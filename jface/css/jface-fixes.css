@@ -46,6 +46,7 @@ header h1 {
   font-weight: 500;
   color: #a89cff;
   background: rgba(30,26,46,0.92);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(108,99,255,0.2);
   z-index: 1000;
@@ -68,6 +69,7 @@ header h1 {
 body {
   display: flex;
   flex-direction: column;
+  height: 100vh;
   height: 100dvh;
   overflow: hidden;
 }

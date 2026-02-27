@@ -11,6 +11,8 @@
   --bg:         #13111c;
   --bg2:        #1e1a2e;
   --bg3:        #2a2540;
+  --bg-dark:    #090812;
+  --bg-medium:  #1e1a2e;
   --accent:     #6c63ff;
   --accent2:    #a89cff;
   --accent-glow: rgba(108,99,255,0.35);
@@ -36,6 +38,7 @@ body {
   color:        var(--text);
   text-align:   center;
   overflow:     hidden;
+  height:       100vh;
   height:       100dvh;
   display:      flex;
   flex-direction: column;
@@ -133,6 +136,7 @@ h1 img {
   width:       100%;
   min-height:  var(--panel-h);
   background:  rgba(19,17,28,0.92);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-top:  1px solid var(--border);
   display:     flex;
@@ -160,6 +164,7 @@ h1 img {
   border-radius: 20px;
   padding:     5px 12px 7px;
   overflow:    hidden;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   min-width:   110px;
   transition:  border-color 0.2s;
@@ -203,6 +208,7 @@ h1 img {
   gap:         6px;
   flex-wrap:   wrap;
   z-index:     10000;
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
 }
 
@@ -249,6 +255,7 @@ button.connected {
   position:    fixed;
   inset:       0;
   background:  rgba(10,8,20,0.88);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   z-index:     10001;
   align-items: center;
@@ -266,6 +273,7 @@ button.connected {
   max-width:    520px;
   text-align:   left;
   box-shadow:   0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px var(--border2);
+  max-height:   90vh;
   max-height:   90dvh;
   overflow-y:   auto;
 }
@@ -485,6 +493,7 @@ button.connected {
   font-weight: 500;
   color: var(--accent-dim);
   background: rgba(30,26,46,0.85);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
   z-index: 999;
@@ -502,6 +511,7 @@ body {
   color: var(--text);
   display: flex;
   flex-direction: column;
+  height: 100vh;
   height: 100dvh;
   overflow: hidden;
   margin: 0;
@@ -534,6 +544,7 @@ header h1 {
   top: 0;
   min-height: 40px;
   background: rgba(30,26,46,0.92);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-top: none;
   border-bottom: 1px solid var(--border);
@@ -584,12 +595,12 @@ header h1 {
 #canvas {
   z-index: 2;
 }
-}
 
 /* Controls fix */
 #controls {
   min-height: 70px;
   background: rgba(30,26,46,0.95);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-top: 1px solid var(--border);
   display: flex;

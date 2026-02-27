@@ -65,7 +65,7 @@ faceMesh.onResults(results => {
 async function startVideo() {
   try {
     // Mostrar capa de càrrega
-    showLoadingOverlay('Carregant MediaPipe Face Mesh...', 'Iniciant càmera i model d\'IA');
+    showLoadingOverlay('Carregant càmera i IA facial...', 'Inicialitzant MediaPipe Face Mesh', '📷');
     
     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
     video.srcObject = stream;

@@ -25,8 +25,8 @@ let hadPrediction = false;
 
 // ── Botons ───────────────────────────────────────────────────
 connectBtn.onclick = connectBluetooth;
-configBtn.onclick = () => { configLayer.style.display = 'block'; };
-infoBtn.onclick = () => { infoLayer.style.display = 'block'; };
+configBtn.onclick = () => { configLayer.style.display = 'flex'; };
+infoBtn.onclick = () => { infoLayer.style.display = 'flex'; };
 closeConfigBtn.onclick = () => { configLayer.style.display = 'none'; };
 closeInfoBtn.onclick = () => { infoLayer.style.display = 'none'; };
 

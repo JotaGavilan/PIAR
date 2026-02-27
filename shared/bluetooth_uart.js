@@ -38,7 +38,8 @@ function notifyStatus(connected, message) {
       connectBtn.classList.remove('connected');
       
       // Mostrar nom de l'última micro:bit si existeix
-      const lastDevice = localStorage.getItem('lastMicrobit');
+      let lastDevice = null;
+    try { lastDevice = localStorage.getItem('lastMicrobit'); } catch(e) {}
       if (lastDevice) {
         connectBtn.textContent = `🔵 Connectar (${lastDevice})`;
       } else {
@@ -60,6 +61,13 @@ function notifyStatus(connected, message) {
 }
 
 async function connectBluetooth() {
+  // Web Bluetooth no és suportat per Firefox ni Safari
+  if (!navigator.bluetooth) {
+    const statusEl = document.getElementById('status');
+    if (statusEl) statusEl.textContent = '❌ Bluetooth no disponible. Usa Chrome o Edge.';
+    alert('El Bluetooth Web no és compatible amb aquest navegador.\nUtilitza Google Chrome o Microsoft Edge.');
+    return;
+  }
   try {
     notifyStatus(false, '🔍 Cercant micro:bit...');
 
@@ -70,7 +78,7 @@ async function connectBluetooth() {
 
     // Guardar el nom del dispositiu
     if (uBitDevice.name) {
-      localStorage.setItem('lastMicrobit', uBitDevice.name);
+      try { localStorage.setItem('lastMicrobit', uBitDevice.name); } catch(e) {}
     }
 
     uBitDevice.addEventListener('gattserverdisconnected', onDisconnected);
@@ -115,7 +123,9 @@ function sendUARTData(data) {
   if (!uart) return;
   const encoded = new TextEncoder().encode(data + '\n');
   queueGattOperation(() =>
-    uart.writeValue(encoded)
+    (uart.writeValueWithoutResponse 
+      ? uart.writeValueWithoutResponse(encoded) 
+      : uart.writeValue(encoded))
       .then(()  => console.log('📤 UART enviat:', data))
       .catch(e  => console.error('❌ Error UART:', e))
   );

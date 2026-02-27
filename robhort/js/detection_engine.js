@@ -69,7 +69,7 @@ async function initModel(modelKey) {
   model = null;
   
   // Mostrar capa de càrrega
-  showLoadingOverlay(`Carregant model ${cfg.label}...`, cfg.description);
+  showLoadingOverlay(`Carregant model ${cfg.label}...`, cfg.description, '🔍');
   
   try {
     model = await cocoSsd.load({ base: cfg.base });

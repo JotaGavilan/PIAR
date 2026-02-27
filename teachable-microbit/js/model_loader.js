@@ -93,26 +93,24 @@ async function loopImage() {
 //  AUDIO
 // ─────────────────────────────────────────────────────────────
 async function startAudioPrediction() {
-  const modelURL = model.model.modelTopology.model_config.config.name;  
-  // Teachable Machine Audio usa un recognizer específic
-  const checkpointURL = modelURL.replace('model.json', '');
   recognizer = model;
 
-  audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  const source = audioContext.createMediaStreamSource(stream);
-
-  // Configurar analitzador d'audio
-  const analyser = audioContext.createAnalyser();
-  source.connect(analyser);
-
-  loopAudio(analyser);
-}
-
-async function loopAudio(analyser) {
-  const prediction = await model.predict();
-  if (onPredictionCallback) onPredictionCallback(prediction);
-  setTimeout(() => loopAudio(analyser), 300);  // cada 300ms
+  // Teachable Machine Audio usa la seua pròpia API listen()
+  // Necessita que l'usuari haja interactuat primer (política autoplay)
+  await recognizer.listen(
+    prediction => {
+      if (onPredictionCallback) onPredictionCallback(prediction.scores.map((score, i) => ({
+        className: recognizer.wordLabels()[i],
+        probability: score
+      })));
+    },
+    {
+      includeSpectrogram: false,
+      probabilityThreshold: 0.75,
+      invokeCallbackOnNoiseAndUnknown: true,
+      overlapFactor: 0.50
+    }
+  );
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -186,6 +184,10 @@ function stopPrediction() {
   if (webcam) {
     webcam.stop();
     webcam = null;
+  }
+  if (recognizer && recognizer.isListening && recognizer.isListening()) {
+    recognizer.stopListening();
+    recognizer = null;
   }
   if (audioContext) {
     audioContext.close();

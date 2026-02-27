@@ -82,10 +82,21 @@ function drawDetections(detections) {
     const textW  = ctx.measureText(label).width + 14;
     const labelY = Math.max(22, y);
 
-    // Fons etiqueta arrodonit
+    // Fons etiqueta arrodonit (compatible sense roundRect)
     ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.roundRect(x, labelY - 20, textW, 20, 5);
+    const r2 = 5;
+    const lx = x, ly = labelY - 20, lw = textW, lh = 20;
+    ctx.moveTo(lx + r2, ly);
+    ctx.lineTo(lx + lw - r2, ly);
+    ctx.arcTo(lx + lw, ly, lx + lw, ly + r2, r2);
+    ctx.lineTo(lx + lw, ly + lh - r2);
+    ctx.arcTo(lx + lw, ly + lh, lx + lw - r2, ly + lh, r2);
+    ctx.lineTo(lx + r2, ly + lh);
+    ctx.arcTo(lx, ly + lh, lx, ly + lh - r2, r2);
+    ctx.lineTo(lx, ly + r2);
+    ctx.arcTo(lx, ly, lx + r2, ly, r2);
+    ctx.closePath();
     ctx.fill();
 
     // Text

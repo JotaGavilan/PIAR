@@ -1,46 +1,144 @@
 /* ============================================================
-   loading_overlay.css – Estils per a la capa de càrrega
+   loading_overlay.css – Capa de càrrega
+   Funciona tant en mòbil com en escriptori
    ============================================================ */
 
 #loading-overlay {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(19, 17, 28, 0.95);
-  backdrop-filter: blur(10px);
-  z-index: 10000;
+  /* Per sobre de tot, inclús les capes i els controls */
+  z-index: 99999;
+  background: rgba(9, 8, 18, 0.96);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   align-items: center;
   justify-content: center;
+  /* Evita que el flex del body el limiti a max-width 480px */
+  width: 100vw !important;
+  max-width: 100vw !important;
+  left: 0 !important;
+  top: 0 !important;
 }
 
+#loading-overlay.visible {
+  display: flex;
+  animation: overlay-in 0.25s ease both;
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes overlay-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+#loading-overlay.hiding {
+  animation: overlay-out 0.3s ease both;
+}
+
+/* ── Contingut central ─────────────────────────────────────── */
 .loading-content {
-  text-align: center;
-  padding: 2rem;
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  text-align:     center;
+  padding:        2.5rem 2rem;
+  max-width:      320px;
+  width:          90%;
 }
 
+/* ── Spinner ───────────────────────────────────────────────── */
 .loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 4px solid rgba(108, 99, 255, 0.2);
-  border-top-color: #6c63ff;
+  position:      relative;
+  width:         72px;
+  height:        72px;
+  margin:        0 auto 1.8rem;
+}
+
+.loading-spinner::before,
+.loading-spinner::after {
+  content:       '';
+  position:      absolute;
+  inset:         0;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 1.5rem;
+  border:        4px solid transparent;
+}
+
+.loading-spinner::before {
+  border-top-color:   #6c63ff;
+  border-right-color: rgba(108, 99, 255, 0.3);
+  animation: spin 0.9s linear infinite;
+}
+
+.loading-spinner::after {
+  inset:               8px;
+  border-bottom-color: #a89cff;
+  border-left-color:   rgba(168, 156, 255, 0.2);
+  animation: spin 1.4s linear infinite reverse;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
+/* ── Icona central (opcional, inserida per JS) ─────────────── */
+.loading-icon {
+  position:    absolute;
+  inset:       0;
+  display:     flex;
+  align-items: center;
+  justify-content: center;
+  font-size:   1.6em;
+  animation:   pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50%       { opacity: 1;   transform: scale(1.05); }
+}
+
+/* ── Textos ────────────────────────────────────────────────── */
 .loading-message {
-  font-size: 1.2em;
-  font-weight: 600;
-  color: #f0eeff;
-  margin-bottom: 0.5rem;
+  font-family:   'Poppins', sans-serif;
+  font-size:     1.05em;
+  font-weight:   600;
+  color:         #f0eeff;
+  margin-bottom: 0.55rem;
+  line-height:   1.4;
 }
 
 .loading-details {
-  font-size: 0.9em;
-  color: #8b82b8;
+  font-family: 'Poppins', sans-serif;
+  font-size:   0.82em;
+  color:       #8b82b8;
   line-height: 1.6;
+}
+
+/* ── Barra de progrés (animació indeterminada) ─────────────── */
+.loading-bar {
+  width:         100%;
+  height:        3px;
+  background:    rgba(108, 99, 255, 0.15);
+  border-radius: 4px;
+  margin-top:    1.4rem;
+  overflow:      hidden;
+}
+
+.loading-bar::after {
+  content:       '';
+  display:       block;
+  height:        100%;
+  width:         40%;
+  background:    linear-gradient(90deg, transparent, #6c63ff, #a89cff, transparent);
+  border-radius: 4px;
+  animation:     bar-slide 1.6s ease-in-out infinite;
+}
+
+@keyframes bar-slide {
+  0%   { transform: translateX(-150%); }
+  100% { transform: translateX(350%); }
 }
