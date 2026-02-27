@@ -1,0 +1,46 @@
+/* ============================================================
+   loading_overlay.css – Estils per a la capa de càrrega
+   ============================================================ */
+
+#loading-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(19, 17, 28, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(108, 99, 255, 0.2);
+  border-top-color: #6c63ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-message {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #f0eeff;
+  margin-bottom: 0.5rem;
+}
+
+.loading-details {
+  font-size: 0.9em;
+  color: #8b82b8;
+  line-height: 1.6;
+}

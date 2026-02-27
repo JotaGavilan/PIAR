@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JFace – Tracking facial amb IA</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/jface-fixes.css">
+  <link rel="stylesheet" href="../shared/loading_overlay.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="manifest" href="icons/site.webmanifest">
+  <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <!-- Capçalera -->
+  <header style="display: flex; align-items: center; justify-content: center; gap: 0.8em;">
+    <img src="icons/android-chrome-512x512.png" alt="Icona JFace" style="width: 32px; height: 32px;">
+    <h1 style="margin: 0;">JFace – Tracking facial amb IA</h1>
+  </header>
+
+  <!-- Contenidor del vídeo i canvas -->
+  <div id="video-container">
+    <video id="video" autoplay playsinline muted style="display: none;"></video>
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <!-- Panel de dades facials -->
+  <div id="data-panel">
+    <span id="device-indicator" style="display:none; margin-right: 1rem; color: var(--accent-dim);"></span>
+    Gir: <span id="yaw">--</span> | 
+    Boca: <span id="mouth">--</span> | 
+    Ull E: <span id="eyeL">-</span> | 
+    Ull D: <span id="eyeR">-</span>
+  </div>
+
+  <!-- Controls inferiors -->
+  <div id="controls">
+    <button id="connectBtn" class="btn-bluetooth">🔵 Connectar Bluetooth</button>
+    <button id="configBtn">⚙️ Configurar</button>
+    <button id="infoBtn">ℹ️ Ajuda</button>
+    <div id="status">⏳ Iniciant càmera...</div>
+  </div>
+
+  <!-- Capa de configuració -->
+  <div id="config-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona">
+        <h2>⚙️ Configuració</h2>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title">Enviament de dades</h3>
+        
+        <div class="interval-control">
+          <label for="intervalSlider">Interval d'enviament:</label>
+          <input type="range" id="intervalSlider" min="1" max="20" value="2" step="1">
+          <span id="intervalLabel">0.2s</span>
+        </div>
+
+        <p class="config-note">
+          Cada quants segons s'envien les dades a la micro:bit per Bluetooth.
+          Valors baixos (0.1-0.3s) donen més fluïdesa però consumeixen més bateria.
+        </p>
+      </div>
+
+      <button class="close-btn" id="closeConfigBtn">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Capa d'informació/ajuda -->
+  <div id="info-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona">
+        <h2>ℹ️ Ajuda</h2>
+      </div>
+
+      <p>
+        <strong>JFace</strong> utilitza <a href="https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker" target="_blank">MediaPipe Face Mesh</a> 
+        de Google per detectar la posició del cap, l'obertura de la boca i l'estat dels ulls en temps real,
+        i envia aquestes dades a una micro:bit per Bluetooth.
+      </p>
+
+      <p><strong>Format de dades enviades (6 dígits):</strong></p>
+      <ul>
+        <li><strong>2 dígits:</strong> gir horitzontal del cap (00 a 99)</li>
+        <li><strong>2 dígits:</strong> obertura de boca (00 a 99)</li>
+        <li><strong>1 dígit:</strong> ull esquerre (0 = tancat, 1 = obert)</li>
+        <li><strong>1 dígit:</strong> ull dret (0 = tancat, 1 = obert)</li>
+      </ul>
+
+      <p><strong>Exemple:</strong> <code>731010</code> → cap a 73°, boca 10% oberta, ull esquerre obert, dret tancat.</p>
+
+      <p>
+        Quan la cara desapareix de pla, s'envia <code>0</code> una sola vegada.
+        Tot el processament es fa localment al navegador sense enviar cap dada a Internet.
+      </p>
+
+      <p class="info-footer">
+        Projecte inspirat en <a href="https://cardboard.lofirobot.com" target="_blank">cardboard.lofirobot.com</a><br>
+        Fet per Jose L. Gavilán amb ❤️ i IA<br>
+        IES Jorge Juan, Alacant, 2026
+      </p>
+
+      <button class="close-btn" id="closeInfoBtn">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Llibreries MediaPipe -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+  <!-- Mòduls de l'app -->
+  <script src="../shared/loading_overlay.js"></script>
+  <script src="../shared/bluetooth_uart.js"></script>
+  <script src="js/video_facial_tracking.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

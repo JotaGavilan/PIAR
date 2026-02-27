@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teachable Microbit</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../shared/loading_overlay.css">
+  <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <!-- Capçalera -->
+  <header>
+    <img src="icons/android-chrome-512x512.png" alt="Icona Teachable Microbit">
+    <h1>Teachable Microbit</h1>
+  </header>
+
+  <!-- Contenidor del vídeo i canvas -->
+  <div id="video-container">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <!-- Panel de prediccions -->
+  <div id="prediction-panel">
+    <span class="no-pred">Cap predicció</span>
+  </div>
+
+  <!-- Controls inferiors -->
+  <div id="controls">
+    <button id="connectBtn" class="btn-bluetooth">🔵 Connectar Bluetooth</button>
+    <button id="configBtn">⚙️ Configurar</button>
+    <button id="infoBtn">ℹ️ Ajuda</button>
+    <div id="status"><span id="device-indicator" style="display:none; margin-right: 0.5rem;"></span>⏳ Carrega el model per començar</div>
+  </div>
+
+  <!-- Capa de configuració -->
+  <div id="config-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona">
+        <h2>⚙️ Configuració</h2>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title">Model Teachable Machine</h3>
+        
+        <div class="model-source">
+          <label>
+            <input type="radio" name="modelSource" value="tm" checked onchange="toggleModelInput()">
+            <span>Model de Teachable Machine (només codi)</span>
+          </label>
+          <input type="text" id="tmCode" placeholder="Exemple: WIQv36jWP">
+          
+          <label>
+            <input type="radio" name="modelSource" value="custom" onchange="toggleModelInput()">
+            <span>URL personalitzada</span>
+          </label>
+          <input type="text" id="customUrl" placeholder="https://..." disabled>
+        </div>
+
+        <div class="model-type">
+          <label for="modelType">Tipus de model:</label>
+          <select id="modelType">
+            <option value="image">🖼️ Imatge</option>
+            <option value="audio">🎤 Audio</option>
+            <option value="pose">🧍 Postura</option>
+          </select>
+        </div>
+
+        <button id="loadModelBtn" class="load-btn">Carregar Model</button>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title">Enviament de dades</h3>
+        
+        <div class="interval-control">
+          <label for="intervalSlider">Interval d'enviament:</label>
+          <input type="range" id="intervalSlider" min="1" max="30" value="2" step="1">
+          <span id="intervalLabel">0.2s</span>
+        </div>
+
+        <div class="classes-control">
+          <label for="numClasses">Classes a enviar:</label>
+          <select id="numClasses">
+            <option value="1">Només la primera (més probable)</option>
+            <option value="2">Primeres 2 classes</option>
+            <option value="3">Primeres 3 classes</option>
+          </select>
+        </div>
+
+        <div class="probability-control">
+          <label>
+            <input type="checkbox" id="showProbability" checked>
+            <span>Incloure probabilitats (percentatges)</span>
+          </label>
+        </div>
+
+        <p class="config-note">
+          <strong>Format amb probabilitats:</strong> <code>classe1:90;classe2:5</code><br>
+          <strong>Format sense:</strong> <code>classe1;classe2</code>
+        </p>
+      </div>
+
+      <button class="close-btn" id="closeConfigBtn">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Capa d'informació/ajuda -->
+  <div id="info-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona">
+        <h2>ℹ️ Ajuda</h2>
+      </div>
+
+      <p>
+        <strong>Teachable Microbit</strong> et permet utilitzar models d'intel·ligència artificial
+        creats amb <a href="https://teachablemachine.withgoogle.com/" target="_blank">Google Teachable Machine</a>
+        i enviar les prediccions a una micro:bit per Bluetooth en temps real.
+      </p>
+
+      <p><strong>Com funciona:</strong></p>
+      <ol>
+        <li>Crea un model a <a href="https://teachablemachine.withgoogle.com/" target="_blank">Teachable Machine</a></li>
+        <li>Exporta'l i puja'l (rebràs un codi com <code>WIQv36jWP</code>)</li>
+        <li>A Configuració, enganxa el codi i carrega el model</li>
+        <li>Connecta la micro:bit per Bluetooth</li>
+        <li>Les prediccions s'enviaran automàticament!</li>
+      </ol>
+
+      <p><strong>Tipus de models compatibles:</strong></p>
+      <ul>
+        <li>🖼️ <strong>Imatge</strong> — detecta objectes, gestos, posicions davant la càmera</li>
+        <li>🎤 <strong>Audio</strong> — reconeix sons, paraules, música (requereix micròfon)</li>
+        <li>🧍 <strong>Postura</strong> — detecta posicions del cos sencer</li>
+      </ul>
+
+      <p><strong>Format de les dades enviades:</strong></p>
+      <ul>
+        <li>AMB probabilitats: <code>gat:87;gos:10;ocell:3</code></li>
+        <li>SENSE probabilitats: <code>gat;gos;ocell</code></li>
+        <li>Quan no hi ha predicció segura, s'envia <code>0</code> una vegada</li>
+      </ul>
+
+      <p class="info-footer">
+        Fet per Jose L. Gavilán amb ❤️ i IA<br>
+        IES Jorge Juan, Alacant, 2026
+      </p>
+
+      <button class="close-btn" id="closeInfoBtn">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Llibreries -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/audio@0.8/dist/teachablemachine-audio.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
+
+  <!-- Mòduls de l'app -->
+  <script src="../shared/loading_overlay.js"></script>
+  <script src="../shared/bluetooth_uart.js"></script>
+  <script src="js/model_loader.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

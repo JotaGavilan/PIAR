@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ca-ES">
+<head>
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32"  href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16"  href="icons/favicon-16x16.png">
+  <link rel="manifest" href="icons/site.webmanifest">
+  <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RobHort – El guardià del teu bancal</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="../shared/loading_overlay.css">
+</head>
+<body>
+
+  <!-- Capçalera -->
+  <h1>
+    <img src="icons/android-chrome-512x512.png" alt="Icona RobHort">
+    RobHort – El guardià del teu bancal
+  </h1>
+
+  <!-- Vídeo + Canvas -->
+  <div id="video-container">
+    <video id="video" autoplay muted playsinline></video>
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <!-- Panel de deteccions -->
+  <div id="detection-panel">
+    <span class="no-det">Inicialitzant...</span>
+  </div>
+
+  <!-- Controls inferiors -->
+  <div id="controls">
+    <button id="connectBtn" class="btn-bluetooth">🔵 Connectar Bluetooth</button>
+    <button id="configBtn">⚙️ Configurar</button>
+    <button id="infoBtn">ℹ️ Informació</button>
+    <div id="status"><span id="device-indicator" style="display:none; margin-right: 0.5rem;"></span>⏳ Inicialitzant càmera...</div>
+  </div>
+
+  <!-- Capa de configuració -->
+  <div id="config-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona RobHort">
+        <h2>⚙️ Configuració</h2>
+      </div>
+
+      <p class="section-title">Animals a detectar</p>
+      <div id="category-list"></div>
+
+      <p class="section-title">Model d'intel·ligència artificial</p>
+      <div id="model-selector"></div>
+      <p style="font-size:0.75em; color:#8b82b8; margin-top:0.4rem; line-height:1.5;">
+        💡 Si no saps quin triar, usa <strong>Ràpid</strong>.<br>
+        <strong>Llarga distància</strong> fa 5 anàlisis per frame: pot anar lent en mòbils antics.
+      </p>
+
+      <div class="interval-control">
+        <label for="intervalSlider">Interval d'enviament</label>
+        <input type="range" id="intervalSlider" min="1" max="15" value="2" step="1">
+        <span id="intervalLabel">2s</span>
+      </div>
+      <p style="font-size:0.75em; color:#8b82b8; margin-top:0.4rem;">
+        Cada quants segons s'envien les dades a la micro:bit per Bluetooth.
+      </p>
+
+      <button class="close-btn" id="closeConfigBtn">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Capa d'informació -->
+  <div id="info-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona RobHort">
+        <h2>ℹ️ Informació</h2>
+      </div>
+
+      <p>
+        <strong>RobHort – El guardià del teu bancal</strong> utilitza la càmera del mòbil
+        per detectar animals en temps real i avisa la micro:bit per Bluetooth.
+        Tot funciona al mateix dispositiu, sense enviar res a Internet.
+      </p>
+
+      <p><strong>Animals que detecta:</strong></p>
+      <ul>
+        <li>🐱 Gat</li>
+        <li>🐦 Ocell</li>
+        <li>🧍 Persona</li>
+      </ul>
+
+      <p><strong>Missatge enviat a la micro:bit:</strong></p>
+      <ul>
+        <li>Format: <code>animal:percentatge</code> separat per comes</li>
+        <li>Eixemple: <code>gat:87,ocell:45</code></li>
+        <li>Quan l'animal desapareix de pla, s'envia <code>0</code> una sola vegada.</li>
+        <li>Mentre no es detecta res, no s'envia res més.</li>
+      </ul>
+
+      <p><strong>Models de detecció disponibles:</strong></p>
+      <ul>
+        <li>
+          ⚡ <strong>Ràpid</strong> — Model: <em>COCO-SSD + MobileNet v2 lite</em> (Google, 2018).<br>
+          Model lleuger optimitzat per a mòbils de baixa potència.
+          Detecta bé objectes grans i propers (~1,5m).
+          Molt fluid i consumeix poca bateria.
+          <strong>Recomanat per al dia a dia.</strong>
+        </li>
+        <li>
+          🔍 <strong>Precís</strong> — Model: <em>COCO-SSD + MobileNet v2</em> (Google, 2018).<br>
+          Versió completa del mateix model. Millor en objectes en moviment,
+          angles difícils o mala il·luminació. Una mica més lent.
+          Distància similar al Ràpid (~1,5-2m).
+        </li>
+        <li>
+          🚀 <strong>Llarga distància</strong> — Model: <em>COCO-SSD + MobileNet v2</em> amb <em>detecció per zones</em>.<br>
+          Usa el mateix model que el Precís, però dividix la imatge en
+          4 quadrants i analitza cadascun per separat. Açò permet
+          detectar animals que ocupen pocs píxels (fins a ~3-4m).
+          Fa 4 anàlisis per frame: és notablement més lent.
+          <strong>Recomanat per a tauletes o quan necessites detectar a distància.</strong>
+        </li>
+      </ul>
+
+      <p>
+        <strong>Consell:</strong> comença amb <em>Ràpid</em>.
+        Si no detecta a la distància que necessites, prova <em>Llarga distància</em>.
+      </p>
+
+      <p class="info-footer">
+        Fet per Jose L. Gavilán amb ❤️ i IA<br>
+        IES Jorge Juan, Alacant, 2026
+      </p>
+
+      <button class="close-btn" id="closeInfoBtn">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Llibreries -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+
+  <!-- Mòduls de l'app -->
+  <script src="../shared/loading_overlay.js"></script>
+  <script src="./js/detection_engine.js"></script>
+  <script src="../shared/bluetooth_uart.js"></script>
+  <script src="./js/script.js"></script>
+
+</body>
+</html>
