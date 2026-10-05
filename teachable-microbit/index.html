@@ -160,7 +160,10 @@
   <!-- Llibreries -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/audio@0.8/dist/teachablemachine-audio.min.js"></script>
+  <!-- NOTA: no existeix cap paquet "@teachablemachine/audio" (mai ha existit a
+       npm/jsdelivr: dona 404). Google implementa l'àudio de Teachable Machine
+       amb la llibreria speech-commands, que és la que carreguem ací. -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.5/dist/speech-commands.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
 
   <!-- Mòduls de l'app -->

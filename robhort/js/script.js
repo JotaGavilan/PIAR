@@ -147,9 +147,16 @@ function buildUARTMessage(detections) {
 
 // Usa setTimeout recursiu per poder canviar l'interval en calent
 let hadDetections = false;   // recorda si l'últim tick tenia deteccions
+let sendLoopId = 0;          // identifica el bucle actiu; evita bucles duplicats
 
 function scheduleSend() {
+  // Si ja hi havia un bucle d'enviament actiu (p.ex. en recarregar el
+  // model), l'invalidem abans de crear-ne un altre, perquè no s'acumulen
+  // diversos "tick" enviant dades per duplicat a la micro:bit.
+  const myLoopId = ++sendLoopId;
+
   function tick() {
+    if (myLoopId !== sendLoopId) return;   // un bucle més nou l'ha substituït
     if (isBluetoothConnected()) {
       const msg = buildUARTMessage(lastDetections);
       if (msg) {

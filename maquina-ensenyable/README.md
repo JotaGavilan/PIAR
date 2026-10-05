@@ -1,22 +1,23 @@
 # Màquina Ensenyable - Notes
 
-Aquest projecte és una aplicació monolítica (tot-en-un) amb el codi inline.
+Aquest projecte és una aplicació monolítica (tot-en-un) amb el codi inline, pensada com un "Teachable Machine" propi que funciona en qualsevol navegador mòbil, sense necessitat de compte de Google ni de Google Drive.
 
-## Limitacions conegudes:
+## Tipus de model disponibles
 
-1. **Mode Audio**: El mode d'entrenament d'audio pot no funcionar correctament al navegador per restriccions de permisos de micròfon. Es recomana usar Teachable Machine (Google) per a models d'audio.
+1. **🖼 Imatge** — MobileNet (transfer learning) + cap classificadora pròpia.
+2. **🎤 Audio** — llibreria `speech-commands` de Google (la mateixa que fa servir per sota Teachable Machine), amb aprenentatge per transferència en viu: cada mostra es grava i s'analitza a l'instant (`collectExample`), i `train()` entrena la cap classificadora amb els exemples recollits.
+3. **🕺 Pose** — PoseNet + cap classificadora pròpia sobre els keypoints normalitzats.
+4. **🤚 Mans** — MediaPipe Hands + cap classificadora pròpia sobre els 21 punts de referència de la mà. No existeix a Teachable Machine original; s'ha afegit perquè és un control natural per a robots/microbit (gestos).
 
-2. **Mode Postura**: El skeleton (línies del cos) no es mostra durant l'entrenament. El model detecta postures però no dibuixa l'esquelet visual.
+Durant la **captura** de mostres de Pose i Mans es mostra en viu l'esquelet/mà detectada sobre la vista de la càmera, perquè l'usuari sàpiga si el model està reconeixent bé la postura abans de guardar la mostra.
 
-## Alternatives:
+## Guardar / exportar
 
-- Per a models d'audio i postura amb millor suport, usa **Teachable Microbit** que integra els models oficials de Teachable Machine de Google.
+- **Fitxer local (`.mia.json`)**: descarregar, compartir (Web Share API: WhatsApp, AirDrop, Drive, correu…) o carregar un fitxer previ. No requereix cap compte.
+- **Exportar model entrenat**: TensorFlow.js, Keras/Python o TF Lite (instruccions), igual que a Teachable Machine.
+- Ja **no hi ha integració amb Google Drive/Sign-In** (eliminada deliberadament perquè l'app no depenga de cap compte).
 
-- Per a entrenament visual d'imatges, **Màquina Ensenyable** funciona correctament.
+## Limitacions conegudes
 
-## Modificacions futures:
-
-Per afegir visualització del skeleton o arreglar l'audio, cal:
-1. Externalitzar el JavaScript inline (~1500 línies)
-2. Modularitzar les funcions de captura
-3. Afegir renderització de PoseNet
+- La reconstrucció d'un model d'àudio carregat des d'un `.mia.json` antic és "best effort": la llibreria `speech-commands` no documenta públicament com reencastar pesos guardats en un reconeixedor de transferència nou. Si després de carregar un projecte d'àudio la predicció no funciona bé, la solució fiable és tornar a grabar les mostres i reentrenar.
+- Esborrar una classe o una mostra d'àudio individualment demana al navegador que elimine eixe exemple intern del reconeixedor; si açò falla per qualsevol motiu, es recomana revisar el nombre de mostres abans d'entrenar.

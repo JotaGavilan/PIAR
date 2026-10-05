@@ -49,7 +49,12 @@ faceMesh.onResults(results => {
     const cambioMouth = (ultimoMouth === null || Math.abs(mouth - ultimoMouth) > 2);
     const cambioOjos = ojos !== ultimoEyes;
 
-    if ((cambioYaw || cambioMouth || cambioOjos) && ahora - ultimoEnvio > 100) {
+    // Interval mínim entre enviaments, controlat pel slider de Configuració
+    // (window.sendIntervalMs, definit en script.js). 100ms de fallback si
+    // encara no s'ha inicialitzat.
+    const intervalMinim = window.sendIntervalMs || 100;
+
+    if ((cambioYaw || cambioMouth || cambioOjos) && ahora - ultimoEnvio > intervalMinim) {
       const mensaje = yaw.toString().padStart(2, '0') + mouth.toString().padStart(2, '0') + ojos;
       sendUARTData(mensaje);
       ultimoYaw = yaw;

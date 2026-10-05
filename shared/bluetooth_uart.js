@@ -60,12 +60,28 @@ function notifyStatus(connected, message) {
   if (onStatusChangeCallback) onStatusChangeCallback(connected, message);
 }
 
+// Detecta iPhone/iPad (inclou Chrome i altres navegadors en iOS, que per
+// restricció d'Apple/WebKit tampoc tenen Web Bluetooth, encara que el
+// navegador siga Chrome).
+function isIOSDevice() {
+  const ua = navigator.userAgent || '';
+  const isAppleTouch = /iPad|iPhone|iPod/.test(ua) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS "desktop" UA
+  return isAppleTouch;
+}
+
 async function connectBluetooth() {
-  // Web Bluetooth no és suportat per Firefox ni Safari
+  // Web Bluetooth no és suportat per Firefox, Safari, ni per CAP navegador
+  // en iOS/iPadOS (és una restricció del sistema, no del navegador concret).
   if (!navigator.bluetooth) {
     const statusEl = document.getElementById('status');
-    if (statusEl) statusEl.textContent = '❌ Bluetooth no disponible. Usa Chrome o Edge.';
-    alert('El Bluetooth Web no és compatible amb aquest navegador.\nUtilitza Google Chrome o Microsoft Edge.');
+    if (isIOSDevice()) {
+      if (statusEl) statusEl.textContent = '❌ Bluetooth no disponible en iPhone/iPad.';
+      alert('Este dispositiu (iPhone/iPad) no permet connectar per Bluetooth des del navegador: és una limitació del sistema d\'Apple, no d\'esta app.\n\nLa càmera i la IA funcionen igual, però per enviar dades a la micro:bit necessites un mòbil o ordinador amb Android, Windows, Linux o ChromeOS (amb Chrome o Edge).');
+    } else {
+      if (statusEl) statusEl.textContent = '❌ Bluetooth no disponible. Usa Chrome o Edge.';
+      alert('El Bluetooth Web no és compatible amb aquest navegador.\nUtilitza Google Chrome o Microsoft Edge.');
+    }
     return;
   }
   try {
@@ -134,3 +150,17 @@ function sendUARTData(data) {
 function isBluetoothConnected() {
   return isConnected && uart !== null;
 }
+
+// Avisa d'entrada (sense esperar que l'usuari premga "Connectar") si este
+// dispositiu no podrà mai connectar per Bluetooth, perquè sàpiga per què
+// abans de perdre temps provant-ho.
+document.addEventListener('DOMContentLoaded', () => {
+  if (navigator.bluetooth) return;
+  const connectBtn = document.getElementById('connectBtn');
+  if (!connectBtn) return;
+  if (isIOSDevice()) {
+    connectBtn.textContent = '⚠️ Bluetooth no disponible en este iPhone/iPad';
+  } else {
+    connectBtn.textContent = '⚠️ Bluetooth no disponible en este navegador';
+  }
+});

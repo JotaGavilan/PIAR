@@ -136,8 +136,16 @@ function buildUARTMessage(predictions) {
 }
 
 // ── Bucle d'enviament UART ───────────────────────────────────
+let sendLoopId = 0;   // identifica el bucle actiu; evita bucles duplicats
+
 function scheduleSend() {
+  // Cada volta que es carrega un model nou, onModelReady torna a cridar
+  // scheduleSend(). Sense este identificador, el bucle anterior seguiria
+  // actiu i s'enviarien dades duplicades a la micro:bit.
+  const myLoopId = ++sendLoopId;
+
   function tick() {
+    if (myLoopId !== sendLoopId) return;   // un bucle més nou l'ha substituït
     if (isBluetoothConnected()) {
       const msg = buildUARTMessage(lastPredictions);
       if (msg) {

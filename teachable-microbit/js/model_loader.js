@@ -37,8 +37,13 @@ async function loadModel(url, type) {
       await startImagePrediction();
 
     } else if (type === 'audio') {
-      model = await tmAudio.load(modelURL, metadataURL);
-      maxPredictions = model.getTotalClasses();
+      // No existeix cap llibreria "tmAudio" (@teachablemachine/audio no està
+      // publicada a npm). Teachable Machine fa servir per sota la llibreria
+      // speech-commands de Google per a models d'àudio: li passem les
+      // mateixes URLs de model.json/metadata.json que exporta TM.
+      model = speechCommands.create('BROWSER_FFT', undefined, modelURL, metadataURL);
+      await model.ensureModelLoaded();
+      maxPredictions = model.wordLabels().length;
       await startAudioPrediction();
 
     } else if (type === 'pose') {

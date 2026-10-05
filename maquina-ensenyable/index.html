@@ -9,11 +9,15 @@
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
 <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+<link rel="manifest" href="icons/site.webmanifest">
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet@2.2.2/dist/posenet.min.js"></script>
-<script src="https://apis.google.com/js/api.js"></script>
-<script src="https://accounts.google.com/gsi/client"></script>
+<!-- Transfer learning d'àudio (la mateixa llibreria que fa servir Google per
+     sota de Teachable Machine Audio) -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.5/dist/speech-commands.min.js"></script>
+<!-- Detecció de mans per al tipus de model "Mans" -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -167,6 +171,7 @@ select.field { appearance: none; }
     <button class="mtype-btn active" onclick="setModelType('image')" id="mtype-image">🖼 Imagen</button>
     <button class="mtype-btn" onclick="setModelType('audio')" id="mtype-audio">🎤 Audio</button>
     <button class="mtype-btn" onclick="setModelType('pose')" id="mtype-pose">🕺 Pose</button>
+    <button class="mtype-btn" onclick="setModelType('hands')" id="mtype-hands">🤚 Manos</button>
   </div>
   <div class="status-pill" id="statusPill">sin modelo</div>
 </header>
@@ -284,6 +289,17 @@ select.field { appearance: none; }
     <div id="predCon-pose"></div>
     <button class="btn btn-p btn-w" id="testBtnPose" onclick="togglePoseTest()">🕺 Activar cámara</button>
   </div>
+
+  <!-- MANOS -->
+  <div id="ts-hands" style="display:none">
+    <div id="topCard-hands" class="top-card" style="display:none">
+      <div class="top-icon">🤚</div>
+      <div><div class="top-name" id="topName-hands">—</div><div class="top-conf" id="topConf-hands">—</div></div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px"><canvas id="handsCanvas"></canvas></div>
+    <div id="predCon-hands"></div>
+    <button class="btn btn-p btn-w" id="testBtnHands" onclick="toggleHandsTest()">🤚 Activar cámara</button>
+  </div>
 </div>
 
 <!-- ── EXPORTAR ── -->
@@ -324,30 +340,7 @@ select.field { appearance: none; }
       <button class="btn btn-s" style="flex:1;font-size:11px" onclick="exportJSON()">⬇ Descargar</button>
     </div>
     <label class="btn btn-s btn-w" style="cursor:pointer;font-size:11px">⬆ Cargar .mia.json<input type="file" accept=".json,.mia.json" style="display:none" onchange="importJSON(event)"></label>
-    <p style="font-size:10px;color:var(--text2);margin-top:7px;line-height:1.5">📤 <b style="color:var(--text)">Compartir</b> abre el menú del móvil → OneDrive, Drive, WhatsApp, AirDrop…</p>
-  </div>
-  <div class="card">
-    <div class="sec-title">☁️ Google Drive</div>
-    <div id="driveOut">
-      <p style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.6">Guarda y carga proyectos en tu Google Drive.</p>
-      <button class="btn btn-w" onclick="gdriveSignIn()" style="background:#fff;color:#1a1a1a;font-size:11px;gap:7px">
-        <svg width="15" height="15" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-        Conectar con Google
-      </button>
-    </div>
-    <div id="driveIn" style="display:none">
-      <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface2);border-radius:9px;border:1px solid var(--border);margin-bottom:10px">
-        <img id="driveAv" src="" style="width:28px;height:28px;border-radius:50%;display:none">
-        <div style="flex:1"><div id="driveName" style="font-size:12px;font-weight:600"></div><div id="driveEmail" style="font-size:10px;color:var(--text2)"></div></div>
-        <button onclick="gdriveSignOut()" style="background:none;border:1px solid var(--border);color:var(--text2);padding:4px 7px;border-radius:6px;cursor:pointer;font-size:10px">Salir</button>
-      </div>
-      <div style="display:flex;gap:5px;margin-bottom:8px">
-        <button class="btn btn-p" style="flex:1;font-size:11px" onclick="gdriveSave()">☁ Guardar</button>
-        <button class="btn btn-s" style="flex:1;font-size:11px" onclick="listDriveFiles()">🔄 Actualizar</button>
-      </div>
-      <div id="driveFiles"></div>
-    </div>
-    <div class="note" style="margin-top:8px"><b>Requiere:</b> registrar app en <a href="https://console.cloud.google.com" target="_blank" style="color:var(--accent)">Google Cloud Console</a> y reemplazar el <code>CLIENT_ID</code> en el código.</div>
+    <p style="font-size:10px;color:var(--text2);margin-top:7px;line-height:1.5">📤 <b style="color:var(--text)">Compartir</b> abre el menú del móvil → OneDrive, Drive, WhatsApp, AirDrop, Bluetooth, correo… sin necesitar iniciar sesión en ningún sitio.</p>
   </div>
 </div>
 
@@ -356,6 +349,7 @@ select.field { appearance: none; }
   <div class="cam-prog"><div class="cam-prog-fill" id="capProg"></div></div>
   <div class="cam-wrap">
     <video id="cameraVideo" autoplay playsinline muted></video>
+    <canvas id="camOverlay" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;transform:scaleX(-1)"></canvas>
     <div class="cam-reticle"><div class="cam-circle"></div></div>
   </div>
   <div class="cam-info">
@@ -379,6 +373,8 @@ select.field { appearance: none; }
 let modelType = 'image';
 let classes = [];
 let model = null, baseModel = null, poseNet = null;
+let handsDetector = null, pendingHandsResolve = null;
+let audioBaseRecognizer = null, audioTransferRecognizer = null, isListeningAudioTest = false;
 let curClass = null;
 let capStream = null, capInterval = null;
 let testStream = null, testInterval = null;
@@ -387,7 +383,6 @@ let isTesting = false, isTestingAudio = false, isTestingPose = false;
 let testMode = 'cam';
 let lossH = [], accH = [], valAccH = [];
 let audioCtx = null, audioAnalyser = null, audioMicStream = null, audioVizInt = null;
-let gdriveToken = null;
 
 const CC = ['#7c3aed','#10b981','#f59e0b','#ef4444','#3b82f6','#ec4899','#06b6d4','#84cc16'];
 
@@ -406,6 +401,11 @@ const DATASETS = {
   pose: [
     { name: '🙋 Mano levantada / Normal', classes: ['Mano levantada','Normal'] },
     { name: '💪 Brazos arriba / abajo', classes: ['Brazos arriba','Brazos abajo'] },
+  ],
+  hands: [
+    { name: '👍 Pulgar arriba / 👎 abajo', classes: ['Pulgar arriba','Pulgar abajo'] },
+    { name: '✌️ Paz / ✊ Puño', classes: ['Paz','Puño'] },
+    { name: '👌 OK / 🖐 Palma abierta', classes: ['OK','Palma abierta'] },
   ]
 };
 
@@ -434,9 +434,10 @@ function setModelType(t) {
   document.querySelectorAll('.mtype-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('mtype-'+t).classList.add('active');
   classes = []; model = null;
+  resetAudioRecognizer();
   setPill('sin modelo','');
   renderClasses(); renderExamples();
-  ['image','audio','pose'].forEach(x => { const el=document.getElementById('ts-'+x); if(el) el.style.display='none'; });
+  ['image','audio','pose','hands'].forEach(x => { const el=document.getElementById('ts-'+x); if(el) el.style.display='none'; });
   document.getElementById('noModelMsg').style.display='block';
 }
 function setPill(txt, cls) {
@@ -460,14 +461,32 @@ function loadDataset(i) {
 
 // ═══ CLASSES ═══
 function addClass() { classes.push({ name: `Clase ${classes.length+1}`, samples: [] }); renderClasses(); }
-function deleteClass(i) { classes.splice(i,1); renderClasses(); }
-function deleteSample(ci, si) { classes[ci].samples.splice(si,1); renderClasses(); }
-function clearSamples(ci) { classes[ci].samples=[]; renderClasses(); }
+function deleteClass(i) {
+  if (modelType==='audio' && audioTransferRecognizer) {
+    classes[i].samples.forEach(s => { if (s && s.uid) { try { audioTransferRecognizer.removeExample(s.uid); } catch(e){} } });
+  }
+  classes.splice(i,1);
+  renderClasses();
+}
+function deleteSample(ci, si) {
+  const s = classes[ci].samples[si];
+  if (modelType==='audio' && audioTransferRecognizer && s && s.uid) { try { audioTransferRecognizer.removeExample(s.uid); } catch(e){} }
+  classes[ci].samples.splice(si,1);
+  renderClasses();
+}
+function clearSamples(ci) {
+  if (modelType==='audio' && audioTransferRecognizer) {
+    classes[ci].samples.forEach(s => { if (s && s.uid) { try { audioTransferRecognizer.removeExample(s.uid); } catch(e){} } });
+  }
+  classes[ci].samples=[];
+  renderClasses();
+}
 
 function renderClasses() {
   const list = document.getElementById('classesList');
   if (!classes.length) {
-    list.innerHTML = `<div class="empty"><div class="icon">${modelType==='audio'?'🎤':modelType==='pose'?'🕺':'✋'}</div><p>Elige un dataset de ejemplo o añade clases.</p></div>`;
+    const icons = { audio:'🎤', pose:'🕺', hands:'🤚', image:'✋' };
+    list.innerHTML = `<div class="empty"><div class="icon">${icons[modelType]||'✋'}</div><p>Elige un dataset de ejemplo o añade clases.</p></div>`;
     return;
   }
   list.innerHTML = classes.map((cls,i) => {
@@ -476,17 +495,22 @@ function renderClasses() {
     let capBtns = '';
     if (modelType==='audio') {
       capBtns = `<div class="cap-btns">
-        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="recordAudio(${i})">🎤 Grabar 2s</button>
+        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="recordAudio(${i})">🎤 Grabar</button>
         <button class="cap-btn" onclick="clearSamples(${i})">🗑 Borrar</button>
       </div>`;
     } else if (modelType==='pose') {
       capBtns = `<div class="cap-btns">
-        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},true)">🕺 Capturar</button>
+        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'pose')">🕺 Capturar</button>
+        <button class="cap-btn" onclick="clearSamples(${i})">🗑 Borrar</button>
+      </div>`;
+    } else if (modelType==='hands') {
+      capBtns = `<div class="cap-btns">
+        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'hands')">🤚 Capturar</button>
         <button class="cap-btn" onclick="clearSamples(${i})">🗑 Borrar</button>
       </div>`;
     } else {
       capBtns = `<div class="cap-btns">
-        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},false)">📷 Cámara</button>
+        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'image')">📷 Cámara</button>
         <label class="cap-btn" style="cursor:pointer">🖼 Subir<input type="file" accept="image/*" multiple style="display:none" onchange="uploadImgs(event,${i})"></label>
         <button class="cap-btn" onclick="clearSamples(${i})">🗑</button>
       </div>`;
@@ -515,22 +539,39 @@ function renderThumbs(cls, ci) {
   if (modelType==='pose') {
     return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio" style="font-size:14px">🕺</div><button class="tdel" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
   }
+  if (modelType==='hands') {
+    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio" style="font-size:14px">🤚</div><button class="tdel" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
+  }
   return `<div class="thumbs">${vis.map((src,si) => `<div class="twrap"><img class="thumb" src="${src}" loading="lazy"><button class="tdel" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
 }
 
 // ═══ CAMERA ═══
-async function openCam(ci, isPose) {
+let camType = 'image';       // 'image' | 'pose' | 'hands' — tipus de la sessió de càmera oberta
+let camOverlayLoop = null;   // requestAnimationFrame id del feedback en viu (esquelet/mà)
+let lastHandsResult = null;  // últim resultat de MediaPipe Hands (es completa de forma asíncrona)
+
+async function openCam(ci, type) {
   curClass = ci;
+  camType = type;
   document.getElementById('camModal').classList.add('open');
   document.getElementById('modalCN').textContent = classes[ci].name;
   updateCamCount();
+  const overlay = document.getElementById('camOverlay');
+  overlay.getContext('2d').clearRect(0,0,overlay.width,overlay.height);
   try {
-    capStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: isPose?'user':'environment' } });
-    document.getElementById('cameraVideo').srcObject = capStream;
+    // 'pose' i 'hands' necessiten la càmera frontal (l'usuari es grava a si
+    // mateix); 'image' fa servir per defecte la posterior.
+    capStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: type==='image'?'environment':'user' } });
+    const v = document.getElementById('cameraVideo');
+    v.srcObject = capStream;
+    await new Promise(res => { v.onloadedmetadata = res; });
+    overlay.width = v.videoWidth; overlay.height = v.videoHeight;
+    if (type==='pose' || type==='hands') startCamOverlayLoop(type);
   } catch(e) { toast('Sin acceso a cámara','error'); closeCamera(); }
 }
 function closeCamera() {
   stopCap();
+  stopCamOverlayLoop();
   if (capStream) { capStream.getTracks().forEach(t=>t.stop()); capStream=null; }
   document.getElementById('camModal').classList.remove('open');
   renderClasses();
@@ -540,6 +581,39 @@ function updateCamCount() {
   document.getElementById('modalCT').textContent = c.samples.length + ' muestras';
   document.getElementById('capProg').style.width = Math.min(c.samples.length/50*100,100)+'%';
 }
+
+// ── Feedback en viu durant la captura (esquelet / mà) ──────────────────
+// Dibuixa sobre #camOverlay mentre el modal de càmera està obert, encara
+// que l'usuari no estiga prement el botó de captura, perquè vegi que el
+// model detecta bé la postura/mà abans de capturar mostres.
+function startCamOverlayLoop(type) {
+  stopCamOverlayLoop();
+  const v = document.getElementById('cameraVideo');
+  const overlay = document.getElementById('camOverlay');
+  const octx = overlay.getContext('2d');
+  async function tick() {
+    if (!document.getElementById('camModal').classList.contains('open')) return;
+    try {
+      if (type === 'pose' && v.readyState >= 2) {
+        if (!poseNet) poseNet = await posenet.load({ architecture:'MobileNetV1', outputStride:16, inputResolution:193, multiplier:.75 });
+        const pose = await poseNet.estimateSinglePose(v, { flipHorizontal:false });
+        octx.clearRect(0,0,overlay.width,overlay.height);
+        drawKPs(pose,octx); drawSkel(pose,octx);
+      } else if (type === 'hands' && v.readyState >= 2) {
+        const res = await detectHandsOnce(v);
+        octx.clearRect(0,0,overlay.width,overlay.height);
+        if (res && res.multiHandLandmarks && res.multiHandLandmarks[0]) drawHandSkeleton(res.multiHandLandmarks[0], octx, overlay.width, overlay.height);
+      }
+    } catch(e) { /* frame puntual fallat: s'ignora, es reintenta al següent tick */ }
+    camOverlayLoop = requestAnimationFrame(tick);
+  }
+  camOverlayLoop = requestAnimationFrame(tick);
+}
+function stopCamOverlayLoop() {
+  if (camOverlayLoop) cancelAnimationFrame(camOverlayLoop);
+  camOverlayLoop = null;
+}
+
 function capImageFrame() {
   const v = document.getElementById('cameraVideo');
   if (v.readyState<2) return;
@@ -564,10 +638,22 @@ async function capPoseFrame() {
     updateCamCount();
   } catch(e) {}
 }
+async function capHandsFrame() {
+  const v = document.getElementById('cameraVideo');
+  if (v.readyState<2) return;
+  try {
+    const res = await detectHandsOnce(v);
+    if (!res || !res.multiHandLandmarks || !res.multiHandLandmarks[0]) return; // sense mà detectada, no guardem soroll
+    const lm = res.multiHandLandmarks[0].map(p => [p.x, p.y]);
+    classes[curClass].samples.push(JSON.stringify(lm));
+    updateCamCount();
+  } catch(e) {}
+}
 function startCap(e) {
   e.preventDefault();
   document.getElementById('holdBtn').classList.add('active');
-  if (modelType==='pose') { capPoseFrame(); capInterval=setInterval(capPoseFrame,300); }
+  if (camType==='pose') { capPoseFrame(); capInterval=setInterval(capPoseFrame,300); }
+  else if (camType==='hands') { capHandsFrame(); capInterval=setInterval(capHandsFrame,300); }
   else { capImageFrame(); capInterval=setInterval(capImageFrame,150); }
 }
 function stopCap(e) {
@@ -585,24 +671,36 @@ async function uploadImgs(event, ci) {
   toast(files.length+' imágenes añadidas ✓','success');
 }
 
-// ═══ AUDIO RECORD ═══
+// ═══ AUDIO RECORD (transfer learning en viu, igual que fa Teachable Machine) ═══
+// A diferència de imatge/pose, l'àudio NO es guarda com a blob reproduïble:
+// cada mostra s'envia directament a speech-commands (collectExample), que
+// l'analitza (espectrograma) i la guarda internament associada a l'etiqueta
+// de la classe. classes[i].samples només duu un marcador lleuger perquè la
+// interfície puga comptar mostres.
 async function recordAudio(ci) {
+  const btn = document.querySelector(`[onclick="recordAudio(${ci})"]`);
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
-    const rec = new MediaRecorder(stream);
-    const chunks = [];
-    rec.ondataavailable = e => chunks.push(e.data);
-    rec.onstop = async () => {
-      stream.getTracks().forEach(t=>t.stop());
-      const blob = new Blob(chunks,{type:'audio/webm'});
-      const url = await new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(blob);});
-      classes[ci].samples.push(url);
-      renderClasses();
-      toast('Muestra grabada ✓','success');
-    };
-    rec.start(); toast('🔴 Grabando…');
-    setTimeout(()=>rec.stop(),2000);
-  } catch(e) { toast('Sin acceso al micrófono','error'); }
+    await ensureAudioBase();
+    if (!audioTransferRecognizer) audioTransferRecognizer = audioBaseRecognizer.createTransfer('maquina-ensenyable');
+    const label = classes[ci].name;
+    if (btn) { btn.disabled = true; btn.textContent = '🔴 Grabando…'; }
+    toast('🔴 Grabando 1s…');
+    const uid = await audioTransferRecognizer.collectExample(label);
+    classes[ci].samples.push({ t: Date.now(), uid }); // uid → permet esborrar esta mostra en concret
+    renderClasses();
+    toast('Muestra grabada ✓','success');
+  } catch(e) {
+    toast('Sin acceso al micrófono o error de grabación','error');
+    console.error(e);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🎤 Grabar'; }
+  }
+}
+// Buidar mostres d'àudio reinicia també el reconeixedor intern, perquè mai
+// quede desincronitzat del que mostra la interfície.
+function resetAudioRecognizer() {
+  if (audioTransferRecognizer) { try { audioTransferRecognizer.dispose(); } catch(e){} }
+  audioTransferRecognizer = null;
 }
 
 // ═══ BASE MODEL ═══
@@ -610,6 +708,44 @@ async function loadBase() {
   if (baseModel) return;
   setPill('cargando MobileNet…','');
   baseModel = await mobilenet.load({ version:2, alpha:.5 });
+}
+
+// ═══ MANOS (MediaPipe Hands) ═══
+// MediaPipe Hands notifica els resultats per callback (onResults), no amb
+// una promesa; este embolcall el converteix en awaitable perquè es puga
+// cridar com la resta de deteccions (posenet.estimateSinglePose, etc.).
+function getHandsDetector() {
+  if (handsDetector) return handsDetector;
+  handsDetector = new Hands({ locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+  handsDetector.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+  handsDetector.onResults(res => { if (pendingHandsResolve) { const r = pendingHandsResolve; pendingHandsResolve = null; r(res); } });
+  return handsDetector;
+}
+function detectHandsOnce(videoEl) {
+  return new Promise(resolve => {
+    pendingHandsResolve = resolve;
+    getHandsDetector().send({ image: videoEl }).catch(() => { pendingHandsResolve = null; resolve(null); });
+  });
+}
+// Connexions entre punts de la mà (21 landmarks de MediaPipe Hands)
+const HAND_CONNECTIONS = [
+  [0,1],[1,2],[2,3],[3,4],           // polze
+  [0,5],[5,6],[6,7],[7,8],           // índex
+  [5,9],[9,10],[10,11],[11,12],      // mitjà
+  [9,13],[13,14],[14,15],[15,16],    // anular
+  [13,17],[17,18],[18,19],[19,20],   // petit
+  [0,17],
+];
+function drawHandSkeleton(landmarks, ctx, w, h) {
+  ctx.strokeStyle = 'rgba(16,185,129,.8)'; ctx.lineWidth = 2;
+  HAND_CONNECTIONS.forEach(([a,b]) => {
+    ctx.beginPath();
+    ctx.moveTo(landmarks[a].x*w, landmarks[a].y*h);
+    ctx.lineTo(landmarks[b].x*w, landmarks[b].y*h);
+    ctx.stroke();
+  });
+  ctx.fillStyle = '#10b981';
+  landmarks.forEach(p => { ctx.beginPath(); ctx.arc(p.x*w, p.y*h, 4, 0, 2*Math.PI); ctx.fill(); });
 }
 function getEmb(imgSrc) {
   return new Promise(resolve => {
@@ -629,7 +765,8 @@ function getEmb(imgSrc) {
 async function trainModel() {
   if (modelType==='image') await trainImage();
   else if (modelType==='pose') await trainPose();
-  else if (modelType==='audio') { toast('Entrena grabando muestras de audio. Próximamente clasificación automática.',''); }
+  else if (modelType==='hands') await trainHands();
+  else if (modelType==='audio') await trainAudio();
 }
 
 async function trainImage() {
@@ -643,7 +780,7 @@ async function trainImage() {
     for (let i=0;i<valid.length;i++) for (const s of valid[i].samples) { xs_l.push(await getEmb(s)); ys_l.push(i); }
     const xs=tf.concat(xs_l); xs_l.forEach(t=>t.dispose());
     const ys=tf.oneHot(tf.tensor1d(ys_l,'int32'),valid.length);
-    if (model) { model.dispose(); model=null; }
+    if (model && model.dispose) { model.dispose(); } model=null;
     model=buildHead(xs.shape[1],valid.length);
     await fitModel(model,xs,ys,valid);
     xs.dispose(); ys.dispose();
@@ -660,12 +797,68 @@ async function trainPose() {
     for (let i=0;i<valid.length;i++) for (const s of valid[i].samples) { xs_l.push(JSON.parse(s).flat()); ys_l.push(i); }
     const xs=tf.tensor2d(xs_l);
     const ys=tf.oneHot(tf.tensor1d(ys_l,'int32'),valid.length);
-    if (model) { model.dispose(); model=null; }
+    if (model && model.dispose) { model.dispose(); } model=null;
     model=buildHead(xs.shape[1],valid.length);
     await fitModel(model,xs,ys,valid);
     xs.dispose(); ys.dispose();
     finishTrain(valid,'pose');
   } catch(e) { toast('Error: '+e.message,'error'); endTrainUI(); }
+}
+
+async function trainHands() {
+  const valid = classes.filter(c=>c.samples.length>=3);
+  if (valid.length<2) { toast('Al menos 2 clases con 3+ muestras de mano','error'); return; }
+  startTrainUI();
+  try {
+    const xs_l=[], ys_l=[];
+    for (let i=0;i<valid.length;i++) for (const s of valid[i].samples) { xs_l.push(JSON.parse(s).flat()); ys_l.push(i); }
+    const xs=tf.tensor2d(xs_l);
+    const ys=tf.oneHot(tf.tensor1d(ys_l,'int32'),valid.length);
+    if (model && model.dispose) { model.dispose(); } model=null;
+    model=buildHead(xs.shape[1],valid.length);
+    await fitModel(model,xs,ys,valid);
+    xs.dispose(); ys.dispose();
+    finishTrain(valid,'hands');
+  } catch(e) { toast('Error: '+e.message,'error'); endTrainUI(); }
+}
+
+// ═══ AUDIO (transfer learning amb speech-commands) ═══
+async function ensureAudioBase() {
+  if (audioBaseRecognizer) return audioBaseRecognizer;
+  setPill('cargando modelo de audio base…','');
+  audioBaseRecognizer = speechCommands.create('BROWSER_FFT');
+  await audioBaseRecognizer.ensureModelLoaded();
+  return audioBaseRecognizer;
+}
+async function trainAudio() {
+  const valid = classes.filter(c => c.samples.length >= 8);
+  if (valid.length < 2) { toast('Cada clase de audio necesita 8+ muestras (incluye una clase "Fondo")','error'); return; }
+  if (!audioTransferRecognizer) { toast('Grava mostres d\'àudio primer','error'); return; }
+  startTrainUI();
+  try {
+    document.getElementById('trainBtn').textContent = '🧠 Entrenando…';
+    const epochs = parseInt(document.getElementById('epochs').value);
+    lossH=[]; accH=[]; valAccH=[];
+    await audioTransferRecognizer.train({
+      epochs,
+      validationSplit: .15,
+      callback: {
+        onEpochEnd: (ep, logs) => {
+          const pct = ((ep+1)/epochs*100).toFixed(0);
+          document.getElementById('epFill').style.width = pct+'%';
+          document.getElementById('epText').textContent = `Época ${ep+1} / ${epochs}`;
+          document.getElementById('lossText').textContent = `loss ${logs.loss.toFixed(3)}`;
+          document.getElementById('mLoss').textContent = logs.loss.toFixed(3);
+          document.getElementById('mAcc').textContent = ((logs.acc||logs.accuracy||0)*100).toFixed(0)+'%';
+          document.getElementById('mValAcc').textContent = ((logs.val_acc||logs.val_accuracy||0)*100).toFixed(0)+'%';
+          lossH.push(logs.loss); accH.push(logs.acc||logs.accuracy||0); valAccH.push(logs.val_acc||logs.val_accuracy||0);
+          drawChart();
+        }
+      }
+    });
+    model = { _isAudio:true, _classNames: valid.map(c=>c.name), _classColors: valid.map((_,i)=>CC[i%CC.length]), _modelType:'audio' };
+    finishTrain(valid, 'audio');
+  } catch(e) { toast('Error: '+e.message,'error'); endTrainUI(); console.error(e); }
 }
 
 function buildHead(inputShape, nCls) {
@@ -715,8 +908,10 @@ function finishTrain(valid, type) {
   setPill('listo ✓','ready');
   document.getElementById('noModelMsg').style.display='none';
   document.getElementById('ts-'+type).style.display='block';
-  setupPredRows('predCon', model._classNames, model._classColors);
-  if (type==='pose') setupPredRows('predCon-pose', model._classNames, model._classColors);
+  if (type==='image') setupPredRows('predCon', model._classNames, model._classColors);
+  else if (type==='pose') setupPredRows('predCon-pose', model._classNames, model._classColors);
+  else if (type==='hands') setupPredRows('predCon-hands', model._classNames, model._classColors);
+  else if (type==='audio') setupPredRows('predCon-audio', model._classNames, model._classColors);
   toast('¡Modelo entrenado! 🎉','success');
   endTrainUI();
 }
@@ -809,7 +1004,7 @@ function setupPredRows(conId, names, colors) {
 // ═══ TEST — AUDIO ═══
 async function toggleAudioTest() { isTestingAudio?stopAudioTest():await startAudioTest(); }
 async function startAudioTest() {
-  if (!model) { toast('Entrena primero','error'); return; }
+  if (!model || !audioTransferRecognizer) { toast('Entrena primero','error'); return; }
   try {
     if (!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
     audioMicStream=await navigator.mediaDevices.getUserMedia({audio:true});
@@ -822,11 +1017,25 @@ async function startAudioTest() {
     document.getElementById('topCard-audio').style.display='flex';
     setupPredRows('predCon-audio',model._classNames,model._classColors);
     initAudioViz(); startAudioViz();
+    // Classificació real en viu amb el model entrenat
+    await audioTransferRecognizer.listen(result => {
+      const names = model._classNames;
+      const scores = Array.from(result.scores);
+      let mx=0; scores.forEach((v,i)=>{if(v>scores[mx])mx=i;});
+      scores.forEach((v,i)=>{
+        const b=document.getElementById(`b-predCon-audio-${i}`), p=document.getElementById(`p-predCon-audio-${i}`);
+        if(b){b.style.width=(v*100).toFixed(1)+'%'; b.style.opacity=i===mx?'1':'.5';}
+        if(p)p.textContent=(v*100).toFixed(1)+'%';
+      });
+      document.getElementById('topName-audio').textContent = names[mx];
+      document.getElementById('topConf-audio').textContent = (scores[mx]*100).toFixed(1)+'% confianza';
+    }, { includeSpectrogram:false, probabilityThreshold:0.6, invokeCallbackOnNoiseAndUnknown:true, overlapFactor:0.50 });
     toast('🎤 Escuchando…');
-  } catch(e) { toast('Sin acceso al micrófono','error'); }
+  } catch(e) { toast('Sin acceso al micrófono','error'); console.error(e); }
 }
 function stopAudioTest() {
   clearInterval(audioVizInt);
+  if (audioTransferRecognizer && audioTransferRecognizer.isListening && audioTransferRecognizer.isListening()) audioTransferRecognizer.stopListening();
   if (audioMicStream) { audioMicStream.getTracks().forEach(t=>t.stop()); audioMicStream=null; }
   isTestingAudio=false;
   document.getElementById('testBtnAudio').textContent='🎤 Activar micrófono';
@@ -894,22 +1103,92 @@ function drawKPs(pose,ctx){pose.keypoints.forEach(k=>{if(k.score>.3){ctx.beginPa
 function drawSkel(pose,ctx){const adj=[[5,6],[5,7],[7,9],[6,8],[8,10],[5,11],[6,12],[11,12],[11,13],[13,15],[12,14],[14,16]],kps=pose.keypoints;ctx.strokeStyle='rgba(124,58,237,.6)';ctx.lineWidth=2;adj.forEach(([a,b])=>{if(kps[a].score>.3&&kps[b].score>.3){ctx.beginPath();ctx.moveTo(kps[a].position.x,kps[a].position.y);ctx.lineTo(kps[b].position.x,kps[b].position.y);ctx.stroke();}});}
 function stopPoseTest(){clearInterval(poseInterval);if(poseStream){poseStream.getTracks().forEach(t=>t.stop());poseStream=null;}isTestingPose=false;document.getElementById('testBtnPose').textContent='🕺 Activar cámara';document.getElementById('testBtnPose').className='btn btn-p btn-w';}
 
+// ═══ TEST — MANOS ═══
+let handsStream = null, isTestingHands = false, handsTestLoop = null;
+async function toggleHandsTest() { isTestingHands?stopHandsTest():await startHandsTest(); }
+async function startHandsTest() {
+  if (!model) { toast('Entrena primero','error'); return; }
+  try {
+    handsStream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
+    const canvas = document.getElementById('handsCanvas');
+    const video = document.createElement('video');
+    video.srcObject = handsStream; video.autoplay = true; video.muted = true; video.playsInline = true;
+    await new Promise(res => video.onloadedmetadata = res);
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+    isTestingHands = true;
+    document.getElementById('testBtnHands').textContent = '⏹ Detener';
+    document.getElementById('testBtnHands').className = 'btn btn-d btn-w';
+    document.getElementById('topCard-hands').style.display = 'flex';
+    setupPredRows('predCon-hands', model._classNames, model._classColors);
+    const loop = async () => {
+      if (!isTestingHands) return;
+      await runHandsPred(video, canvas);
+      handsTestLoop = setTimeout(loop, 200);
+    };
+    loop();
+  } catch(e) { toast('Sin acceso a cámara','error'); }
+}
+async function runHandsPred(video, canvas) {
+  if (!model || video.readyState<2) return;
+  try {
+    const res = await detectHandsOnce(video);
+    const ctx = canvas.getContext('2d');
+    ctx.save(); ctx.translate(canvas.width,0); ctx.scale(-1,1);
+    ctx.drawImage(video,0,0,canvas.width,canvas.height); ctx.restore();
+    if (!res || !res.multiHandLandmarks || !res.multiHandLandmarks[0]) return;
+    const lm = res.multiHandLandmarks[0];
+    // Les coordenades es mostren mirallades (com la webcam), igual que el dibuix
+    ctx.save(); ctx.translate(canvas.width,0); ctx.scale(-1,1);
+    drawHandSkeleton(lm, ctx, canvas.width, canvas.height);
+    ctx.restore();
+    const kp = lm.map(p => [p.x, p.y]);
+    const inp = tf.tensor2d([kp.flat()]);
+    const pred = model.predict(inp); const data = await pred.data();
+    inp.dispose(); pred.dispose();
+    let mx=0; data.forEach((v,i)=>{if(v>data[mx])mx=i;});
+    data.forEach((v,i)=>{
+      const b=document.getElementById(`b-predCon-hands-${i}`), p=document.getElementById(`p-predCon-hands-${i}`);
+      if(b){b.style.width=(v*100).toFixed(1)+'%'; b.style.opacity=i===mx?'1':'.5';}
+      if(p)p.textContent=(v*100).toFixed(1)+'%';
+    });
+    document.getElementById('topName-hands').textContent = model._classNames[mx];
+    document.getElementById('topConf-hands').textContent = (data[mx]*100).toFixed(1)+'% confianza';
+  } catch(e) {}
+}
+function stopHandsTest(){
+  isTestingHands=false;
+  if (handsTestLoop) clearTimeout(handsTestLoop);
+  if (handsStream) { handsStream.getTracks().forEach(t=>t.stop()); handsStream=null; }
+  document.getElementById('testBtnHands').textContent='🤚 Activar cámara';
+  document.getElementById('testBtnHands').className='btn btn-p btn-w';
+}
+
 // ═══ EXPORT ═══
 function updateExportTab() {
   const has=!!model;
   document.getElementById('noModelExport').style.display=has?'none':'block';
   document.getElementById('exportSec').style.display=has?'block':'none';
 }
+// L'àudio guarda els pesos entrenats dins de audioTransferRecognizer.model
+// (un tf.LayersModel normal), no dins de la variable "model" (que per a
+// l'àudio només duu metadades: noms de classe, etc.). Esta funció unifica
+// els dos casos per a exportar/guardar.
+function getExportableModel() {
+  if (modelType === 'audio') return audioTransferRecognizer && audioTransferRecognizer.model;
+  return model;
+}
 async function exportTFJS() {
-  if (!model) return;
+  const m = getExportableModel();
+  if (!m) return;
   const name=document.getElementById('projectName').value||'mi-modelo';
-  await model.save('downloads://'+name+'-tfjs');
+  await m.save('downloads://'+name+'-tfjs');
   toast('Descargando model.json + weights ✓','success');
 }
 async function exportKeras() {
-  if (!model) return;
+  const m = getExportableModel();
+  if (!m) return;
   let topology,weightSpecs,weightData;
-  await model.save(tf.io.withSaveHandler(async a=>{
+  await m.save(tf.io.withSaveHandler(async a=>{
     topology=a.modelTopology; weightSpecs=a.weightSpecs;
     const bytes=new Uint8Array(a.weightData); let bin='';
     bytes.forEach(b=>bin+=String.fromCharCode(b)); weightData=btoa(bin); return {};
@@ -931,9 +1210,10 @@ function updateSaveTab() {
 }
 async function buildJSON() {
   let modelData=null;
-  if (model) {
+  const m = getExportableModel();
+  if (model && m) {
     let topology,weightSpecs,weightData;
-    await model.save(tf.io.withSaveHandler(async a=>{
+    await m.save(tf.io.withSaveHandler(async a=>{
       topology=a.modelTopology; weightSpecs=a.weightSpecs;
       const bytes=new Uint8Array(a.weightData); let bin='';
       bytes.forEach(b=>bin+=String.fromCharCode(b)); weightData=btoa(bin); return {};
@@ -982,51 +1262,40 @@ async function loadProject(p) {
     if (modelType==='image') await loadBase();
     const bin=atob(md.weightData), bytes=new Uint8Array(bin.length);
     for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
-    if (model){model.dispose();model=null;}
-    model=await tf.loadLayersModel(tf.io.fromMemory(md.topology,md.weightSpecs,bytes.buffer));
-    model._classNames=md.classNames; model._classColors=md.classColors; model._modelType=md.modelType||modelType;
+    const loaded = await tf.loadLayersModel(tf.io.fromMemory(md.topology,md.weightSpecs,bytes.buffer));
+
+    if (modelType==='audio') {
+      // Reconstruïm un reconeixedor de transferència i hi encastem els pesos
+      // carregats. L'API interna de speech-commands per a açò no està
+      // documentada públicament; si "listen()" no reconeix bé després de
+      // carregar, la solució fiable és tornar a grabar i entrenar.
+      await ensureAudioBase();
+      resetAudioRecognizer();
+      audioTransferRecognizer = audioBaseRecognizer.createTransfer('loaded-' + Date.now());
+      try { audioTransferRecognizer.model = loaded; audioTransferRecognizer.words = md.classNames; }
+      catch(e) { console.warn('No s\'ha pogut reencastar el model d\'àudio carregat', e); }
+      model = { _isAudio:true, _classNames:md.classNames, _classColors:md.classColors, _modelType:'audio' };
+    } else {
+      if (model && model.dispose) { model.dispose(); } model=null;
+      model = loaded;
+      model._classNames=md.classNames; model._classColors=md.classColors; model._modelType=md.modelType||modelType;
+    }
+
     setPill('listo ✓','ready');
     document.getElementById('noModelMsg').style.display='none';
     const sec=document.getElementById('ts-'+modelType); if(sec) sec.style.display='block';
-    setupPredRows('predCon',model._classNames,model._classColors);
-    if(modelType==='pose') setupPredRows('predCon-pose',model._classNames,model._classColors);
+    if (modelType==='image') setupPredRows('predCon',model._classNames,model._classColors);
+    else if (modelType==='pose') setupPredRows('predCon-pose',model._classNames,model._classColors);
+    else if (modelType==='hands') setupPredRows('predCon-hands',model._classNames,model._classColors);
+    else if (modelType==='audio') setupPredRows('predCon-audio',model._classNames,model._classColors);
   }
   if(p.name) document.getElementById('projectName').value=p.name;
   updateSaveTab();
 }
 
-// ═══ GOOGLE DRIVE ═══
-const GDRIVE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
-const GDRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
-const GDRIVE_FOLDER = 'Màquina Ensenyable';
-
-function gdriveSignIn() {
-  if (GDRIVE_CLIENT_ID.includes('YOUR_GOOGLE')) { toast('Configura el CLIENT_ID de Google Cloud','error'); return; }
-  google.accounts.oauth2.initTokenClient({ client_id:GDRIVE_CLIENT_ID, scope:GDRIVE_SCOPE,
-    callback:async res=>{
-      if(res.error){toast('Error auth','error');return;}
-      gdriveToken=res.access_token;
-      const u=await(await fetch('https://www.googleapis.com/oauth2/v2/userinfo',{headers:{Authorization:'Bearer '+gdriveToken}})).json();
-      document.getElementById('driveName').textContent=u.name||'';
-      document.getElementById('driveEmail').textContent=u.email||'';
-      if(u.picture){const av=document.getElementById('driveAv');av.src=u.picture;av.style.display='block';}
-      document.getElementById('driveOut').style.display='none';
-      document.getElementById('driveIn').style.display='block';
-      toast('Conectado ✓','success'); listDriveFiles();
-    }
-  }).requestAccessToken();
-}
-function gdriveSignOut(){try{google.accounts.oauth2.revoke(gdriveToken,()=>{});}catch(e){}gdriveToken=null;document.getElementById('driveOut').style.display='block';document.getElementById('driveIn').style.display='none';document.getElementById('driveFiles').innerHTML='';}
-async function getOrCreateFolder(){const r=await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(GDRIVE_FOLDER)}' and mimeType='application/vnd.google-apps.folder' and trashed=false&fields=files(id)`,{headers:{Authorization:'Bearer '+gdriveToken}});const d=await r.json();if(d.files&&d.files.length)return d.files[0].id;const cr=await fetch('https://www.googleapis.com/drive/v3/files',{method:'POST',headers:{Authorization:'Bearer '+gdriveToken,'Content-Type':'application/json'},body:JSON.stringify({name:GDRIVE_FOLDER,mimeType:'application/vnd.google-apps.folder'})});return(await cr.json()).id;}
-async function gdriveSave(){if(!gdriveToken){toast('Inicia sesión','error');return;}const p=await buildJSON(),name=p.name+'.mia.json',content=JSON.stringify(p);try{const fid=await getOrCreateFolder();const ex=await(await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(name)}' and '${fid}' in parents and trashed=false&fields=files(id)`,{headers:{Authorization:'Bearer '+gdriveToken}})).json();const has=ex.files&&ex.files.length;const url=has?`https://www.googleapis.com/upload/drive/v3/files/${ex.files[0].id}?uploadType=multipart`:'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';const method=has?'PATCH':'POST';const meta={name,mimeType:'application/json',...(!has&&{parents:[fid]})};const form=new FormData();form.append('metadata',new Blob([JSON.stringify(meta)],{type:'application/json'}));form.append('file',new Blob([content],{type:'application/json'}));const r=await fetch(url,{method,headers:{Authorization:'Bearer '+gdriveToken},body:form});if(!r.ok)throw new Error(await r.text());toast('Guardado en Drive ✓','success');listDriveFiles();}catch(e){toast('Error al guardar','error');console.error(e);}}
-async function listDriveFiles(){if(!gdriveToken)return;try{const fid=await getOrCreateFolder();const res=await fetch(`https://www.googleapis.com/drive/v3/files?q='${fid}' in parents and trashed=false and name contains '.mia.json'&fields=files(id,name,modifiedTime)&orderBy=modifiedTime desc`,{headers:{Authorization:'Bearer '+gdriveToken}});const{files=[]}=await res.json();const c=document.getElementById('driveFiles');if(!files.length){c.innerHTML=`<div style="font-size:11px;color:var(--text2);text-align:center;padding:10px">Sin proyectos guardados</div>`;return;}c.innerHTML=files.map(f=>`<div style="display:flex;align-items:center;gap:7px;padding:7px 9px;background:var(--surface2);border-radius:9px;border:1px solid var(--border);margin-bottom:5px"><div style="flex:1;overflow:hidden"><div style="font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name.replace('.mia.json','')}</div><div style="font-size:9px;color:var(--text2)">${new Date(f.modifiedTime).toLocaleDateString('es-ES')}</div></div><button onclick="gdriveLoad('${f.id}')" style="background:var(--accent);color:#fff;border:none;padding:4px 9px;border-radius:6px;font-size:10px;cursor:pointer">Cargar</button><button onclick="gdriveDel('${f.id}')" style="background:none;border:1px solid var(--border);color:var(--text2);padding:4px 7px;border-radius:6px;font-size:10px;cursor:pointer">🗑</button></div>`).join('');}catch(e){console.error(e);}}
-async function gdriveLoad(id){try{const r=await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`,{headers:{Authorization:'Bearer '+gdriveToken}});await loadProject(await r.json());toast('Cargado ✓','success');}catch(e){toast('Error al cargar','error');}}
-async function gdriveDel(id){try{await fetch(`https://www.googleapis.com/drive/v3/files/${id}`,{method:'DELETE',headers:{Authorization:'Bearer '+gdriveToken}});toast('Eliminado','');listDriveFiles();}catch(e){toast('Error','error');}}
-
 // ═══ INIT ═══
 renderExamples(); renderClasses(); addClass(); addClass();
 setTimeout(()=>loadBase().catch(()=>{}),1200);
 </script>
-<script src="fixes.js"></script>
 </body>
 </html>
