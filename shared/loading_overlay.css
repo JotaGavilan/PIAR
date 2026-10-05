@@ -142,3 +142,17 @@
   0%   { transform: translateX(-150%); }
   100% { transform: translateX(350%); }
 }
+
+/* ── Nota sobre Internet / ús sense connexió ───────────────── */
+.loading-note {
+  display:       none;
+  margin-top:    1.4rem;
+  padding:       0.7rem 0.8rem;
+  border-radius: 10px;
+  background:    rgba(108, 99, 255, 0.12);
+  border:        1px solid rgba(168, 156, 255, 0.25);
+  font-family:   'Poppins', sans-serif;
+  font-size:     0.74em;
+  line-height:   1.55;
+  color:         #c9c2f2;
+}

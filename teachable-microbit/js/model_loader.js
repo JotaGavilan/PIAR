@@ -1,6 +1,6 @@
 // ============================================================
 //  model_loader.js – Carregador de models Teachable Machine
-//  Suporta: Image, Audio, Pose
+//  Admet: imatge, àudio i postura
 // ============================================================
 
 let model = null;
@@ -28,7 +28,9 @@ async function loadModel(url, type) {
     const typeLabels = { image: '🖼️ Imatge', audio: '🎤 Àudio', pose: '🧍 Postura' };
     showLoadingOverlay(
       `Carregant model de ${typeLabels[type]}...`,
-      'Descarregant des de Teachable Machine. Això pot trigar uns segons.'
+      'Descarregant des de Teachable Machine. Açò pot tardar uns segons.',
+      undefined,
+      NET_NOTE_LOADING
     );
 
     if (type === 'image') {

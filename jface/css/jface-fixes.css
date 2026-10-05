@@ -99,3 +99,13 @@ body {
 #canvas {
   z-index: 2;
 }
+
+/* ── Pantalles estretes (320–360 px): el títol i el panell de dades s'adapten ── */
+header { padding: 0 10px; }
+header h1 { min-width: 0; font-size: clamp(0.8rem, 4.3vw, 1rem); line-height: 1.15; }
+#data-panel { box-sizing: border-box; max-width: 100vw; padding-left: 6px; padding-right: 6px; font-size: clamp(0.72rem, 3.6vw, 0.9rem); }
+
+/* El nom de la micro:bit connectada va en una línia pròpia, perquè les
+   dades (Gir | Boca | Ull E | Ull D) no es parteixen en pantalles estretes */
+#data-panel { flex-wrap: wrap; }
+#data-panel #device-indicator { flex-basis: 100%; margin: 0 0 2px 0 !important; text-align: center; }

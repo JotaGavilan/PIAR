@@ -7,9 +7,9 @@
 //    · precise   → mobilenet_v2,      llindar 0.20 (precís)
 //    · distance  → mobilenet_v2,      llindar 0.12 + tile (distància)
 //
-//  El mode "distance" divideix el frame en 4 quadrants i
+//  El mode "distance" divideix el fotograma en 4 quadrants i
 //  fa la detecció sobre cadascun ampliat, permetent detectar
-//  objectes llunyans que ocupen pocs píxels en el frame complet.
+//  objectes llunyans que ocupen pocs píxels en el fotograma complet.
 // ============================================================
 
 const CATEGORIES = ['cat', 'bird', 'person'];
@@ -25,7 +25,7 @@ const MODELS = {
     type:            'cocossd',
     base:            'lite_mobilenet_v2',
     label:           '⚡ Ràpid',
-    description:     'Funciona bé fins a ~1,5m. Ideal per a mòbils antics o amb poca bateria.',
+    description:     'Funciona bé fins a ~1,5 m. Ideal per a mòbils antics o amb poca bateria.',
     score_threshold: 0.25,
     tiled:           false,
   },
@@ -41,7 +41,7 @@ const MODELS = {
     type:            'cocossd',
     base:            'mobilenet_v2',
     label:           '🚀 Llarga distància',
-    description:     'Detecta fins a ~3-4m dividint la imatge en zones. Més lent.',
+    description:     'Detecta fins a ~3-4 m dividint la imatge en zones. Més lent.',
     score_threshold: 0.15,
     tiled:           true,
   },
@@ -63,25 +63,34 @@ const tileCtx    = tileCanvas.getContext('2d', { willReadFrequently: true });
 
 // ─────────────────────────────────────────────────────────────
 async function initModel(modelKey) {
+  // Si el canvi de model falla (p. ex. no hi ha Internet), tornem al model
+  // anterior en lloc de deixar l'app sense cap model carregat.
+  const prevKey   = currentModelKey;
+  const prevModel = model;
   if (modelKey) currentModelKey = modelKey;
   const cfg = MODELS[currentModelKey];
   stopDetection();
-  model = null;
-  
+
   // Mostrar capa de càrrega
-  showLoadingOverlay(`Carregant model ${cfg.label}...`, cfg.description, '🔍');
-  
+  showLoadingOverlay(`Carregant model ${cfg.label}...`, cfg.description, '🔍',
+    prevModel ? NET_NOTE_CHANGE_MODEL + ' ' + NET_NOTE_LOADING : NET_NOTE_LOADING);
+
   try {
-    model = await cocoSsd.load({ base: cfg.base });
+    const loaded = await cocoSsd.load({ base: cfg.base });
+    model = loaded;
     // Petit retard per assegurar que l'usuari veu el missatge
     setTimeout(() => {
       hideLoadingOverlay();
       if (onModelReadyCallback) onModelReadyCallback();
     }, 500);
+    return true;
   } catch (e) {
     console.error('❌ Error carregant el model:', e);
+    currentModelKey = prevKey;
+    model = prevModel;
     hideLoadingOverlay();
-    if (onModelErrorCallback) onModelErrorCallback(e);
+    if (onModelErrorCallback) onModelErrorCallback(e, !!prevModel);
+    return false;
   }
 }
 

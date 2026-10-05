@@ -1,5 +1,5 @@
 
-// Detección facial con MediaPipe + Canvas
+// Detecció facial amb MediaPipe + Canvas
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
@@ -9,10 +9,18 @@ const mouthEl = document.getElementById('mouth');
 const eyeLEl = document.getElementById('eyeL');
 const eyeREl = document.getElementById('eyeR');
 
-let ultimoEnvio = 0;
-let ultimoYaw = null;
-let ultimoMouth = null;
-let ultimoEyes = "";
+let darrerEnviament = 0;
+let caraPerduda = false;   // true quan ja s'ha enviat el '0' de "cara perduda"
+let darrerGir = null;
+let darreraBoca = null;
+let darrersUlls = "";
+
+// Si no hi havia Internet en obrir la pàgina, les llibreries de jsDelivr no
+// s'han descarregat: ho diem clarament en lloc de quedar-nos en blanc.
+if (missingLibs(['FaceMesh', 'Camera']).length) {
+  setStatusText(NET_LIBS_MISSING_TEXT);
+  throw new Error('Llibreries d\'IA no disponibles (sense Internet?)');
+}
 
 const faceMesh = new FaceMesh({ locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}` });
 faceMesh.setOptions({
@@ -29,7 +37,17 @@ faceMesh.onResults(results => {
   ctx.translate(-canvas.width, 0);
   ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
 
+  if (results.multiFaceLandmarks.length === 0) {
+    // La cara ha desaparegut: s'envia '0' una sola vegada (com diu l'ajuda)
+    if (!caraPerduda && darrerGir !== null) {
+      sendUARTData('0');
+      caraPerduda = true;
+      darrerGir = null; darreraBoca = null; darrersUlls = "";
+    }
+  }
+
   if (results.multiFaceLandmarks.length > 0) {
+    caraPerduda = false;
     const lm = results.multiFaceLandmarks[0];
     drawConnectors(ctx, lm, FACEMESH_TESSELATION, { color: '#00FF00', lineWidth: 0.5 });
 
@@ -37,30 +55,30 @@ faceMesh.onResults(results => {
     const mouth = Math.max(0, Math.min(99, Math.round(Math.hypot(lm[13].x - lm[14].x, lm[13].y - lm[14].y) * 100)));
     const eyeL = getEyeOpen(lm, true);
     const eyeR = getEyeOpen(lm, false);
-    const ojos = `${eyeL}${eyeR}`;
+    const ulls = `${eyeL}${eyeR}`;
 
     yawEl.textContent = yaw;
     mouthEl.textContent = mouth;
     eyeLEl.textContent = eyeL;
     eyeREl.textContent = eyeR;
 
-    const ahora = Date.now();
-    const cambioYaw = (ultimoYaw === null || Math.abs(yaw - ultimoYaw) > 4);
-    const cambioMouth = (ultimoMouth === null || Math.abs(mouth - ultimoMouth) > 2);
-    const cambioOjos = ojos !== ultimoEyes;
+    const ara = Date.now();
+    const canviGir = (darrerGir === null || Math.abs(yaw - darrerGir) > 4);
+    const canviBoca = (darreraBoca === null || Math.abs(mouth - darreraBoca) > 2);
+    const canviUlls = ulls !== darrersUlls;
 
-    // Interval mínim entre enviaments, controlat pel slider de Configuració
-    // (window.sendIntervalMs, definit en script.js). 100ms de fallback si
-    // encara no s'ha inicialitzat.
+    // Interval mínim entre enviaments, controlat pel control lliscant de
+    // Configuració (window.sendIntervalMs, definit en script.js). 100 ms per
+    // defecte si encara no s'ha inicialitzat.
     const intervalMinim = window.sendIntervalMs || 100;
 
-    if ((cambioYaw || cambioMouth || cambioOjos) && ahora - ultimoEnvio > intervalMinim) {
-      const mensaje = yaw.toString().padStart(2, '0') + mouth.toString().padStart(2, '0') + ojos;
-      sendUARTData(mensaje);
-      ultimoYaw = yaw;
-      ultimoMouth = mouth;
-      ultimoEyes = ojos;
-      ultimoEnvio = ahora;
+    if ((canviGir || canviBoca || canviUlls) && ara - darrerEnviament > intervalMinim) {
+      const missatge = yaw.toString().padStart(2, '0') + mouth.toString().padStart(2, '0') + ulls;
+      sendUARTData(missatge);
+      darrerGir = yaw;
+      darreraBoca = mouth;
+      darrersUlls = ulls;
+      darrerEnviament = ara;
     }
   }
 
@@ -69,20 +87,34 @@ faceMesh.onResults(results => {
 
 async function startVideo() {
   try {
-    // Mostrar capa de càrrega
-    showLoadingOverlay('Carregant càmera i IA facial...', 'Inicialitzant MediaPipe Face Mesh', '📷');
+    // Mostrar la capa de càrrega
+    showLoadingOverlay('Carregant càmera i IA facial...', 'Descarregant MediaPipe Face Mesh', '📷', NET_NOTE_LOADING);
     
     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
     video.srcObject = stream;
     await new Promise(r => video.onloadedmetadata = r);
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+    // Descarrega el model ara (i no al primer fotograma) per a poder avisar
+    // amb claredat si falla la descàrrega.
+    if (typeof faceMesh.initialize === 'function') {
+      let slow = setTimeout(() => updateLoadingMessage('Encara descarregant…', 'Si tarda massa, comprova que tens connexió a Internet.'), 20000);
+      try { await faceMesh.initialize(); }
+      catch (err) {
+        clearTimeout(slow);
+        console.error('❌ Error descarregant Face Mesh:', err);
+        hideLoadingOverlay();
+        setStatusText(netErrorText('el model de detecció facial') + ' Recarrega la pàgina.');
+        return;
+      }
+      clearTimeout(slow);
+    }
     const cam = new Camera(video, {
       onFrame: async () => {
         try {
           await faceMesh.send({ image: video });
         } catch (e) {
-          console.error("❌ Error en procesamiento de frame:", e);
+          console.error("❌ Error en el processament del fotograma:", e);
         }
       },
       width: video.videoWidth,
@@ -90,14 +122,18 @@ async function startVideo() {
     });
     cam.start();
     
-    // Amagar capa de càrrega quan tot estigui llest
+    // Amagar la capa de càrrega quan tot estiga llest
     setTimeout(() => {
       hideLoadingOverlay();
-      statusEl.textContent = '✅ Càmera llesta';
-    }, 1000); // Petit retard per assegurar que tot està carregat
+      setStatusText('✅ Càmera llesta · Ja no cal Internet');
+    }, 1000); // Xicotet retard per a assegurar que tot està carregat
   } catch (e) {
-    console.error("❌ Error al iniciar la cámara:", e);
+    console.error("❌ Error en iniciar la càmera:", e);
     hideLoadingOverlay();
+    const msg = (e && e.name === 'NotAllowedError')
+      ? '❌ Has denegat l\'accés a la càmera. Permet-lo en el navegador i recarrega la pàgina.'
+      : '❌ No s\'ha pogut accedir a la càmera.';
+    setStatusText(msg);
   }
 }
 

@@ -1,6 +1,6 @@
 // ============================================================
 //  script.js  –  Coordinador principal de RobHort – El guardià del teu bancal
-//  Gestiona: càmera, canvas, configuració, envios UART
+//  Gestiona: càmera, canvas, configuració, enviaments UART
 // ============================================================
 
 // ── Elements del DOM ─────────────────────────────────────────
@@ -8,6 +8,7 @@ const video          = document.getElementById('video');
 const canvas         = document.getElementById('canvas');
 const ctx            = canvas.getContext('2d');
 const statusEl       = document.getElementById('status');
+const statusTextEl   = document.getElementById('status-text');   // només el text (no esborra #device-indicator)
 const detectionPanel = document.getElementById('detection-panel');
 const connectBtn     = document.getElementById('connectBtn');
 const infoBtn        = document.getElementById('infoBtn');
@@ -39,14 +40,16 @@ async function startVideo() {
     await new Promise(r => video.onloadedmetadata = r);
     canvas.width  = video.videoWidth;
     canvas.height = video.videoHeight;
-    statusEl.textContent = '📷 Càmera activa. Carregant model IA...';
+    statusTextEl.textContent = '📷 Càmera activa. Carregant model IA...';
   } catch (e) {
     console.error('❌ Error càmera:', e);
-    statusEl.textContent = '❌ No s\'ha pogut accedir a la càmera';
+    statusTextEl.textContent = (e && e.name === 'NotAllowedError')
+      ? '❌ Has denegat l\'accés a la càmera. Permet-lo en el navegador i recarrega la pàgina.'
+      : '❌ No s\'ha pogut accedir a la càmera';
   }
 }
 
-// ── Canvas: dibuixa bounding boxes ───────────────────────────
+// ── Canvas: dibuixa els requadres de detecció ────────────────
 function drawDetections(detections) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -56,7 +59,7 @@ function drawDetections(detections) {
     const [x, y, w, h] = det.bbox;
     const color  = getCategoryColor(det.class);
     const label  = `${det.label}  ${det.score}%`;
-    const r      = 8;   // border-radius
+    const r      = 8;   // radi de les vores
 
     // Marc arrodonit
     ctx.strokeStyle = color;
@@ -183,21 +186,23 @@ onDetection(detections => {
 });
 
 onModelReady(() => {
-  statusEl.textContent = '🤖 Model IA llest';
-  startDetection(video, 300);   // detecció cada 300ms (independent de l'enviament)
+  // Si la càmera ha fallat, es conserva el missatge d'error de la càmera
+  if (video.srcObject) statusTextEl.textContent = '🤖 Model IA llest · Ja no cal Internet';
+  startDetection(video, 300);   // detecció cada 300 ms (independent de l'enviament)
   scheduleSend();
 });
 
-onModelError((err) => {
+onModelError((err, keptPrevious) => {
   console.error('Model error:', err);
-  statusEl.textContent = '❌ Error carregant el model IA';
+  statusTextEl.textContent = looksLikeNetworkError(err)
+    ? netErrorText('el model IA') + (keptPrevious ? ' Es manté el model anterior.' : ' Recarrega la pàgina quan tingues connexió.')
+    : '❌ Error carregant el model IA';
 });
 
 // ── Bluetooth ─────────────────────────────────────────────────
 onBTStatusChange((connected, msg) => {
-  statusEl.textContent = msg;
-  connectBtn.textContent = connected ? '🔵 Connectada' : '🔵 Connectar';
-  connectBtn.classList.toggle('connected', connected);
+  // El text i la classe del botó els gestiona bluetooth_uart.js (iguals en totes les apps)
+  if (msg) statusTextEl.textContent = msg;
 });
 
 connectBtn.onclick = connectBluetooth;
@@ -216,7 +221,7 @@ configBtn.onclick = () => {
 };
 document.getElementById('closeConfigBtn').onclick = () => {
   configLayer.style.display = 'none';
-  // Reconstrueix el bucle de detecció si l'interval ha canviat
+  // En tancar la configuració es reinicia el bucle de detecció
   stopDetection();
   startDetection(video, 300);
 };
@@ -251,10 +256,23 @@ function buildModelSelector() {
   `).join('');
 }
 
+function syncModelRadio() {
+  const r = document.querySelector(`input[name="modelChoice"][value="${getCurrentModel()}"]`);
+  if (r) r.checked = true;
+}
+
 async function changeModel(key) {
-  statusEl.textContent = '⏳ Carregant model...';
+  // Canviar de model descarrega un model nou: sense Internet segur que falla.
+  // Ho comprovem abans per a no parar el model que ja funciona.
+  if (isDefinitelyOffline()) {
+    syncModelRadio();
+    statusTextEl.textContent = '🌐 ' + NET_NOTE_CHANGE_MODEL + ' Ara no tens connexió: es manté el model actual.';
+    return;
+  }
+  statusTextEl.textContent = '⏳ Carregant model... ' + NET_NOTE_CHANGE_MODEL;
   stopDetection();
   await initModel(key);
+  syncModelRadio();            // si ha fallat, torna a marcar el model anterior
   startDetection(video, 300);
 }
 
@@ -267,13 +285,17 @@ function toggleCategory(cls, enabled) {
 intervalSlider.addEventListener('input', () => {
   const secs = parseInt(intervalSlider.value);
   sendIntervalMs = secs * 1000;
-  intervalLabel.textContent = `${secs}s`;
+  intervalLabel.textContent = `${secs} s`;
 });
 
 // ── Arrencada ─────────────────────────────────────────────────
 (async () => {
   buildCategoryList();
   buildModelSelector();
+  if (missingLibs(['cocoSsd', 'tf']).length) {
+    statusTextEl.textContent = NET_LIBS_MISSING_TEXT;
+    return;
+  }
   await startVideo();
   await initModel();
 })();

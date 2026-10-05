@@ -338,6 +338,7 @@ button.connected {
 .layer-box a:hover { text-decoration: underline; }
 
 .layer-box code {
+  overflow-wrap: anywhere;
   background:    var(--bg3);
   padding:       2px 6px;
   border-radius: 5px;
@@ -516,3 +517,10 @@ button.connected {
   color: #10b981 !important;
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
 }
+
+
+/* ── Correccions per a pantalles estretes (320–360 px) ─────── */
+.interval-control { flex-wrap: wrap; }
+.interval-control label { min-width: 0; }
+.interval-control input[type="range"] { min-width: 90px; }
+#intervalLabel { white-space: nowrap; min-width: 52px; }

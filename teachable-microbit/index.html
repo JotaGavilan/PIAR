@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="ca-ES-valencia">
 <head>
   <meta charset="UTF-8">
   <meta name="theme-color" content="#13111c">
@@ -36,7 +36,7 @@
     <button id="connectBtn" class="btn-bluetooth">🔵 Connectar Bluetooth</button>
     <button id="configBtn">⚙️ Configurar</button>
     <button id="infoBtn">ℹ️ Ajuda</button>
-    <div id="status"><span id="device-indicator" style="display:none; margin-right: 0.5rem;"></span>⏳ Carrega el model per començar</div>
+    <div id="status"><span id="device-indicator" style="display:none; margin-right: 0.5rem;"></span><span id="status-text">⏳ Carrega el model per a començar</span></div>
   </div>
 
   <!-- Capa de configuració -->
@@ -68,12 +68,13 @@
           <label for="modelType">Tipus de model:</label>
           <select id="modelType">
             <option value="image">🖼️ Imatge</option>
-            <option value="audio">🎤 Audio</option>
+            <option value="audio">🎤 Àudio</option>
             <option value="pose">🧍 Postura</option>
           </select>
         </div>
 
-        <button id="loadModelBtn" class="load-btn">Carregar Model</button>
+        <button id="loadModelBtn" class="load-btn">Carregar model</button>
+        <p class="net-note">🌐 Carregar o canviar de model necessita Internet (el model es descarrega de Teachable Machine). Una vegada carregat, ja no cal.</p>
       </div>
 
       <div class="config-section">
@@ -82,7 +83,7 @@
         <div class="interval-control">
           <label for="intervalSlider">Interval d'enviament:</label>
           <input type="range" id="intervalSlider" min="1" max="30" value="2" step="1">
-          <span id="intervalLabel">0.2s</span>
+          <span id="intervalLabel">0,2 s</span>
         </div>
 
         <div class="classes-control">
@@ -125,27 +126,37 @@
         i enviar les prediccions a una micro:bit per Bluetooth en temps real.
       </p>
 
+      <a class="guide-btn" href="guia.html" style="display:block;text-align:center;background:#6c63ff;color:#fff;padding:.75rem 1rem;border-radius:12px;text-decoration:none;font-weight:600;margin:1rem 0;box-shadow:0 0 18px rgba(108,99,255,.45)">📖 Guia completa pas a pas</a>
+
       <p><strong>Com funciona:</strong></p>
       <ol>
         <li>Crea un model a <a href="https://teachablemachine.withgoogle.com/" target="_blank">Teachable Machine</a></li>
-        <li>Exporta'l i puja'l (rebràs un codi com <code>WIQv36jWP</code>)</li>
+        <li>Exporta'l i puja'l: rebràs un enllaç com <code>teachablemachine.withgoogle.com/models/WIQv36jWP/</code>. El <strong>codi</strong> és la part final de l'enllaç (<code>WIQv36jWP</code>)</li>
         <li>A Configuració, enganxa el codi i carrega el model</li>
         <li>Connecta la micro:bit per Bluetooth</li>
         <li>Les prediccions s'enviaran automàticament!</li>
       </ol>
 
+      <p><strong>Internet i mode avió:</strong></p>
+      <ul>
+        <li>Cal Internet <strong>només per a descarregar el model</strong>: sempre que obris l'app i cada vegada que carregues o canvies de model.</li>
+        <li>Quan veges «Model carregat», pots llevar el Wi-Fi i les dades mòbils: la càmera o el micròfon es processen en el dispositiu i no s'envia res a cap servidor.</li>
+        <li><strong>No actives el mode avió</strong> (o torna a activar el Bluetooth després), perquè la micro:bit es connecta per Bluetooth.</li>
+        <li>Si recarregues la pàgina sense Internet, no tornarà a obrir-se: l'app no funciona sense connexió.</li>
+      </ul>
+
       <p><strong>Tipus de models compatibles:</strong></p>
       <ul>
         <li>🖼️ <strong>Imatge</strong> — detecta objectes, gestos, posicions davant la càmera</li>
-        <li>🎤 <strong>Audio</strong> — reconeix sons, paraules, música (requereix micròfon)</li>
+        <li>🎤 <strong>Àudio</strong> — reconeix sons, paraules, música (requereix micròfon)</li>
         <li>🧍 <strong>Postura</strong> — detecta posicions del cos sencer</li>
       </ul>
 
       <p><strong>Format de les dades enviades:</strong></p>
       <ul>
-        <li>AMB probabilitats: <code>gat:87;gos:10;ocell:3</code></li>
-        <li>SENSE probabilitats: <code>gat;gos;ocell</code></li>
-        <li>Quan no hi ha predicció segura, s'envia <code>0</code> una vegada</li>
+        <li>Amb probabilitats: <code>gat:87;gos:10;ocell:3</code></li>
+        <li>Sense probabilitats: <code>gat;gos;ocell</code></li>
+        <li>S'envien les classes més probables (les que tenen més d'un 1 %). Si totes queden per sota de l'1 %, s'envia <code>0</code> una sola vegada</li>
       </ul>
 
       <p class="info-footer">
@@ -167,6 +178,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
 
   <!-- Mòduls de l'app -->
+  <script src="../shared/internet_notice.js"></script>
   <script src="../shared/loading_overlay.js"></script>
   <script src="../shared/bluetooth_uart.js"></script>
   <script src="js/model_loader.js"></script>

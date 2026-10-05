@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="ca-ES-valencia">
 <head>
   <meta charset="UTF-8">
   <meta name="theme-color" content="#090812">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JFace – Tracking facial amb IA</title>
+  <title>JFace – Seguiment facial amb IA</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/jface-fixes.css">
   <link rel="stylesheet" href="../shared/loading_overlay.css">
@@ -21,7 +21,7 @@
   <!-- Capçalera -->
   <header style="display: flex; align-items: center; justify-content: center; gap: 0.8em;">
     <img src="icons/android-chrome-512x512.png" alt="Icona JFace" style="width: 32px; height: 32px;">
-    <h1 style="margin: 0;">JFace – Tracking facial amb IA</h1>
+    <h1 style="margin: 0;">JFace – Seguiment facial amb IA</h1>
   </header>
 
   <!-- Contenidor del vídeo i canvas -->
@@ -44,7 +44,7 @@
     <button id="connectBtn" class="btn-bluetooth">🔵 Connectar Bluetooth</button>
     <button id="configBtn">⚙️ Configurar</button>
     <button id="infoBtn">ℹ️ Ajuda</button>
-    <div id="status">⏳ Iniciant càmera...</div>
+    <div id="status"><span id="status-text">⏳ Iniciant càmera...</span></div>
   </div>
 
   <!-- Capa de configuració -->
@@ -61,12 +61,12 @@
         <div class="interval-control">
           <label for="intervalSlider">Interval d'enviament:</label>
           <input type="range" id="intervalSlider" min="1" max="20" value="2" step="1">
-          <span id="intervalLabel">0.2s</span>
+          <span id="intervalLabel">0,2 s</span>
         </div>
 
         <p class="config-note">
           Cada quants segons s'envien les dades a la micro:bit per Bluetooth.
-          Valors baixos (0.1-0.3s) donen més fluïdesa però consumeixen més bateria.
+          Valors baixos (0,1–0,3 s) donen més fluïdesa però consumixen més bateria.
         </p>
       </div>
 
@@ -84,24 +84,34 @@
 
       <p>
         <strong>JFace</strong> utilitza <a href="https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker" target="_blank">MediaPipe Face Mesh</a> 
-        de Google per detectar la posició del cap, l'obertura de la boca i l'estat dels ulls en temps real,
-        i envia aquestes dades a una micro:bit per Bluetooth.
+        de Google per a detectar la posició del cap, l'obertura de la boca i l'estat dels ulls en temps real,
+        i envia estes dades a una micro:bit per Bluetooth.
       </p>
+
+      <a class="guide-btn" href="guia.html" style="display:block;text-align:center;background:#6c63ff;color:#fff;padding:.75rem 1rem;border-radius:12px;text-decoration:none;font-weight:600;margin:1rem 0;box-shadow:0 0 18px rgba(108,99,255,.45)">📖 Guia completa pas a pas</a>
 
       <p><strong>Format de dades enviades (6 dígits):</strong></p>
       <ul>
-        <li><strong>2 dígits:</strong> gir horitzontal del cap (00 a 99)</li>
-        <li><strong>2 dígits:</strong> obertura de boca (00 a 99)</li>
+        <li><strong>2 dígits:</strong> gir horitzontal del cap (00 a 99). Amb el cap de cara el valor ronda 15, i canvia en girar-lo cap a un costat o cap a l'altre.</li>
+        <li><strong>2 dígits:</strong> obertura de la boca (00 a 99). 00 és boca tancada; com més oberta, més gran és el valor.</li>
         <li><strong>1 dígit:</strong> ull esquerre (0 = tancat, 1 = obert)</li>
         <li><strong>1 dígit:</strong> ull dret (0 = tancat, 1 = obert)</li>
       </ul>
 
-      <p><strong>Exemple:</strong> <code>731010</code> → cap a 73°, boca 10% oberta, ull esquerre obert, dret tancat.</p>
+      <p><strong>Exemple:</strong> <code>151010</code> → cap de cara (15), boca amb obertura 10, ull esquerre obert i ull dret tancat.</p>
 
       <p>
-        Quan la cara desapareix de pla, s'envia <code>0</code> una sola vegada.
-        Tot el processament es fa localment al navegador sense enviar cap dada a Internet.
+        Quan la cara desapareix de la imatge, s'envia <code>0</code> una sola vegada.
+        Tot el processament es fa localment al navegador, sense enviar cap dada a Internet.
       </p>
+
+      <p><strong>Internet i mode avió:</strong></p>
+      <ul>
+        <li>Cal Internet <strong>només en obrir l'app</strong>, per a descarregar les llibreries i el model de detecció facial.</li>
+        <li>Quan veges «Càmera llesta», pots llevar el Wi-Fi i les dades mòbils: la càmera es processa en el dispositiu i no s'envia res a cap servidor.</li>
+        <li><strong>No actives el mode avió</strong> (o torna a activar el Bluetooth després), perquè la micro:bit es connecta per Bluetooth.</li>
+        <li>Si recarregues la pàgina sense Internet, no tornarà a obrir-se: l'app no funciona sense connexió.</li>
+      </ul>
 
       <p class="info-footer">
         Projecte inspirat en <a href="https://cardboard.lofirobot.com" target="_blank">cardboard.lofirobot.com</a><br>
@@ -119,6 +129,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
 
   <!-- Mòduls de l'app -->
+  <script src="../shared/internet_notice.js"></script>
   <script src="../shared/loading_overlay.js"></script>
   <script src="../shared/bluetooth_uart.js"></script>
   <script src="js/video_facial_tracking.js"></script>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="ca-ES-valencia">
 <head>
 <meta charset="UTF-8">
 <meta name="theme-color" content="#13111c">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Màquina Ensenyable</title>
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
@@ -28,26 +28,28 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
-header { padding: 12px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; background: var(--surface); position: sticky; top: 0; z-index: 100; }
-.logo { font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; }
+header { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; background: var(--surface); position: sticky; top: 0; z-index: 100; }
+.logo { font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; margin-right: auto; }
+.help-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 15px; cursor: pointer; flex-shrink: 0; }
+.help-btn:active { transform: scale(.95); }
 .logo span { color: var(--accent); }
-.mtype-btns { display: flex; gap: 4px; }
-.mtype-btn { padding: 4px 9px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 11px; cursor: pointer; transition: all .2s; }
+.mtype-btns { display: flex; gap: 4px; order: 3; width: 100%; }
+.mtype-btn { flex: 1; min-height: 40px; padding: 6px 4px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 12px; cursor: pointer; transition: all .2s; white-space: nowrap; }
 .mtype-btn.active { background: rgba(124,58,237,.2); border-color: var(--accent); color: var(--accent); }
-.status-pill { margin-left: auto; font-size: 10px; font-family: 'Space Mono', monospace; padding: 3px 8px; border-radius: 20px; background: rgba(124,58,237,.12); border: 1px solid rgba(124,58,237,.25); color: var(--accent); transition: all .3s; white-space: nowrap; }
+.status-pill { max-width: 50vw; min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size:11px; font-family: 'Space Mono', monospace; padding: 3px 8px; border-radius: 20px; background: rgba(124,58,237,.12); border: 1px solid rgba(124,58,237,.25); color: var(--accent); transition: all .3s; white-space: nowrap; }
 .status-pill.ready { background: rgba(16,185,129,.12); border-color: rgba(16,185,129,.25); color: var(--accent2); }
 .status-pill.training { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.25); color: var(--accent3); animation: blink 1.2s infinite; }
 @keyframes blink { 0%,100%{opacity:1}50%{opacity:.4} }
 
 .tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--surface); overflow-x: auto; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
-.tab { flex: 1; min-width: 64px; padding: 11px 4px; font-size: 9px; font-family: 'Space Mono', monospace; color: var(--text2); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; text-transform: uppercase; letter-spacing: .3px; }
+.tab { flex: 1; min-width: 60px; padding: 11px 2px; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--text2); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; text-transform: uppercase; letter-spacing: .3px; }
 .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 .tab span { display: block; font-size: 15px; margin-bottom: 1px; }
 
 .panel { display: none; padding: 12px; }
 .panel.active { display: block; }
-.sec-title { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 8px; }
+.sec-title { font-family: 'Space Mono', monospace; font-size:11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 8px; }
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 12px; margin-bottom: 10px; }
 
 .btn { padding: 12px 14px; border-radius: 11px; border: none; font-size: 12px; font-family: 'Space Mono', monospace; cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
@@ -67,7 +69,7 @@ header { padding: 12px 14px; border-bottom: 1px solid var(--border); display: fl
 .cname-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; font-size: 12px; font-family: 'DM Sans', sans-serif; color: var(--text); outline: none; }
 .cname-input:focus { border-color: var(--accent); }
 .sample-n { font-size: 24px; font-family: 'Space Mono', monospace; font-weight: 700; color: var(--cc, var(--accent)); line-height: 1; }
-.sample-lbl { font-size: 10px; color: var(--text2); }
+.sample-lbl { font-size:11px; color: var(--text2); }
 .cap-btns { display: flex; gap: 5px; margin-top: 8px; }
 .cap-btn { flex: 1; padding: 9px 4px; border-radius: 9px; border: 1px dashed var(--border); background: transparent; color: var(--text2); font-size: 11px; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 3px; }
 .cap-btn.cam { border-style: solid; border-color: var(--cc, var(--accent)); color: var(--cc, var(--accent)); }
@@ -77,13 +79,13 @@ header { padding: 12px 14px; border-bottom: 1px solid var(--border); display: fl
 .twrap { position: relative; flex-shrink: 0; }
 .thumb { width: 44px; height: 44px; border-radius: 6px; object-fit: cover; display: block; border: 1px solid var(--border); }
 .thumb-audio { width: 44px; height: 44px; border-radius: 6px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 16px; border: 1px solid var(--border); flex-shrink: 0; }
-.tdel { position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; border-radius: 50%; background: var(--danger); color: #fff; border: none; font-size: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.tmore { width: 44px; height: 44px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--text2); flex-shrink: 0; }
+.tdel { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; background: var(--danger); color: #fff; border: none; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.tmore { width: 44px; height: 44px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size:11px; color: var(--text2); flex-shrink: 0; }
 
 /* Examples */
 .ex-row { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; margin-bottom: 10px; }
 .ex-row::-webkit-scrollbar { display: none; }
-.ex-chip { flex-shrink: 0; padding: 5px 9px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); font-size: 10px; color: var(--text2); cursor: pointer; white-space: nowrap; transition: all .2s; }
+.ex-chip { flex-shrink: 0; padding: 8px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); font-size:11px; color: var(--text2); cursor: pointer; white-space: nowrap; transition: all .2s; }
 .ex-chip:hover { border-color: var(--accent); color: var(--accent); }
 .add-cls-btn { width: 100%; padding: 12px; border-radius: 11px; border: 2px dashed var(--border); background: transparent; color: var(--text2); font-size: 12px; font-family: 'Space Mono', monospace; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
 .add-cls-btn:hover { border-color: var(--accent); color: var(--accent); }
@@ -97,7 +99,7 @@ header { padding: 12px 14px; border-bottom: 1px solid var(--border); display: fl
 .cam-circle { width: 150px; height: 150px; border: 2px solid rgba(255,255,255,.3); border-radius: 50%; }
 .cam-info { padding: 10px 14px; text-align: center; }
 .cam-cn { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-.cam-ct { font-size: 10px; color: var(--text2); font-family: 'Space Mono', monospace; }
+.cam-ct { font-size:11px; color: var(--text2); font-family: 'Space Mono', monospace; }
 .cam-prog { height: 3px; background: var(--border); width: 100%; max-width: 400px; border-radius: 2px; overflow: hidden; margin-bottom: 5px; }
 .cam-prog-fill { height: 100%; background: var(--accent); width: 0; transition: width .1s; }
 .cam-acts { display: flex; gap: 7px; padding: 0 14px 14px; width: 100%; max-width: 400px; }
@@ -110,15 +112,15 @@ header { padding: 12px 14px; border-bottom: 1px solid var(--border); display: fl
 .cfg-row:last-child { border-bottom: none; }
 .cfg-lbl { font-size: 12px; color: var(--text2); }
 .num-inp { width: 60px; text-align: center; background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 5px 7px; font-size: 12px; font-family: 'Space Mono', monospace; color: var(--text); outline: none; }
-.adj { width: 24px; height: 24px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 12px; }
+.adj { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 12px; }
 .train-prog { margin-top: 12px; display: none; }
 .prog-bar { height: 7px; background: var(--surface2); border-radius: 4px; overflow: hidden; margin: 6px 0; }
 .prog-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 4px; width: 0; transition: width .3s; }
-.ep-stats { display: flex; justify-content: space-between; font-size: 10px; font-family: 'Space Mono', monospace; color: var(--text2); }
+.ep-stats { display: flex; justify-content: space-between; font-size:11px; font-family: 'Space Mono', monospace; color: var(--text2); }
 .metrics { display: flex; gap: 6px; margin-top: 8px; }
 .mbox { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 8px; text-align: center; }
 .mval { font-size: 18px; font-family: 'Space Mono', monospace; font-weight: 700; color: var(--accent); }
-.mlbl { font-size: 9px; color: var(--text2); margin-top: 1px; }
+.mlbl { font-size:11px; color: var(--text2); margin-top: 1px; }
 .loss-chart { height: 64px; background: var(--surface2); border-radius: 7px; margin-top: 8px; overflow: hidden; }
 .lcvs { width: 100%; height: 100%; display: block; }
 
@@ -126,13 +128,13 @@ header { padding: 12px 14px; border-bottom: 1px solid var(--border); display: fl
 .top-card { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--surface2); border-radius: 11px; border: 1px solid var(--border); margin-bottom: 10px; }
 .top-icon { font-size: 26px; }
 .top-name { font-size: 16px; font-weight: 600; }
-.top-conf { font-size: 10px; color: var(--text2); font-family: 'Space Mono', monospace; }
+.top-conf { font-size:11px; color: var(--text2); font-family: 'Space Mono', monospace; }
 #testVideo { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; transform: scaleX(-1); border-radius: 12px 12px 0 0; }
 .pred-row { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; }
 .pred-lbl { font-size: 11px; min-width: 74px; max-width: 94px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pred-bg { flex: 1; height: 20px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
 .pred-fill { height: 100%; border-radius: 5px; transition: width .15s; background: var(--pc, var(--accent)); }
-.pred-pct { font-family: 'Space Mono', monospace; font-size: 10px; min-width: 36px; text-align: right; color: var(--text2); }
+.pred-pct { font-family: 'Space Mono', monospace; font-size:11px; min-width: 36px; text-align: right; color: var(--text2); }
 .test-img-prev { width: 100%; border-radius: 11px; margin-bottom: 8px; max-height: 240px; object-fit: contain; background: var(--surface2); display: none; }
 
 /* Audio viz */
@@ -147,7 +149,7 @@ header { padding: 12px 14px; border-bottom: 1px solid var(--border); display: fl
 .exp-opt:hover { border-color: var(--accent); }
 .exp-icon { font-size: 22px; flex-shrink: 0; }
 .exp-title { font-size: 12px; font-weight: 600; margin-bottom: 1px; }
-.exp-desc { font-size: 10px; color: var(--text2); }
+.exp-desc { font-size:11px; color: var(--text2); }
 
 /* Toast */
 .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--surface); border: 1px solid var(--border); border-radius: 9px; padding: 9px 16px; font-size: 11px; font-family: 'Space Mono', monospace; z-index: 300; transition: transform .3s; max-width: 260px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,.5); }
@@ -161,43 +163,54 @@ header { padding: 12px 14px; border-bottom: 1px solid var(--border); display: fl
 .note { padding: 9px 12px; background: rgba(245,158,11,.07); border: 1px solid rgba(245,158,11,.2); border-radius: 9px; font-size: 11px; color: var(--text2); line-height: 1.6; }
 .note b { color: var(--accent3); }
 select.field { appearance: none; }
+
+/* Ajuda i interruptor de soroll de fons */
+.help-sec { margin-bottom: 14px; }
+.help-sec h3 { font-size: 13px; margin-bottom: 6px; color: var(--accent); }
+.help-sec p, .help-sec li { font-size: 12px; line-height: 1.65; color: var(--text2); }
+.help-sec ul, .help-sec ol { padding-left: 18px; }
+.help-sec b { color: var(--text); }
+.help-foot { font-size: 11px; color: var(--text2); text-align: center; margin: 18px 0 8px; line-height: 1.7; }
+.bg-toggle { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); margin-top: 4px; }
+.bg-toggle input { width: 18px; height: 18px; accent-color: var(--accent); }
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">Màquina<span>Ensenyable</span></div>
+  <button class="help-btn" onclick="switchTab('help')" aria-label="Ajuda" title="Ajuda">❓</button>
+  <div class="status-pill" id="statusPill">sense model</div>
   <div class="mtype-btns">
-    <button class="mtype-btn active" onclick="setModelType('image')" id="mtype-image">🖼 Imagen</button>
-    <button class="mtype-btn" onclick="setModelType('audio')" id="mtype-audio">🎤 Audio</button>
-    <button class="mtype-btn" onclick="setModelType('pose')" id="mtype-pose">🕺 Pose</button>
-    <button class="mtype-btn" onclick="setModelType('hands')" id="mtype-hands">🤚 Manos</button>
+    <button class="mtype-btn active" onclick="setModelType('image')" id="mtype-image">🖼 Imatge</button>
+    <button class="mtype-btn" onclick="setModelType('audio')" id="mtype-audio">🎤 Àudio</button>
+    <button class="mtype-btn" onclick="setModelType('pose')" id="mtype-pose">🕺 Postura</button>
+    <button class="mtype-btn" onclick="setModelType('hands')" id="mtype-hands">🤚 Mans</button>
   </div>
-  <div class="status-pill" id="statusPill">sin modelo</div>
 </header>
 
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('train')" id="tab-train"><span>🧠</span>Datos</button>
+  <button class="tab active" onclick="switchTab('train')" id="tab-train"><span>🧠</span>Dades</button>
   <button class="tab" onclick="switchTab('config')" id="tab-config"><span>⚙️</span>Entrenar</button>
-  <button class="tab" onclick="switchTab('test')" id="tab-test"><span>🔍</span>Probar</button>
+  <button class="tab" onclick="switchTab('test')" id="tab-test"><span>🔍</span>Provar</button>
   <button class="tab" onclick="switchTab('export')" id="tab-export"><span>📦</span>Exportar</button>
   <button class="tab" onclick="switchTab('save')" id="tab-save"><span>💾</span>Guardar</button>
 </div>
 
 <!-- ── DATOS ── -->
 <div class="panel active" id="panel-train">
-  <div class="sec-title">Datasets de ejemplo</div>
+  <div class="sec-title">Conjunts d'exemple</div>
   <div class="ex-row" id="examplesRow"></div>
   <div id="classesList"></div>
-  <button class="add-cls-btn" onclick="addClass()">＋ Añadir clase</button>
+  <button class="add-cls-btn" onclick="addClass()">＋ Afegir classe</button>
 </div>
 
 <!-- ── ENTRENAR ── -->
 <div class="panel" id="panel-config">
   <div class="card">
-    <div class="sec-title">Hiperparámetros</div>
+    <div class="sec-title">Hiperparàmetres</div>
     <div class="cfg-row">
-      <span class="cfg-lbl">Épocas</span>
+      <span class="cfg-lbl">Èpoques</span>
       <div style="display:flex;align-items:center;gap:5px">
         <button class="adj" onclick="adj('epochs',-10)">−</button>
         <input type="number" id="epochs" class="num-inp" value="30" min="5" max="300">
@@ -205,16 +218,16 @@ select.field { appearance: none; }
       </div>
     </div>
     <div class="cfg-row">
-      <span class="cfg-lbl">Tasa aprendizaje</span>
+      <span class="cfg-lbl">Taxa d'aprenentatge</span>
       <select id="lr" class="num-inp field" style="width:84px">
-        <option value="0.0003">0.0003</option>
-        <option value="0.001">0.001</option>
-        <option value="0.003" selected>0.003</option>
-        <option value="0.01">0.01</option>
+        <option value="0.0003">0,0003</option>
+        <option value="0.001">0,001</option>
+        <option value="0.003" selected>0,003</option>
+        <option value="0.01">0,01</option>
       </select>
     </div>
     <div class="cfg-row">
-      <span class="cfg-lbl">Batch size</span>
+      <span class="cfg-lbl">Mida del lot</span>
       <div style="display:flex;align-items:center;gap:5px">
         <button class="adj" onclick="adj('batchSize',-8)">−</button>
         <input type="number" id="batchSize" class="num-inp" value="16" min="4" max="128" step="4">
@@ -222,29 +235,29 @@ select.field { appearance: none; }
       </div>
     </div>
   </div>
-  <button class="btn btn-p btn-w" id="trainBtn" onclick="trainModel()">⚡ Entrenar modelo</button>
+  <button class="btn btn-p btn-w" id="trainBtn" onclick="trainModel()">⚡ Entrenar model</button>
   <div class="train-prog" id="trainProg">
     <div class="ep-stats" style="margin-top:10px">
-      <span id="epText">Época 0 / 0</span><span id="lossText">loss —</span>
+      <span id="epText">Època 0 / 0</span><span id="lossText">pèrdua —</span>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="epFill"></div></div>
     <div class="metrics">
-      <div class="mbox"><div class="mval" id="mLoss">—</div><div class="mlbl">Loss</div></div>
-      <div class="mbox"><div class="mval" id="mAcc" style="color:var(--accent2)">—</div><div class="mlbl">Accuracy</div></div>
-      <div class="mbox"><div class="mval" id="mValAcc" style="color:var(--accent3)">—</div><div class="mlbl">Val Acc</div></div>
+      <div class="mbox"><div class="mval" id="mLoss">—</div><div class="mlbl">Pèrdua</div></div>
+      <div class="mbox"><div class="mval" id="mAcc" style="color:var(--accent2)">—</div><div class="mlbl">Precisió</div></div>
+      <div class="mbox"><div class="mval" id="mValAcc" style="color:var(--accent3)">—</div><div class="mlbl">Precisió val.</div></div>
     </div>
     <div class="loss-chart"><canvas class="lcvs" id="lcvs"></canvas></div>
-    <div style="display:flex;gap:12px;margin-top:6px;font-size:9px;color:var(--text2);font-family:'Space Mono',monospace">
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#7c3aed;display:inline-block"></span>Loss</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#10b981;display:inline-block"></span>Accuracy</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#f59e0b;display:inline-block"></span>Val Acc</span>
+    <div style="display:flex;gap:12px;margin-top:6px;font-size:11px;color:var(--text2);font-family:'Space Mono',monospace">
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#7c3aed;display:inline-block"></span>Pèrdua</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#10b981;display:inline-block"></span>Precisió</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#f59e0b;display:inline-block"></span>Precisió val.</span>
     </div>
   </div>
 </div>
 
 <!-- ── PROBAR ── -->
 <div class="panel" id="panel-test">
-  <div id="noModelMsg" class="empty"><div class="icon">🤖</div><p>Entrena un modelo primero para probarlo aquí.</p></div>
+  <div id="noModelMsg" class="empty"><div class="icon">🤖</div><p>Entrena primer un model per a provar-lo ací.</p></div>
 
   <!-- IMAGE -->
   <div id="ts-image" style="display:none">
@@ -253,18 +266,18 @@ select.field { appearance: none; }
       <div><div class="top-name" id="topName">—</div><div class="top-conf" id="topConf">—</div></div>
     </div>
     <div style="display:flex;gap:5px;margin-bottom:8px">
-      <button class="btn btn-s" id="tmodeCam" onclick="setTestMode('cam')" style="flex:1;font-size:10px">📷 Cámara</button>
-      <button class="btn btn-s" id="tmodeImg" onclick="setTestMode('img')" style="flex:1;font-size:10px">🖼 Imagen estática</button>
+      <button class="btn btn-s" id="tmodeCam" onclick="setTestMode('cam')" style="flex:1;font-size:11px">📷 Càmera</button>
+      <button class="btn btn-s" id="tmodeImg" onclick="setTestMode('img')" style="flex:1;font-size:11px">🖼 Imatge estàtica</button>
     </div>
     <div id="tsCam">
       <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px"><video id="testVideo" autoplay playsinline muted></video></div>
       <div id="predCon"></div>
-      <button class="btn btn-p btn-w" id="testBtn" onclick="toggleTest()">📷 Activar cámara</button>
+      <button class="btn btn-p btn-w" id="testBtn" onclick="toggleTest()">📷 Activar càmera</button>
     </div>
     <div id="tsImg" style="display:none">
       <img id="testImgPrev" class="test-img-prev">
       <div id="predConImg"></div>
-      <label class="btn btn-p btn-w" style="cursor:pointer">🖼 Seleccionar imagen<input type="file" accept="image/*" style="display:none" onchange="classifyStatic(event)"></label>
+      <label class="btn btn-p btn-w" style="cursor:pointer">🖼 Seleccionar imatge<input type="file" accept="image/*" style="display:none" onchange="classifyStatic(event)"></label>
     </div>
   </div>
 
@@ -276,7 +289,7 @@ select.field { appearance: none; }
     </div>
     <div class="card" style="margin-bottom:8px"><div class="audio-viz" id="audioViz"></div></div>
     <div id="predCon-audio"></div>
-    <button class="btn btn-p btn-w" id="testBtnAudio" onclick="toggleAudioTest()">🎤 Activar micrófono</button>
+    <button class="btn btn-p btn-w" id="testBtnAudio" onclick="toggleAudioTest()">🎤 Activar micròfon</button>
   </div>
 
   <!-- POSE -->
@@ -287,7 +300,7 @@ select.field { appearance: none; }
     </div>
     <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px"><canvas id="poseCanvas"></canvas></div>
     <div id="predCon-pose"></div>
-    <button class="btn btn-p btn-w" id="testBtnPose" onclick="togglePoseTest()">🕺 Activar cámara</button>
+    <button class="btn btn-p btn-w" id="testBtnPose" onclick="togglePoseTest()">🕺 Activar càmera</button>
   </div>
 
   <!-- MANOS -->
@@ -298,50 +311,104 @@ select.field { appearance: none; }
     </div>
     <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px"><canvas id="handsCanvas"></canvas></div>
     <div id="predCon-hands"></div>
-    <button class="btn btn-p btn-w" id="testBtnHands" onclick="toggleHandsTest()">🤚 Activar cámara</button>
+    <button class="btn btn-p btn-w" id="testBtnHands" onclick="toggleHandsTest()">🤚 Activar càmera</button>
   </div>
 </div>
 
 <!-- ── EXPORTAR ── -->
 <div class="panel" id="panel-export">
-  <div id="noModelExport" class="empty"><div class="icon">📦</div><p>Entrena un modelo para exportarlo.</p></div>
+  <div id="noModelExport" class="empty"><div class="icon">📦</div><p>Entrena un model per a exportar-lo.</p></div>
   <div id="exportSec" style="display:none">
-    <div class="sec-title">Exportar modelo entrenado</div>
+    <div class="sec-title">Exportar el model entrenat</div>
     <div class="exp-opt" onclick="exportTFJS()">
       <div class="exp-icon">🌐</div>
-      <div><div class="exp-title">TensorFlow.js</div><div class="exp-desc">Para webs y Node.js — descarga model.json + weights.bin</div></div>
+      <div><div class="exp-title">TensorFlow.js</div><div class="exp-desc">Per a webs i Node.js: descarrega el fitxer .json del model + el de pesos (.bin)</div></div>
     </div>
     <div class="exp-opt" onclick="exportKeras()">
       <div class="exp-icon">🐍</div>
-      <div><div class="exp-title">Keras / Python</div><div class="exp-desc">Arquitectura + pesos para tf.keras en Python</div></div>
+      <div><div class="exp-title">Keras / Python</div><div class="exp-desc">Arquitectura + pesos per a tf.keras en Python</div></div>
     </div>
     <div class="exp-opt" onclick="exportTFLite()">
       <div class="exp-icon">📱</div>
-      <div><div class="exp-title">TensorFlow Lite</div><div class="exp-desc">Para apps Android/iOS (exporta TF.js + instrucciones)</div></div>
+      <div><div class="exp-title">TensorFlow Lite</div><div class="exp-desc">Per a apps Android/iOS (ara exporta TF.js; la conversió a TFLite requerix un servidor)</div></div>
     </div>
-    <div class="note" style="margin-top:8px"><b>Nota:</b> Se exporta la cabeza clasificadora. Para inferencia completa necesitas también MobileNet v2 como extractor de features.</div>
+    <div class="note" id="exportNote" style="margin-top:8px"></div>
   </div>
 </div>
 
 <!-- ── GUARDAR ── -->
 <div class="panel" id="panel-save">
   <div class="card">
-    <div class="sec-title">Proyecto</div>
-    <div class="cfg-row"><span class="cfg-lbl">Nombre</span><input type="text" id="projectName" class="field" style="width:150px" value="mi-modelo"></div>
-    <div class="cfg-row"><span class="cfg-lbl">Tipo</span><span id="saveType" style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text2)">imagen</span></div>
-    <div class="cfg-row"><span class="cfg-lbl">Clases / muestras</span><span id="saveStats" style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text2)">0 / 0</span></div>
-    <div class="cfg-row" style="border:none"><span class="cfg-lbl">Modelo</span><span id="saveModelOk" style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text2)">no</span></div>
+    <div class="sec-title">Projecte</div>
+    <div class="cfg-row"><span class="cfg-lbl">Nom</span><input type="text" id="projectName" class="field" style="width:150px" value="el-meu-model"></div>
+    <div class="cfg-row"><span class="cfg-lbl">Tipus</span><span id="saveType" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text2)">imatge</span></div>
+    <div class="cfg-row"><span class="cfg-lbl">Classes / mostres</span><span id="saveStats" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text2)">0 / 0</span></div>
+    <div class="cfg-row" style="border:none"><span class="cfg-lbl">Model</span><span id="saveModelOk" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text2)">no</span></div>
   </div>
   <div class="card">
-    <div class="sec-title">💻 Archivo local</div>
-    <p style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.6">Guarda todo en un <code style="background:var(--surface);padding:1px 4px;border-radius:3px">.mia.json</code> y compártelo o descárgalo.</p>
+    <div class="sec-title">💻 Fitxer local</div>
+    <p style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.6">Guarda-ho tot en un fitxer <code style="background:var(--surface);padding:1px 4px;border-radius:3px">.mia.json</code> i compartix-lo o descarrega'l.</p>
     <div style="display:flex;gap:5px;margin-bottom:6px">
       <button class="btn btn-p" style="flex:1;font-size:11px" onclick="shareProject()">📤 Compartir</button>
-      <button class="btn btn-s" style="flex:1;font-size:11px" onclick="exportJSON()">⬇ Descargar</button>
+      <button class="btn btn-s" style="flex:1;font-size:11px" onclick="exportJSON()">⬇ Descarregar</button>
     </div>
-    <label class="btn btn-s btn-w" style="cursor:pointer;font-size:11px">⬆ Cargar .mia.json<input type="file" accept=".json,.mia.json" style="display:none" onchange="importJSON(event)"></label>
-    <p style="font-size:10px;color:var(--text2);margin-top:7px;line-height:1.5">📤 <b style="color:var(--text)">Compartir</b> abre el menú del móvil → OneDrive, Drive, WhatsApp, AirDrop, Bluetooth, correo… sin necesitar iniciar sesión en ningún sitio.</p>
+    <label class="btn btn-s btn-w" style="cursor:pointer;font-size:11px">⬆ Carregar .mia.json<input type="file" accept=".json,.mia.json" style="display:none" onchange="importJSON(event)"></label>
+    <p style="font-size:11px;color:var(--text2);margin-top:7px;line-height:1.5">📤 <b style="color:var(--text)">Compartir</b> obri el menú del mòbil → OneDrive, Drive, WhatsApp, AirDrop, Bluetooth, correu… sense necessitat d'iniciar sessió en cap lloc.</p>
   </div>
+</div>
+
+
+<!-- ── AJUDA ── -->
+<div class="panel" id="panel-help">
+  <a href="guia.html" style="display:block;text-align:center;background:#7c3aed;color:#fff;padding:12px 14px;border-radius:12px;text-decoration:none;font-weight:700;font-size:13px;margin-bottom:14px">📖 Guia completa pas a pas</a>
+  <div class="help-sec">
+    <h3>Què és Màquina Ensenyable?</h3>
+    <p>Una aplicació per a <b>entrenar els teus propis models d'IA</b> en el mòbil, sense programar i sense cap compte. Tot es processa en el teu dispositiu: les imatges, els sons i els moviments no s'envien a cap servidor.</p>
+  </div>
+  <div class="help-sec">
+    <h3>Com es fa servir</h3>
+    <ol>
+      <li><b>Dades:</b> tria el tipus de model (imatge, àudio, postura o mans) i crea les classes. Pots partir d'un conjunt d'exemple.</li>
+      <li><b>Dades:</b> afig mostres a cada classe amb la càmera (mantín premut el botó), pujant imatges o gravant el micròfon.</li>
+      <li><b>Entrenar:</b> ajusta els paràmetres si vols (els valors per defecte funcionen bé) i prem «Entrenar model».</li>
+      <li><b>Provar:</b> comprova el model amb la càmera, el micròfon o una imatge.</li>
+      <li><b>Exportar</b> o <b>Guardar:</b> descarrega el model o guarda tot el projecte en un fitxer <code>.mia.json</code>.</li>
+    </ol>
+  </div>
+  <div class="help-sec">
+    <h3>Tipus de model</h3>
+    <ul>
+      <li>🖼 <b>Imatge:</b> reconeix objectes, gestos o expressions. Mínim 3 mostres per classe; amb 20–50 de variades va molt millor.</li>
+      <li>🎤 <b>Àudio:</b> reconeix sons i paraules. Cada mostra dura 1 segon. Calen 8 mostres o més per classe i convé marcar una classe com a <b>soroll de fons</b> (el silenci i el soroll de l'ambient).</li>
+      <li>🕺 <b>Postura:</b> reconeix la posició del cos amb la càmera frontal. Col·loca't de manera que es veja el cos sencer.</li>
+      <li>🤚 <b>Mans:</b> reconeix gestos de la mà amb la càmera frontal. Només es guarda la mostra si es detecta una mà.</li>
+    </ul>
+  </div>
+  <div class="help-sec">
+    <h3>Consells</h3>
+    <ul>
+      <li>Varia la distància, la llum i el fons mentre captures mostres.</li>
+      <li>Canviar de tipus de model esborra les classes, les mostres i el model entrenat (l'aplicació t'ho preguntarà).</li>
+    </ul>
+  </div>
+  <div class="help-sec">
+    <h3>Internet i mode avió</h3>
+    <ul>
+      <li>Cal Internet <b>només per a descarregar els models base</b> (MobileNet, PoseNet, àudio, mans): la primera vegada que uses cada tipus de model després d'obrir l'aplicació.</li>
+      <li>Quan el model base està descarregat, pots llevar el Wi-Fi i les dades mòbils: la càmera i el micròfon es processen en el dispositiu i no s'envia res a cap servidor.</li>
+      <li>Si canvies a un tipus de model que encara no s'ha descarregat, cal Internet. L'aplicació t'ho avisa; si falla la descàrrega, et dirà que revises la connexió.</li>
+      <li>Esta aplicació no necessita Bluetooth, així que pots usar el mode avió una vegada descarregats els models.</li>
+      <li>Si recarregues la pàgina sense Internet, no tornarà a obrir-se: l'aplicació no funciona sense connexió.</li>
+    </ul>
+  </div>
+  <div class="help-sec">
+    <h3>Limitacions</h3>
+    <ul>
+      <li>Les mostres d'àudio no es guarden en el fitxer del projecte; sí el model entrenat. Recuperar un model d'àudio guardat és experimental: si no funciona bé, grava les mostres i entrena de nou.</li>
+      <li>Esta aplicació no envia dades a la micro:bit. Per a això, consulta l'aplicació Teachable Microbit.</li>
+    </ul>
+  </div>
+  <p class="help-foot">Fet per Jose L. Gavilán amb ❤️ i IA<br>IES Jorge Juan, Alacant, 2026</p>
 </div>
 
 <!-- CAMERA MODAL -->
@@ -353,15 +420,15 @@ select.field { appearance: none; }
     <div class="cam-reticle"><div class="cam-circle"></div></div>
   </div>
   <div class="cam-info">
-    <div class="cam-cn" id="modalCN">Clase</div>
-    <div class="cam-ct" id="modalCT">0 muestras</div>
+    <div class="cam-cn" id="modalCN">Classe</div>
+    <div class="cam-ct" id="modalCT">0 mostres</div>
   </div>
   <div class="cam-acts">
-    <button class="cam-close" onclick="closeCamera()">✕</button>
+    <button class="cam-close" onclick="closeCamera()" aria-label="Tancar la càmera">✕</button>
     <button class="cam-hold" id="holdBtn"
       ontouchstart="startCap(event)" ontouchend="stopCap(event)"
       onmousedown="startCap(event)" onmouseup="stopCap(event)" onmouseleave="stopCap(event)">
-      🤌 Mantén pulsado
+      🤌 Mantín premut
     </button>
   </div>
 </div>
@@ -373,7 +440,7 @@ select.field { appearance: none; }
 let modelType = 'image';
 let classes = [];
 let model = null, baseModel = null, poseNet = null;
-let handsDetector = null, pendingHandsResolve = null;
+let handsDetector = null, pendingHandsResolve = null, handsReady = false;
 let audioBaseRecognizer = null, audioTransferRecognizer = null, isListeningAudioTest = false;
 let curClass = null;
 let capStream = null, capInterval = null;
@@ -386,34 +453,88 @@ let audioCtx = null, audioAnalyser = null, audioMicStream = null, audioVizInt = 
 
 const CC = ['#7c3aed','#10b981','#f59e0b','#ef4444','#3b82f6','#ec4899','#06b6d4','#84cc16'];
 
+// ═══ AJUDES GENERALS ═══
+function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+let classSeq = 0;
+const BG_NAME = 'Soroll de fons';
+// Cada classe té un identificador estable: l'etiqueta que es dona al reconeixedor
+// d'àudio no depén del nom (que l'usuari pot canviar) ni de l'ordre de les classes.
+function newClass(name, bg) { return { id: ++classSeq, name, samples: [], bg: !!bg }; }
+// La classe de soroll de fons usa l'etiqueta reservada de speech-commands.
+function audioLabel(c) { return c.bg ? '_background_noise_' : 'c' + c.id; }
+const TYPE_NAMES = { image:'imatge', audio:'àudio', pose:'postura', hands:'mans' };
+function hasWork() { return !!model || classes.some(c => c.samples.length); }
+function stopAllTests() {
+  try { stopTest(); } catch(e) {}
+  try { stopPoseTest(); } catch(e) {}
+  try { stopHandsTest(); } catch(e) {}
+  try { stopAudioTest(); } catch(e) {}
+}
+
 const DATASETS = {
   image: [
-    { name: '✋ Abierta / ✊ Puño', classes: ['Mano abierta','Puño'] },
-    { name: '👍 Pulgar ↑ / ↓', classes: ['Pulgar arriba','Pulgar abajo'] },
-    { name: '😊 Sonrisa / 😐 Neutro', classes: ['Sonriendo','Neutro'] },
-    { name: '💡 Luz on / off', classes: ['Luz encendida','Luz apagada'] },
+    { name: '✋ Mà oberta / ✊ Puny', classes: ['Mà oberta','Puny'] },
+    { name: '👍 Polze amunt / avall', classes: ['Polze amunt','Polze avall'] },
+    { name: '😊 Somriure / 😐 Neutre', classes: ['Somrient','Neutre'] },
+    { name: '💡 Llum encesa / apagada', classes: ['Llum encesa','Llum apagada'] },
   ],
   audio: [
-    { name: '✅ Sí / ❌ No', classes: ['Sí','No','Fondo'] },
-    { name: '⬆ Arriba / ⬇ Abajo', classes: ['Arriba','Abajo','Fondo'] },
-    { name: '🔴 Rojo / 🔵 Azul', classes: ['Rojo','Azul','Fondo'] },
+    { name: '✅ Sí / ❌ No', classes: ['Sí','No','Soroll de fons'] },
+    { name: '⬆ Amunt / ⬇ Avall', classes: ['Amunt','Avall','Soroll de fons'] },
+    { name: '🔴 Roig / 🔵 Blau', classes: ['Roig','Blau','Soroll de fons'] },
   ],
   pose: [
-    { name: '🙋 Mano levantada / Normal', classes: ['Mano levantada','Normal'] },
-    { name: '💪 Brazos arriba / abajo', classes: ['Brazos arriba','Brazos abajo'] },
+    { name: '🙋 Mà alçada / Normal', classes: ['Mà alçada','Normal'] },
+    { name: '💪 Braços amunt / avall', classes: ['Braços amunt','Braços avall'] },
   ],
   hands: [
-    { name: '👍 Pulgar arriba / 👎 abajo', classes: ['Pulgar arriba','Pulgar abajo'] },
-    { name: '✌️ Paz / ✊ Puño', classes: ['Paz','Puño'] },
-    { name: '👌 OK / 🖐 Palma abierta', classes: ['OK','Palma abierta'] },
+    { name: '👍 Polze amunt / 👎 avall', classes: ['Polze amunt','Polze avall'] },
+    { name: '✌️ Pau / ✊ Puny', classes: ['Pau','Puny'] },
+    { name: '👌 OK / 🖐 Palmell obert', classes: ['OK','Palmell obert'] },
   ]
 };
 
 // ═══ UTILS ═══
-function toast(msg, type='') {
+let toastTimer = null;
+function toast(msg, type='', ms=2800) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast show ' + type;
-  setTimeout(() => t.className = 'toast', 2800);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = 'toast', ms);
+}
+
+// ═══ INTERNET ═══
+// Només cal Internet per a descarregar els models base (MobileNet, PoseNet,
+// àudio, mans); després tot es processa en el dispositiu. navigator.onLine
+// no és fiable (pot ser true sense Internet), així que només l'usem per a
+// evitar un intent que segur que fallarà; l'error real es detecta en fallar
+// la descàrrega.
+const BASE_NAMES = { image:'MobileNet', audio:'el model d\'àudio', pose:'PoseNet', hands:'el model de mans' };
+function offlineNow() { return navigator.onLine === false; }
+function looksLikeNetworkError(e) {
+  if (offlineNow()) return true;
+  const txt = String((e && (e.message || e.name)) || e || '');
+  return /fetch|network|load failed|failed to|timeout|time out|ERR_|xhr|http|status|cors|script|404|403|500/i.test(txt);
+}
+function baseLoaded(t) {
+  return t==='image' ? !!baseModel : t==='pose' ? !!poseNet : t==='audio' ? !!audioBaseRecognizer : !!handsReady;
+}
+let lastNetToast = 0;
+function netFail(what) {
+  const n = Date.now();
+  if (n - lastNetToast < 4000) return;
+  lastNetToast = n;
+  toast(`🌐 No s'ha pogut descarregar ${what}. Cal connexió a Internet: connecta't i torna-ho a provar.`, 'error', 5000);
+}
+function netInfo(what) {
+  toast(`🌐 Descarregant ${what}… Cal Internet només ara: quan acabe, pots llevar el Wi-Fi i les dades mòbils (no s'envia res a cap servidor).`, '', 6000);
+}
+function needLib(name) {
+  if (typeof window[name] === 'undefined') throw new Error('Failed to load library ' + name);
+}
+function errToast(e) {
+  if (!baseLoaded(modelType) && looksLikeNetworkError(e)) netFail(BASE_NAMES[modelType]);
+  else toast('Error: ' + e.message, 'error');
 }
 function adj(id, d) {
   const el = document.getElementById(id);
@@ -423,22 +544,35 @@ function switchTab(tab) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-'+tab).classList.add('active');
-  document.getElementById('tab-'+tab).classList.add('active');
+  const t = document.getElementById('tab-'+tab);   // el panell d'ajuda no té pestanya
+  if (t) t.classList.add('active');
   if (tab==='save') updateSaveTab();
   if (tab==='export') updateExportTab();
+  window.scrollTo(0, 0);
 }
 
 // ═══ MODEL TYPE ═══
 function setModelType(t) {
+  const needsDownload = !baseLoaded(t);
+  if (hasWork() && !confirm('Si canvies de tipus de model es perdran les classes, les mostres i el model entrenat.' +
+      (needsDownload ? ' A més, este tipus necessita descarregar el seu model base: cal connexió a Internet.' : '') +
+      ' Vols continuar?')) return;
+  stopAllTests();
   modelType = t;
   document.querySelectorAll('.mtype-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('mtype-'+t).classList.add('active');
-  classes = []; model = null;
+  classes = [];
+  if (model && model.dispose) { model.dispose(); }
+  model = null;
   resetAudioRecognizer();
-  setPill('sin modelo','');
+  setPill('sense model','');
   renderClasses(); renderExamples();
   ['image','audio','pose','hands'].forEach(x => { const el=document.getElementById('ts-'+x); if(el) el.style.display='none'; });
   document.getElementById('noModelMsg').style.display='block';
+  if (needsDownload) {
+    if (offlineNow()) netFail(BASE_NAMES[t]);
+    else toast(`🌐 Este tipus descarrega ${BASE_NAMES[t]} la primera vegada que el uses: cal Internet. Després ja no.`, '', 5000);
+  }
 }
 function setPill(txt, cls) {
   const el = document.getElementById('statusPill');
@@ -454,16 +588,19 @@ function renderExamples() {
 }
 function loadDataset(i) {
   const d = DATASETS[modelType][i];
-  classes = d.classes.map(name => ({ name, samples: [] }));
+  classes = d.classes.map(name => newClass(name, modelType==='audio' && name===BG_NAME));
+  resetAudioRecognizer();   // les mostres d'àudio anteriors ja no corresponen a estes classes
   renderClasses();
-  toast('Dataset cargado. ¡Añade muestras!', 'success');
+  toast('Conjunt carregat. Afig mostres!', 'success');
 }
 
 // ═══ CLASSES ═══
-function addClass() { classes.push({ name: `Clase ${classes.length+1}`, samples: [] }); renderClasses(); }
+function addClass() { classes.push(newClass(`Classe ${classes.length+1}`)); renderClasses(); }
 function deleteClass(i) {
+  const c = classes[i];
+  if (c.samples.length && !confirm(`Esborrar la classe «${c.name}» i les seues ${c.samples.length} mostres?`)) return;
   if (modelType==='audio' && audioTransferRecognizer) {
-    classes[i].samples.forEach(s => { if (s && s.uid) { try { audioTransferRecognizer.removeExample(s.uid); } catch(e){} } });
+    c.samples.forEach(sm => { if (sm && sm.uid) { try { audioTransferRecognizer.removeExample(sm.uid); } catch(e){} } });
   }
   classes.splice(i,1);
   renderClasses();
@@ -475,18 +612,25 @@ function deleteSample(ci, si) {
   renderClasses();
 }
 function clearSamples(ci) {
+  const c = classes[ci];
+  if (!c.samples.length) return;
+  if (!confirm(`Esborrar les ${c.samples.length} mostres de la classe «${c.name}»?`)) return;
   if (modelType==='audio' && audioTransferRecognizer) {
-    classes[ci].samples.forEach(s => { if (s && s.uid) { try { audioTransferRecognizer.removeExample(s.uid); } catch(e){} } });
+    c.samples.forEach(sm => { if (sm && sm.uid) { try { audioTransferRecognizer.removeExample(sm.uid); } catch(e){} } });
   }
-  classes[ci].samples=[];
+  c.samples=[];
   renderClasses();
+}
+function setBg(i, v) {
+  if (v && classes.some((c,j) => j!==i && c.bg)) { toast('Només una classe pot ser el soroll de fons','error'); renderClasses(); return; }
+  classes[i].bg = v;
 }
 
 function renderClasses() {
   const list = document.getElementById('classesList');
   if (!classes.length) {
     const icons = { audio:'🎤', pose:'🕺', hands:'🤚', image:'✋' };
-    list.innerHTML = `<div class="empty"><div class="icon">${icons[modelType]||'✋'}</div><p>Elige un dataset de ejemplo o añade clases.</p></div>`;
+    list.innerHTML = `<div class="empty"><div class="icon">${icons[modelType]||'✋'}</div><p>Tria un conjunt d'exemple o afig classes.</p></div>`;
     return;
   }
   list.innerHTML = classes.map((cls,i) => {
@@ -494,35 +638,36 @@ function renderClasses() {
     const thumbs = renderThumbs(cls, i);
     let capBtns = '';
     if (modelType==='audio') {
-      capBtns = `<div class="cap-btns">
-        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="recordAudio(${i})">🎤 Grabar</button>
-        <button class="cap-btn" onclick="clearSamples(${i})">🗑 Borrar</button>
+      capBtns = `<label class="bg-toggle"><input type="checkbox" ${cls.bg?'checked':''} ${cls.samples.length?'disabled':''} onchange="setBg(${i},this.checked)"> Soroll de fons</label>
+      <div class="cap-btns">
+        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="recordAudio(${i})">🎤 Gravar</button>
+        <button class="cap-btn" onclick="clearSamples(${i})">🗑 Esborrar</button>
       </div>`;
     } else if (modelType==='pose') {
       capBtns = `<div class="cap-btns">
         <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'pose')">🕺 Capturar</button>
-        <button class="cap-btn" onclick="clearSamples(${i})">🗑 Borrar</button>
+        <button class="cap-btn" onclick="clearSamples(${i})">🗑 Esborrar</button>
       </div>`;
     } else if (modelType==='hands') {
       capBtns = `<div class="cap-btns">
         <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'hands')">🤚 Capturar</button>
-        <button class="cap-btn" onclick="clearSamples(${i})">🗑 Borrar</button>
+        <button class="cap-btn" onclick="clearSamples(${i})">🗑 Esborrar</button>
       </div>`;
     } else {
       capBtns = `<div class="cap-btns">
-        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'image')">📷 Cámara</button>
-        <label class="cap-btn" style="cursor:pointer">🖼 Subir<input type="file" accept="image/*" multiple style="display:none" onchange="uploadImgs(event,${i})"></label>
-        <button class="cap-btn" onclick="clearSamples(${i})">🗑</button>
+        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'image')">📷 Càmera</button>
+        <label class="cap-btn" style="cursor:pointer">🖼 Pujar<input type="file" accept="image/*" multiple style="display:none" onchange="uploadImgs(event,${i})"></label>
+        <button class="cap-btn" onclick="clearSamples(${i})" aria-label="Esborrar les mostres">🗑</button>
       </div>`;
     }
     return `<div class="class-card" style="--cc:${col}">
       <div class="class-header">
-        <input class="cname-input" value="${cls.name}" oninput="classes[${i}].name=this.value">
-        <button style="background:none;border:1px solid var(--border);color:var(--text2);width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:11px" onclick="deleteClass(${i})">✕</button>
+        <input class="cname-input" value="${esc(cls.name)}" oninput="classes[${i}].name=this.value" aria-label="Nom de la classe">
+        <button style="background:none;border:1px solid var(--border);color:var(--text2);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:12px" onclick="deleteClass(${i})" aria-label="Esborrar la classe">✕</button>
       </div>
       <div style="display:flex;align-items:baseline;gap:5px;margin-bottom:6px">
         <div class="sample-n">${cls.samples.length}</div>
-        <div class="sample-lbl">muestras</div>
+        <div class="sample-lbl">mostres</div>
       </div>
       ${thumbs}
       ${capBtns}
@@ -534,15 +679,15 @@ function renderThumbs(cls, ci) {
   if (!cls.samples.length) return '';
   const MAX = 8, vis = cls.samples.slice(0,MAX), extra = cls.samples.length-MAX;
   if (modelType==='audio') {
-    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio">🔊</div><button class="tdel" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
+    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio">🔊</div><button class="tdel" aria-label="Esborrar la mostra" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
   }
   if (modelType==='pose') {
-    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio" style="font-size:14px">🕺</div><button class="tdel" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
+    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio" style="font-size:14px">🕺</div><button class="tdel" aria-label="Esborrar la mostra" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
   }
   if (modelType==='hands') {
-    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio" style="font-size:14px">🤚</div><button class="tdel" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
+    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio" style="font-size:14px">🤚</div><button class="tdel" aria-label="Esborrar la mostra" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
   }
-  return `<div class="thumbs">${vis.map((src,si) => `<div class="twrap"><img class="thumb" src="${src}" loading="lazy"><button class="tdel" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
+  return `<div class="thumbs">${vis.map((src,si) => `<div class="twrap"><img class="thumb" src="${src}" loading="lazy"><button class="tdel" aria-label="Esborrar la mostra" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
 }
 
 // ═══ CAMERA ═══
@@ -567,7 +712,7 @@ async function openCam(ci, type) {
     await new Promise(res => { v.onloadedmetadata = res; });
     overlay.width = v.videoWidth; overlay.height = v.videoHeight;
     if (type==='pose' || type==='hands') startCamOverlayLoop(type);
-  } catch(e) { toast('Sin acceso a cámara','error'); closeCamera(); }
+  } catch(e) { toast('Sense accés a la càmera','error'); closeCamera(); }
 }
 function closeCamera() {
   stopCap();
@@ -578,7 +723,7 @@ function closeCamera() {
 }
 function updateCamCount() {
   const c = classes[curClass];
-  document.getElementById('modalCT').textContent = c.samples.length + ' muestras';
+  document.getElementById('modalCT').textContent = c.samples.length + ' mostres';
   document.getElementById('capProg').style.width = Math.min(c.samples.length/50*100,100)+'%';
 }
 
@@ -595,7 +740,7 @@ function startCamOverlayLoop(type) {
     if (!document.getElementById('camModal').classList.contains('open')) return;
     try {
       if (type === 'pose' && v.readyState >= 2) {
-        if (!poseNet) poseNet = await posenet.load({ architecture:'MobileNetV1', outputStride:16, inputResolution:193, multiplier:.75 });
+        if (!poseNet) await ensurePoseNet();
         const pose = await poseNet.estimateSinglePose(v, { flipHorizontal:false });
         octx.clearRect(0,0,overlay.width,overlay.height);
         drawKPs(pose,octx); drawSkel(pose,octx);
@@ -604,7 +749,14 @@ function startCamOverlayLoop(type) {
         octx.clearRect(0,0,overlay.width,overlay.height);
         if (res && res.multiHandLandmarks && res.multiHandLandmarks[0]) drawHandSkeleton(res.multiHandLandmarks[0], octx, overlay.width, overlay.height);
       }
-    } catch(e) { /* frame puntual fallat: s'ignora, es reintenta al següent tick */ }
+    } catch(e) {
+      // Fotograma puntual fallat: s'ignora i es reintenta. Si el que falla és la
+      // descàrrega del model base, avisa i espera uns segons abans de reintentar.
+      if (!baseLoaded(type)) {
+        netFail(BASE_NAMES[type]);
+        await new Promise(r => setTimeout(r, 4000));
+      }
+    }
     camOverlayLoop = requestAnimationFrame(tick);
   }
   camOverlayLoop = requestAnimationFrame(tick);
@@ -626,8 +778,8 @@ function capImageFrame() {
 }
 async function capPoseFrame() {
   if (!poseNet) {
-    try { poseNet = await posenet.load({ architecture:'MobileNetV1', outputStride:16, inputResolution:193, multiplier:.75 }); }
-    catch(e) { toast('Error PoseNet','error'); return; }
+    try { await ensurePoseNet(); }
+    catch(e) { netFail('PoseNet'); return; }
   }
   const v = document.getElementById('cameraVideo');
   if (v.readyState<2) return;
@@ -668,7 +820,7 @@ async function uploadImgs(event, ci) {
     classes[ci].samples.push(url);
   }
   renderClasses();
-  toast(files.length+' imágenes añadidas ✓','success');
+  toast(files.length+(files.length===1?' imatge afegida ✓':' imatges afegides ✓'),'success');
 }
 
 // ═══ AUDIO RECORD (transfer learning en viu, igual que fa Teachable Machine) ═══
@@ -682,18 +834,18 @@ async function recordAudio(ci) {
   try {
     await ensureAudioBase();
     if (!audioTransferRecognizer) audioTransferRecognizer = audioBaseRecognizer.createTransfer('maquina-ensenyable');
-    const label = classes[ci].name;
-    if (btn) { btn.disabled = true; btn.textContent = '🔴 Grabando…'; }
-    toast('🔴 Grabando 1s…');
+    const label = audioLabel(classes[ci]);   // etiqueta estable (no depén del nom de la classe)
+    if (btn) { btn.disabled = true; btn.textContent = '🔴 Gravant…'; }
+    toast('🔴 Gravant 1 s…');
     const uid = await audioTransferRecognizer.collectExample(label);
     classes[ci].samples.push({ t: Date.now(), uid }); // uid → permet esborrar esta mostra en concret
     renderClasses();
-    toast('Muestra grabada ✓','success');
+    toast('Mostra gravada ✓','success');
   } catch(e) {
-    toast('Sin acceso al micrófono o error de grabación','error');
+    toast('Sense accés al micròfon o error de gravació','error');
     console.error(e);
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '🎤 Grabar'; }
+    if (btn) { btn.disabled = false; btn.textContent = '🎤 Gravar'; }
   }
 }
 // Buidar mostres d'àudio reinicia també el reconeixedor intern, perquè mai
@@ -703,11 +855,34 @@ function resetAudioRecognizer() {
   audioTransferRecognizer = null;
 }
 
+// Torna la pastilla d'estat al valor correcte quan acaba una càrrega de model base
+function restorePill() {
+  if (document.getElementById('trainBtn').disabled) setPill('entrenant','training');
+  else if (model) setPill('llest ✓','ready');
+  else setPill('sense model','');
+}
+
 // ═══ BASE MODEL ═══
 async function loadBase() {
   if (baseModel) return;
-  setPill('cargando MobileNet…','');
-  baseModel = await mobilenet.load({ version:2, alpha:.5 });
+  if (offlineNow()) throw new Error('Network offline');
+  needLib('mobilenet');
+  setPill('carregant MobileNet…','');
+  netInfo('MobileNet');
+  try { baseModel = await mobilenet.load({ version:2, alpha:.5 }); }
+  finally { restorePill(); }
+}
+
+// ═══ POSENET ═══
+async function ensurePoseNet() {
+  if (poseNet) return poseNet;
+  if (offlineNow()) throw new Error('Network offline');
+  needLib('posenet');
+  setPill('carregant PoseNet…','');
+  netInfo('PoseNet');
+  try { poseNet = await posenet.load({ architecture:'MobileNetV1', outputStride:16, inputResolution:193, multiplier:.75 }); }
+  finally { restorePill(); }
+  return poseNet;
 }
 
 // ═══ MANOS (MediaPipe Hands) ═══
@@ -716,15 +891,24 @@ async function loadBase() {
 // cridar com la resta de deteccions (posenet.estimateSinglePose, etc.).
 function getHandsDetector() {
   if (handsDetector) return handsDetector;
+  needLib('Hands');
+  netInfo('el model de mans');
   handsDetector = new Hands({ locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
   handsDetector.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
-  handsDetector.onResults(res => { if (pendingHandsResolve) { const r = pendingHandsResolve; pendingHandsResolve = null; r(res); } });
+  handsDetector.onResults(res => { handsReady = true; if (pendingHandsResolve) { const r = pendingHandsResolve; pendingHandsResolve = null; r(res); } });
   return handsDetector;
 }
 function detectHandsOnce(videoEl) {
   return new Promise(resolve => {
     pendingHandsResolve = resolve;
-    getHandsDetector().send({ image: videoEl }).catch(() => { pendingHandsResolve = null; resolve(null); });
+    let det;
+    try { det = getHandsDetector(); }
+    catch (e) { pendingHandsResolve = null; netFail('el model de mans'); resolve(null); return; }
+    det.send({ image: videoEl }).catch(() => {
+      pendingHandsResolve = null;
+      if (!handsReady) netFail('el model de mans');   // la descàrrega no ha funcionat
+      resolve(null);
+    });
   });
 }
 // Connexions entre punts de la mà (21 landmarks de MediaPipe Hands)
@@ -771,11 +955,11 @@ async function trainModel() {
 
 async function trainImage() {
   const valid = classes.filter(c=>c.samples.length>=3);
-  if (valid.length<2) { toast('Al menos 2 clases con 3+ muestras','error'); return; }
+  if (valid.length<2) { toast('Cal almenys 2 classes amb 3 mostres o més','error'); return; }
   startTrainUI();
   try {
     await loadBase();
-    document.getElementById('trainBtn').textContent='🔄 Extrayendo…';
+    document.getElementById('trainBtn').textContent='🔄 Extraient…';
     const xs_l=[], ys_l=[];
     for (let i=0;i<valid.length;i++) for (const s of valid[i].samples) { xs_l.push(await getEmb(s)); ys_l.push(i); }
     const xs=tf.concat(xs_l); xs_l.forEach(t=>t.dispose());
@@ -785,12 +969,12 @@ async function trainImage() {
     await fitModel(model,xs,ys,valid);
     xs.dispose(); ys.dispose();
     finishTrain(valid,'image');
-  } catch(e) { toast('Error: '+e.message,'error'); endTrainUI(); }
+  } catch(e) { errToast(e); endTrainUI(); }
 }
 
 async function trainPose() {
   const valid = classes.filter(c=>c.samples.length>=3);
-  if (valid.length<2) { toast('Al menos 2 clases con 3+ muestras de pose','error'); return; }
+  if (valid.length<2) { toast('Cal almenys 2 classes amb 3 mostres de postura o més','error'); return; }
   startTrainUI();
   try {
     const xs_l=[], ys_l=[];
@@ -802,12 +986,12 @@ async function trainPose() {
     await fitModel(model,xs,ys,valid);
     xs.dispose(); ys.dispose();
     finishTrain(valid,'pose');
-  } catch(e) { toast('Error: '+e.message,'error'); endTrainUI(); }
+  } catch(e) { errToast(e); endTrainUI(); }
 }
 
 async function trainHands() {
   const valid = classes.filter(c=>c.samples.length>=3);
-  if (valid.length<2) { toast('Al menos 2 clases con 3+ muestras de mano','error'); return; }
+  if (valid.length<2) { toast('Cal almenys 2 classes amb 3 mostres de mà o més','error'); return; }
   startTrainUI();
   try {
     const xs_l=[], ys_l=[];
@@ -819,35 +1003,49 @@ async function trainHands() {
     await fitModel(model,xs,ys,valid);
     xs.dispose(); ys.dispose();
     finishTrain(valid,'hands');
-  } catch(e) { toast('Error: '+e.message,'error'); endTrainUI(); }
+  } catch(e) { errToast(e); endTrainUI(); }
 }
 
 // ═══ AUDIO (transfer learning amb speech-commands) ═══
 async function ensureAudioBase() {
   if (audioBaseRecognizer) return audioBaseRecognizer;
-  setPill('cargando modelo de audio base…','');
-  audioBaseRecognizer = speechCommands.create('BROWSER_FFT');
-  await audioBaseRecognizer.ensureModelLoaded();
+  if (offlineNow()) throw new Error('Network offline');
+  needLib('speechCommands');
+  setPill('carregant el model d\'àudio base…','');
+  netInfo('el model d\'àudio');
+  try {
+    audioBaseRecognizer = speechCommands.create('BROWSER_FFT');
+    await audioBaseRecognizer.ensureModelLoaded();
+  } catch(e) { audioBaseRecognizer = null; throw e; }
+  finally { restorePill(); }
   return audioBaseRecognizer;
 }
 async function trainAudio() {
-  const valid = classes.filter(c => c.samples.length >= 8);
-  if (valid.length < 2) { toast('Cada clase de audio necesita 8+ muestras (incluye una clase "Fondo")','error'); return; }
-  if (!audioTransferRecognizer) { toast('Grava mostres d\'àudio primer','error'); return; }
+  if (!audioTransferRecognizer) { toast('Grava primer mostres d\'àudio','error'); return; }
+  // Les mostres viuen dins del reconeixedor: es compten per etiqueta (no per l'ordre ni el nom)
+  const counts = audioTransferRecognizer.countExamples ? audioTransferRecognizer.countExamples() : {};
+  const withSamples = classes.filter(c => (counts[audioLabel(c)] || 0) > 0);
+  const few = withSamples.find(c => counts[audioLabel(c)] < 8);
+  if (few) { toast(`La classe «${few.name}» necessita 8 mostres o més (en té ${counts[audioLabel(few)]})`,'error'); return; }
+  if (withSamples.length < 2) { toast('Cal almenys 2 classes amb 8 mostres o més (inclou una de «Soroll de fons»)','error'); return; }
   startTrainUI();
   try {
-    document.getElementById('trainBtn').textContent = '🧠 Entrenando…';
+    document.getElementById('trainBtn').textContent = '🧠 Entrenant…';
     const epochs = parseInt(document.getElementById('epochs').value);
+    const batchSize = parseInt(document.getElementById('batchSize').value);
+    const lr = parseFloat(document.getElementById('lr').value);
     lossH=[]; accH=[]; valAccH=[];
     await audioTransferRecognizer.train({
       epochs,
+      batchSize,
+      optimizer: tf.train.adam(lr),
       validationSplit: .15,
       callback: {
         onEpochEnd: (ep, logs) => {
           const pct = ((ep+1)/epochs*100).toFixed(0);
           document.getElementById('epFill').style.width = pct+'%';
-          document.getElementById('epText').textContent = `Época ${ep+1} / ${epochs}`;
-          document.getElementById('lossText').textContent = `loss ${logs.loss.toFixed(3)}`;
+          document.getElementById('epText').textContent = `Època ${ep+1} / ${epochs}`;
+          document.getElementById('lossText').textContent = `pèrdua ${logs.loss.toFixed(3)}`;
           document.getElementById('mLoss').textContent = logs.loss.toFixed(3);
           document.getElementById('mAcc').textContent = ((logs.acc||logs.accuracy||0)*100).toFixed(0)+'%';
           document.getElementById('mValAcc').textContent = ((logs.val_acc||logs.val_accuracy||0)*100).toFixed(0)+'%';
@@ -856,9 +1054,13 @@ async function trainAudio() {
         }
       }
     });
-    model = { _isAudio:true, _classNames: valid.map(c=>c.name), _classColors: valid.map((_,i)=>CC[i%CC.length]), _modelType:'audio' };
-    finishTrain(valid, 'audio');
-  } catch(e) { toast('Error: '+e.message,'error'); endTrainUI(); console.error(e); }
+    // Les puntuacions del reconeixedor segueixen l'ordre ALFABÈTIC de les etiquetes
+    // (wordLabels), no l'ordre de les classes de l'usuari: es tradueixen a noms.
+    const words = audioTransferRecognizer.wordLabels();
+    const names = words.map(w => { const c = classes.find(x => audioLabel(x) === w); return c ? c.name : w; });
+    model = { _isAudio:true, _words: words, _classNames: names, _classColors: names.map((_,i)=>CC[i%CC.length]), _modelType:'audio' };
+    finishTrain(withSamples, 'audio');
+  } catch(e) { errToast(e); endTrainUI(); console.error(e); }
 }
 
 function buildHead(inputShape, nCls) {
@@ -876,14 +1078,14 @@ async function fitModel(m, xs, ys, valid) {
   const epochs=parseInt(document.getElementById('epochs').value);
   const bs=parseInt(document.getElementById('batchSize').value);
   lossH=[]; accH=[]; valAccH=[];
-  document.getElementById('trainBtn').textContent='🧠 Entrenando…';
+  document.getElementById('trainBtn').textContent='🧠 Entrenant…';
   await m.fit(xs,ys,{
     epochs, batchSize:bs, shuffle:true, validationSplit:.15,
     callbacks:{ onEpochEnd:(ep,logs)=>{
       const pct=((ep+1)/epochs*100).toFixed(0);
       document.getElementById('epFill').style.width=pct+'%';
-      document.getElementById('epText').textContent=`Época ${ep+1} / ${epochs}`;
-      document.getElementById('lossText').textContent=`loss ${logs.loss.toFixed(3)}`;
+      document.getElementById('epText').textContent=`Època ${ep+1} / ${epochs}`;
+      document.getElementById('lossText').textContent=`pèrdua ${logs.loss.toFixed(3)}`;
       document.getElementById('mLoss').textContent=logs.loss.toFixed(3);
       document.getElementById('mAcc').textContent=((logs.acc||logs.accuracy||0)*100).toFixed(0)+'%';
       document.getElementById('mValAcc').textContent=((logs.val_acc||logs.val_accuracy||0)*100).toFixed(0)+'%';
@@ -897,22 +1099,22 @@ async function fitModel(m, xs, ys, valid) {
 }
 
 function startTrainUI() {
-  const b=document.getElementById('trainBtn'); b.disabled=true; b.textContent='⏳ Preparando…';
+  const b=document.getElementById('trainBtn'); b.disabled=true; b.textContent='⏳ Preparant…';
   document.getElementById('trainProg').style.display='block';
-  setPill('entrenando','training');
+  setPill('entrenant','training');
 }
 function endTrainUI() {
-  const b=document.getElementById('trainBtn'); b.disabled=false; b.textContent='⚡ Entrenar modelo';
+  const b=document.getElementById('trainBtn'); b.disabled=false; b.textContent='⚡ Entrenar model';
 }
 function finishTrain(valid, type) {
-  setPill('listo ✓','ready');
+  setPill('llest ✓','ready');
   document.getElementById('noModelMsg').style.display='none';
   document.getElementById('ts-'+type).style.display='block';
   if (type==='image') setupPredRows('predCon', model._classNames, model._classColors);
   else if (type==='pose') setupPredRows('predCon-pose', model._classNames, model._classColors);
   else if (type==='hands') setupPredRows('predCon-hands', model._classNames, model._classColors);
   else if (type==='audio') setupPredRows('predCon-audio', model._classNames, model._classColors);
-  toast('¡Modelo entrenado! 🎉','success');
+  toast('Model entrenat! 🎉','success');
   endTrainUI();
 }
 
@@ -945,23 +1147,23 @@ function setTestMode(m) {
 }
 async function toggleTest() { isTesting?stopTest():await startTest(); }
 async function startTest() {
-  if (!model) { toast('Entrena primero','error'); return; }
+  if (!model) { toast('Entrena primer un model','error'); return; }
   try {
     testStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
     document.getElementById('testVideo').srcObject=testStream;
     isTesting=true;
-    document.getElementById('testBtn').textContent='⏹ Detener';
+    document.getElementById('testBtn').textContent='⏹ Detindre';
     document.getElementById('testBtn').className='btn btn-d btn-w';
     document.getElementById('topCard').style.display='flex';
     setupPredRows('predCon',model._classNames,model._classColors);
     testInterval=setInterval(runImgPred,200);
-  } catch(e) { toast('Sin acceso a cámara','error'); }
+  } catch(e) { toast('Sense accés a la càmera','error'); }
 }
 function stopTest() {
   clearInterval(testInterval);
   if (testStream) { testStream.getTracks().forEach(t=>t.stop()); testStream=null; }
   isTesting=false;
-  document.getElementById('testBtn').textContent='📷 Activar cámara';
+  document.getElementById('testBtn').textContent='📷 Activar càmera';
   document.getElementById('testBtn').className='btn btn-p btn-w';
 }
 async function runImgPred() {
@@ -980,8 +1182,11 @@ async function classifyStatic(event) {
   await predictShow(url,'predConImg','topName','topConf');
 }
 async function predictShow(imgSrc, conId, nameId, confId) {
+  const m=model;   // el model pot canviar o esborrar-se mentre s'espera
+  if (!m) return;
   const emb=await getEmb(imgSrc);
-  const pred=model.predict(emb); const data=await pred.data();
+  if (m!==model) { emb.dispose(); return; }
+  const pred=m.predict(emb); const data=await pred.data();
   emb.dispose(); pred.dispose();
   let mx=0; data.forEach((v,i)=>{if(v>data[mx])mx=i;});
   data.forEach((v,i)=>{
@@ -989,13 +1194,13 @@ async function predictShow(imgSrc, conId, nameId, confId) {
     if(b){b.style.width=(v*100).toFixed(1)+'%'; b.style.opacity=i===mx?'1':'.5';}
     if(p) p.textContent=(v*100).toFixed(1)+'%';
   });
-  if(nameId) document.getElementById(nameId).textContent=model._classNames[mx];
-  if(confId) document.getElementById(confId).textContent=(data[mx]*100).toFixed(1)+'% confianza';
+  if(nameId) document.getElementById(nameId).textContent=m._classNames[mx];
+  if(confId) document.getElementById(confId).textContent=(data[mx]*100).toFixed(1)+'% de confiança';
 }
 function setupPredRows(conId, names, colors) {
   document.getElementById(conId).innerHTML=names.map((n,i)=>`
     <div class="pred-row">
-      <div class="pred-lbl">${n}</div>
+      <div class="pred-lbl">${esc(n)}</div>
       <div class="pred-bg"><div class="pred-fill" id="b-${conId}-${i}" style="width:0%;--pc:${colors[i]}"></div></div>
       <div class="pred-pct" id="p-${conId}-${i}">0%</div>
     </div>`).join('');
@@ -1004,7 +1209,7 @@ function setupPredRows(conId, names, colors) {
 // ═══ TEST — AUDIO ═══
 async function toggleAudioTest() { isTestingAudio?stopAudioTest():await startAudioTest(); }
 async function startAudioTest() {
-  if (!model || !audioTransferRecognizer) { toast('Entrena primero','error'); return; }
+  if (!model || !audioTransferRecognizer) { toast('Entrena primer un model','error'); return; }
   try {
     if (!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
     audioMicStream=await navigator.mediaDevices.getUserMedia({audio:true});
@@ -1012,7 +1217,7 @@ async function startAudioTest() {
     audioAnalyser=audioCtx.createAnalyser(); audioAnalyser.fftSize=256;
     src.connect(audioAnalyser);
     isTestingAudio=true;
-    document.getElementById('testBtnAudio').textContent='⏹ Detener';
+    document.getElementById('testBtnAudio').textContent='⏹ Detindre';
     document.getElementById('testBtnAudio').className='btn btn-d btn-w';
     document.getElementById('topCard-audio').style.display='flex';
     setupPredRows('predCon-audio',model._classNames,model._classColors);
@@ -1028,17 +1233,17 @@ async function startAudioTest() {
         if(p)p.textContent=(v*100).toFixed(1)+'%';
       });
       document.getElementById('topName-audio').textContent = names[mx];
-      document.getElementById('topConf-audio').textContent = (scores[mx]*100).toFixed(1)+'% confianza';
+      document.getElementById('topConf-audio').textContent = (scores[mx]*100).toFixed(1)+'% de confiança';
     }, { includeSpectrogram:false, probabilityThreshold:0.6, invokeCallbackOnNoiseAndUnknown:true, overlapFactor:0.50 });
-    toast('🎤 Escuchando…');
-  } catch(e) { toast('Sin acceso al micrófono','error'); console.error(e); }
+    toast('🎤 Escoltant…');
+  } catch(e) { toast('Sense accés al micròfon','error'); console.error(e); }
 }
 function stopAudioTest() {
   clearInterval(audioVizInt);
   if (audioTransferRecognizer && audioTransferRecognizer.isListening && audioTransferRecognizer.isListening()) audioTransferRecognizer.stopListening();
   if (audioMicStream) { audioMicStream.getTracks().forEach(t=>t.stop()); audioMicStream=null; }
   isTestingAudio=false;
-  document.getElementById('testBtnAudio').textContent='🎤 Activar micrófono';
+  document.getElementById('testBtnAudio').textContent='🎤 Activar micròfon';
   document.getElementById('testBtnAudio').className='btn btn-p btn-w';
 }
 function initAudioViz() {
@@ -1056,11 +1261,10 @@ function startAudioViz() {
 // ═══ TEST — POSE ═══
 async function togglePoseTest() { isTestingPose?stopPoseTest():await startPoseTest(); }
 async function startPoseTest() {
-  if (!model) { toast('Entrena primero','error'); return; }
+  if (!model) { toast('Entrena primer un model','error'); return; }
   if (!poseNet) {
-    toast('Cargando PoseNet…');
-    try { poseNet=await posenet.load({architecture:'MobileNetV1',outputStride:16,inputResolution:193,multiplier:.75}); }
-    catch(e) { toast('Error PoseNet','error'); return; }
+    try { await ensurePoseNet(); }
+    catch(e) { netFail('PoseNet'); return; }
   }
   try {
     poseStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
@@ -1070,21 +1274,24 @@ async function startPoseTest() {
     await new Promise(res=>video.onloadedmetadata=res);
     canvas.width=video.videoWidth; canvas.height=video.videoHeight;
     isTestingPose=true;
-    document.getElementById('testBtnPose').textContent='⏹ Detener';
+    document.getElementById('testBtnPose').textContent='⏹ Detindre';
     document.getElementById('testBtnPose').className='btn btn-d btn-w';
     document.getElementById('topCard-pose').style.display='flex';
     setupPredRows('predCon-pose',model._classNames,model._classColors);
     poseInterval=setInterval(()=>runPosePred(video,canvas),300);
-  } catch(e) { toast('Sin acceso a cámara','error'); }
+  } catch(e) { toast('Sense accés a la càmera','error'); }
 }
 async function runPosePred(video, canvas) {
   if (!poseNet||!model||video.readyState<2) return;
   try {
-    const pose=await poseNet.estimateSinglePose(video,{flipHorizontal:true});
+    // Mateixes coordenades (sense mirall) que en capturar les mostres, perquè el model
+    // veja les dades igual que en entrenar; només el dibuix es mostra mirallat.
+    const pose=await poseNet.estimateSinglePose(video,{flipHorizontal:false});
     const ctx=canvas.getContext('2d');
     ctx.save(); ctx.translate(canvas.width,0); ctx.scale(-1,1);
-    ctx.drawImage(video,0,0,canvas.width,canvas.height); ctx.restore();
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
     drawKPs(pose,ctx); drawSkel(pose,ctx);
+    ctx.restore();
     const kp=pose.keypoints.map(k=>[k.position.x/video.videoWidth,k.position.y/video.videoHeight,k.score]);
     const inp=tf.tensor2d([kp.flat()]);
     const pred=model.predict(inp); const data=await pred.data();
@@ -1096,18 +1303,18 @@ async function runPosePred(video, canvas) {
       if(p)p.textContent=(v*100).toFixed(1)+'%';
     });
     document.getElementById('topName-pose').textContent=model._classNames[mx];
-    document.getElementById('topConf-pose').textContent=(data[mx]*100).toFixed(1)+'% confianza';
+    document.getElementById('topConf-pose').textContent=(data[mx]*100).toFixed(1)+'% de confiança';
   } catch(e) {}
 }
 function drawKPs(pose,ctx){pose.keypoints.forEach(k=>{if(k.score>.3){ctx.beginPath();ctx.arc(k.position.x,k.position.y,5,0,2*Math.PI);ctx.fillStyle='#7c3aed';ctx.fill();}});}
 function drawSkel(pose,ctx){const adj=[[5,6],[5,7],[7,9],[6,8],[8,10],[5,11],[6,12],[11,12],[11,13],[13,15],[12,14],[14,16]],kps=pose.keypoints;ctx.strokeStyle='rgba(124,58,237,.6)';ctx.lineWidth=2;adj.forEach(([a,b])=>{if(kps[a].score>.3&&kps[b].score>.3){ctx.beginPath();ctx.moveTo(kps[a].position.x,kps[a].position.y);ctx.lineTo(kps[b].position.x,kps[b].position.y);ctx.stroke();}});}
-function stopPoseTest(){clearInterval(poseInterval);if(poseStream){poseStream.getTracks().forEach(t=>t.stop());poseStream=null;}isTestingPose=false;document.getElementById('testBtnPose').textContent='🕺 Activar cámara';document.getElementById('testBtnPose').className='btn btn-p btn-w';}
+function stopPoseTest(){clearInterval(poseInterval);if(poseStream){poseStream.getTracks().forEach(t=>t.stop());poseStream=null;}isTestingPose=false;document.getElementById('testBtnPose').textContent='🕺 Activar càmera';document.getElementById('testBtnPose').className='btn btn-p btn-w';}
 
 // ═══ TEST — MANOS ═══
 let handsStream = null, isTestingHands = false, handsTestLoop = null;
 async function toggleHandsTest() { isTestingHands?stopHandsTest():await startHandsTest(); }
 async function startHandsTest() {
-  if (!model) { toast('Entrena primero','error'); return; }
+  if (!model) { toast('Entrena primer un model','error'); return; }
   try {
     handsStream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
     const canvas = document.getElementById('handsCanvas');
@@ -1116,7 +1323,7 @@ async function startHandsTest() {
     await new Promise(res => video.onloadedmetadata = res);
     canvas.width = video.videoWidth; canvas.height = video.videoHeight;
     isTestingHands = true;
-    document.getElementById('testBtnHands').textContent = '⏹ Detener';
+    document.getElementById('testBtnHands').textContent = '⏹ Detindre';
     document.getElementById('testBtnHands').className = 'btn btn-d btn-w';
     document.getElementById('topCard-hands').style.display = 'flex';
     setupPredRows('predCon-hands', model._classNames, model._classColors);
@@ -1126,7 +1333,7 @@ async function startHandsTest() {
       handsTestLoop = setTimeout(loop, 200);
     };
     loop();
-  } catch(e) { toast('Sin acceso a cámara','error'); }
+  } catch(e) { toast('Sense accés a la càmera','error'); }
 }
 async function runHandsPred(video, canvas) {
   if (!model || video.readyState<2) return;
@@ -1152,14 +1359,14 @@ async function runHandsPred(video, canvas) {
       if(p)p.textContent=(v*100).toFixed(1)+'%';
     });
     document.getElementById('topName-hands').textContent = model._classNames[mx];
-    document.getElementById('topConf-hands').textContent = (data[mx]*100).toFixed(1)+'% confianza';
+    document.getElementById('topConf-hands').textContent = (data[mx]*100).toFixed(1)+'% de confiança';
   } catch(e) {}
 }
 function stopHandsTest(){
   isTestingHands=false;
   if (handsTestLoop) clearTimeout(handsTestLoop);
   if (handsStream) { handsStream.getTracks().forEach(t=>t.stop()); handsStream=null; }
-  document.getElementById('testBtnHands').textContent='🤚 Activar cámara';
+  document.getElementById('testBtnHands').textContent='🤚 Activar càmera';
   document.getElementById('testBtnHands').className='btn btn-p btn-w';
 }
 
@@ -1168,6 +1375,13 @@ function updateExportTab() {
   const has=!!model;
   document.getElementById('noModelExport').style.display=has?'none':'block';
   document.getElementById('exportSec').style.display=has?'block':'none';
+  const notes = {
+    image: "S'exporta el cap classificador. Per a la inferència completa també necessites MobileNet v2 com a extractor de característiques.",
+    pose: "S'exporta el classificador. Les entrades són els 17 punts de PoseNet (x, y i confiança, normalitzats).",
+    hands: "S'exporta el classificador. Les entrades són els 21 punts de MediaPipe Hands (x, y).",
+    audio: "S'exporta el cap classificador d'àudio. Per a usar-lo també necessites el model base de speech-commands."
+  };
+  document.getElementById('exportNote').innerHTML = '<b>Nota:</b> ' + (notes[modelType] || '');
 }
 // L'àudio guarda els pesos entrenats dins de audioTransferRecognizer.model
 // (un tf.LayersModel normal), no dins de la variable "model" (que per a
@@ -1180,9 +1394,9 @@ function getExportableModel() {
 async function exportTFJS() {
   const m = getExportableModel();
   if (!m) return;
-  const name=document.getElementById('projectName').value||'mi-modelo';
+  const name=document.getElementById('projectName').value||'el-meu-model';
   await m.save('downloads://'+name+'-tfjs');
-  toast('Descargando model.json + weights ✓','success');
+  toast('Descarregant el model i els pesos ✓','success');
 }
 async function exportKeras() {
   const m = getExportableModel();
@@ -1193,17 +1407,17 @@ async function exportKeras() {
     const bytes=new Uint8Array(a.weightData); let bin='';
     bytes.forEach(b=>bin+=String.fromCharCode(b)); weightData=btoa(bin); return {};
   }));
-  const d={modelTopology:topology,weightSpecs,weightData,classNames:model._classNames};
-  dlBlob(JSON.stringify(d,null,2),(document.getElementById('projectName').value||'mi-modelo')+'-keras.json','application/json');
-  toast('Exportado ✓','success');
+  const d={modelTopology:topology,weightSpecs,weightData,classNames:model._classNames,modelType};
+  dlBlob(JSON.stringify(d,null,2),(document.getElementById('projectName').value||'el-meu-model')+'-keras.json','application/json');
+  toast('Exportat ✓','success');
 }
-function exportTFLite() { toast('TFLite requiere servidor. Exportando TF.js…',''); setTimeout(exportTFJS,500); }
+function exportTFLite() { toast('TFLite requerix un servidor. Exportant TF.js…',''); setTimeout(exportTFJS,500); }
 function dlBlob(content,name,mime){const b=new Blob([content],{type:mime}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
 
 // ═══ SAVE / LOAD ═══
 function updateSaveTab() {
   const tot=classes.reduce((a,c)=>a+c.samples.length,0);
-  document.getElementById('saveType').textContent=modelType;
+  document.getElementById('saveType').textContent=TYPE_NAMES[modelType]||modelType;
   document.getElementById('saveStats').textContent=classes.length+' / '+tot;
   document.getElementById('saveModelOk').textContent=model?'✅ sí':'❌ no';
   document.getElementById('saveModelOk').style.color=model?'var(--accent2)':'var(--text2)';
@@ -1218,19 +1432,19 @@ async function buildJSON() {
       const bytes=new Uint8Array(a.weightData); let bin='';
       bytes.forEach(b=>bin+=String.fromCharCode(b)); weightData=btoa(bin); return {};
     }));
-    modelData={topology,weightSpecs,weightData,classNames:model._classNames,classColors:model._classColors,modelType};
+    modelData={topology,weightSpecs,weightData,classNames:model._classNames,classColors:model._classColors,words:model._words||null,modelType};
   }
   return {
-    version:2, name:document.getElementById('projectName').value||'mi-modelo',
+    version:3, name:document.getElementById('projectName').value||'el-meu-model',
     modelType, exportedAt:new Date().toISOString(),
-    classes:classes.map(c=>({name:c.name,samples:c.samples})),
+    classes:classes.map(c=>({id:c.id,name:c.name,bg:!!c.bg,samples:modelType==='audio'?[]:c.samples})),   // les mostres d'àudio viuen dins del reconeixedor: no es guarden
     model:modelData
   };
 }
 async function exportJSON() {
   const p=await buildJSON();
   dlBlob(JSON.stringify(p),p.name+'.mia.json','application/json');
-  toast('Descargado ✓','success');
+  toast('Descarregat ✓','success');
 }
 async function shareProject() {
   const p=await buildJSON(), content=JSON.stringify(p), fn=p.name+'.mia.json';
@@ -1240,22 +1454,24 @@ async function shareProject() {
     catch(e){if(e.name==='AbortError')return;}
   }
   dlBlob(content,fn,'application/json');
-  toast('Descargado. Compártelo desde el gestor de archivos.','');
+  toast('Descarregat. Compartix-lo des del gestor de fitxers.','');
 }
 async function importJSON(event) {
   const file=event.target.files[0]; if(!file) return;
-  try { await loadProject(JSON.parse(await file.text())); toast('Proyecto cargado ✓','success'); }
-  catch(e) { toast('Error: '+e.message,'error'); }
+  try { await loadProject(JSON.parse(await file.text())); toast('Projecte carregat ✓','success'); }
+  catch(e) { errToast(e); }
   event.target.value='';
 }
 async function loadProject(p) {
-  if (!p.classes) throw new Error('Formato inválido');
+  if (!p.classes) throw new Error('Format no vàlid');
+  stopAllTests();
   if (p.modelType) {
     modelType=p.modelType;
     document.querySelectorAll('.mtype-btn').forEach(b=>b.classList.remove('active'));
     document.getElementById('mtype-'+modelType).classList.add('active');
   }
-  classes=p.classes.map(c=>({name:c.name,samples:c.samples||[]}));
+  classes=p.classes.map(c=>({id:c.id||++classSeq,name:c.name,bg:!!c.bg,samples:modelType==='audio'?[]:(c.samples||[])}));
+  classSeq=Math.max(classSeq,...classes.map(c=>c.id));
   renderClasses(); renderExamples();
   if (p.model) {
     const md=p.model;
@@ -1272,16 +1488,16 @@ async function loadProject(p) {
       await ensureAudioBase();
       resetAudioRecognizer();
       audioTransferRecognizer = audioBaseRecognizer.createTransfer('loaded-' + Date.now());
-      try { audioTransferRecognizer.model = loaded; audioTransferRecognizer.words = md.classNames; }
+      try { audioTransferRecognizer.model = loaded; audioTransferRecognizer.words = md.words || md.classNames; }
       catch(e) { console.warn('No s\'ha pogut reencastar el model d\'àudio carregat', e); }
-      model = { _isAudio:true, _classNames:md.classNames, _classColors:md.classColors, _modelType:'audio' };
+      model = { _isAudio:true, _words: md.words||md.classNames, _classNames:md.classNames, _classColors:md.classColors, _modelType:'audio' };
     } else {
       if (model && model.dispose) { model.dispose(); } model=null;
       model = loaded;
       model._classNames=md.classNames; model._classColors=md.classColors; model._modelType=md.modelType||modelType;
     }
 
-    setPill('listo ✓','ready');
+    setPill('llest ✓','ready');
     document.getElementById('noModelMsg').style.display='none';
     const sec=document.getElementById('ts-'+modelType); if(sec) sec.style.display='block';
     if (modelType==='image') setupPredRows('predCon',model._classNames,model._classColors);
@@ -1295,7 +1511,7 @@ async function loadProject(p) {
 
 // ═══ INIT ═══
 renderExamples(); renderClasses(); addClass(); addClass();
-setTimeout(()=>loadBase().catch(()=>{}),1200);
+setTimeout(()=>{ if (modelType==='image') loadBase().catch(e=>netFail('MobileNet')); },1200);   // només si seguim en «Imatge»
 </script>
 </body>
 </html>

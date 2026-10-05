@@ -16,6 +16,7 @@ function _getOrCreateOverlay() {
         <div class="loading-message"></div>
         <div class="loading-details"></div>
         <div class="loading-bar"></div>
+        <div class="loading-note"></div>
       </div>
     `;
     // Afegir directament a <body> com a primer fill per evitar problemes de z-index
@@ -24,7 +25,7 @@ function _getOrCreateOverlay() {
   return overlay;
 }
 
-function showLoadingOverlay(message, details, icon) {
+function showLoadingOverlay(message, details, icon, note) {
   message = message || 'Carregant model d\'IA...';
   details = details || '';
   icon    = icon    || '🤖';
@@ -35,6 +36,9 @@ function showLoadingOverlay(message, details, icon) {
   overlay.querySelector('.loading-message').textContent = message;
   overlay.querySelector('.loading-details').textContent = details;
   overlay.querySelector('.loading-icon').textContent    = icon;
+  const noteEl = overlay.querySelector('.loading-note');
+  noteEl.textContent   = note || '';
+  noteEl.style.display = note ? 'block' : 'none';
 
   // Mostrar amb animació
   overlay.classList.remove('hiding');

@@ -4,6 +4,7 @@
 
 // ── Elements del DOM ─────────────────────────────────────────
 const statusEl = document.getElementById('status');
+const statusTextEl = document.getElementById('status-text');   // només el text (no esborra #device-indicator)
 const predictionPanel = document.getElementById('prediction-panel');
 const connectBtn = document.getElementById('connectBtn');
 const configBtn = document.getElementById('configBtn');
@@ -19,7 +20,7 @@ const numClassesSelect = document.getElementById('numClasses');
 const showProbabilityCheck = document.getElementById('showProbability');
 
 // ── Estat ────────────────────────────────────────────────────
-let sendIntervalMs = 200;  // 0.2s per defecte
+let sendIntervalMs = 200;  // 0,2 s per defecte
 let lastPredictions = [];
 let hadPrediction = false;
 
@@ -46,6 +47,12 @@ window.toggleModelInput = function() {
 };
 
 // ── Carregar model ───────────────────────────────────────────
+function modelErrorText(e) {
+  return looksLikeNetworkError(e)
+    ? netErrorText('el model') + ' Revisa també el codi o la URL del model.'
+    : '❌ Error carregant el model';
+}
+
 loadModelBtn.onclick = async () => {
   const source = document.querySelector('input[name="modelSource"]:checked').value;
   const type = document.getElementById('modelType').value;
@@ -61,13 +68,30 @@ loadModelBtn.onclick = async () => {
   } else {
     url = document.getElementById('customUrl').value.trim();
     if (!url) {
-      alert('Introduïx una URL vàlida');
+      alert('Introduïx una adreça (URL) vàlida');
       return;
     }
     if (!url.endsWith('/')) url += '/';
   }
 
-  statusEl.textContent = '⏳ Carregant model...';
+  // Sense Internet, la descàrrega fallarà segur: no parem el model actual.
+  if (isDefinitelyOffline()) {
+    statusTextEl.textContent = '🌐 Per a carregar o canviar de model cal Internet. Ara no tens connexió' +
+      (loadModelBtn.classList.contains('model-loaded') ? ': es manté el model actual.' : '.');
+    return;
+  }
+  const libsNeeded = { image: ['tf', 'tmImage'], audio: ['tf', 'speechCommands'], pose: ['tf', 'tmPose'] }[type] || ['tf'];
+  if (missingLibs(libsNeeded).length) {
+    statusTextEl.textContent = NET_LIBS_MISSING_TEXT;
+    return;
+  }
+  // Canviar de model atura el que està funcionant i en descarrega un de nou
+  if (loadModelBtn.classList.contains('model-loaded') &&
+      !confirm('Per a canviar de model cal connexió a Internet i s\'aturarà el model actual. Vols continuar?')) {
+    return;
+  }
+
+  statusTextEl.textContent = '⏳ Carregant model...';
   loadModelBtn.disabled = true;
   loadModelBtn.textContent = '⏳ Carregant...';
   loadModelBtn.classList.remove('model-loaded');
@@ -75,9 +99,9 @@ loadModelBtn.onclick = async () => {
   try {
     await loadModel(url, type);
   } catch (e) {
-    statusEl.textContent = '❌ Error carregant el model';
+    statusTextEl.textContent = modelErrorText(e);
     loadModelBtn.disabled = false;
-    loadModelBtn.textContent = 'Carregar Model';
+    loadModelBtn.textContent = 'Carregar model';
     loadModelBtn.classList.remove('model-loaded');
   }
 };
@@ -85,9 +109,9 @@ loadModelBtn.onclick = async () => {
 // ── Control de l'interval ────────────────────────────────────
 intervalSlider.addEventListener('input', () => {
   const value = parseInt(intervalSlider.value);
-  const seconds = value / 10;  // 1→0.1s, 30→3.0s
+  const seconds = value / 10;  // 1→0,1 s, 30→3,0 s
   sendIntervalMs = seconds * 1000;
-  intervalLabel.textContent = `${seconds.toFixed(1)}s`;
+  intervalLabel.textContent = `${seconds.toFixed(1).replace('.', ',')} s`;
 });
 
 // ── Actualitzar panel de prediccions ─────────────────────────
@@ -162,6 +186,9 @@ function scheduleSend() {
   setTimeout(tick, sendIntervalMs);
 }
 
+// ── Missatges de la connexió Bluetooth ───────────────────────
+onBTStatusChange((connected, msg) => { if (msg) statusTextEl.textContent = msg; });
+
 // ── Callbacks del model ──────────────────────────────────────
 onPrediction(predictions => {
   lastPredictions = predictions;
@@ -169,17 +196,17 @@ onPrediction(predictions => {
 });
 
 onModelReady(() => {
-  statusEl.textContent = '✅ Model carregat! Connecta Bluetooth per enviar dades.';
+  statusTextEl.textContent = '✅ Model carregat! Ja no cal Internet. Connecta Bluetooth per a enviar dades.';
   loadModelBtn.disabled = false;
-  loadModelBtn.textContent = '✅ Model Carregat';
+  loadModelBtn.textContent = '✅ Model carregat';
   loadModelBtn.classList.add('model-loaded');
   scheduleSend();
 });
 
 onModelError((err) => {
   console.error('Error model:', err);
-  statusEl.textContent = '❌ Error carregant el model';
+  statusTextEl.textContent = modelErrorText(err);
   loadModelBtn.disabled = false;
-  loadModelBtn.textContent = 'Carregar Model';
+  loadModelBtn.textContent = 'Carregar model';
   loadModelBtn.classList.remove('model-loaded');
 });
