@@ -15,14 +15,28 @@ let darrerGir = null;
 let darreraBoca = null;
 let darrersUlls = "";
 
+// ── Idioma: estat de la barra d'estat ─────────────────────────
+// Guardem COM es calcula l'últim missatge (una funció) per a poder tornar-lo a escriure en canviar d'idioma.
+const BT_STATUS_KEYS = ['sh.bt.ios_status', 'sh.bt.unsupported_status', 'sh.bt.searching', 'sh.bt.ok', 'sh.bt.error', 'sh.bt.disconnected'];
+let statusFn = () => _t('jf.status.starting');
+const _writeStatus = setStatusText;          // versió original (bluetooth_uart.js)
+function showStatus(fn) { statusFn = fn; _writeStatus(fn()); }
+// Els missatges que escriu bluetooth_uart.js arriben ja traduïts: reconeixem la clau per a poder retraduir-los.
+function showTranslatedStatus(msg) {
+  const key = BT_STATUS_KEYS.find(k => _t(k) === msg);
+  showStatus(key ? () => _t(key) : () => msg);
+}
+setStatusText = showTranslatedStatus;       // bluetooth_uart.js crida setStatusText(...) directament en alguns casos
+showStatus(statusFn);
+
 // Si no hi havia Internet en obrir la pàgina, les llibreries de jsDelivr no
 // s'han descarregat: ho diem clarament en lloc de quedar-nos en blanc.
 if (missingLibs(['FaceMesh', 'Camera']).length) {
-  setStatusText(NET_LIBS_MISSING_TEXT);
+  showStatus(() => NET_LIBS_MISSING_TEXT);
   throw new Error('Llibreries d\'IA no disponibles (sense Internet?)');
 }
 
-const faceMesh = new FaceMesh({ locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}` });
+const faceMesh = new FaceMesh({ locateFile: file => `../vendor/mediapipe-face_mesh/${file}` });
 faceMesh.setOptions({
   maxNumFaces: 1,
   refineLandmarks: true,
@@ -88,7 +102,7 @@ faceMesh.onResults(results => {
 async function startVideo() {
   try {
     // Mostrar la capa de càrrega
-    showLoadingOverlay('Carregant càmera i IA facial...', 'Descarregant MediaPipe Face Mesh', '📷', NET_NOTE_LOADING);
+    showLoadingOverlay(_t('jf.loading.msg'), _t('jf.loading.det'), '📷', NET_NOTE_LOADING);
     
     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
     video.srcObject = stream;
@@ -98,13 +112,13 @@ async function startVideo() {
     // Descarrega el model ara (i no al primer fotograma) per a poder avisar
     // amb claredat si falla la descàrrega.
     if (typeof faceMesh.initialize === 'function') {
-      let slow = setTimeout(() => updateLoadingMessage('Encara descarregant…', 'Si tarda massa, comprova que tens connexió a Internet.'), 20000);
+      let slow = setTimeout(() => updateLoadingMessage(_t('jf.loading.slow'), _t('jf.loading.slow_det')), 20000);
       try { await faceMesh.initialize(); }
       catch (err) {
         clearTimeout(slow);
         console.error('❌ Error descarregant Face Mesh:', err);
         hideLoadingOverlay();
-        setStatusText(netErrorText('el model de detecció facial') + ' Recarrega la pàgina.');
+        showStatus(() => netErrorText(_t('jf.what.model')) + ' ' + _t('jf.status.reload'));
         return;
       }
       clearTimeout(slow);
@@ -125,15 +139,13 @@ async function startVideo() {
     // Amagar la capa de càrrega quan tot estiga llest
     setTimeout(() => {
       hideLoadingOverlay();
-      setStatusText('✅ Càmera llesta · Ja no cal Internet');
+      showStatus(() => _t('jf.status.ready'));
     }, 1000); // Xicotet retard per a assegurar que tot està carregat
   } catch (e) {
     console.error("❌ Error en iniciar la càmera:", e);
     hideLoadingOverlay();
-    const msg = (e && e.name === 'NotAllowedError')
-      ? '❌ Has denegat l\'accés a la càmera. Permet-lo en el navegador i recarrega la pàgina.'
-      : '❌ No s\'ha pogut accedir a la càmera.';
-    setStatusText(msg);
+    const key = (e && e.name === 'NotAllowedError') ? 'jf.status.cam_denied' : 'jf.status.cam_fail';
+    showStatus(() => _t(key));
   }
 }
 

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<title>Màquina Ensenyable – descàrrega de models</title>
+</head>
+<body>
+<!-- Pàgina oculta: la crida la portada («Descarregar per a ús sense Internet»). Carrega els models base de Màquina Ensenyable
+     (imatge, postura i àudio) perquè el service worker els guarde. El model de mans ja és dins de /vendor/. No usa càmera ni micròfon. -->
+<script src="../vendor/tfjs-4.15.0/tf.min.js"></script>
+<script src="../vendor/mobilenet-2.1.0/mobilenet.min.js"></script>
+<script src="../vendor/posenet-2.2.2/posenet.min.js"></script>
+<script src="../vendor/speech-commands-0.5.4/speech-commands.min.js"></script>
+<script>
+(async () => {
+  const steps = []; let ok = true, error = null;
+  const run = async (name, fn) => { try { await fn(); steps.push({ name, ok: true }); } catch (e) { ok = false; error = error || String(e && e.message || e); steps.push({ name, ok: false, error: String(e && e.message || e) }); } };
+  // Mateixes opcions que usa l'app (index.html)
+  await run('imatge (MobileNet)', async () => { const m = await mobilenet.load({ version: 2, alpha: .5 }); if (m.dispose) m.dispose(); });
+  await run('postura (PoseNet)',  async () => { const m = await posenet.load({ architecture: 'MobileNetV1', outputStride: 16, inputResolution: 193, multiplier: .75 }); if (m.dispose) m.dispose(); });
+  await run('àudio (speech-commands)', async () => { const r = speechCommands.create('BROWSER_FFT'); await r.ensureModelLoaded(); });
+  parent.postMessage({ piarPreload: 'maquina', finished: true, ok, steps, error }, location.origin);
+})();
+</script>
+</body>
+</html>

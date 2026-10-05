@@ -10,15 +10,16 @@
 <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
 <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
 <link rel="manifest" href="icons/site.webmanifest">
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet@2.2.2/dist/posenet.min.js"></script>
+<script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
+<script src="../vendor/tfjs-4.15.0/tf.min.js"></script>
+<script src="../vendor/mobilenet-2.1.0/mobilenet.min.js"></script>
+<script src="../vendor/posenet-2.2.2/posenet.min.js"></script>
 <!-- Transfer learning d'àudio (la mateixa llibreria que fa servir Google per
      sota de Teachable Machine Audio) -->
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.5/dist/speech-commands.min.js"></script>
+<script src="../vendor/speech-commands-0.5.4/speech-commands.min.js"></script>
 <!-- Detecció de mans per al tipus de model "Mans" -->
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<script src="../vendor/mediapipe-hands/hands.js"></script>
+<link rel="stylesheet" href="../vendor/fonts/fonts.css">
 <style>
 :root {
   --bg: #080810; --surface: #11111c; --surface2: #191926;
@@ -45,7 +46,7 @@ header { padding: 10px 14px; border-bottom: 1px solid var(--border); display: fl
 .tabs::-webkit-scrollbar { display: none; }
 .tab { flex: 1; min-width: 60px; padding: 11px 2px; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--text2); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; text-transform: uppercase; letter-spacing: .3px; }
 .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-.tab span { display: block; font-size: 15px; margin-bottom: 1px; }
+.tab .ic { display: block; font-size: 15px; margin-bottom: 1px; }
 
 .panel { display: none; padding: 12px; }
 .panel.active { display: block; }
@@ -173,44 +174,49 @@ select.field { appearance: none; }
 .help-foot { font-size: 11px; color: var(--text2); text-align: center; margin: 18px 0 8px; line-height: 1.7; }
 .bg-toggle { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); margin-top: 4px; }
 .bg-toggle input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+/* Selector d'idioma */
+.config-section h3 { font-weight: 400; }
+select.piar-lang-select { width: 100%; min-height: 44px; padding: 8px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none; color-scheme: dark; }
+select.piar-lang-select:focus { border-color: var(--accent); }
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">Màquina<span>Ensenyable</span></div>
-  <button class="help-btn" onclick="switchTab('help')" aria-label="Ajuda" title="Ajuda">❓</button>
+  <button class="help-btn" onclick="switchTab('help')" aria-label="Ajuda" title="Ajuda" data-i18n-attr="aria-label:mq.help.title;title:mq.help.title">❓</button>
   <div class="status-pill" id="statusPill">sense model</div>
   <div class="mtype-btns">
-    <button class="mtype-btn active" onclick="setModelType('image')" id="mtype-image">🖼 Imatge</button>
-    <button class="mtype-btn" onclick="setModelType('audio')" id="mtype-audio">🎤 Àudio</button>
-    <button class="mtype-btn" onclick="setModelType('pose')" id="mtype-pose">🕺 Postura</button>
-    <button class="mtype-btn" onclick="setModelType('hands')" id="mtype-hands">🤚 Mans</button>
+    <button class="mtype-btn active" onclick="setModelType('image')" id="mtype-image" data-i18n="mq.mtype.image">🖼 Imatge</button>
+    <button class="mtype-btn" onclick="setModelType('audio')" id="mtype-audio" data-i18n="mq.mtype.audio">🎤 Àudio</button>
+    <button class="mtype-btn" onclick="setModelType('pose')" id="mtype-pose" data-i18n="mq.mtype.pose">🕺 Postura</button>
+    <button class="mtype-btn" onclick="setModelType('hands')" id="mtype-hands" data-i18n="mq.mtype.hands">🤚 Mans</button>
   </div>
 </header>
 
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('train')" id="tab-train"><span>🧠</span>Dades</button>
-  <button class="tab" onclick="switchTab('config')" id="tab-config"><span>⚙️</span>Entrenar</button>
-  <button class="tab" onclick="switchTab('test')" id="tab-test"><span>🔍</span>Provar</button>
-  <button class="tab" onclick="switchTab('export')" id="tab-export"><span>📦</span>Exportar</button>
-  <button class="tab" onclick="switchTab('save')" id="tab-save"><span>💾</span>Guardar</button>
+  <button class="tab active" onclick="switchTab('train')" id="tab-train"><span class="ic">🧠</span><span data-i18n="mq.tab.train">Dades</span></button>
+  <button class="tab" onclick="switchTab('config')" id="tab-config"><span class="ic">⚙️</span><span data-i18n="mq.tab.config">Entrenar</span></button>
+  <button class="tab" onclick="switchTab('test')" id="tab-test"><span class="ic">🔍</span><span data-i18n="mq.tab.test">Provar</span></button>
+  <button class="tab" onclick="switchTab('export')" id="tab-export"><span class="ic">📦</span><span data-i18n="mq.tab.export">Exportar</span></button>
+  <button class="tab" onclick="switchTab('save')" id="tab-save"><span class="ic">💾</span><span data-i18n="mq.tab.save">Guardar</span></button>
 </div>
 
 <!-- ── DATOS ── -->
 <div class="panel active" id="panel-train">
-  <div class="sec-title">Conjunts d'exemple</div>
+  <div class="sec-title" data-i18n="mq.examples">Conjunts d'exemple</div>
   <div class="ex-row" id="examplesRow"></div>
   <div id="classesList"></div>
-  <button class="add-cls-btn" onclick="addClass()">＋ Afegir classe</button>
+  <button class="add-cls-btn" onclick="addClass()" data-i18n="mq.add_class">＋ Afegir classe</button>
 </div>
 
 <!-- ── ENTRENAR ── -->
 <div class="panel" id="panel-config">
   <div class="card">
-    <div class="sec-title">Hiperparàmetres</div>
+    <div class="sec-title" data-i18n="mq.hp.title">Hiperparàmetres</div>
     <div class="cfg-row">
-      <span class="cfg-lbl">Èpoques</span>
+      <span class="cfg-lbl" data-i18n="mq.hp.epochs">Èpoques</span>
       <div style="display:flex;align-items:center;gap:5px">
         <button class="adj" onclick="adj('epochs',-10)">−</button>
         <input type="number" id="epochs" class="num-inp" value="30" min="5" max="300">
@@ -218,7 +224,7 @@ select.field { appearance: none; }
       </div>
     </div>
     <div class="cfg-row">
-      <span class="cfg-lbl">Taxa d'aprenentatge</span>
+      <span class="cfg-lbl" data-i18n="mq.hp.lr">Taxa d'aprenentatge</span>
       <select id="lr" class="num-inp field" style="width:84px">
         <option value="0.0003">0,0003</option>
         <option value="0.001">0,001</option>
@@ -227,7 +233,7 @@ select.field { appearance: none; }
       </select>
     </div>
     <div class="cfg-row">
-      <span class="cfg-lbl">Mida del lot</span>
+      <span class="cfg-lbl" data-i18n="mq.hp.batch">Mida del lot</span>
       <div style="display:flex;align-items:center;gap:5px">
         <button class="adj" onclick="adj('batchSize',-8)">−</button>
         <input type="number" id="batchSize" class="num-inp" value="16" min="4" max="128" step="4">
@@ -242,22 +248,26 @@ select.field { appearance: none; }
     </div>
     <div class="prog-bar"><div class="prog-fill" id="epFill"></div></div>
     <div class="metrics">
-      <div class="mbox"><div class="mval" id="mLoss">—</div><div class="mlbl">Pèrdua</div></div>
-      <div class="mbox"><div class="mval" id="mAcc" style="color:var(--accent2)">—</div><div class="mlbl">Precisió</div></div>
-      <div class="mbox"><div class="mval" id="mValAcc" style="color:var(--accent3)">—</div><div class="mlbl">Precisió val.</div></div>
+      <div class="mbox"><div class="mval" id="mLoss">—</div><div class="mlbl" data-i18n="mq.train.loss">Pèrdua</div></div>
+      <div class="mbox"><div class="mval" id="mAcc" style="color:var(--accent2)">—</div><div class="mlbl" data-i18n="mq.train.acc">Precisió</div></div>
+      <div class="mbox"><div class="mval" id="mValAcc" style="color:var(--accent3)">—</div><div class="mlbl" data-i18n="mq.train.val_acc">Precisió val.</div></div>
     </div>
     <div class="loss-chart"><canvas class="lcvs" id="lcvs"></canvas></div>
     <div style="display:flex;gap:12px;margin-top:6px;font-size:11px;color:var(--text2);font-family:'Space Mono',monospace">
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#7c3aed;display:inline-block"></span>Pèrdua</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#10b981;display:inline-block"></span>Precisió</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#f59e0b;display:inline-block"></span>Precisió val.</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#7c3aed;display:inline-block"></span><span data-i18n="mq.train.loss">Pèrdua</span></span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#10b981;display:inline-block"></span><span data-i18n="mq.train.acc">Precisió</span></span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#f59e0b;display:inline-block"></span><span data-i18n="mq.train.val_acc">Precisió val.</span></span>
     </div>
+  </div>
+  <div class="card config-section" style="margin-top:12px">
+    <h3 class="sec-title section-title" data-i18n="sh.lang.label">🌐 Idioma</h3>
+    <div id="langSelectHost"></div>
   </div>
 </div>
 
 <!-- ── PROBAR ── -->
 <div class="panel" id="panel-test">
-  <div id="noModelMsg" class="empty"><div class="icon">🤖</div><p>Entrena primer un model per a provar-lo ací.</p></div>
+  <div id="noModelMsg" class="empty"><div class="icon">🤖</div><p data-i18n="mq.test.no_model">Entrena primer un model per a provar-lo ací.</p></div>
 
   <!-- IMAGE -->
   <div id="ts-image" style="display:none">
@@ -266,8 +276,8 @@ select.field { appearance: none; }
       <div><div class="top-name" id="topName">—</div><div class="top-conf" id="topConf">—</div></div>
     </div>
     <div style="display:flex;gap:5px;margin-bottom:8px">
-      <button class="btn btn-s" id="tmodeCam" onclick="setTestMode('cam')" style="flex:1;font-size:11px">📷 Càmera</button>
-      <button class="btn btn-s" id="tmodeImg" onclick="setTestMode('img')" style="flex:1;font-size:11px">🖼 Imatge estàtica</button>
+      <button class="btn btn-s" id="tmodeCam" onclick="setTestMode('cam')" style="flex:1;font-size:11px" data-i18n="mq.test.mode_cam">📷 Càmera</button>
+      <button class="btn btn-s" id="tmodeImg" onclick="setTestMode('img')" style="flex:1;font-size:11px" data-i18n="mq.test.mode_img">🖼 Imatge estàtica</button>
     </div>
     <div id="tsCam">
       <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px"><video id="testVideo" autoplay playsinline muted></video></div>
@@ -277,7 +287,7 @@ select.field { appearance: none; }
     <div id="tsImg" style="display:none">
       <img id="testImgPrev" class="test-img-prev">
       <div id="predConImg"></div>
-      <label class="btn btn-p btn-w" style="cursor:pointer">🖼 Seleccionar imatge<input type="file" accept="image/*" style="display:none" onchange="classifyStatic(event)"></label>
+      <label class="btn btn-p btn-w" style="cursor:pointer"><span data-i18n="mq.test.select_img">🖼 Seleccionar imatge</span><input type="file" accept="image/*" style="display:none" onchange="classifyStatic(event)"></label>
     </div>
   </div>
 
@@ -317,20 +327,20 @@ select.field { appearance: none; }
 
 <!-- ── EXPORTAR ── -->
 <div class="panel" id="panel-export">
-  <div id="noModelExport" class="empty"><div class="icon">📦</div><p>Entrena un model per a exportar-lo.</p></div>
+  <div id="noModelExport" class="empty"><div class="icon">📦</div><p data-i18n="mq.exp.no_model">Entrena un model per a exportar-lo.</p></div>
   <div id="exportSec" style="display:none">
-    <div class="sec-title">Exportar el model entrenat</div>
+    <div class="sec-title" data-i18n="mq.exp.title">Exportar el model entrenat</div>
     <div class="exp-opt" onclick="exportTFJS()">
       <div class="exp-icon">🌐</div>
-      <div><div class="exp-title">TensorFlow.js</div><div class="exp-desc">Per a webs i Node.js: descarrega el fitxer .json del model + el de pesos (.bin)</div></div>
+      <div><div class="exp-title">TensorFlow.js</div><div class="exp-desc" data-i18n="mq.exp.tfjs_desc">Per a webs i Node.js: descarrega el fitxer .json del model + el de pesos (.bin)</div></div>
     </div>
     <div class="exp-opt" onclick="exportKeras()">
       <div class="exp-icon">🐍</div>
-      <div><div class="exp-title">Keras / Python</div><div class="exp-desc">Arquitectura + pesos per a tf.keras en Python</div></div>
+      <div><div class="exp-title">Keras / Python</div><div class="exp-desc" data-i18n="mq.exp.keras_desc">Arquitectura + pesos per a tf.keras en Python</div></div>
     </div>
     <div class="exp-opt" onclick="exportTFLite()">
       <div class="exp-icon">📱</div>
-      <div><div class="exp-title">TensorFlow Lite</div><div class="exp-desc">Per a apps Android/iOS (ara exporta TF.js; la conversió a TFLite requerix un servidor)</div></div>
+      <div><div class="exp-title">TensorFlow Lite</div><div class="exp-desc" data-i18n="mq.exp.tflite_desc">Per a apps Android/iOS (ara exporta TF.js; la conversió a TFLite requerix un servidor)</div></div>
     </div>
     <div class="note" id="exportNote" style="margin-top:8px"></div>
   </div>
@@ -339,76 +349,76 @@ select.field { appearance: none; }
 <!-- ── GUARDAR ── -->
 <div class="panel" id="panel-save">
   <div class="card">
-    <div class="sec-title">Projecte</div>
-    <div class="cfg-row"><span class="cfg-lbl">Nom</span><input type="text" id="projectName" class="field" style="width:150px" value="el-meu-model"></div>
-    <div class="cfg-row"><span class="cfg-lbl">Tipus</span><span id="saveType" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text2)">imatge</span></div>
-    <div class="cfg-row"><span class="cfg-lbl">Classes / mostres</span><span id="saveStats" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text2)">0 / 0</span></div>
-    <div class="cfg-row" style="border:none"><span class="cfg-lbl">Model</span><span id="saveModelOk" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text2)">no</span></div>
+    <div class="sec-title" data-i18n="mq.save.project">Projecte</div>
+    <div class="cfg-row"><span class="cfg-lbl" data-i18n="mq.save.name">Nom</span><input type="text" id="projectName" class="field" style="width:150px" value="el-meu-model"></div>
+    <div class="cfg-row"><span class="cfg-lbl" data-i18n="mq.save.type">Tipus</span><span id="saveType" data-i18n="mq.type.image" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text2)">imatge</span></div>
+    <div class="cfg-row"><span class="cfg-lbl" data-i18n="mq.save.stats">Classes / mostres</span><span id="saveStats" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text2)">0 / 0</span></div>
+    <div class="cfg-row" style="border:none"><span class="cfg-lbl" data-i18n="mq.save.model">Model</span><span id="saveModelOk" data-i18n="mq.save.model_no" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text2)">no</span></div>
   </div>
   <div class="card">
-    <div class="sec-title">💻 Fitxer local</div>
-    <p style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.6">Guarda-ho tot en un fitxer <code style="background:var(--surface);padding:1px 4px;border-radius:3px">.mia.json</code> i compartix-lo o descarrega'l.</p>
+    <div class="sec-title" data-i18n="mq.save.local">💻 Fitxer local</div>
+    <p style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.6" data-i18n-html="mq.save.local_desc">Guarda-ho tot en un fitxer <code style="background:var(--surface);padding:1px 4px;border-radius:3px">.mia.json</code> i compartix-lo o descarrega'l.</p>
     <div style="display:flex;gap:5px;margin-bottom:6px">
-      <button class="btn btn-p" style="flex:1;font-size:11px" onclick="shareProject()">📤 Compartir</button>
-      <button class="btn btn-s" style="flex:1;font-size:11px" onclick="exportJSON()">⬇ Descarregar</button>
+      <button class="btn btn-p" style="flex:1;font-size:11px" onclick="shareProject()" data-i18n="mq.save.share">📤 Compartir</button>
+      <button class="btn btn-s" style="flex:1;font-size:11px" onclick="exportJSON()" data-i18n="mq.save.download">⬇ Descarregar</button>
     </div>
-    <label class="btn btn-s btn-w" style="cursor:pointer;font-size:11px">⬆ Carregar .mia.json<input type="file" accept=".json,.mia.json" style="display:none" onchange="importJSON(event)"></label>
-    <p style="font-size:11px;color:var(--text2);margin-top:7px;line-height:1.5">📤 <b style="color:var(--text)">Compartir</b> obri el menú del mòbil → OneDrive, Drive, WhatsApp, AirDrop, Bluetooth, correu… sense necessitat d'iniciar sessió en cap lloc.</p>
+    <label class="btn btn-s btn-w" style="cursor:pointer;font-size:11px"><span data-i18n="mq.save.load">⬆ Carregar .mia.json</span><input type="file" accept=".json,.mia.json" style="display:none" onchange="importJSON(event)"></label>
+    <p style="font-size:11px;color:var(--text2);margin-top:7px;line-height:1.5" data-i18n-html="mq.save.share_help">📤 <b style="color:var(--text)">Compartir</b> obri el menú del mòbil → OneDrive, Drive, WhatsApp, AirDrop, Bluetooth, correu… sense necessitat d'iniciar sessió en cap lloc.</p>
   </div>
 </div>
 
 
 <!-- ── AJUDA ── -->
 <div class="panel" id="panel-help">
-  <a href="guia.html" style="display:block;text-align:center;background:#7c3aed;color:#fff;padding:12px 14px;border-radius:12px;text-decoration:none;font-weight:700;font-size:13px;margin-bottom:14px">📖 Guia completa pas a pas</a>
+  <a href="guia.html" style="display:block;text-align:center;background:#7c3aed;color:#fff;padding:12px 14px;border-radius:12px;text-decoration:none;font-weight:700;font-size:13px;margin-bottom:14px" data-i18n="mq.help.guide">📖 Guia completa pas a pas</a>
   <div class="help-sec">
-    <h3>Què és Màquina Ensenyable?</h3>
-    <p>Una aplicació per a <b>entrenar els teus propis models d'IA</b> en el mòbil, sense programar i sense cap compte. Tot es processa en el teu dispositiu: les imatges, els sons i els moviments no s'envien a cap servidor.</p>
+    <h3 data-i18n="mq.help.what.h">Què és Màquina Ensenyable?</h3>
+    <p data-i18n-html="mq.help.what.p">Una aplicació per a <b>entrenar els teus propis models d'IA</b> en el mòbil, sense programar i sense cap compte. Tot es processa en el teu dispositiu: les imatges, els sons i els moviments no s'envien a cap servidor.</p>
   </div>
   <div class="help-sec">
-    <h3>Com es fa servir</h3>
+    <h3 data-i18n="mq.help.how.h">Com es fa servir</h3>
     <ol>
-      <li><b>Dades:</b> tria el tipus de model (imatge, àudio, postura o mans) i crea les classes. Pots partir d'un conjunt d'exemple.</li>
-      <li><b>Dades:</b> afig mostres a cada classe amb la càmera (mantín premut el botó), pujant imatges o gravant el micròfon.</li>
-      <li><b>Entrenar:</b> ajusta els paràmetres si vols (els valors per defecte funcionen bé) i prem «Entrenar model».</li>
-      <li><b>Provar:</b> comprova el model amb la càmera, el micròfon o una imatge.</li>
-      <li><b>Exportar</b> o <b>Guardar:</b> descarrega el model o guarda tot el projecte en un fitxer <code>.mia.json</code>.</li>
+      <li data-i18n-html="mq.help.how.1"><b>Dades:</b> tria el tipus de model (imatge, àudio, postura o mans) i crea les classes. Pots partir d'un conjunt d'exemple.</li>
+      <li data-i18n-html="mq.help.how.2"><b>Dades:</b> afig mostres a cada classe amb la càmera (mantín premut el botó), pujant imatges o gravant el micròfon.</li>
+      <li data-i18n-html="mq.help.how.3"><b>Entrenar:</b> ajusta els paràmetres si vols (els valors per defecte funcionen bé) i prem «Entrenar model».</li>
+      <li data-i18n-html="mq.help.how.4"><b>Provar:</b> comprova el model amb la càmera, el micròfon o una imatge.</li>
+      <li data-i18n-html="mq.help.how.5"><b>Exportar</b> o <b>Guardar:</b> descarrega el model o guarda tot el projecte en un fitxer <code>.mia.json</code>.</li>
     </ol>
   </div>
   <div class="help-sec">
-    <h3>Tipus de model</h3>
+    <h3 data-i18n="mq.help.types.h">Tipus de model</h3>
     <ul>
-      <li>🖼 <b>Imatge:</b> reconeix objectes, gestos o expressions. Mínim 3 mostres per classe; amb 20–50 de variades va molt millor.</li>
-      <li>🎤 <b>Àudio:</b> reconeix sons i paraules. Cada mostra dura 1 segon. Calen 8 mostres o més per classe i convé marcar una classe com a <b>soroll de fons</b> (el silenci i el soroll de l'ambient).</li>
-      <li>🕺 <b>Postura:</b> reconeix la posició del cos amb la càmera frontal. Col·loca't de manera que es veja el cos sencer.</li>
-      <li>🤚 <b>Mans:</b> reconeix gestos de la mà amb la càmera frontal. Només es guarda la mostra si es detecta una mà.</li>
+      <li data-i18n-html="mq.help.types.1">🖼 <b>Imatge:</b> reconeix objectes, gestos o expressions. Mínim 3 mostres per classe; amb 20–50 de variades va molt millor.</li>
+      <li data-i18n-html="mq.help.types.2">🎤 <b>Àudio:</b> reconeix sons i paraules. Cada mostra dura 1 segon. Calen 8 mostres o més per classe i convé marcar una classe com a <b>soroll de fons</b> (el silenci i el soroll de l'ambient).</li>
+      <li data-i18n-html="mq.help.types.3">🕺 <b>Postura:</b> reconeix la posició del cos amb la càmera frontal. Col·loca't de manera que es veja el cos sencer.</li>
+      <li data-i18n-html="mq.help.types.4">🤚 <b>Mans:</b> reconeix gestos de la mà amb la càmera frontal. Només es guarda la mostra si es detecta una mà.</li>
     </ul>
   </div>
   <div class="help-sec">
-    <h3>Consells</h3>
+    <h3 data-i18n="mq.help.tips.h">Consells</h3>
     <ul>
-      <li>Varia la distància, la llum i el fons mentre captures mostres.</li>
-      <li>Canviar de tipus de model esborra les classes, les mostres i el model entrenat (l'aplicació t'ho preguntarà).</li>
+      <li data-i18n="mq.help.tips.1">Varia la distància, la llum i el fons mentre captures mostres.</li>
+      <li data-i18n="mq.help.tips.2">Canviar de tipus de model esborra les classes, les mostres i el model entrenat (l'aplicació t'ho preguntarà).</li>
     </ul>
   </div>
   <div class="help-sec">
-    <h3>Internet i mode avió</h3>
+    <h3 data-i18n="mq.help.net.h">Internet i mode avió</h3>
     <ul>
-      <li>Cal Internet <b>només per a descarregar els models base</b> (MobileNet, PoseNet, àudio, mans): la primera vegada que uses cada tipus de model després d'obrir l'aplicació.</li>
-      <li>Quan el model base està descarregat, pots llevar el Wi-Fi i les dades mòbils: la càmera i el micròfon es processen en el dispositiu i no s'envia res a cap servidor.</li>
-      <li>Si canvies a un tipus de model que encara no s'ha descarregat, cal Internet. L'aplicació t'ho avisa; si falla la descàrrega, et dirà que revises la connexió.</li>
-      <li>Esta aplicació no necessita Bluetooth, així que pots usar el mode avió una vegada descarregats els models.</li>
-      <li>Si recarregues la pàgina sense Internet, no tornarà a obrir-se: l'aplicació no funciona sense connexió.</li>
+      <li data-i18n-html="mq.help.net.1">Cal Internet <b>només per a descarregar els models base</b> (MobileNet, PoseNet, àudio, mans): la primera vegada que uses cada tipus de model. Després queden guardats en el dispositiu, i amb «📥 Ús sense Internet» de la portada els descarregues tots d'una vegada.</li>
+      <li data-i18n="mq.help.net.2">Quan el model base està descarregat, pots llevar el Wi-Fi i les dades mòbils: la càmera i el micròfon es processen en el dispositiu i no s'envia res a cap servidor.</li>
+      <li data-i18n="mq.help.net.3">Si canvies a un tipus de model que encara no s'ha descarregat, cal Internet. L'aplicació t'ho avisa; si falla la descàrrega, et dirà que revises la connexió.</li>
+      <li data-i18n="mq.help.net.4">Esta aplicació no necessita Bluetooth, així que pots usar el mode avió una vegada descarregats els models.</li>
+      <li data-i18n="mq.help.net.5">Sense Internet, l'aplicació només s'obri si ja l'has instal·lat o usat abans amb connexió, i només funcionen els models ja descarregats. Des de la portada, «📥 Ús sense Internet» els descarrega tots.</li>
     </ul>
   </div>
   <div class="help-sec">
-    <h3>Limitacions</h3>
+    <h3 data-i18n="mq.help.lim.h">Limitacions</h3>
     <ul>
-      <li>Les mostres d'àudio no es guarden en el fitxer del projecte; sí el model entrenat. Recuperar un model d'àudio guardat és experimental: si no funciona bé, grava les mostres i entrena de nou.</li>
-      <li>Esta aplicació no envia dades a la micro:bit. Per a això, consulta l'aplicació Teachable Microbit.</li>
+      <li data-i18n="mq.help.lim.1">Les mostres d'àudio no es guarden en el fitxer del projecte; sí el model entrenat. Recuperar un model d'àudio guardat és experimental: si no funciona bé, grava les mostres i entrena de nou.</li>
+      <li data-i18n="mq.help.lim.2">Esta aplicació no envia dades a la micro:bit. Per a això, consulta l'aplicació Teachable Microbit.</li>
     </ul>
   </div>
-  <p class="help-foot">Fet per Jose L. Gavilán amb ❤️ i IA<br>IES Jorge Juan, Alacant, 2026</p>
+  <p class="help-foot" data-i18n-html="mq.help.foot">Fet per Jose L. Gavilán amb ❤️ i IA<br>IES Jorge Juan, Alacant, 2026</p>
 </div>
 
 <!-- CAMERA MODAL -->
@@ -424,12 +434,10 @@ select.field { appearance: none; }
     <div class="cam-ct" id="modalCT">0 mostres</div>
   </div>
   <div class="cam-acts">
-    <button class="cam-close" onclick="closeCamera()" aria-label="Tancar la càmera">✕</button>
+    <button class="cam-close" onclick="closeCamera()" aria-label="Tancar la càmera" data-i18n-attr="aria-label:mq.cam.close">✕</button>
     <button class="cam-hold" id="holdBtn"
       ontouchstart="startCap(event)" ontouchend="stopCap(event)"
-      onmousedown="startCap(event)" onmouseup="stopCap(event)" onmouseleave="stopCap(event)">
-      🤌 Mantín premut
-    </button>
+      onmousedown="startCap(event)" onmouseup="stopCap(event)" onmouseleave="stopCap(event)" data-i18n="mq.cam.hold">🤌 Mantín premut</button>
   </div>
 </div>
 
@@ -456,13 +464,26 @@ const CC = ['#7c3aed','#10b981','#f59e0b','#ef4444','#3b82f6','#ec4899','#06b6d4
 // ═══ AJUDES GENERALS ═══
 function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 let classSeq = 0;
-const BG_NAME = 'Soroll de fons';
+// ── Idioma: ajudes (els textos estan en js/i18n.js) ──
+// Decimals dels percentatges: coma en castellà; el valencià conserva el punt actual (els tests comproven el text exacte); anglés amb punt.
+function decNum(s) { return PIAR_I18N.lang === 'es' ? String(s).replace('.', ',') : String(s); }
+// Nombres escrits a mà (taxa d'aprenentatge): coma en ca/es, punt en en.
+function localNum(s) { return PIAR_I18N.lang === 'en' ? String(s) : String(s).replace('.', ','); }
+// Text amb singular/plural: usa la clau «<clau>_1» quan n val 1 i passa {n}.
+function tn(key, n, vars) { return _t(n === 1 ? key + '_1' : key, Object.assign({ n }, vars || {})); }
+function baseName(type) { return _t('mq.base.' + type); }
+function typeName() { return _t('mq.type.' + modelType); }
+function defName() { return _t('mq.proj.default'); }
+const DEF_NAMES = ['el-meu-model', 'mi-modelo', 'my-model'];
+// Estat dels textos que canvien durant l'ús: es guarda la CLAU per a poder repintar-los en canviar d'idioma.
+let pillKey = 'mq.pill.none', trainBtnKey = 'mq.train.btn', trainStat = null;
+function setTrainBtn(key) { trainBtnKey = key; document.getElementById('trainBtn').textContent = _t(key); }
 // Cada classe té un identificador estable: l'etiqueta que es dona al reconeixedor
 // d'àudio no depén del nom (que l'usuari pot canviar) ni de l'ordre de les classes.
-function newClass(name, bg) { return { id: ++classSeq, name, samples: [], bg: !!bg }; }
+// «auto»: clau i variables del nom per defecte (es retradueix en canviar d'idioma mentre l'usuari no l'edite).
+function newClass(name, bg, auto) { return { id: ++classSeq, name, samples: [], bg: !!bg, auto: auto || null }; }
 // La classe de soroll de fons usa l'etiqueta reservada de speech-commands.
 function audioLabel(c) { return c.bg ? '_background_noise_' : 'c' + c.id; }
-const TYPE_NAMES = { image:'imatge', audio:'àudio', pose:'postura', hands:'mans' };
 function hasWork() { return !!model || classes.some(c => c.samples.length); }
 function stopAllTests() {
   try { stopTest(); } catch(e) {}
@@ -473,24 +494,24 @@ function stopAllTests() {
 
 const DATASETS = {
   image: [
-    { name: '✋ Mà oberta / ✊ Puny', classes: ['Mà oberta','Puny'] },
-    { name: '👍 Polze amunt / avall', classes: ['Polze amunt','Polze avall'] },
-    { name: '😊 Somriure / 😐 Neutre', classes: ['Somrient','Neutre'] },
-    { name: '💡 Llum encesa / apagada', classes: ['Llum encesa','Llum apagada'] },
+    { name: 'mq.ds.image.0', classes: ['mq.c.open_hand','mq.c.fist'] },
+    { name: 'mq.ds.image.1', classes: ['mq.c.thumb_up','mq.c.thumb_down'] },
+    { name: 'mq.ds.image.2', classes: ['mq.c.smiling','mq.c.neutral'] },
+    { name: 'mq.ds.image.3', classes: ['mq.c.light_on','mq.c.light_off'] },
   ],
   audio: [
-    { name: '✅ Sí / ❌ No', classes: ['Sí','No','Soroll de fons'] },
-    { name: '⬆ Amunt / ⬇ Avall', classes: ['Amunt','Avall','Soroll de fons'] },
-    { name: '🔴 Roig / 🔵 Blau', classes: ['Roig','Blau','Soroll de fons'] },
+    { name: 'mq.ds.audio.0', classes: ['mq.c.yes','mq.c.no','mq.c.bg'] },
+    { name: 'mq.ds.audio.1', classes: ['mq.c.up','mq.c.down','mq.c.bg'] },
+    { name: 'mq.ds.audio.2', classes: ['mq.c.red','mq.c.blue','mq.c.bg'] },
   ],
   pose: [
-    { name: '🙋 Mà alçada / Normal', classes: ['Mà alçada','Normal'] },
-    { name: '💪 Braços amunt / avall', classes: ['Braços amunt','Braços avall'] },
+    { name: 'mq.ds.pose.0', classes: ['mq.c.raised_hand','mq.c.normal'] },
+    { name: 'mq.ds.pose.1', classes: ['mq.c.arms_up','mq.c.arms_down'] },
   ],
   hands: [
-    { name: '👍 Polze amunt / 👎 avall', classes: ['Polze amunt','Polze avall'] },
-    { name: '✌️ Pau / ✊ Puny', classes: ['Pau','Puny'] },
-    { name: '👌 OK / 🖐 Palmell obert', classes: ['OK','Palmell obert'] },
+    { name: 'mq.ds.hands.0', classes: ['mq.c.thumb_up','mq.c.thumb_down'] },
+    { name: 'mq.ds.hands.1', classes: ['mq.c.peace','mq.c.fist'] },
+    { name: 'mq.ds.hands.2', classes: ['mq.c.ok','mq.c.open_palm'] },
   ]
 };
 
@@ -509,7 +530,6 @@ function toast(msg, type='', ms=2800) {
 // no és fiable (pot ser true sense Internet), així que només l'usem per a
 // evitar un intent que segur que fallarà; l'error real es detecta en fallar
 // la descàrrega.
-const BASE_NAMES = { image:'MobileNet', audio:'el model d\'àudio', pose:'PoseNet', hands:'el model de mans' };
 function offlineNow() { return navigator.onLine === false; }
 function looksLikeNetworkError(e) {
   if (offlineNow()) return true;
@@ -524,17 +544,17 @@ function netFail(what) {
   const n = Date.now();
   if (n - lastNetToast < 4000) return;
   lastNetToast = n;
-  toast(`🌐 No s'ha pogut descarregar ${what}. Cal connexió a Internet: connecta't i torna-ho a provar.`, 'error', 5000);
+  toast(_t('mq.net.fail', { what: baseName(what) }), 'error', 5000);   // what: 'image' | 'audio' | 'pose' | 'hands'
 }
 function netInfo(what) {
-  toast(`🌐 Descarregant ${what}… Cal Internet només ara: quan acabe, pots llevar el Wi-Fi i les dades mòbils (no s'envia res a cap servidor).`, '', 6000);
+  toast(_t('mq.net.info', { what: baseName(what) }), '', 6000);
 }
 function needLib(name) {
   if (typeof window[name] === 'undefined') throw new Error('Failed to load library ' + name);
 }
 function errToast(e) {
-  if (!baseLoaded(modelType) && looksLikeNetworkError(e)) netFail(BASE_NAMES[modelType]);
-  else toast('Error: ' + e.message, 'error');
+  if (!baseLoaded(modelType) && looksLikeNetworkError(e)) netFail(modelType);
+  else toast(_t('mq.toast.err', { msg: e.message }), 'error');
 }
 function adj(id, d) {
   const el = document.getElementById(id);
@@ -554,9 +574,9 @@ function switchTab(tab) {
 // ═══ MODEL TYPE ═══
 function setModelType(t) {
   const needsDownload = !baseLoaded(t);
-  if (hasWork() && !confirm('Si canvies de tipus de model es perdran les classes, les mostres i el model entrenat.' +
-      (needsDownload ? ' A més, este tipus necessita descarregar el seu model base: cal connexió a Internet.' : '') +
-      ' Vols continuar?')) return;
+  if (hasWork() && !confirm(_t('mq.confirm.change_type') +
+      (needsDownload ? ' ' + _t('mq.confirm.change_type_dl') : '') +
+      ' ' + _t('mq.confirm.continue'))) return;
   stopAllTests();
   modelType = t;
   document.querySelectorAll('.mtype-btn').forEach(b => b.classList.remove('active'));
@@ -565,40 +585,41 @@ function setModelType(t) {
   if (model && model.dispose) { model.dispose(); }
   model = null;
   resetAudioRecognizer();
-  setPill('sense model','');
+  setPill('mq.pill.none','');
   renderClasses(); renderExamples();
   ['image','audio','pose','hands'].forEach(x => { const el=document.getElementById('ts-'+x); if(el) el.style.display='none'; });
   document.getElementById('noModelMsg').style.display='block';
   if (needsDownload) {
-    if (offlineNow()) netFail(BASE_NAMES[t]);
-    else toast(`🌐 Este tipus descarrega ${BASE_NAMES[t]} la primera vegada que el uses: cal Internet. Després ja no.`, '', 5000);
+    if (offlineNow()) netFail(t);
+    else toast(_t('mq.net.type_change', { what: baseName(t) }), '', 5000);
   }
 }
-function setPill(txt, cls) {
+function setPill(key, cls) {   // key: clau del diccionari (es guarda per a repintar-la en canviar d'idioma)
   const el = document.getElementById('statusPill');
-  el.textContent = txt; el.className = 'status-pill ' + cls;
+  pillKey = key;
+  el.textContent = _t(key); el.className = 'status-pill ' + cls;
 }
 
 // ═══ EXAMPLES ═══
 function renderExamples() {
   document.getElementById('examplesRow').innerHTML =
     (DATASETS[modelType]||[]).map((d,i) =>
-      `<div class="ex-chip" onclick="loadDataset(${i})">${d.name}</div>`
+      `<div class="ex-chip" onclick="loadDataset(${i})">${_t(d.name)}</div>`
     ).join('');
 }
 function loadDataset(i) {
   const d = DATASETS[modelType][i];
-  classes = d.classes.map(name => newClass(name, modelType==='audio' && name===BG_NAME));
+  classes = d.classes.map(key => newClass(_t(key), modelType==='audio' && key==='mq.c.bg', { key }));
   resetAudioRecognizer();   // les mostres d'àudio anteriors ja no corresponen a estes classes
   renderClasses();
-  toast('Conjunt carregat. Afig mostres!', 'success');
+  toast(_t('mq.toast.dataset'), 'success');
 }
 
 // ═══ CLASSES ═══
-function addClass() { classes.push(newClass(`Classe ${classes.length+1}`)); renderClasses(); }
+function addClass() { const n = classes.length+1; classes.push(newClass(_t('mq.cls.default', { n }), false, { key:'mq.cls.default', vars:{ n } })); renderClasses(); }
 function deleteClass(i) {
   const c = classes[i];
-  if (c.samples.length && !confirm(`Esborrar la classe «${c.name}» i les seues ${c.samples.length} mostres?`)) return;
+  if (c.samples.length && !confirm(tn('mq.confirm.del_class', c.samples.length, { name: c.name }))) return;
   if (modelType==='audio' && audioTransferRecognizer) {
     c.samples.forEach(sm => { if (sm && sm.uid) { try { audioTransferRecognizer.removeExample(sm.uid); } catch(e){} } });
   }
@@ -614,7 +635,7 @@ function deleteSample(ci, si) {
 function clearSamples(ci) {
   const c = classes[ci];
   if (!c.samples.length) return;
-  if (!confirm(`Esborrar les ${c.samples.length} mostres de la classe «${c.name}»?`)) return;
+  if (!confirm(tn('mq.confirm.clear', c.samples.length, { name: c.name }))) return;
   if (modelType==='audio' && audioTransferRecognizer) {
     c.samples.forEach(sm => { if (sm && sm.uid) { try { audioTransferRecognizer.removeExample(sm.uid); } catch(e){} } });
   }
@@ -622,7 +643,7 @@ function clearSamples(ci) {
   renderClasses();
 }
 function setBg(i, v) {
-  if (v && classes.some((c,j) => j!==i && c.bg)) { toast('Només una classe pot ser el soroll de fons','error'); renderClasses(); return; }
+  if (v && classes.some((c,j) => j!==i && c.bg)) { toast(_t('mq.toast.one_bg'),'error'); renderClasses(); return; }
   classes[i].bg = v;
 }
 
@@ -630,7 +651,7 @@ function renderClasses() {
   const list = document.getElementById('classesList');
   if (!classes.length) {
     const icons = { audio:'🎤', pose:'🕺', hands:'🤚', image:'✋' };
-    list.innerHTML = `<div class="empty"><div class="icon">${icons[modelType]||'✋'}</div><p>Tria un conjunt d'exemple o afig classes.</p></div>`;
+    list.innerHTML = `<div class="empty"><div class="icon">${icons[modelType]||'✋'}</div><p>${_t('mq.cls.empty')}</p></div>`;
     return;
   }
   list.innerHTML = classes.map((cls,i) => {
@@ -638,36 +659,36 @@ function renderClasses() {
     const thumbs = renderThumbs(cls, i);
     let capBtns = '';
     if (modelType==='audio') {
-      capBtns = `<label class="bg-toggle"><input type="checkbox" ${cls.bg?'checked':''} ${cls.samples.length?'disabled':''} onchange="setBg(${i},this.checked)"> Soroll de fons</label>
+      capBtns = `<label class="bg-toggle"><input type="checkbox" ${cls.bg?'checked':''} ${cls.samples.length?'disabled':''} onchange="setBg(${i},this.checked)"> ${_t('mq.c.bg')}</label>
       <div class="cap-btns">
-        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="recordAudio(${i})">🎤 Gravar</button>
-        <button class="cap-btn" onclick="clearSamples(${i})">🗑 Esborrar</button>
+        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="recordAudio(${i})">${_t('mq.cls.rec')}</button>
+        <button class="cap-btn" onclick="clearSamples(${i})">${_t('mq.cls.clear')}</button>
       </div>`;
     } else if (modelType==='pose') {
       capBtns = `<div class="cap-btns">
-        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'pose')">🕺 Capturar</button>
-        <button class="cap-btn" onclick="clearSamples(${i})">🗑 Esborrar</button>
+        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'pose')">${_t('mq.cls.capture_pose')}</button>
+        <button class="cap-btn" onclick="clearSamples(${i})">${_t('mq.cls.clear')}</button>
       </div>`;
     } else if (modelType==='hands') {
       capBtns = `<div class="cap-btns">
-        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'hands')">🤚 Capturar</button>
-        <button class="cap-btn" onclick="clearSamples(${i})">🗑 Esborrar</button>
+        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'hands')">${_t('mq.cls.capture_hands')}</button>
+        <button class="cap-btn" onclick="clearSamples(${i})">${_t('mq.cls.clear')}</button>
       </div>`;
     } else {
       capBtns = `<div class="cap-btns">
-        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'image')">📷 Càmera</button>
-        <label class="cap-btn" style="cursor:pointer">🖼 Pujar<input type="file" accept="image/*" multiple style="display:none" onchange="uploadImgs(event,${i})"></label>
-        <button class="cap-btn" onclick="clearSamples(${i})" aria-label="Esborrar les mostres">🗑</button>
+        <button class="cap-btn cam" style="border-color:${col};color:${col}" onclick="openCam(${i},'image')">${_t('mq.cls.camera')}</button>
+        <label class="cap-btn" style="cursor:pointer">${_t('mq.cls.upload')}<input type="file" accept="image/*" multiple style="display:none" onchange="uploadImgs(event,${i})"></label>
+        <button class="cap-btn" onclick="clearSamples(${i})" aria-label="${_t('mq.cls.clear_aria')}">🗑</button>
       </div>`;
     }
     return `<div class="class-card" style="--cc:${col}">
       <div class="class-header">
-        <input class="cname-input" value="${esc(cls.name)}" oninput="classes[${i}].name=this.value" aria-label="Nom de la classe">
-        <button style="background:none;border:1px solid var(--border);color:var(--text2);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:12px" onclick="deleteClass(${i})" aria-label="Esborrar la classe">✕</button>
+        <input class="cname-input" value="${esc(cls.name)}" oninput="classes[${i}].name=this.value;classes[${i}].auto=null" aria-label="${_t('mq.cls.name_aria')}">
+        <button style="background:none;border:1px solid var(--border);color:var(--text2);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:12px" onclick="deleteClass(${i})" aria-label="${_t('mq.cls.del_aria')}">✕</button>
       </div>
       <div style="display:flex;align-items:baseline;gap:5px;margin-bottom:6px">
         <div class="sample-n">${cls.samples.length}</div>
-        <div class="sample-lbl">mostres</div>
+        <div class="sample-lbl">${_t(cls.samples.length===1?'mq.cls.samples_lbl_1':'mq.cls.samples_lbl')}</div>
       </div>
       ${thumbs}
       ${capBtns}
@@ -679,15 +700,15 @@ function renderThumbs(cls, ci) {
   if (!cls.samples.length) return '';
   const MAX = 8, vis = cls.samples.slice(0,MAX), extra = cls.samples.length-MAX;
   if (modelType==='audio') {
-    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio">🔊</div><button class="tdel" aria-label="Esborrar la mostra" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
+    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio">🔊</div><button class="tdel" aria-label="${_t('mq.cls.sample_del_aria')}" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
   }
   if (modelType==='pose') {
-    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio" style="font-size:14px">🕺</div><button class="tdel" aria-label="Esborrar la mostra" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
+    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio" style="font-size:14px">🕺</div><button class="tdel" aria-label="${_t('mq.cls.sample_del_aria')}" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
   }
   if (modelType==='hands') {
-    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio" style="font-size:14px">🤚</div><button class="tdel" aria-label="Esborrar la mostra" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
+    return `<div class="thumbs">${vis.map((_,si) => `<div class="twrap"><div class="thumb-audio" style="font-size:14px">🤚</div><button class="tdel" aria-label="${_t('mq.cls.sample_del_aria')}" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
   }
-  return `<div class="thumbs">${vis.map((src,si) => `<div class="twrap"><img class="thumb" src="${src}" loading="lazy"><button class="tdel" aria-label="Esborrar la mostra" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
+  return `<div class="thumbs">${vis.map((src,si) => `<div class="twrap"><img class="thumb" src="${src}" loading="lazy"><button class="tdel" aria-label="${_t('mq.cls.sample_del_aria')}" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
 }
 
 // ═══ CAMERA ═══
@@ -712,7 +733,7 @@ async function openCam(ci, type) {
     await new Promise(res => { v.onloadedmetadata = res; });
     overlay.width = v.videoWidth; overlay.height = v.videoHeight;
     if (type==='pose' || type==='hands') startCamOverlayLoop(type);
-  } catch(e) { toast('Sense accés a la càmera','error'); closeCamera(); }
+  } catch(e) { toast(_t('mq.toast.no_cam'),'error'); closeCamera(); }
 }
 function closeCamera() {
   stopCap();
@@ -723,7 +744,7 @@ function closeCamera() {
 }
 function updateCamCount() {
   const c = classes[curClass];
-  document.getElementById('modalCT').textContent = c.samples.length + ' mostres';
+  document.getElementById('modalCT').textContent = tn('mq.samples_n', c.samples.length);
   document.getElementById('capProg').style.width = Math.min(c.samples.length/50*100,100)+'%';
 }
 
@@ -753,7 +774,7 @@ function startCamOverlayLoop(type) {
       // Fotograma puntual fallat: s'ignora i es reintenta. Si el que falla és la
       // descàrrega del model base, avisa i espera uns segons abans de reintentar.
       if (!baseLoaded(type)) {
-        netFail(BASE_NAMES[type]);
+        netFail(type);
         await new Promise(r => setTimeout(r, 4000));
       }
     }
@@ -779,7 +800,7 @@ function capImageFrame() {
 async function capPoseFrame() {
   if (!poseNet) {
     try { await ensurePoseNet(); }
-    catch(e) { netFail('PoseNet'); return; }
+    catch(e) { netFail('pose'); return; }
   }
   const v = document.getElementById('cameraVideo');
   if (v.readyState<2) return;
@@ -820,7 +841,7 @@ async function uploadImgs(event, ci) {
     classes[ci].samples.push(url);
   }
   renderClasses();
-  toast(files.length+(files.length===1?' imatge afegida ✓':' imatges afegides ✓'),'success');
+  toast(tn('mq.toast.img_added', files.length),'success');
 }
 
 // ═══ AUDIO RECORD (transfer learning en viu, igual que fa Teachable Machine) ═══
@@ -835,17 +856,17 @@ async function recordAudio(ci) {
     await ensureAudioBase();
     if (!audioTransferRecognizer) audioTransferRecognizer = audioBaseRecognizer.createTransfer('maquina-ensenyable');
     const label = audioLabel(classes[ci]);   // etiqueta estable (no depén del nom de la classe)
-    if (btn) { btn.disabled = true; btn.textContent = '🔴 Gravant…'; }
-    toast('🔴 Gravant 1 s…');
+    if (btn) { btn.disabled = true; btn.textContent = _t('mq.cls.recording'); }
+    toast(_t('mq.toast.recording'));
     const uid = await audioTransferRecognizer.collectExample(label);
     classes[ci].samples.push({ t: Date.now(), uid }); // uid → permet esborrar esta mostra en concret
     renderClasses();
-    toast('Mostra gravada ✓','success');
+    toast(_t('mq.toast.recorded'),'success');
   } catch(e) {
-    toast('Sense accés al micròfon o error de gravació','error');
+    toast(_t('mq.toast.rec_fail'),'error');
     console.error(e);
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '🎤 Gravar'; }
+    if (btn) { btn.disabled = false; btn.textContent = _t('mq.cls.rec'); }
   }
 }
 // Buidar mostres d'àudio reinicia també el reconeixedor intern, perquè mai
@@ -857,9 +878,9 @@ function resetAudioRecognizer() {
 
 // Torna la pastilla d'estat al valor correcte quan acaba una càrrega de model base
 function restorePill() {
-  if (document.getElementById('trainBtn').disabled) setPill('entrenant','training');
-  else if (model) setPill('llest ✓','ready');
-  else setPill('sense model','');
+  if (document.getElementById('trainBtn').disabled) setPill('mq.pill.training','training');
+  else if (model) setPill('mq.pill.ready','ready');
+  else setPill('mq.pill.none','');
 }
 
 // ═══ BASE MODEL ═══
@@ -867,8 +888,8 @@ async function loadBase() {
   if (baseModel) return;
   if (offlineNow()) throw new Error('Network offline');
   needLib('mobilenet');
-  setPill('carregant MobileNet…','');
-  netInfo('MobileNet');
+  setPill('mq.pill.loading_mobilenet','');
+  netInfo('image');
   try { baseModel = await mobilenet.load({ version:2, alpha:.5 }); }
   finally { restorePill(); }
 }
@@ -878,8 +899,8 @@ async function ensurePoseNet() {
   if (poseNet) return poseNet;
   if (offlineNow()) throw new Error('Network offline');
   needLib('posenet');
-  setPill('carregant PoseNet…','');
-  netInfo('PoseNet');
+  setPill('mq.pill.loading_posenet','');
+  netInfo('pose');
   try { poseNet = await posenet.load({ architecture:'MobileNetV1', outputStride:16, inputResolution:193, multiplier:.75 }); }
   finally { restorePill(); }
   return poseNet;
@@ -892,8 +913,8 @@ async function ensurePoseNet() {
 function getHandsDetector() {
   if (handsDetector) return handsDetector;
   needLib('Hands');
-  netInfo('el model de mans');
-  handsDetector = new Hands({ locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+  netInfo('hands');
+  handsDetector = new Hands({ locateFile: file => `../vendor/mediapipe-hands/${file}` });
   handsDetector.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
   handsDetector.onResults(res => { handsReady = true; if (pendingHandsResolve) { const r = pendingHandsResolve; pendingHandsResolve = null; r(res); } });
   return handsDetector;
@@ -903,10 +924,10 @@ function detectHandsOnce(videoEl) {
     pendingHandsResolve = resolve;
     let det;
     try { det = getHandsDetector(); }
-    catch (e) { pendingHandsResolve = null; netFail('el model de mans'); resolve(null); return; }
+    catch (e) { pendingHandsResolve = null; netFail('hands'); resolve(null); return; }
     det.send({ image: videoEl }).catch(() => {
       pendingHandsResolve = null;
-      if (!handsReady) netFail('el model de mans');   // la descàrrega no ha funcionat
+      if (!handsReady) netFail('hands');   // la descàrrega no ha funcionat
       resolve(null);
     });
   });
@@ -955,11 +976,11 @@ async function trainModel() {
 
 async function trainImage() {
   const valid = classes.filter(c=>c.samples.length>=3);
-  if (valid.length<2) { toast('Cal almenys 2 classes amb 3 mostres o més','error'); return; }
+  if (valid.length<2) { toast(_t('mq.toast.need_img'),'error'); return; }
   startTrainUI();
   try {
     await loadBase();
-    document.getElementById('trainBtn').textContent='🔄 Extraient…';
+    setTrainBtn('mq.train.extracting');
     const xs_l=[], ys_l=[];
     for (let i=0;i<valid.length;i++) for (const s of valid[i].samples) { xs_l.push(await getEmb(s)); ys_l.push(i); }
     const xs=tf.concat(xs_l); xs_l.forEach(t=>t.dispose());
@@ -974,7 +995,7 @@ async function trainImage() {
 
 async function trainPose() {
   const valid = classes.filter(c=>c.samples.length>=3);
-  if (valid.length<2) { toast('Cal almenys 2 classes amb 3 mostres de postura o més','error'); return; }
+  if (valid.length<2) { toast(_t('mq.toast.need_pose'),'error'); return; }
   startTrainUI();
   try {
     const xs_l=[], ys_l=[];
@@ -991,7 +1012,7 @@ async function trainPose() {
 
 async function trainHands() {
   const valid = classes.filter(c=>c.samples.length>=3);
-  if (valid.length<2) { toast('Cal almenys 2 classes amb 3 mostres de mà o més','error'); return; }
+  if (valid.length<2) { toast(_t('mq.toast.need_hands'),'error'); return; }
   startTrainUI();
   try {
     const xs_l=[], ys_l=[];
@@ -1011,8 +1032,8 @@ async function ensureAudioBase() {
   if (audioBaseRecognizer) return audioBaseRecognizer;
   if (offlineNow()) throw new Error('Network offline');
   needLib('speechCommands');
-  setPill('carregant el model d\'àudio base…','');
-  netInfo('el model d\'àudio');
+  setPill('mq.pill.loading_audio','');
+  netInfo('audio');
   try {
     audioBaseRecognizer = speechCommands.create('BROWSER_FFT');
     await audioBaseRecognizer.ensureModelLoaded();
@@ -1021,16 +1042,16 @@ async function ensureAudioBase() {
   return audioBaseRecognizer;
 }
 async function trainAudio() {
-  if (!audioTransferRecognizer) { toast('Grava primer mostres d\'àudio','error'); return; }
+  if (!audioTransferRecognizer) { toast(_t('mq.toast.rec_first'),'error'); return; }
   // Les mostres viuen dins del reconeixedor: es compten per etiqueta (no per l'ordre ni el nom)
   const counts = audioTransferRecognizer.countExamples ? audioTransferRecognizer.countExamples() : {};
   const withSamples = classes.filter(c => (counts[audioLabel(c)] || 0) > 0);
   const few = withSamples.find(c => counts[audioLabel(c)] < 8);
-  if (few) { toast(`La classe «${few.name}» necessita 8 mostres o més (en té ${counts[audioLabel(few)]})`,'error'); return; }
-  if (withSamples.length < 2) { toast('Cal almenys 2 classes amb 8 mostres o més (inclou una de «Soroll de fons»)','error'); return; }
+  if (few) { toast(_t('mq.toast.few', { name: few.name, n: counts[audioLabel(few)] }),'error'); return; }
+  if (withSamples.length < 2) { toast(_t('mq.toast.need_audio'),'error'); return; }
   startTrainUI();
   try {
-    document.getElementById('trainBtn').textContent = '🧠 Entrenant…';
+    setTrainBtn('mq.train.training');
     const epochs = parseInt(document.getElementById('epochs').value);
     const batchSize = parseInt(document.getElementById('batchSize').value);
     const lr = parseFloat(document.getElementById('lr').value);
@@ -1044,9 +1065,7 @@ async function trainAudio() {
         onEpochEnd: (ep, logs) => {
           const pct = ((ep+1)/epochs*100).toFixed(0);
           document.getElementById('epFill').style.width = pct+'%';
-          document.getElementById('epText').textContent = `Època ${ep+1} / ${epochs}`;
-          document.getElementById('lossText').textContent = `pèrdua ${logs.loss.toFixed(3)}`;
-          document.getElementById('mLoss').textContent = logs.loss.toFixed(3);
+          trainStat = { ep: ep+1, epochs, loss: logs.loss.toFixed(3) }; renderTrainStats();
           document.getElementById('mAcc').textContent = ((logs.acc||logs.accuracy||0)*100).toFixed(0)+'%';
           document.getElementById('mValAcc').textContent = ((logs.val_acc||logs.val_accuracy||0)*100).toFixed(0)+'%';
           lossH.push(logs.loss); accH.push(logs.acc||logs.accuracy||0); valAccH.push(logs.val_acc||logs.val_accuracy||0);
@@ -1078,15 +1097,13 @@ async function fitModel(m, xs, ys, valid) {
   const epochs=parseInt(document.getElementById('epochs').value);
   const bs=parseInt(document.getElementById('batchSize').value);
   lossH=[]; accH=[]; valAccH=[];
-  document.getElementById('trainBtn').textContent='🧠 Entrenant…';
+  setTrainBtn('mq.train.training');
   await m.fit(xs,ys,{
     epochs, batchSize:bs, shuffle:true, validationSplit:.15,
     callbacks:{ onEpochEnd:(ep,logs)=>{
       const pct=((ep+1)/epochs*100).toFixed(0);
       document.getElementById('epFill').style.width=pct+'%';
-      document.getElementById('epText').textContent=`Època ${ep+1} / ${epochs}`;
-      document.getElementById('lossText').textContent=`pèrdua ${logs.loss.toFixed(3)}`;
-      document.getElementById('mLoss').textContent=logs.loss.toFixed(3);
+      trainStat = { ep: ep+1, epochs, loss: logs.loss.toFixed(3) }; renderTrainStats();
       document.getElementById('mAcc').textContent=((logs.acc||logs.accuracy||0)*100).toFixed(0)+'%';
       document.getElementById('mValAcc').textContent=((logs.val_acc||logs.val_accuracy||0)*100).toFixed(0)+'%';
       lossH.push(logs.loss); accH.push(logs.acc||logs.accuracy||0); valAccH.push(logs.val_acc||logs.val_accuracy||0);
@@ -1099,22 +1116,22 @@ async function fitModel(m, xs, ys, valid) {
 }
 
 function startTrainUI() {
-  const b=document.getElementById('trainBtn'); b.disabled=true; b.textContent='⏳ Preparant…';
+  const b=document.getElementById('trainBtn'); b.disabled=true; setTrainBtn('mq.train.preparing');
   document.getElementById('trainProg').style.display='block';
-  setPill('entrenant','training');
+  setPill('mq.pill.training','training');
 }
 function endTrainUI() {
-  const b=document.getElementById('trainBtn'); b.disabled=false; b.textContent='⚡ Entrenar model';
+  const b=document.getElementById('trainBtn'); b.disabled=false; setTrainBtn('mq.train.btn');
 }
 function finishTrain(valid, type) {
-  setPill('llest ✓','ready');
+  setPill('mq.pill.ready','ready');
   document.getElementById('noModelMsg').style.display='none';
   document.getElementById('ts-'+type).style.display='block';
   if (type==='image') setupPredRows('predCon', model._classNames, model._classColors);
   else if (type==='pose') setupPredRows('predCon-pose', model._classNames, model._classColors);
   else if (type==='hands') setupPredRows('predCon-hands', model._classNames, model._classColors);
   else if (type==='audio') setupPredRows('predCon-audio', model._classNames, model._classColors);
-  toast('Model entrenat! 🎉','success');
+  toast(_t('mq.toast.trained'),'success');
   endTrainUI();
 }
 
@@ -1147,23 +1164,23 @@ function setTestMode(m) {
 }
 async function toggleTest() { isTesting?stopTest():await startTest(); }
 async function startTest() {
-  if (!model) { toast('Entrena primer un model','error'); return; }
+  if (!model) { toast(_t('mq.toast.train_first'),'error'); return; }
   try {
     testStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
     document.getElementById('testVideo').srcObject=testStream;
     isTesting=true;
-    document.getElementById('testBtn').textContent='⏹ Detindre';
+    document.getElementById('testBtn').textContent=_t('mq.test.stop');
     document.getElementById('testBtn').className='btn btn-d btn-w';
     document.getElementById('topCard').style.display='flex';
     setupPredRows('predCon',model._classNames,model._classColors);
     testInterval=setInterval(runImgPred,200);
-  } catch(e) { toast('Sense accés a la càmera','error'); }
+  } catch(e) { toast(_t('mq.toast.no_cam'),'error'); }
 }
 function stopTest() {
   clearInterval(testInterval);
   if (testStream) { testStream.getTracks().forEach(t=>t.stop()); testStream=null; }
   isTesting=false;
-  document.getElementById('testBtn').textContent='📷 Activar càmera';
+  document.getElementById('testBtn').textContent=_t('mq.test.cam_on');
   document.getElementById('testBtn').className='btn btn-p btn-w';
 }
 async function runImgPred() {
@@ -1192,10 +1209,10 @@ async function predictShow(imgSrc, conId, nameId, confId) {
   data.forEach((v,i)=>{
     const b=document.getElementById(`b-${conId}-${i}`), p=document.getElementById(`p-${conId}-${i}`);
     if(b){b.style.width=(v*100).toFixed(1)+'%'; b.style.opacity=i===mx?'1':'.5';}
-    if(p) p.textContent=(v*100).toFixed(1)+'%';
+    if(p) p.textContent=decNum((v*100).toFixed(1))+'%';
   });
   if(nameId) document.getElementById(nameId).textContent=m._classNames[mx];
-  if(confId) document.getElementById(confId).textContent=(data[mx]*100).toFixed(1)+'% de confiança';
+  if(confId) setConf(confId,(data[mx]*100).toFixed(1));
 }
 function setupPredRows(conId, names, colors) {
   document.getElementById(conId).innerHTML=names.map((n,i)=>`
@@ -1209,7 +1226,7 @@ function setupPredRows(conId, names, colors) {
 // ═══ TEST — AUDIO ═══
 async function toggleAudioTest() { isTestingAudio?stopAudioTest():await startAudioTest(); }
 async function startAudioTest() {
-  if (!model || !audioTransferRecognizer) { toast('Entrena primer un model','error'); return; }
+  if (!model || !audioTransferRecognizer) { toast(_t('mq.toast.train_first'),'error'); return; }
   try {
     if (!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
     audioMicStream=await navigator.mediaDevices.getUserMedia({audio:true});
@@ -1217,7 +1234,7 @@ async function startAudioTest() {
     audioAnalyser=audioCtx.createAnalyser(); audioAnalyser.fftSize=256;
     src.connect(audioAnalyser);
     isTestingAudio=true;
-    document.getElementById('testBtnAudio').textContent='⏹ Detindre';
+    document.getElementById('testBtnAudio').textContent=_t('mq.test.stop');
     document.getElementById('testBtnAudio').className='btn btn-d btn-w';
     document.getElementById('topCard-audio').style.display='flex';
     setupPredRows('predCon-audio',model._classNames,model._classColors);
@@ -1230,20 +1247,20 @@ async function startAudioTest() {
       scores.forEach((v,i)=>{
         const b=document.getElementById(`b-predCon-audio-${i}`), p=document.getElementById(`p-predCon-audio-${i}`);
         if(b){b.style.width=(v*100).toFixed(1)+'%'; b.style.opacity=i===mx?'1':'.5';}
-        if(p)p.textContent=(v*100).toFixed(1)+'%';
+        if(p)p.textContent=decNum((v*100).toFixed(1))+'%';
       });
       document.getElementById('topName-audio').textContent = names[mx];
-      document.getElementById('topConf-audio').textContent = (scores[mx]*100).toFixed(1)+'% de confiança';
+      setConf('topConf-audio',(scores[mx]*100).toFixed(1));
     }, { includeSpectrogram:false, probabilityThreshold:0.6, invokeCallbackOnNoiseAndUnknown:true, overlapFactor:0.50 });
-    toast('🎤 Escoltant…');
-  } catch(e) { toast('Sense accés al micròfon','error'); console.error(e); }
+    toast(_t('mq.toast.listening'));
+  } catch(e) { toast(_t('mq.toast.no_mic'),'error'); console.error(e); }
 }
 function stopAudioTest() {
   clearInterval(audioVizInt);
   if (audioTransferRecognizer && audioTransferRecognizer.isListening && audioTransferRecognizer.isListening()) audioTransferRecognizer.stopListening();
   if (audioMicStream) { audioMicStream.getTracks().forEach(t=>t.stop()); audioMicStream=null; }
   isTestingAudio=false;
-  document.getElementById('testBtnAudio').textContent='🎤 Activar micròfon';
+  document.getElementById('testBtnAudio').textContent=_t('mq.test.mic_on');
   document.getElementById('testBtnAudio').className='btn btn-p btn-w';
 }
 function initAudioViz() {
@@ -1261,10 +1278,10 @@ function startAudioViz() {
 // ═══ TEST — POSE ═══
 async function togglePoseTest() { isTestingPose?stopPoseTest():await startPoseTest(); }
 async function startPoseTest() {
-  if (!model) { toast('Entrena primer un model','error'); return; }
+  if (!model) { toast(_t('mq.toast.train_first'),'error'); return; }
   if (!poseNet) {
     try { await ensurePoseNet(); }
-    catch(e) { netFail('PoseNet'); return; }
+    catch(e) { netFail('pose'); return; }
   }
   try {
     poseStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
@@ -1274,12 +1291,12 @@ async function startPoseTest() {
     await new Promise(res=>video.onloadedmetadata=res);
     canvas.width=video.videoWidth; canvas.height=video.videoHeight;
     isTestingPose=true;
-    document.getElementById('testBtnPose').textContent='⏹ Detindre';
+    document.getElementById('testBtnPose').textContent=_t('mq.test.stop');
     document.getElementById('testBtnPose').className='btn btn-d btn-w';
     document.getElementById('topCard-pose').style.display='flex';
     setupPredRows('predCon-pose',model._classNames,model._classColors);
     poseInterval=setInterval(()=>runPosePred(video,canvas),300);
-  } catch(e) { toast('Sense accés a la càmera','error'); }
+  } catch(e) { toast(_t('mq.toast.no_cam'),'error'); }
 }
 async function runPosePred(video, canvas) {
   if (!poseNet||!model||video.readyState<2) return;
@@ -1300,21 +1317,21 @@ async function runPosePred(video, canvas) {
     data.forEach((v,i)=>{
       const b=document.getElementById(`b-predCon-pose-${i}`), p=document.getElementById(`p-predCon-pose-${i}`);
       if(b){b.style.width=(v*100).toFixed(1)+'%'; b.style.opacity=i===mx?'1':'.5';}
-      if(p)p.textContent=(v*100).toFixed(1)+'%';
+      if(p)p.textContent=decNum((v*100).toFixed(1))+'%';
     });
     document.getElementById('topName-pose').textContent=model._classNames[mx];
-    document.getElementById('topConf-pose').textContent=(data[mx]*100).toFixed(1)+'% de confiança';
+    setConf('topConf-pose',(data[mx]*100).toFixed(1));
   } catch(e) {}
 }
 function drawKPs(pose,ctx){pose.keypoints.forEach(k=>{if(k.score>.3){ctx.beginPath();ctx.arc(k.position.x,k.position.y,5,0,2*Math.PI);ctx.fillStyle='#7c3aed';ctx.fill();}});}
 function drawSkel(pose,ctx){const adj=[[5,6],[5,7],[7,9],[6,8],[8,10],[5,11],[6,12],[11,12],[11,13],[13,15],[12,14],[14,16]],kps=pose.keypoints;ctx.strokeStyle='rgba(124,58,237,.6)';ctx.lineWidth=2;adj.forEach(([a,b])=>{if(kps[a].score>.3&&kps[b].score>.3){ctx.beginPath();ctx.moveTo(kps[a].position.x,kps[a].position.y);ctx.lineTo(kps[b].position.x,kps[b].position.y);ctx.stroke();}});}
-function stopPoseTest(){clearInterval(poseInterval);if(poseStream){poseStream.getTracks().forEach(t=>t.stop());poseStream=null;}isTestingPose=false;document.getElementById('testBtnPose').textContent='🕺 Activar càmera';document.getElementById('testBtnPose').className='btn btn-p btn-w';}
+function stopPoseTest(){clearInterval(poseInterval);if(poseStream){poseStream.getTracks().forEach(t=>t.stop());poseStream=null;}isTestingPose=false;document.getElementById('testBtnPose').textContent=_t('mq.test.pose_cam_on');document.getElementById('testBtnPose').className='btn btn-p btn-w';}
 
 // ═══ TEST — MANOS ═══
 let handsStream = null, isTestingHands = false, handsTestLoop = null;
 async function toggleHandsTest() { isTestingHands?stopHandsTest():await startHandsTest(); }
 async function startHandsTest() {
-  if (!model) { toast('Entrena primer un model','error'); return; }
+  if (!model) { toast(_t('mq.toast.train_first'),'error'); return; }
   try {
     handsStream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
     const canvas = document.getElementById('handsCanvas');
@@ -1323,7 +1340,7 @@ async function startHandsTest() {
     await new Promise(res => video.onloadedmetadata = res);
     canvas.width = video.videoWidth; canvas.height = video.videoHeight;
     isTestingHands = true;
-    document.getElementById('testBtnHands').textContent = '⏹ Detindre';
+    document.getElementById('testBtnHands').textContent = _t('mq.test.stop');
     document.getElementById('testBtnHands').className = 'btn btn-d btn-w';
     document.getElementById('topCard-hands').style.display = 'flex';
     setupPredRows('predCon-hands', model._classNames, model._classColors);
@@ -1333,7 +1350,7 @@ async function startHandsTest() {
       handsTestLoop = setTimeout(loop, 200);
     };
     loop();
-  } catch(e) { toast('Sense accés a la càmera','error'); }
+  } catch(e) { toast(_t('mq.toast.no_cam'),'error'); }
 }
 async function runHandsPred(video, canvas) {
   if (!model || video.readyState<2) return;
@@ -1356,17 +1373,17 @@ async function runHandsPred(video, canvas) {
     data.forEach((v,i)=>{
       const b=document.getElementById(`b-predCon-hands-${i}`), p=document.getElementById(`p-predCon-hands-${i}`);
       if(b){b.style.width=(v*100).toFixed(1)+'%'; b.style.opacity=i===mx?'1':'.5';}
-      if(p)p.textContent=(v*100).toFixed(1)+'%';
+      if(p)p.textContent=decNum((v*100).toFixed(1))+'%';
     });
     document.getElementById('topName-hands').textContent = model._classNames[mx];
-    document.getElementById('topConf-hands').textContent = (data[mx]*100).toFixed(1)+'% de confiança';
+    setConf('topConf-hands',(data[mx]*100).toFixed(1));
   } catch(e) {}
 }
 function stopHandsTest(){
   isTestingHands=false;
   if (handsTestLoop) clearTimeout(handsTestLoop);
   if (handsStream) { handsStream.getTracks().forEach(t=>t.stop()); handsStream=null; }
-  document.getElementById('testBtnHands').textContent='🤚 Activar càmera';
+  document.getElementById('testBtnHands').textContent=_t('mq.test.hands_cam_on');
   document.getElementById('testBtnHands').className='btn btn-p btn-w';
 }
 
@@ -1375,13 +1392,7 @@ function updateExportTab() {
   const has=!!model;
   document.getElementById('noModelExport').style.display=has?'none':'block';
   document.getElementById('exportSec').style.display=has?'block':'none';
-  const notes = {
-    image: "S'exporta el cap classificador. Per a la inferència completa també necessites MobileNet v2 com a extractor de característiques.",
-    pose: "S'exporta el classificador. Les entrades són els 17 punts de PoseNet (x, y i confiança, normalitzats).",
-    hands: "S'exporta el classificador. Les entrades són els 21 punts de MediaPipe Hands (x, y).",
-    audio: "S'exporta el cap classificador d'àudio. Per a usar-lo també necessites el model base de speech-commands."
-  };
-  document.getElementById('exportNote').innerHTML = '<b>Nota:</b> ' + (notes[modelType] || '');
+  document.getElementById('exportNote').innerHTML = '<b>' + _t('mq.exp.note_label') + '</b> ' + (['image','pose','hands','audio'].includes(modelType) ? _t('mq.exp.note.' + modelType) : '');
 }
 // L'àudio guarda els pesos entrenats dins de audioTransferRecognizer.model
 // (un tf.LayersModel normal), no dins de la variable "model" (que per a
@@ -1394,9 +1405,9 @@ function getExportableModel() {
 async function exportTFJS() {
   const m = getExportableModel();
   if (!m) return;
-  const name=document.getElementById('projectName').value||'el-meu-model';
+  const name=document.getElementById('projectName').value||defName();
   await m.save('downloads://'+name+'-tfjs');
-  toast('Descarregant el model i els pesos ✓','success');
+  toast(_t('mq.toast.dl_model'),'success');
 }
 async function exportKeras() {
   const m = getExportableModel();
@@ -1408,18 +1419,18 @@ async function exportKeras() {
     bytes.forEach(b=>bin+=String.fromCharCode(b)); weightData=btoa(bin); return {};
   }));
   const d={modelTopology:topology,weightSpecs,weightData,classNames:model._classNames,modelType};
-  dlBlob(JSON.stringify(d,null,2),(document.getElementById('projectName').value||'el-meu-model')+'-keras.json','application/json');
-  toast('Exportat ✓','success');
+  dlBlob(JSON.stringify(d,null,2),(document.getElementById('projectName').value||defName())+'-keras.json','application/json');
+  toast(_t('mq.toast.exported'),'success');
 }
-function exportTFLite() { toast('TFLite requerix un servidor. Exportant TF.js…',''); setTimeout(exportTFJS,500); }
+function exportTFLite() { toast(_t('mq.toast.tflite'),''); setTimeout(exportTFJS,500); }
 function dlBlob(content,name,mime){const b=new Blob([content],{type:mime}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
 
 // ═══ SAVE / LOAD ═══
 function updateSaveTab() {
   const tot=classes.reduce((a,c)=>a+c.samples.length,0);
-  document.getElementById('saveType').textContent=TYPE_NAMES[modelType]||modelType;
+  document.getElementById('saveType').textContent=['image','audio','pose','hands'].includes(modelType)?typeName():modelType;
   document.getElementById('saveStats').textContent=classes.length+' / '+tot;
-  document.getElementById('saveModelOk').textContent=model?'✅ sí':'❌ no';
+  document.getElementById('saveModelOk').textContent=model?_t('mq.save.model_yes'):_t('mq.save.model_no_x');
   document.getElementById('saveModelOk').style.color=model?'var(--accent2)':'var(--text2)';
 }
 async function buildJSON() {
@@ -1435,7 +1446,7 @@ async function buildJSON() {
     modelData={topology,weightSpecs,weightData,classNames:model._classNames,classColors:model._classColors,words:model._words||null,modelType};
   }
   return {
-    version:3, name:document.getElementById('projectName').value||'el-meu-model',
+    version:3, name:document.getElementById('projectName').value||defName(),
     modelType, exportedAt:new Date().toISOString(),
     classes:classes.map(c=>({id:c.id,name:c.name,bg:!!c.bg,samples:modelType==='audio'?[]:c.samples})),   // les mostres d'àudio viuen dins del reconeixedor: no es guarden
     model:modelData
@@ -1444,7 +1455,7 @@ async function buildJSON() {
 async function exportJSON() {
   const p=await buildJSON();
   dlBlob(JSON.stringify(p),p.name+'.mia.json','application/json');
-  toast('Descarregat ✓','success');
+  toast(_t('mq.toast.downloaded'),'success');
 }
 async function shareProject() {
   const p=await buildJSON(), content=JSON.stringify(p), fn=p.name+'.mia.json';
@@ -1454,16 +1465,16 @@ async function shareProject() {
     catch(e){if(e.name==='AbortError')return;}
   }
   dlBlob(content,fn,'application/json');
-  toast('Descarregat. Compartix-lo des del gestor de fitxers.','');
+  toast(_t('mq.toast.downloaded_share'),'');
 }
 async function importJSON(event) {
   const file=event.target.files[0]; if(!file) return;
-  try { await loadProject(JSON.parse(await file.text())); toast('Projecte carregat ✓','success'); }
+  try { await loadProject(JSON.parse(await file.text())); toast(_t('mq.toast.loaded'),'success'); }
   catch(e) { errToast(e); }
   event.target.value='';
 }
 async function loadProject(p) {
-  if (!p.classes) throw new Error('Format no vàlid');
+  if (!p.classes) throw new Error(_t('mq.err.bad_format'));
   stopAllTests();
   if (p.modelType) {
     modelType=p.modelType;
@@ -1497,7 +1508,7 @@ async function loadProject(p) {
       model._classNames=md.classNames; model._classColors=md.classColors; model._modelType=md.modelType||modelType;
     }
 
-    setPill('llest ✓','ready');
+    setPill('mq.pill.ready','ready');
     document.getElementById('noModelMsg').style.display='none';
     const sec=document.getElementById('ts-'+modelType); if(sec) sec.style.display='block';
     if (modelType==='image') setupPredRows('predCon',model._classNames,model._classColors);
@@ -1509,9 +1520,48 @@ async function loadProject(p) {
   updateSaveTab();
 }
 
+// ═══ IDIOMA: textos dinàmics i canvi en directe ═══
+function renderTrainStats() {
+  const s = trainStat;
+  document.getElementById('epText').textContent = _t('mq.train.epoch', { a: s ? s.ep : 0, b: s ? s.epochs : 0 });
+  document.getElementById('lossText').textContent = _t('mq.train.loss_text', { v: s ? decNum(s.loss) : '—' });
+  if (s) document.getElementById('mLoss').textContent = decNum(s.loss);
+}
+// Confiança de la predicció: es guarda el valor per a poder repintar-lo en canviar d'idioma
+function setConf(id, p) {
+  const el = document.getElementById(id);
+  el.dataset.p = p;
+  el.textContent = _t('mq.conf', { p: decNum(p) });
+}
+// Repinta els textos que escriu el JS segons l'estat actual (inicial i en canviar d'idioma)
+function refreshDyn() {
+  document.getElementById('statusPill').textContent = _t(pillKey);
+  document.getElementById('trainBtn').textContent = _t(trainBtnKey);
+  renderTrainStats();
+  document.querySelectorAll('#lr option').forEach(o => { o.textContent = localNum(o.value); });
+  const T = (id, k) => { document.getElementById(id).textContent = _t(k); };
+  T('testBtn', isTesting ? 'mq.test.stop' : 'mq.test.cam_on');
+  T('testBtnAudio', isTestingAudio ? 'mq.test.stop' : 'mq.test.mic_on');
+  T('testBtnPose', isTestingPose ? 'mq.test.stop' : 'mq.test.pose_cam_on');
+  T('testBtnHands', isTestingHands ? 'mq.test.stop' : 'mq.test.hands_cam_on');
+  document.querySelectorAll('.top-conf[data-p]').forEach(el => { el.textContent = _t('mq.conf', { p: decNum(el.dataset.p) }); });
+  if (curClass !== null && classes[curClass]) { document.getElementById('modalCN').textContent = classes[curClass].name; updateCamCount(); }
+  else { T('modalCN', 'mq.modal.class'); document.getElementById('modalCT').textContent = tn('mq.samples_n', 0); }
+  const pn = document.getElementById('projectName');
+  if (DEF_NAMES.includes(pn.value)) pn.value = defName();
+}
+
 // ═══ INIT ═══
 renderExamples(); renderClasses(); addClass(); addClass();
-setTimeout(()=>{ if (modelType==='image') loadBase().catch(e=>netFail('MobileNet')); },1200);   // només si seguim en «Imatge»
+PIAR_I18N.mountSelector(document.getElementById('langSelectHost'));
+refreshDyn();
+PIAR_I18N.onChange(() => {
+  classes.forEach(c => { if (c.auto) c.name = _t(c.auto.key, c.auto.vars); });   // noms per defecte (no els editats per l'usuari)
+  renderExamples(); renderClasses();
+  refreshDyn(); updateSaveTab(); updateExportTab();
+});
+setTimeout(()=>{ if (modelType==='image') loadBase().catch(e=>netFail('image')); },1200);   // només si seguim en «Imatge»
 </script>
+<script src="../shared/pwa.js"></script>
 </body>
 </html>

@@ -664,3 +664,22 @@ html {
 .interval-control label { min-width: 0; }
 .interval-control input[type="range"] { min-width: 90px; }
 #intervalLabel { white-space: nowrap; min-width: 52px; }
+
+/* ── Selector d'idioma (Configuració) ─────────────────────── */
+.layer-box select.piar-lang-select {
+  width:         100%;
+  min-height:    44px;
+  margin-top:    0.4rem;
+  padding:       0 12px;
+  background:    var(--bg3);
+  color:         var(--text);
+  border:        1px solid var(--border);
+  border-radius: var(--radius);
+  font:          inherit;
+  font-size:     0.9em;
+  cursor:        pointer;
+}
+.layer-box select.piar-lang-select:focus-visible {
+  outline:        2px solid var(--accent);
+  outline-offset: 2px;
+}

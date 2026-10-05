@@ -14,6 +14,8 @@
 
 const CATEGORIES = ['cat', 'bird', 'person'];
 
+// Etiquetes en valencià que s'ENVIEN per UART a la micro:bit (protocol: NO es tradueixen).
+// El nom que veu l'usuari en pantalla va per _t('rh.cat.<classe>') → getCategoryName().
 const TRANSLATIONS = {
   cat:    'gat',
   bird:   'ocell',
@@ -24,24 +26,24 @@ const MODELS = {
   lite: {
     type:            'cocossd',
     base:            'lite_mobilenet_v2',
-    label:           '⚡ Ràpid',
-    description:     'Funciona bé fins a ~1,5 m. Ideal per a mòbils antics o amb poca bateria.',
+    get label()       { return _t('rh.model.lite.label'); },
+    get description() { return _t('rh.model.lite.desc'); },
     score_threshold: 0.25,
     tiled:           false,
   },
   precise: {
     type:            'cocossd',
     base:            'mobilenet_v2',
-    label:           '🔍 Precís',
-    description:     'Millor en angles difícils i moviment. Una mica més lent que el Ràpid.',
+    get label()       { return _t('rh.model.precise.label'); },
+    get description() { return _t('rh.model.precise.desc'); },
     score_threshold: 0.20,
     tiled:           false,
   },
   distance: {
     type:            'cocossd',
     base:            'mobilenet_v2',
-    label:           '🚀 Llarga distància',
-    description:     'Detecta fins a ~3-4 m dividint la imatge en zones. Més lent.',
+    get label()       { return _t('rh.model.distance.label'); },
+    get description() { return _t('rh.model.distance.desc'); },
     score_threshold: 0.15,
     tiled:           true,
   },
@@ -72,7 +74,7 @@ async function initModel(modelKey) {
   stopDetection();
 
   // Mostrar capa de càrrega
-  showLoadingOverlay(`Carregant model ${cfg.label}...`, cfg.description, '🔍',
+  showLoadingOverlay(_t('rh.loading.model', { label: cfg.label }), cfg.description, '🔍',
     prevModel ? NET_NOTE_CHANGE_MODEL + ' ' + NET_NOTE_LOADING : NET_NOTE_LOADING);
 
   try {
@@ -233,5 +235,7 @@ function onModelReady(cb)   { onModelReadyCallback  = cb; }
 function onModelError(cb)   { onModelErrorCallback  = cb; }
 function getCategories()    { return CATEGORIES; }
 function getTranslations()  { return TRANSLATIONS; }
+// Nom de la categoria per a mostrar-lo en pantalla (en l'idioma actual)
+function getCategoryName(cls) { return _t('rh.cat.' + cls); }
 function getModels()        { return MODELS; }
 function getCurrentModel()  { return currentModelKey; }

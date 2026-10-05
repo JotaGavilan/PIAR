@@ -1,8 +1,8 @@
 // ============================================================
 //  internet_notice.js – Avisos sobre Internet, mode avió i ús sense connexió
 //
-//  Cap app PIAR no té mode «sense connexió» (no hi ha service worker):
-//  cal Internet per a descarregar les llibreries i els models. Una vegada
+//  PIAR es pot instal·lar i usar sense Internet (service worker + llibreries dins de /vendor/),
+//  però els models d'IA de Google es descarreguen la primera vegada, amb Internet. Una vegada
 //  carregat el model, la càmera es processa en el dispositiu i no s'envia
 //  res a cap servidor; el Bluetooth no necessita Internet.
 //
@@ -11,16 +11,21 @@
 //  fallarà (valor false); l'error real es detecta quan la descàrrega falla.
 // ============================================================
 
-const NET_NOTE_LOADING =
-  'Cal Internet només per a descarregar el model. Quan estiga carregat, pots llevar el Wi-Fi i les dades mòbils: ' +
-  'la càmera i el micròfon es processen en este dispositiu i no s\'envia res a cap servidor.';
+// Textos dependents de l'idioma (claus «sh.net.*» a shared/i18n_shared.js). Són propietats globals amb getter,
+// de manera que les apps els poden llegir com abans (NET_NOTE_LOADING…) i sempre estan en l'idioma actual.
+Object.defineProperty(window, 'NET_NOTE_LOADING',      { get: () => _t('sh.net.loading') });
+Object.defineProperty(window, 'NET_NOTE_READY',        { get: () => _t('sh.net.ready') });
+Object.defineProperty(window, 'NET_NOTE_CHANGE_MODEL', { get: () => _t('sh.net.change_model') });
+Object.defineProperty(window, 'NET_LIBS_MISSING_TEXT', { get: () => _t('sh.net.libs_missing') });
 
-const NET_NOTE_READY =
-  'Ja no cal Internet: pots llevar el Wi-Fi i les dades mòbils. ' +
-  'No actives el mode avió (o torna a activar el Bluetooth després), perquè la micro:bit el necessita.';
-
-const NET_NOTE_CHANGE_MODEL =
-  'Per a canviar de model cal Internet, perquè es descarrega de nou.';
+// Comprova si un model (adreça que conté «substr») ja està guardat al dispositiu pel service worker
+async function isModelCached(substr) {
+  try {
+    if (!('caches' in window)) return false;
+    const c = await caches.open('piar-models-v1');
+    return (await c.keys()).some(r => r.url.includes(substr));
+  } catch (e) { return false; }
+}
 
 function isDefinitelyOffline() {
   return typeof navigator !== 'undefined' && navigator.onLine === false;
@@ -35,7 +40,7 @@ function looksLikeNetworkError(e) {
 }
 
 function netErrorText(what) {
-  return `❌ No s'ha pogut descarregar ${what}. Comprova que tens connexió a Internet i torna-ho a provar.`;
+  return _t('sh.net.error', { what });
 }
 
 // Comprova que les llibreries externes s'han carregat (si no hi havia
@@ -43,6 +48,3 @@ function netErrorText(what) {
 function missingLibs(names) {
   return names.filter(n => typeof window[n] === 'undefined');
 }
-
-const NET_LIBS_MISSING_TEXT =
-  '❌ No s\'han pogut descarregar les llibreries d\'IA. Cal Internet per a obrir esta app: connecta\'t i recarrega la pàgina.';

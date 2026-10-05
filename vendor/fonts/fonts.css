@@ -1,0 +1,11 @@
+/* Tipografies allotjades (llicència SIL OFL 1.1: Poppins, Space Mono, DM Sans), subconjunt llatí.
+   Així l'app es veu igual sense Internet. */
+@font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:swap;src:url(poppins-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Poppins';font-style:normal;font-weight:500;font-display:swap;src:url(poppins-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url(poppins-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url(poppins-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url(space-mono-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url(space-mono-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:300;font-display:swap;src:url(dm-sans-latin-300-normal.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:500;font-display:swap;src:url(dm-sans-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:600;font-display:swap;src:url(dm-sans-latin-600-normal.woff2) format('woff2')}

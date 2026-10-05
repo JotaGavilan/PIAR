@@ -9,19 +9,17 @@
   <meta charset="UTF-8">
   <meta name="theme-color" content="#090812">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RobHort – El guardià del teu bancal</title>
+  <title data-i18n="rh.title">RobHort – El guardià del teu bancal</title>
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="../shared/loading_overlay.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../vendor/fonts/fonts.css">
 </head>
 <body>
 
   <!-- Capçalera -->
   <h1>
-    <img src="icons/android-chrome-512x512.png" alt="Icona RobHort">
-    RobHort – El guardià del teu bancal
+    <img src="icons/android-chrome-512x512.png" alt="Icona RobHort" data-i18n-attr="alt:rh.alt.app">
+    <span data-i18n="rh.title">RobHort – El guardià del teu bancal</span>
   </h1>
 
   <!-- Vídeo + Canvas -->
@@ -32,14 +30,14 @@
 
   <!-- Panel de deteccions -->
   <div id="detection-panel">
-    <span class="no-det">Inicialitzant...</span>
+    <span class="no-det" data-i18n="rh.panel.init">Inicialitzant...</span>
   </div>
 
   <!-- Controls inferiors -->
   <div id="controls">
     <button id="connectBtn" class="btn-bluetooth">🔵 Connectar Bluetooth</button>
-    <button id="configBtn">⚙️ Configurar</button>
-    <button id="infoBtn">ℹ️ Ajuda</button>
+    <button id="configBtn" data-i18n="rh.btn.config">⚙️ Configurar</button>
+    <button id="infoBtn" data-i18n="rh.btn.help">ℹ️ Ajuda</button>
     <div id="status"><span id="device-indicator" style="display:none; margin-right: 0.5rem;"></span><span id="status-text">⏳ Inicialitzant càmera...</span></div>
   </div>
 
@@ -47,31 +45,36 @@
   <div id="config-layer" class="layer">
     <div class="layer-box">
       <div class="layer-header">
-        <img src="icons/android-chrome-512x512.png" alt="Icona RobHort">
-        <h2>⚙️ Configuració</h2>
+        <img src="icons/android-chrome-512x512.png" alt="Icona RobHort" data-i18n-attr="alt:rh.alt.app">
+        <h2 data-i18n="rh.cfg.title">⚙️ Configuració</h2>
       </div>
 
-      <p class="section-title">Què detectar</p>
+      <p class="section-title" data-i18n="rh.cfg.detect">Què detectar</p>
       <div id="category-list"></div>
 
-      <p class="section-title">Model d'intel·ligència artificial</p>
+      <p class="section-title" data-i18n="rh.cfg.model">Model d'intel·ligència artificial</p>
       <div id="model-selector"></div>
-      <p style="font-size:0.75em; color:#8b82b8; margin-top:0.4rem; line-height:1.5;">
+      <p style="font-size:0.75em; color:#8b82b8; margin-top:0.4rem; line-height:1.5;" data-i18n-html="rh.cfg.model_note">
         💡 Si no saps quin triar, usa <strong>Ràpid</strong>.<br>
         <strong>Llarga distància</strong> fa 4 anàlisis per fotograma: pot anar lent en mòbils antics.<br>
         🌐 <strong>Canviar de model necessita Internet</strong> (es descarrega de nou). Si falla, es manté el model anterior.
       </p>
 
       <div class="interval-control">
-        <label for="intervalSlider">Interval d'enviament</label>
+        <label for="intervalSlider" data-i18n="rh.cfg.interval">Interval d'enviament</label>
         <input type="range" id="intervalSlider" min="1" max="15" value="2" step="1">
         <span id="intervalLabel">2 s</span>
       </div>
-      <p style="font-size:0.75em; color:#8b82b8; margin-top:0.4rem;">
+      <p style="font-size:0.75em; color:#8b82b8; margin-top:0.4rem;" data-i18n="rh.cfg.interval_note">
         Cada quants segons s'envien les dades a la micro:bit per Bluetooth.
       </p>
 
-      <button class="close-btn" id="closeConfigBtn">Tancar</button>
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="sh.lang.label">🌐 Idioma</h3>
+        <div id="langSelectHost"></div>
+      </div>
+
+      <button class="close-btn" id="closeConfigBtn" data-i18n="rh.close">Tancar</button>
     </div>
   </div>
 
@@ -79,57 +82,57 @@
   <div id="info-layer" class="layer">
     <div class="layer-box">
       <div class="layer-header">
-        <img src="icons/android-chrome-512x512.png" alt="Icona RobHort">
-        <h2>ℹ️ Ajuda</h2>
+        <img src="icons/android-chrome-512x512.png" alt="Icona RobHort" data-i18n-attr="alt:rh.alt.app">
+        <h2 data-i18n="rh.btn.help">ℹ️ Ajuda</h2>
       </div>
 
-      <p>
+      <p data-i18n-html="rh.help.p1">
         <strong>RobHort – El guardià del teu bancal</strong> utilitza la càmera del mòbil
         per a detectar animals en temps real i avisa la micro:bit per Bluetooth.
         La imatge de la càmera es processa al mateix dispositiu i no s'envia a cap servidor.
       </p>
 
-      <a class="guide-btn" href="guia.html" style="display:block;text-align:center;background:#6c63ff;color:#fff;padding:.75rem 1rem;border-radius:12px;text-decoration:none;font-weight:600;margin:1rem 0;box-shadow:0 0 18px rgba(108,99,255,.45)">📖 Guia completa pas a pas</a>
+      <a class="guide-btn" href="guia.html" style="display:block;text-align:center;background:#6c63ff;color:#fff;padding:.75rem 1rem;border-radius:12px;text-decoration:none;font-weight:600;margin:1rem 0;box-shadow:0 0 18px rgba(108,99,255,.45)" data-i18n="rh.help.guide">📖 Guia completa pas a pas</a>
 
-      <p><strong>Internet i mode avió:</strong></p>
+      <p data-i18n-html="rh.help.net_title"><strong>Internet i mode avió:</strong></p>
       <ul>
-        <li>Cal Internet <strong>només per a descarregar el model</strong>: en obrir l'app i cada vegada que canvies de model (Ràpid, Precís o Llarga distància).</li>
-        <li>Quan veges «Model IA llest», pots llevar el Wi-Fi i les dades mòbils: la detecció continua i no s'envia res a cap servidor.</li>
-        <li><strong>No actives el mode avió</strong> (o torna a activar el Bluetooth després), perquè la micro:bit es connecta per Bluetooth.</li>
-        <li>Si recarregues la pàgina sense Internet, no tornarà a obrir-se: l'app no funciona sense connexió.</li>
+        <li data-i18n-html="rh.help.net1">Cal Internet <strong>només per a descarregar el model</strong>: la primera vegada que uses cada model (Ràpid, Precís o Llarga distància). Després queda guardat en el dispositiu, i amb «📥 Ús sense Internet» de la portada els descarregues tots d'una vegada.</li>
+        <li data-i18n-html="rh.help.net2">Quan veges «Model IA llest», pots llevar el Wi-Fi i les dades mòbils: la detecció continua i no s'envia res a cap servidor.</li>
+        <li data-i18n-html="rh.help.net3"><strong>No actives el mode avió</strong> (o torna a activar el Bluetooth després), perquè la micro:bit es connecta per Bluetooth.</li>
+        <li data-i18n-html="rh.help.net4">Sense Internet, l'app només s'obri si ja l'has instal·lat o usat abans amb connexió, i només funcionen els models ja descarregats. Des de la portada, «📥 Ús sense Internet» els descarrega tots.</li>
       </ul>
 
-      <p><strong>Què detecta:</strong></p>
+      <p data-i18n-html="rh.help.detects_title"><strong>Què detecta:</strong></p>
       <ul>
-        <li>🐱 Gat</li>
-        <li>🐦 Ocell</li>
-        <li>🧍 Persona</li>
+        <li data-i18n="rh.help.det_cat">🐱 Gat</li>
+        <li data-i18n="rh.help.det_bird">🐦 Ocell</li>
+        <li data-i18n="rh.help.det_person">🧍 Persona</li>
       </ul>
 
-      <p><strong>Missatge enviat a la micro:bit:</strong></p>
+      <p data-i18n-html="rh.help.msg_title"><strong>Missatge enviat a la micro:bit:</strong></p>
       <ul>
-        <li>Format: <code>animal:percentatge</code> separat per comes</li>
-        <li>Exemple: <code>gat:87,ocell:45</code></li>
-        <li>Quan allò detectat desapareix de la imatge, s'envia <code>0</code> una sola vegada.</li>
-        <li>Mentre no es detecta res, no s'envia res més.</li>
+        <li data-i18n-html="rh.help.msg1">Format: <code>animal:percentatge</code> separat per comes</li>
+        <li data-i18n-html="rh.help.msg2">Exemple: <code>gat:87,ocell:45</code></li>
+        <li data-i18n-html="rh.help.msg3">Quan allò detectat desapareix de la imatge, s'envia <code>0</code> una sola vegada.</li>
+        <li data-i18n="rh.help.msg4">Mentre no es detecta res, no s'envia res més.</li>
       </ul>
 
-      <p><strong>Models de detecció disponibles:</strong></p>
+      <p data-i18n-html="rh.help.models_title"><strong>Models de detecció disponibles:</strong></p>
       <ul>
-        <li>
+        <li data-i18n-html="rh.help.m_lite">
           ⚡ <strong>Ràpid</strong> — Model: <em>COCO-SSD + MobileNet v2 lite</em> (Google, 2018).<br>
           Model lleuger optimitzat per a mòbils de poca potència.
           Detecta bé objectes grans i propers (~1,5 m).
           Molt fluid i consumix poca bateria.
           <strong>Recomanat per al dia a dia.</strong>
         </li>
-        <li>
+        <li data-i18n-html="rh.help.m_precise">
           🔍 <strong>Precís</strong> — Model: <em>COCO-SSD + MobileNet v2</em> (Google, 2018).<br>
           Versió completa del mateix model. Millor en objectes en moviment,
           angles difícils o mala il·luminació. Una mica més lent.
           Distància similar a la del Ràpid (~1,5-2 m).
         </li>
-        <li>
+        <li data-i18n-html="rh.help.m_distance">
           🚀 <strong>Llarga distància</strong> — Model: <em>COCO-SSD + MobileNet v2</em> amb <em>detecció per zones</em>.<br>
           Usa el mateix model que el Precís, però dividix la imatge en
           4 quadrants i analitza cadascun per separat. Açò permet
@@ -139,23 +142,26 @@
         </li>
       </ul>
 
-      <p>
+      <p data-i18n-html="rh.help.tip">
         <strong>Consell:</strong> comença amb <em>Ràpid</em>.
         Si no detecta a la distància que necessites, prova <em>Llarga distància</em>.
       </p>
 
-      <p class="info-footer">
+      <p class="info-footer" data-i18n-html="rh.help.footer">
         Fet per Jose L. Gavilán amb ❤️ i IA<br>
         IES Jorge Juan, Alacant, 2026
       </p>
 
-      <button class="close-btn" id="closeInfoBtn">Tancar</button>
+      <button class="close-btn" id="closeInfoBtn" data-i18n="rh.close">Tancar</button>
     </div>
   </div>
 
+  <!-- Idioma (ha d'anar abans dels altres scripts de l'app) -->
+  <script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
+
   <!-- Llibreries -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+  <script src="../vendor/tfjs-4.17.0/tf.min.js"></script>
+  <script src="../vendor/coco-ssd-2.2.3/coco-ssd.min.js"></script>
 
   <!-- Mòduls de l'app -->
   <script src="../shared/internet_notice.js"></script>
@@ -164,5 +170,6 @@
   <script src="../shared/bluetooth_uart.js"></script>
   <script src="./js/script.js"></script>
 
+<script src="../shared/pwa.js"></script>
 </body>
 </html>

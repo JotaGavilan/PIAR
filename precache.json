@@ -1,0 +1,274 @@
+{
+ "version": "190694360263",
+ "shell": [
+  "./",
+  "index.html",
+  "manifest.webmanifest",
+  "icons/android-chrome-192x192.png",
+  "icons/android-chrome-512x512.png",
+  "icons/apple-touch-icon.png",
+  "icons/favicon-16x16.png",
+  "icons/favicon-32x32.png",
+  "icons/favicon.ico",
+  "icons/maskable-192x192.png",
+  "icons/maskable-512x512.png",
+  "icons/piar-icon.svg",
+  "jface/guia.html",
+  "jface/index.html",
+  "jface/css/jface-fixes.css",
+  "jface/css/style.css",
+  "jface/guia-img/jface-1-inici.webp",
+  "jface/guia-img/jface-2-connectat.webp",
+  "jface/guia-img/jface-3-config.webp",
+  "jface/guia-img/jface-4-ajuda.webp",
+  "jface/icons/android-chrome-192x192.png",
+  "jface/icons/android-chrome-512x512.png",
+  "jface/icons/apple-touch-icon.png",
+  "jface/icons/favicon-16x16.png",
+  "jface/icons/favicon-32x32.png",
+  "jface/icons/favicon.ico",
+  "jface/icons/site.webmanifest",
+  "jface/js/i18n.js",
+  "jface/js/script.js",
+  "jface/js/video_facial_tracking.js",
+  "maquina-ensenyable/guia.html",
+  "maquina-ensenyable/index.html",
+  "maquina-ensenyable/precarrega.html",
+  "maquina-ensenyable/guia-img/maquina-1-dades-buit.webp",
+  "maquina-ensenyable/guia-img/maquina-2-dades.webp",
+  "maquina-ensenyable/guia-img/maquina-2b-camera.webp",
+  "maquina-ensenyable/guia-img/maquina-3-entrenar-config.webp",
+  "maquina-ensenyable/guia-img/maquina-4-entrenat.webp",
+  "maquina-ensenyable/guia-img/maquina-5-provar.webp",
+  "maquina-ensenyable/guia-img/maquina-6-exportar.webp",
+  "maquina-ensenyable/guia-img/maquina-7-guardar.webp",
+  "maquina-ensenyable/guia-img/maquina-8-ajuda.webp",
+  "maquina-ensenyable/icons/android-chrome-192x192.png",
+  "maquina-ensenyable/icons/android-chrome-512x512.png",
+  "maquina-ensenyable/icons/apple-touch-icon.png",
+  "maquina-ensenyable/icons/favicon-16x16.png",
+  "maquina-ensenyable/icons/favicon-32x32.png",
+  "maquina-ensenyable/icons/favicon.ico",
+  "maquina-ensenyable/icons/site.webmanifest",
+  "maquina-ensenyable/js/i18n.js",
+  "robhort/guia.html",
+  "robhort/index.html",
+  "robhort/precarrega.html",
+  "robhort/css/style.css",
+  "robhort/guia-img/robhort-1-inici.webp",
+  "robhort/guia-img/robhort-2-connectat.webp",
+  "robhort/guia-img/robhort-3-config.webp",
+  "robhort/guia-img/robhort-4-ajuda.webp",
+  "robhort/icons/android-chrome-192x192.png",
+  "robhort/icons/android-chrome-512x512.png",
+  "robhort/icons/apple-touch-icon.png",
+  "robhort/icons/favicon-16x16.png",
+  "robhort/icons/favicon-32x32.png",
+  "robhort/icons/favicon.ico",
+  "robhort/icons/site.webmanifest",
+  "robhort/js/detection_engine.js",
+  "robhort/js/i18n.js",
+  "robhort/js/script.js",
+  "shared/bluetooth_uart.js",
+  "shared/guia.css",
+  "shared/guia.js",
+  "shared/i18n.js",
+  "shared/i18n_portada.js",
+  "shared/i18n_shared.js",
+  "shared/internet_notice.js",
+  "shared/loading_overlay.css",
+  "shared/loading_overlay.js",
+  "shared/pwa.js",
+  "teachable-microbit/guia.html",
+  "teachable-microbit/index.html",
+  "teachable-microbit/css/style.css",
+  "teachable-microbit/guia-img/teachable-1-config.webp",
+  "teachable-microbit/guia-img/teachable-2-enviament.webp",
+  "teachable-microbit/guia-img/teachable-3-model.webp",
+  "teachable-microbit/guia-img/teachable-4-connectat.webp",
+  "teachable-microbit/guia-img/teachable-5-ajuda.webp",
+  "teachable-microbit/icons/android-chrome-192x192.png",
+  "teachable-microbit/icons/android-chrome-512x512.png",
+  "teachable-microbit/icons/apple-touch-icon.png",
+  "teachable-microbit/icons/favicon-16x16.png",
+  "teachable-microbit/icons/favicon-32x32.png",
+  "teachable-microbit/icons/favicon.ico",
+  "teachable-microbit/icons/site.webmanifest",
+  "teachable-microbit/js/i18n.js",
+  "teachable-microbit/js/model_loader.js",
+  "teachable-microbit/js/script.js",
+  "test-mobil/index.html",
+  "test-mobil/icons/android-chrome-192x192.png",
+  "test-mobil/icons/android-chrome-512x512.png",
+  "test-mobil/icons/apple-touch-icon.png",
+  "test-mobil/icons/favicon-16x16.png",
+  "test-mobil/icons/favicon-32x32.png",
+  "test-mobil/icons/favicon.ico",
+  "test-mobil/icons/site.webmanifest",
+  "test-mobil/js/i18n.js",
+  "vendor/fonts/dm-sans-latin-300-normal.woff2",
+  "vendor/fonts/dm-sans-latin-500-normal.woff2",
+  "vendor/fonts/dm-sans-latin-600-normal.woff2",
+  "vendor/fonts/fonts.css",
+  "vendor/fonts/poppins-latin-400-normal.woff2",
+  "vendor/fonts/poppins-latin-500-normal.woff2",
+  "vendor/fonts/poppins-latin-600-normal.woff2",
+  "vendor/fonts/poppins-latin-700-normal.woff2",
+  "vendor/fonts/space-mono-latin-400-normal.woff2",
+  "vendor/fonts/space-mono-latin-700-normal.woff2"
+ ],
+ "groups": [
+  {
+   "id": "jface",
+   "name": "JFace",
+   "files": [
+    {
+     "u": "vendor/mediapipe-camera_utils/camera_utils.js",
+     "s": 7881
+    },
+    {
+     "u": "vendor/mediapipe-drawing_utils/drawing_utils.js",
+     "s": 3767
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh.binarypb",
+     "s": 939
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh.js",
+     "s": 64913
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_packed_assets.data",
+     "s": 3986256
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_packed_assets_loader.js",
+     "s": 8928
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_simd_wasm_bin.data",
+     "s": 0
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_simd_wasm_bin.js",
+     "s": 330166
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_simd_wasm_bin.wasm",
+     "s": 6161697
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_wasm_bin.js",
+     "s": 330161
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_wasm_bin.wasm",
+     "s": 6084312
+    }
+   ],
+   "preload": null
+  },
+  {
+   "id": "robhort",
+   "name": "RobHort",
+   "files": [
+    {
+     "u": "vendor/coco-ssd-2.2.3/coco-ssd.min.js",
+     "s": 9299
+    },
+    {
+     "u": "vendor/tfjs-4.17.0/tf.min.js",
+     "s": 1469106
+    }
+   ],
+   "preload": "robhort/precarrega.html"
+  },
+  {
+   "id": "teachable",
+   "name": "Teachable Microbit",
+   "files": [
+    {
+     "u": "vendor/speech-commands-0.5.4/speech-commands.min.js",
+     "s": 48338
+    },
+    {
+     "u": "vendor/teachablemachine-image-0.8.5/teachablemachine-image.min.js",
+     "s": 249531
+    },
+    {
+     "u": "vendor/teachablemachine-pose-0.8.6/teachablemachine-pose.min.js",
+     "s": 718707
+    },
+    {
+     "u": "vendor/tfjs-3.11.0/tf.min.js",
+     "s": 1244053
+    }
+   ],
+   "preload": null
+  },
+  {
+   "id": "maquina",
+   "name": "Màquina Ensenyable",
+   "files": [
+    {
+     "u": "vendor/mediapipe-hands/hand_landmark_full.tflite",
+     "s": 5478688
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands.binarypb",
+     "s": 550
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands.js",
+     "s": 45581
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_packed_assets.data",
+     "s": 4326731
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_packed_assets_loader.js",
+     "s": 8327
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_simd_wasm_bin.data",
+     "s": 0
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_simd_wasm_bin.js",
+     "s": 276479
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_simd_wasm_bin.wasm",
+     "s": 6026259
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_wasm_bin.js",
+     "s": 276474
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_wasm_bin.wasm",
+     "s": 5917209
+    },
+    {
+     "u": "vendor/mobilenet-2.1.0/mobilenet.min.js",
+     "s": 33612
+    },
+    {
+     "u": "vendor/posenet-2.2.2/posenet.min.js",
+     "s": 18814
+    },
+    {
+     "u": "vendor/speech-commands-0.5.4/speech-commands.min.js",
+     "s": 48338
+    },
+    {
+     "u": "vendor/tfjs-4.15.0/tf.min.js",
+     "s": 1469043
+    }
+   ],
+   "preload": "maquina-ensenyable/precarrega.html"
+  }
+ ]
+}

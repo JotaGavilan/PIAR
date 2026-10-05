@@ -1,1 +1,23 @@
-{"name":"JFace – Seguiment facial amb IA","short_name":"JFace","icons":[{"src":"android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#090812","background_color":"#090812","display":"standalone"}
+{
+  "name": "JFace – Seguiment facial amb IA",
+  "short_name": "JFace",
+  "description": "Seguiment facial en temps real que envia el gir del cap, la boca i els ulls a la micro:bit.",
+  "lang": "ca-ES-valencia",
+  "start_url": "../",
+  "scope": "../",
+  "display": "standalone",
+  "background_color": "#090812",
+  "theme_color": "#090812",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -4,9 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PIAR</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Projectes d'intel·ligència artificial connectats a la micro:bit.">
+  <meta name="theme-color" content="#1e1a2e">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PIAR">
+  <link rel="stylesheet" href="vendor/fonts/fonts.css">
   <style>
     :root {
       --bg-dark:     #13111c;
@@ -186,12 +194,41 @@
         padding: 1.5rem;
       }
     }
+
+    .lang-bar { display: flex; align-items: center; justify-content: center; gap: .6rem; margin: 0 auto 1.4rem; font-size: .9em; color: var(--text-dim); }
+    .lang-bar select { font-family: inherit; font-size: 1em; color: var(--text); background: var(--bg-medium); border: 1px solid var(--border); border-radius: 12px; padding: .5rem .9rem; min-height: 44px; cursor: pointer; }
+    .lang-bar select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* ── Instal·lació i ús sense Internet ───────────────────── */
+    .piar-logo { width: 96px; height: 96px; border-radius: 22px; margin: 0 auto 1rem; display: block; border: 2px solid var(--border); box-shadow: 0 0 30px rgba(77,245,160,0.25); }
+    .install { max-width: 760px; margin: 2.5rem auto 0; padding: 1.5rem; background: var(--bg-medium); border: 1px solid var(--border); border-radius: 20px; }
+    .install h2 { font-size: 1.25em; margin-bottom: .6rem; }
+    .install h3 { font-size: 1.02em; margin: 1.4rem 0 .4rem; color: var(--accent-dim); }
+    .install p, .install li { font-size: .9em; line-height: 1.6; color: var(--text-dim); }
+    .install ul { padding-left: 1.2rem; margin: .4rem 0; }
+    .install .btn { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; font-family: inherit; font-size: .95em; font-weight: 600; cursor: pointer; border: none; border-radius: 12px; padding: .75rem 1.2rem; min-height: 46px; color: #fff; background: var(--accent); margin: .6rem .6rem .2rem 0; }
+    .install .btn.sec { background: var(--bg-light); color: var(--accent-dim); border: 1px solid var(--border); }
+    .install .btn[disabled] { opacity: .55; cursor: default; }
+    .install .state { display: inline-block; font-size: .8em; border-radius: 10px; padding: .15rem .6rem; border: 1px solid var(--border); margin: .15rem .3rem .15rem 0; }
+    .install .state.ok { color: #4ade80; border-color: rgba(74,222,128,.4); }
+    .install .state.wait { color: #fbbf24; border-color: rgba(251,191,36,.4); }
+    .install .bar { height: 10px; border-radius: 6px; background: var(--bg-light); overflow: hidden; margin: .7rem 0 .3rem; }
+    .install .bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), #4df5a0); transition: width .25s; }
+    .install table { width: 100%; border-collapse: collapse; margin: .6rem 0; font-size: .85em; }
+    .install td, .install th { padding: .4rem .3rem; border-top: 1px solid var(--border); text-align: left; color: var(--text); vertical-align: top; }
+    .install th { color: var(--accent-dim); font-weight: 600; border-top: none; }
+    .install [hidden] { display: none !important; }
+    .install .msg { font-size: .85em; min-height: 1.3em; }
+    .install .msg.err { color: #ff5c7a; }
+    .install .msg.ok { color: #4ade80; }
   </style>
 </head>
 <body>
   <header>
+    <div class="lang-bar"><label for="piarLang" data-i18n="sh.lang.label">🌐 Idioma</label><span id="langHost"></span></div>
+    <img src="icons/android-chrome-192x192.png" alt="Icona de PIAR" data-i18n-attr="alt:pt.logo_alt" class="piar-logo" width="96" height="96">
     <h1>PIAR</h1>
-    <p class="subtitle">Intel·ligència artificial connectada al món real</p>
+    <p class="subtitle" data-i18n="pt.subtitle">Intel·ligència artificial connectada al món real</p>
   </header>
 
   <div class="projects-container">
@@ -200,7 +237,7 @@
       <img src="jface/icons/android-chrome-512x512.png" 
            alt="JFace" class="project-icon">
       <h2 class="project-title">JFace</h2>
-      <p class="project-description">
+      <p class="project-description" data-i18n="pt.card.jface">
         Seguiment facial en temps real. Detecta el gir del cap, l'obertura de la boca
         i l'estat dels ulls, i envia les dades a la micro:bit per Bluetooth.
         Ideal per a controlar robots o interfícies amb gestos facials.
@@ -217,7 +254,7 @@
       <img src="robhort/icons/android-chrome-512x512.png" 
            alt="RobHort" class="project-icon">
       <h2 class="project-title">RobHort</h2>
-      <p class="project-description">
+      <p class="project-description" data-i18n="pt.card.robhort">
         El guardià del teu bancal. Detecta gats, ocells i persones amb la càmera
         utilitzant models d'IA optimitzats. Tres modes de detecció segons les necessitats:
         ràpid, precís o llarga distància.
@@ -225,7 +262,7 @@
       <div class="project-tech">
         <span class="tech-tag">COCO-SSD</span>
         <span class="tech-tag">TensorFlow.js</span>
-        <span class="tech-tag">Detecció d'objectes</span>
+        <span class="tech-tag" data-i18n="pt.tag.objects">Detecció d'objectes</span>
       </div>
     </a>
 
@@ -234,15 +271,15 @@
       <img src="teachable-microbit/icons/android-chrome-512x512.png" 
            alt="Teachable Microbit" class="project-icon">
       <h2 class="project-title">Teachable Microbit</h2>
-      <p class="project-description">
+      <p class="project-description" data-i18n="pt.card.teachable">
         Connecta els teus models de Teachable Machine amb la micro:bit.
         Admet reconeixement d'imatges, àudio i postures. Crea les teues pròpies
         aplicacions d'IA sense programar.
       </p>
       <div class="project-tech">
         <span class="tech-tag">Teachable Machine</span>
-        <span class="tech-tag">Imatge / Àudio / Postura</span>
-        <span class="tech-tag">IA personalitzada</span>
+        <span class="tech-tag" data-i18n="pt.tag.iap">Imatge / Àudio / Postura</span>
+        <span class="tech-tag" data-i18n="pt.tag.custom">IA personalitzada</span>
       </div>
     </a>
 
@@ -251,13 +288,13 @@
       <img src="maquina-ensenyable/icons/android-chrome-512x512.png" 
            alt="Màquina Ensenyable" class="project-icon">
       <h2 class="project-title">Màquina Ensenyable</h2>
-      <p class="project-description">
+      <p class="project-description" data-i18n="pt.card.maquina">
         Entrena models d'IA directament al navegador, sense programar ni necessitar cap compte.
         Crea classificadors d'imatges, sons, postures i mans amb les teues pròpies dades.
         Exporta els models i usa'ls en altres projectes.
       </p>
       <div class="project-tech">
-        <span class="tech-tag">Aprenentatge per transferència</span>
+        <span class="tech-tag" data-i18n="pt.tag.transfer">Aprenentatge per transferència</span>
         <span class="tech-tag">MobileNet</span>
         <span class="tech-tag">PoseNet</span>
         <span class="tech-tag">MediaPipe Hands</span>
@@ -267,28 +304,131 @@
     <!-- Test del mòbil -->
     <a href="test-mobil/" class="project-card">
       <img src="test-mobil/icons/android-chrome-512x512.png"
-           alt="Test del mòbil" class="project-icon">
-      <h2 class="project-title">Test del mòbil</h2>
-      <p class="project-description">
+           alt="Test del mòbil" data-i18n-attr="alt:pt.card.test_name" class="project-icon">
+      <h2 class="project-title" data-i18n="pt.card.test_name">Test del mòbil</h2>
+      <p class="project-description" data-i18n="pt.card.test">
         Comprova si les aplicacions funcionaran en el teu dispositiu. Prova la càmera, el micròfon,
         el Bluetooth i la connexió, i et diu app per app si anirà bé; si no, t'explica per què
         i com arreglar-ho (també amb Family Link).
       </p>
       <div class="project-tech">
-        <span class="tech-tag">Diagnòstic</span>
-        <span class="tech-tag">Càmera / Micròfon</span>
+        <span class="tech-tag" data-i18n="pt.tag.diag">Diagnòstic</span>
+        <span class="tech-tag" data-i18n="pt.tag.cammic">Càmera / Micròfon</span>
         <span class="tech-tag">Bluetooth</span>
         <span class="tech-tag">Family Link</span>
       </div>
     </a>
   </div>
 
+
+  <section class="install" id="instal-la" aria-labelledby="inst-t" hidden>
+    <h2 id="inst-t" data-i18n="pt.inst.title">📲 Instal·la PIAR en el teu mòbil</h2>
+    <p data-i18n="pt.inst.intro">Instal·lada, PIAR té la seua icona a la pantalla d'inici, s'obri a pantalla completa i les apps carreguen més ràpid.</p>
+    <div>
+      <button type="button" class="btn" id="installBtn" hidden data-i18n="pt.inst.btn">📲 Instal·lar PIAR</button>
+      <span class="state ok" id="installedState" hidden data-i18n="pt.inst.done">✅ PIAR ja està instal·lada</span>
+    </div>
+    <p id="installHelp"></p>
+
+    <h3 data-i18n="pt.off.title">📥 Ús sense Internet</h3>
+    <p data-i18n-html="pt.off.intro">Pots descarregar al mòbil les llibreries i els models d'IA perquè les apps funcionen <b>sense Internet</b> (per exemple, a classe o al camp). Només cal fer-ho una vegada, amb Internet i, millor, amb Wi-Fi.</p>
+    <table aria-label="Estat de la descàrrega" data-i18n-attr="aria-label:pt.off.table_label">
+      <tr><th data-i18n="pt.off.col_app">App</th><th data-i18n="pt.off.col_libs">Llibreries</th><th data-i18n="pt.off.col_models">Models</th></tr>
+      <tbody id="offRows"></tbody>
+    </table>
+    <button type="button" class="btn" id="prepBtn" data-i18n="pt.prep.btn">📥 Descarregar per a ús sense Internet</button>
+    <div class="bar" id="prepBar" hidden><i id="prepFill"></i></div>
+    <p class="msg" id="prepMsg" role="status" aria-live="polite"></p>
+    <ul>
+      <li data-i18n-html="pt.off.b1"><b>JFace</b> i la detecció de mans de <b>Màquina</b> queden completes: el model està dins de l'app.</li>
+      <li data-i18n-html="pt.off.b2">Els models de <b>RobHort</b> i <b>Màquina</b> (imatge, postura i àudio) es descarreguen de Google en este pas.</li>
+      <li data-i18n-html="pt.off.b3">Els models de <b>Teachable Microbit</b> són els teus: es guarden la primera vegada que els carregues amb Internet.</li>
+      <li data-i18n-html="pt.off.b4">El <b>Bluetooth</b> no necessita Internet. No actives el mode avió (o torna a activar el Bluetooth després).</li>
+    </ul>
+    <button type="button" class="btn sec" id="clearBtn" data-i18n="pt.clear.btn" hidden>🗑 Esborrar el que s'ha descarregat</button>
+  </section>
+
   <footer>
-    <p>Fet per Jose L. Gavilán amb ❤️ i IA</p>
-    <p>IES Jorge Juan, Alacant, 2026</p>
+    <p data-i18n="pt.footer1">Fet per Jose L. Gavilán amb ❤️ i IA</p>
+    <p data-i18n="pt.footer2">IES Jorge Juan, Alacant, 2026</p>
     <p style="margin-top: 1rem;">
       <a href="https://github.com/jotagavilan" target="_blank">GitHub</a>
     </p>
   </footer>
+
+  <script>window.PIAR_INSTALL_UI = true;</script>
+  <script src="shared/i18n.js"></script>
+  <script src="shared/i18n_shared.js"></script>
+  <script src="shared/i18n_portada.js"></script>
+  <script>PIAR_I18N.mountSelector(document.getElementById('langHost'), { id: 'piarLang' });</script>
+  <script src="shared/pwa.js"></script>
+  <script>
+  (function () {
+    var P = window.PIAR_PWA, $ = function (id) { return document.getElementById(id); };
+    if (!P || !P.supported) { return; }               // sense https o sense service worker: la secció no es mostra
+    $('instal-la').hidden = false;
+    var ua = navigator.userAgent, isIOS = /iphone|ipad|ipod/i.test(ua), busy = false, lastStatus = null;
+
+    function help() {
+      var el = $('installHelp'), btn = $('installBtn');
+      btn.hidden = !P.canInstall(); $('installedState').hidden = !P.isStandalone();
+      if (P.isStandalone()) { el.textContent = ''; return; }
+      if (P.canInstall()) { el.textContent = ''; return; }
+      el.innerHTML = _t(isIOS ? 'pt.inst.help_ios' : 'pt.inst.help_chrome');
+    }
+    $('installBtn').onclick = function () {
+      P.install().then(function (outcome) {
+        help();
+        // Instal·lar vol dir que se vol usar sense Internet: oferim descarregar-ho tot ara (millor amb Wi-Fi)
+        if (outcome === 'accepted' && !busy && confirm(_t('pt.inst.confirm'))) $('prepBtn').click();
+      });
+    };
+    P.onChange(help); help();
+
+    function stHtml(cls, key) { return '<span class="state' + (cls ? ' ' + cls : '') + '">' + _t(key) + '</span>'; }
+    function render(st) {
+      if (!st || !st.supported) return;
+      lastStatus = st;
+      var rows = '';
+      Object.keys(st.groups).forEach(function (id) {
+        var g = st.groups[id];
+        var libs = g.libsOk ? stHtml('ok', 'pt.st.ok') : ('<span class="state wait">⏳ ' + g.have + '/' + g.files + '</span>');
+        var mod = g.preload ? (g.modelsOk ? stHtml('ok', 'pt.st.ok') : stHtml('wait', 'pt.st.wait')) : (id === 'jface' ? stHtml('ok', 'pt.st.included') : stHtml('', 'pt.st.yours'));
+        rows += '<tr><td>' + g.name + '</td><td>' + libs + '</td><td>' + mod + '</td></tr>';
+      });
+      $('offRows').innerHTML = rows;
+      $('clearBtn').hidden = !Object.keys(st.groups).some(function (k) { return st.groups[k].have > 0; });
+      var all = Object.keys(st.groups).every(function (k) { var g = st.groups[k]; return g.libsOk && (g.modelsOk !== false); });
+      $('prepBtn').textContent = _t(all ? 'pt.prep.recheck' : 'pt.prep.btn');
+    }
+    function refresh() { P.status().then(render).catch(function () {}); }
+    P.ready.then(function () { refresh(); });
+
+    // El missatge de progrés es guarda com a clau + variables per a poder tornar-lo a escriure en canviar d'idioma
+    var lastMsg = null;
+    function msg(key, vars, cls, raw) { lastMsg = { key: key, vars: vars, cls: cls, raw: raw }; paintMsg(); }
+    function paintMsg() {
+      var m = $('prepMsg'); if (!lastMsg) { return; }
+      m.textContent = lastMsg.raw !== undefined ? lastMsg.raw : _t(lastMsg.key, lastMsg.vars);
+      m.className = 'msg' + (lastMsg.cls ? ' ' + lastMsg.cls : '');
+    }
+    PIAR_I18N.onChange(function () { help(); if (lastStatus) render(lastStatus); paintMsg(); });
+
+    $('prepBtn').onclick = function () {
+      if (busy) return; busy = true; $('prepBtn').disabled = true; $('prepBar').hidden = false; $('prepFill').style.width = '0%'; msg('pt.prep.start');
+      P.prepare(function (p) {
+        if (p.phase === 'libs') { $('prepFill').style.width = Math.round(p.done / p.total * 90) + '%'; msg('pt.prep.libs', { done: P.fmtMB(p.done), total: P.fmtMB(p.total) }); }
+        else if (p.phase === 'models') { $('prepFill').style.width = '92%'; msg('pt.prep.models', { name: p.name }); }
+      }).then(function (res) {
+        $('prepFill').style.width = '100%';
+        var bad = Object.keys(res).filter(function (k) { return !res[k].ok; });
+        if (bad.length) msg('pt.prep.partial', { bad: bad.join(', ') }, 'err');
+        else msg('pt.prep.done', null, 'ok');
+      }).catch(function (e) { msg(null, null, 'err', '❌ ' + (e && e.message || e)); })
+        .then(function () { busy = false; $('prepBtn').disabled = false; refresh(); });
+    };
+    $('clearBtn').onclick = function () { if (confirm(_t('pt.clear.confirm'))) P.clear().then(function () { msg('pt.clear.done'); refresh(); }); };
+  })();
+  </script>
 </body>
 </html>

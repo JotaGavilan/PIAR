@@ -25,10 +25,9 @@ async function loadModel(url, type) {
     const metadataURL = url + 'metadata.json';
 
     // Mostrar capa de càrrega segons el tipus
-    const typeLabels = { image: '🖼️ Imatge', audio: '🎤 Àudio', pose: '🧍 Postura' };
     showLoadingOverlay(
-      `Carregant model de ${typeLabels[type]}...`,
-      'Descarregant des de Teachable Machine. Açò pot tardar uns segons.',
+      _t('tm.overlay.title', { type: _t('tm.type.' + type) }),
+      _t('tm.overlay.details'),
       undefined,
       NET_NOTE_LOADING
     );

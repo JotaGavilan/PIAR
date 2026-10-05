@@ -1,0 +1,99 @@
+{
+  "name": "PIAR – IA i micro:bit",
+  "short_name": "PIAR",
+  "description": "Projectes d'intel·ligència artificial connectats a la micro:bit: JFace, RobHort, Teachable Microbit i Màquina Ensenyable.",
+  "lang": "ca-ES-valencia",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#090812",
+  "theme_color": "#1e1a2e",
+  "categories": [
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "JFace",
+      "url": "jface/",
+      "icons": [
+        {
+          "src": "jface/icons/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "RobHort",
+      "url": "robhort/",
+      "icons": [
+        {
+          "src": "robhort/icons/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Teachable Microbit",
+      "url": "teachable-microbit/",
+      "icons": [
+        {
+          "src": "teachable-microbit/icons/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Màquina Ensenyable",
+      "url": "maquina-ensenyable/",
+      "icons": [
+        {
+          "src": "maquina-ensenyable/icons/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Test del mòbil",
+      "url": "test-mobil/",
+      "icons": [
+        {
+          "src": "test-mobil/icons/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

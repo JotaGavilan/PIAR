@@ -1,11 +1,23 @@
 {
   "name": "Teachable Microbit",
-  "short_name": "TeachMB",
-  "icons": [
-    {"src": "android-chrome-192x192.png", "sizes": "192x192", "type": "image/png"},
-    {"src": "android-chrome-512x512.png",  "sizes": "512x512",  "type": "image/png"}
-  ],
+  "short_name": "Teachable",
+  "description": "Envia a la micro:bit les prediccions d'un model de Teachable Machine.",
+  "lang": "ca-ES-valencia",
+  "start_url": "../",
+  "scope": "../",
+  "display": "standalone",
+  "background_color": "#090812",
   "theme_color": "#13111c",
-  "background_color": "#13111c",
-  "display": "standalone"
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }

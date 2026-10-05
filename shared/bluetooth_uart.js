@@ -32,29 +32,33 @@ function onBTStatusChange(cb) {
   onStatusChangeCallback = cb;
 }
 
+// Text i estil del botó «Connectar Bluetooth» segons l'estat i l'idioma actual
+function updateConnectButton() {
+  const connectBtn = document.getElementById('connectBtn');
+  if (!connectBtn) return;
+  if (!navigator.bluetooth) {          // sense Web Bluetooth (iPhone, Firefox…): text curt perquè càpiga en 320 px
+    connectBtn.textContent = _t('sh.bt.none');
+    connectBtn.title = isIOSDevice() ? _t('sh.bt.none_ios_title') : _t('sh.bt.none_title');
+    return;
+  }
+  if (isConnected) {
+    connectBtn.classList.add('connected');
+    connectBtn.textContent = _t('sh.bt.connected');   // el ✓ el posa el CSS (.connected::before)
+  } else {
+    connectBtn.classList.remove('connected');
+    // Mostrar nom de l'última micro:bit si existeix
+    let lastDevice = null;
+    try { lastDevice = localStorage.getItem('lastMicrobit'); } catch(e) {}
+    connectBtn.textContent = lastDevice ? _t('sh.bt.connect_named', { name: lastDevice }) : _t('sh.bt.connect');
+  }
+}
+
 function notifyStatus(connected, message) {
   isConnected = connected;
   
-  // Actualitzar classe del botó de connexió
-  const connectBtn = document.getElementById('connectBtn');
-  if (connectBtn) {
-    if (connected) {
-      connectBtn.classList.add('connected');
-      connectBtn.textContent = 'Bluetooth connectat';   // el ✓ el posa el CSS (.connected::before)
-    } else {
-      connectBtn.classList.remove('connected');
-      
-      // Mostrar nom de l'última micro:bit si existeix
-      let lastDevice = null;
-    try { lastDevice = localStorage.getItem('lastMicrobit'); } catch(e) {}
-      if (lastDevice) {
-        connectBtn.textContent = `🔵 Connectar (${lastDevice})`;
-      } else {
-        connectBtn.textContent = '🔵 Connectar Bluetooth';
-      }
-    }
-  }
-  
+  // Actualitzar classe i text del botó de connexió
+  updateConnectButton();
+
   // Actualitzar indicador de dispositiu a la pàgina
   const deviceIndicator = document.getElementById('device-indicator');
   if (deviceIndicator && connected && uBitDevice) {
@@ -82,16 +86,16 @@ async function connectBluetooth() {
   // en iOS/iPadOS (és una restricció del sistema, no del navegador concret).
   if (!navigator.bluetooth) {
     if (isIOSDevice()) {
-      setStatusText('❌ Bluetooth no disponible a l\'iPhone/iPad.');
-      alert('Este dispositiu (iPhone/iPad) no permet connectar per Bluetooth des del navegador: és una limitació del sistema d\'Apple, no d\'esta aplicació.\n\nLa càmera i la IA funcionen igual, però per a enviar dades a la micro:bit necessites un mòbil o un ordinador amb Android, Windows, Linux o ChromeOS (amb Chrome o Edge).');
+      setStatusText(_t('sh.bt.ios_status'));
+      alert(_t('sh.bt.ios_alert'));
     } else {
-      setStatusText('❌ Bluetooth no disponible. Usa Chrome o Edge.');
-      alert('El Bluetooth Web no és compatible amb este navegador.\nUtilitza Google Chrome o Microsoft Edge.');
+      setStatusText(_t('sh.bt.unsupported_status'));
+      alert(_t('sh.bt.unsupported_alert'));
     }
     return;
   }
   try {
-    notifyStatus(false, '🔍 Cercant micro:bit...');
+    notifyStatus(false, _t('sh.bt.searching'));
 
     uBitDevice = await navigator.bluetooth.requestDevice({
       filters:          [{ namePrefix: 'BBC micro:bit' }],
@@ -114,12 +118,12 @@ async function connectBluetooth() {
 
     uart = await service.getCharacteristic(UART_RX_CHARACTERISTIC);
 
-    notifyStatus(true, '✅ micro:bit connectada');
+    notifyStatus(true, _t('sh.bt.ok'));
   } catch (e) {
     console.error('❌ Error BT:', e);
     uart = null;
     rxCharacteristic = null;
-    notifyStatus(false, '❌ Error en la connexió');
+    notifyStatus(false, _t('sh.bt.error'));
   }
 }
 
@@ -133,7 +137,7 @@ function onDisconnected(event) {
   console.log(`🔌 Desconnectat de ${event.target.name}`);
   uart             = null;
   rxCharacteristic = null;
-  notifyStatus(false, '🔌 micro:bit desconnectada');
+  notifyStatus(false, _t('sh.bt.disconnected'));
 }
 
 /**
@@ -167,14 +171,6 @@ function isBluetoothConnected() {
 // Avisa d'entrada (sense esperar que l'usuari prema "Connectar") si este
 // dispositiu no podrà mai connectar per Bluetooth, perquè sàpia per què
 // abans de perdre temps provant-ho.
-document.addEventListener('DOMContentLoaded', () => {
-  if (navigator.bluetooth) return;
-  const connectBtn = document.getElementById('connectBtn');
-  if (!connectBtn) return;
-  // Text curt perquè càpiga en pantalles de 320 px; l'explicació completa
-  // apareix en tocar el botó.
-  connectBtn.textContent = '⚠️ Sense Bluetooth';
-  connectBtn.title = isIOSDevice()
-    ? 'Bluetooth no disponible a l\'iPhone/iPad'
-    : 'Este navegador no té Bluetooth Web';
-});
+document.addEventListener('DOMContentLoaded', () => { if (!navigator.bluetooth || (window.PIAR_I18N && PIAR_I18N.lang !== 'ca')) updateConnectButton(); });
+// En canviar d'idioma, el botó es torna a escriure en el nou idioma
+if (window.PIAR_I18N) PIAR_I18N.onChange(() => updateConnectButton());

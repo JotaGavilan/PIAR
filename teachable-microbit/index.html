@@ -7,16 +7,17 @@
   <title>Teachable Microbit</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="../shared/loading_overlay.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
   <link rel="manifest" href="icons/site.webmanifest">
   <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../vendor/fonts/fonts.css">
 </head>
 <body>
   <!-- Capçalera -->
   <header>
-    <img src="icons/android-chrome-512x512.png" alt="Icona Teachable Microbit">
+    <img src="icons/android-chrome-512x512.png" alt="Icona Teachable Microbit" data-i18n-attr="alt:tm.icon_alt">
     <h1>Teachable Microbit</h1>
   </header>
 
@@ -28,14 +29,14 @@
 
   <!-- Panel de prediccions -->
   <div id="prediction-panel">
-    <span class="no-pred">Cap predicció</span>
+    <span class="no-pred" data-i18n="tm.no_pred">Cap predicció</span>
   </div>
 
   <!-- Controls inferiors -->
   <div id="controls">
     <button id="connectBtn" class="btn-bluetooth">🔵 Connectar Bluetooth</button>
-    <button id="configBtn">⚙️ Configurar</button>
-    <button id="infoBtn">ℹ️ Ajuda</button>
+    <button id="configBtn" data-i18n="tm.btn.config">⚙️ Configurar</button>
+    <button id="infoBtn" data-i18n="tm.btn.help">ℹ️ Ajuda</button>
     <div id="status"><span id="device-indicator" style="display:none; margin-right: 0.5rem;"></span><span id="status-text">⏳ Carrega el model per a començar</span></div>
   </div>
 
@@ -43,72 +44,77 @@
   <div id="config-layer" class="layer">
     <div class="layer-box">
       <div class="layer-header">
-        <img src="icons/android-chrome-512x512.png" alt="Icona">
-        <h2>⚙️ Configuració</h2>
+        <img src="icons/android-chrome-512x512.png" alt="Icona" data-i18n-attr="alt:tm.icon_alt_short">
+        <h2 data-i18n="tm.cfg.title">⚙️ Configuració</h2>
       </div>
 
       <div class="config-section">
-        <h3 class="section-title">Model Teachable Machine</h3>
+        <h3 class="section-title" data-i18n="tm.cfg.model_title">Model Teachable Machine</h3>
         
         <div class="model-source">
           <label>
             <input type="radio" name="modelSource" value="tm" checked onchange="toggleModelInput()">
-            <span>Model de Teachable Machine (només codi)</span>
+            <span data-i18n="tm.cfg.src_tm">Model de Teachable Machine (només codi)</span>
           </label>
-          <input type="text" id="tmCode" placeholder="Exemple: WIQv36jWP">
+          <input type="text" id="tmCode" placeholder="Exemple: WIQv36jWP" data-i18n-attr="placeholder:tm.cfg.src_tm_ph">
           
           <label>
             <input type="radio" name="modelSource" value="custom" onchange="toggleModelInput()">
-            <span>URL personalitzada</span>
+            <span data-i18n="tm.cfg.src_custom">URL personalitzada</span>
           </label>
           <input type="text" id="customUrl" placeholder="https://..." disabled>
         </div>
 
         <div class="model-type">
-          <label for="modelType">Tipus de model:</label>
+          <label for="modelType" data-i18n="tm.cfg.type_label">Tipus de model:</label>
           <select id="modelType">
-            <option value="image">🖼️ Imatge</option>
-            <option value="audio">🎤 Àudio</option>
-            <option value="pose">🧍 Postura</option>
+            <option value="image" data-i18n="tm.type.image">🖼️ Imatge</option>
+            <option value="audio" data-i18n="tm.type.audio">🎤 Àudio</option>
+            <option value="pose" data-i18n="tm.type.pose">🧍 Postura</option>
           </select>
         </div>
 
         <button id="loadModelBtn" class="load-btn">Carregar model</button>
-        <p class="net-note">🌐 Carregar o canviar de model necessita Internet (el model es descarrega de Teachable Machine). Una vegada carregat, ja no cal.</p>
+        <p class="net-note" data-i18n="tm.cfg.net_note">🌐 Carregar o canviar de model necessita Internet (el model es descarrega de Teachable Machine). Una vegada carregat, ja no cal.</p>
       </div>
 
       <div class="config-section">
-        <h3 class="section-title">Enviament de dades</h3>
+        <h3 class="section-title" data-i18n="tm.cfg.send_title">Enviament de dades</h3>
         
         <div class="interval-control">
-          <label for="intervalSlider">Interval d'enviament:</label>
+          <label for="intervalSlider" data-i18n="tm.cfg.interval_label">Interval d'enviament:</label>
           <input type="range" id="intervalSlider" min="1" max="30" value="2" step="1">
           <span id="intervalLabel">0,2 s</span>
         </div>
 
         <div class="classes-control">
-          <label for="numClasses">Classes a enviar:</label>
+          <label for="numClasses" data-i18n="tm.cfg.classes_label">Classes a enviar:</label>
           <select id="numClasses">
-            <option value="1">Només la primera (més probable)</option>
-            <option value="2">Primeres 2 classes</option>
-            <option value="3">Primeres 3 classes</option>
+            <option value="1" data-i18n="tm.cfg.classes_1">Només la primera (més probable)</option>
+            <option value="2" data-i18n="tm.cfg.classes_2">Primeres 2 classes</option>
+            <option value="3" data-i18n="tm.cfg.classes_3">Primeres 3 classes</option>
           </select>
         </div>
 
         <div class="probability-control">
           <label>
             <input type="checkbox" id="showProbability" checked>
-            <span>Incloure probabilitats (percentatges)</span>
+            <span data-i18n="tm.cfg.show_prob">Incloure probabilitats (percentatges)</span>
           </label>
         </div>
 
         <p class="config-note">
-          <strong>Format amb probabilitats:</strong> <code>classe1:90;classe2:5</code><br>
-          <strong>Format sense:</strong> <code>classe1;classe2</code>
+          <span data-i18n-html="tm.cfg.fmt_with"><strong>Format amb probabilitats:</strong> <code>classe1:90;classe2:5</code></span><br>
+          <span data-i18n-html="tm.cfg.fmt_without"><strong>Format sense:</strong> <code>classe1;classe2</code></span>
         </p>
       </div>
 
-      <button class="close-btn" id="closeConfigBtn">Tancar</button>
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="sh.lang.label">🌐 Idioma</h3>
+        <div id="langSelectHost"></div>
+      </div>
+
+      <button class="close-btn" id="closeConfigBtn" data-i18n="tm.btn.close">Tancar</button>
     </div>
   </div>
 
@@ -116,66 +122,67 @@
   <div id="info-layer" class="layer">
     <div class="layer-box">
       <div class="layer-header">
-        <img src="icons/android-chrome-512x512.png" alt="Icona">
-        <h2>ℹ️ Ajuda</h2>
+        <img src="icons/android-chrome-512x512.png" alt="Icona" data-i18n-attr="alt:tm.icon_alt_short">
+        <h2 data-i18n="tm.help.title">ℹ️ Ajuda</h2>
       </div>
 
-      <p>
+      <p data-i18n-html="tm.help.intro">
         <strong>Teachable Microbit</strong> et permet utilitzar models d'intel·ligència artificial
         creats amb <a href="https://teachablemachine.withgoogle.com/" target="_blank">Google Teachable Machine</a>
         i enviar les prediccions a una micro:bit per Bluetooth en temps real.
       </p>
 
-      <a class="guide-btn" href="guia.html" style="display:block;text-align:center;background:#6c63ff;color:#fff;padding:.75rem 1rem;border-radius:12px;text-decoration:none;font-weight:600;margin:1rem 0;box-shadow:0 0 18px rgba(108,99,255,.45)">📖 Guia completa pas a pas</a>
+      <a class="guide-btn" data-i18n="tm.help.guide" href="guia.html" style="display:block;text-align:center;background:#6c63ff;color:#fff;padding:.75rem 1rem;border-radius:12px;text-decoration:none;font-weight:600;margin:1rem 0;box-shadow:0 0 18px rgba(108,99,255,.45)">📖 Guia completa pas a pas</a>
 
-      <p><strong>Com funciona:</strong></p>
+      <p><strong data-i18n="tm.help.how_title">Com funciona:</strong></p>
       <ol>
-        <li>Crea un model a <a href="https://teachablemachine.withgoogle.com/" target="_blank">Teachable Machine</a></li>
-        <li>Exporta'l i puja'l: rebràs un enllaç com <code>teachablemachine.withgoogle.com/models/WIQv36jWP/</code>. El <strong>codi</strong> és la part final de l'enllaç (<code>WIQv36jWP</code>)</li>
-        <li>A Configuració, enganxa el codi i carrega el model</li>
-        <li>Connecta la micro:bit per Bluetooth</li>
-        <li>Les prediccions s'enviaran automàticament!</li>
+        <li data-i18n-html="tm.help.how_1">Crea un model a <a href="https://teachablemachine.withgoogle.com/" target="_blank">Teachable Machine</a></li>
+        <li data-i18n-html="tm.help.how_2">Exporta'l i puja'l: rebràs un enllaç com <code>teachablemachine.withgoogle.com/models/WIQv36jWP/</code>. El <strong>codi</strong> és la part final de l'enllaç (<code>WIQv36jWP</code>)</li>
+        <li data-i18n-html="tm.help.how_3">A Configuració, enganxa el codi i carrega el model</li>
+        <li data-i18n-html="tm.help.how_4">Connecta la micro:bit per Bluetooth</li>
+        <li data-i18n-html="tm.help.how_5">Les prediccions s'enviaran automàticament!</li>
       </ol>
 
-      <p><strong>Internet i mode avió:</strong></p>
+      <p><strong data-i18n="tm.help.net_title">Internet i mode avió:</strong></p>
       <ul>
-        <li>Cal Internet <strong>només per a descarregar el model</strong>: sempre que obris l'app i cada vegada que carregues o canvies de model.</li>
-        <li>Quan veges «Model carregat», pots llevar el Wi-Fi i les dades mòbils: la càmera o el micròfon es processen en el dispositiu i no s'envia res a cap servidor.</li>
-        <li><strong>No actives el mode avió</strong> (o torna a activar el Bluetooth després), perquè la micro:bit es connecta per Bluetooth.</li>
-        <li>Si recarregues la pàgina sense Internet, no tornarà a obrir-se: l'app no funciona sense connexió.</li>
+        <li data-i18n-html="tm.help.net_1">Cal Internet <strong>només per a descarregar el model</strong>: la primera vegada que el carregues. Després queda guardat en el dispositiu i també el pots carregar sense connexió.</li>
+        <li data-i18n-html="tm.help.net_2">Quan veges «Model carregat», pots llevar el Wi-Fi i les dades mòbils: la càmera o el micròfon es processen en el dispositiu i no s'envia res a cap servidor.</li>
+        <li data-i18n-html="tm.help.net_3"><strong>No actives el mode avió</strong> (o torna a activar el Bluetooth després), perquè la micro:bit es connecta per Bluetooth.</li>
+        <li data-i18n-html="tm.help.net_4">Sense Internet, l'app només s'obri si ja l'has instal·lat o usat abans amb connexió, i només funcionen els models ja descarregats. Des de la portada, «📥 Ús sense Internet» els descarrega tots.</li>
       </ul>
 
-      <p><strong>Tipus de models compatibles:</strong></p>
+      <p><strong data-i18n="tm.help.types_title">Tipus de models compatibles:</strong></p>
       <ul>
-        <li>🖼️ <strong>Imatge</strong> — detecta objectes, gestos, posicions davant la càmera</li>
-        <li>🎤 <strong>Àudio</strong> — reconeix sons, paraules, música (requereix micròfon)</li>
-        <li>🧍 <strong>Postura</strong> — detecta posicions del cos sencer</li>
+        <li data-i18n-html="tm.help.type_image">🖼️ <strong>Imatge</strong> — detecta objectes, gestos, posicions davant la càmera</li>
+        <li data-i18n-html="tm.help.type_audio">🎤 <strong>Àudio</strong> — reconeix sons, paraules, música (requereix micròfon)</li>
+        <li data-i18n-html="tm.help.type_pose">🧍 <strong>Postura</strong> — detecta posicions del cos sencer</li>
       </ul>
 
-      <p><strong>Format de les dades enviades:</strong></p>
+      <p><strong data-i18n="tm.help.fmt_title">Format de les dades enviades:</strong></p>
       <ul>
-        <li>Amb probabilitats: <code>gat:87;gos:10;ocell:3</code></li>
-        <li>Sense probabilitats: <code>gat;gos;ocell</code></li>
-        <li>S'envien les classes més probables (les que tenen més d'un 1 %). Si totes queden per sota de l'1 %, s'envia <code>0</code> una sola vegada</li>
+        <li data-i18n-html="tm.help.fmt_1">Amb probabilitats: <code>gat:87;gos:10;ocell:3</code></li>
+        <li data-i18n-html="tm.help.fmt_2">Sense probabilitats: <code>gat;gos;ocell</code></li>
+        <li data-i18n-html="tm.help.fmt_3">S'envien les classes més probables (les que tenen més d'un 1 %). Si totes queden per sota de l'1 %, s'envia <code>0</code> una sola vegada</li>
       </ul>
 
-      <p class="info-footer">
+      <p class="info-footer" data-i18n-html="tm.help.footer">
         Fet per Jose L. Gavilán amb ❤️ i IA<br>
         IES Jorge Juan, Alacant, 2026
       </p>
 
-      <button class="close-btn" id="closeInfoBtn">Tancar</button>
+      <button class="close-btn" id="closeInfoBtn" data-i18n="tm.btn.close">Tancar</button>
     </div>
   </div>
 
   <!-- Llibreries -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+  <script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
+  <script src="../vendor/tfjs-3.11.0/tf.min.js"></script>
+  <script src="../vendor/teachablemachine-image-0.8.5/teachablemachine-image.min.js"></script>
   <!-- NOTA: no existeix cap paquet "@teachablemachine/audio" (mai ha existit a
        npm/jsdelivr: dona 404). Google implementa l'àudio de Teachable Machine
        amb la llibreria speech-commands, que és la que carreguem ací. -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.5/dist/speech-commands.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
+  <script src="../vendor/speech-commands-0.5.4/speech-commands.min.js"></script>
+  <script src="../vendor/teachablemachine-pose-0.8.6/teachablemachine-pose.min.js"></script>
 
   <!-- Mòduls de l'app -->
   <script src="../shared/internet_notice.js"></script>
@@ -183,5 +190,6 @@
   <script src="../shared/bluetooth_uart.js"></script>
   <script src="js/model_loader.js"></script>
   <script src="js/script.js"></script>
+<script src="../shared/pwa.js"></script>
 </body>
 </html>

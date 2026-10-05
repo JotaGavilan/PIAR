@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<title data-i18n="rh.preload_title">RobHort – descàrrega de models</title>
+</head>
+<body>
+<!-- Pàgina oculta: la crida la portada («Descarregar per a ús sense Internet»). Carrega els models de RobHort perquè el
+     service worker els guarde i després funcionen sense Internet. No fa servir la càmera. -->
+<script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
+<script src="../vendor/tfjs-4.17.0/tf.min.js"></script>
+<script src="../vendor/coco-ssd-2.2.3/coco-ssd.min.js"></script>
+<script>
+(async () => {
+  const steps = [];
+  const bases = ['lite_mobilenet_v2', 'mobilenet_v2'];   // «Ràpid» (lite) i «Precís»/«Llarga distància»
+  let ok = true, error = null;
+  for (const base of bases) {
+    try { const m = await cocoSsd.load({ base }); if (m && m.dispose) m.dispose(); steps.push({ name: base, ok: true }); }
+    catch (e) { ok = false; error = String(e && e.message || e); steps.push({ name: base, ok: false, error }); }
+  }
+  parent.postMessage({ piarPreload: 'robhort', finished: true, ok, steps, error }, location.origin);
+})();
+</script>
+</body>
+</html>

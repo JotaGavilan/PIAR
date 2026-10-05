@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('../../vendor/fonts/fonts.css');
 
 /* style.css – Teachable Microbit */
 
@@ -534,4 +534,18 @@ button:active {
 .classes-control select, .model-type select { min-width: 0; max-width: 100%; text-overflow: ellipsis; }
 @media (max-width: 400px) {
   .interval-control label, .classes-control label { min-width: 90px; }
+}
+
+/* Selector d'idioma (configuració) */
+#langSelectHost select.piar-lang-select {
+  width: 100%;
+  min-height: 44px;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9em;
+  padding: 8px 12px;
+  cursor: pointer;
 }

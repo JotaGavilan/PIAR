@@ -24,6 +24,43 @@ let sendIntervalMs = 200;  // 0,2 s per defecte
 let lastPredictions = [];
 let hadPrediction = false;
 
+// ── Textos dinàmics i idioma ─────────────────────────────────
+// L'estat de la UI es guarda com a funcions que tornen a pintar el text
+// en l'idioma actual (es crida de nou quan l'usuari canvia d'idioma).
+let statusRender = null;
+function setStatus(render) {
+  statusRender = render;
+  statusTextEl.textContent = render();
+}
+
+// Estat del botó de càrrega: 'load' | 'loading' | 'loaded'
+let loadBtnState = 'load';
+const LOAD_BTN_KEYS = { load: 'tm.btn.load', loading: 'tm.btn.loading', loaded: 'tm.btn.loaded' };
+function setLoadBtnState(state) {
+  loadBtnState = state;
+  loadModelBtn.classList.toggle('model-loaded', state === 'loaded');
+  loadModelBtn.textContent = _t(LOAD_BTN_KEYS[state]);
+}
+
+// Segons amb una xifra decimal: coma en ca/es, punt en en (0,2 s / 0.2 s)
+function formatSeconds(seconds) {
+  const txt = seconds.toFixed(1);
+  return (PIAR_I18N.lang === 'en' ? txt : txt.replace('.', ',')) + ' s';
+}
+function renderIntervalLabel() {
+  intervalLabel.textContent = formatSeconds(parseInt(intervalSlider.value) / 10);
+}
+
+setStatus(() => _t('tm.status.initial'));
+renderIntervalLabel();
+setLoadBtnState('load');
+PIAR_I18N.mountSelector(document.getElementById('langSelectHost'));
+PIAR_I18N.onChange(() => {
+  if (statusRender) statusTextEl.textContent = statusRender();
+  loadModelBtn.textContent = _t(LOAD_BTN_KEYS[loadBtnState]);
+  renderIntervalLabel();
+});
+
 // ── Botons ───────────────────────────────────────────────────
 connectBtn.onclick = connectBluetooth;
 configBtn.onclick = () => { configLayer.style.display = 'flex'; };
@@ -49,8 +86,8 @@ window.toggleModelInput = function() {
 // ── Carregar model ───────────────────────────────────────────
 function modelErrorText(e) {
   return looksLikeNetworkError(e)
-    ? netErrorText('el model') + ' Revisa també el codi o la URL del model.'
-    : '❌ Error carregant el model';
+    ? netErrorText(_t('tm.what_model')) + ' ' + _t('tm.err.check_code')
+    : _t('tm.err.load');
 }
 
 loadModelBtn.onclick = async () => {
@@ -61,48 +98,46 @@ loadModelBtn.onclick = async () => {
   if (source === 'tm') {
     const code = document.getElementById('tmCode').value.trim();
     if (!code) {
-      alert('Introduïx el codi del model de Teachable Machine');
+      alert(_t('tm.alert.no_code'));
       return;
     }
     url = `https://teachablemachine.withgoogle.com/models/${code}/`;
   } else {
     url = document.getElementById('customUrl').value.trim();
     if (!url) {
-      alert('Introduïx una adreça (URL) vàlida');
+      alert(_t('tm.alert.no_url'));
       return;
     }
     if (!url.endsWith('/')) url += '/';
   }
 
-  // Sense Internet, la descàrrega fallarà segur: no parem el model actual.
-  if (isDefinitelyOffline()) {
-    statusTextEl.textContent = '🌐 Per a carregar o canviar de model cal Internet. Ara no tens connexió' +
-      (loadModelBtn.classList.contains('model-loaded') ? ': es manté el model actual.' : '.');
+  // Sense Internet, només es pot carregar un model que ja estiga guardat al dispositiu: no parem el model actual.
+  if (isDefinitelyOffline() && !(await isModelCached(url))) {
+    const keepKey = loadModelBtn.classList.contains('model-loaded') ? 'tm.status.offline_keep' : 'tm.status.offline';
+    setStatus(() => _t(keepKey));
     return;
   }
   const libsNeeded = { image: ['tf', 'tmImage'], audio: ['tf', 'speechCommands'], pose: ['tf', 'tmPose'] }[type] || ['tf'];
   if (missingLibs(libsNeeded).length) {
-    statusTextEl.textContent = NET_LIBS_MISSING_TEXT;
+    setStatus(() => NET_LIBS_MISSING_TEXT);
     return;
   }
   // Canviar de model atura el que està funcionant i en descarrega un de nou
   if (loadModelBtn.classList.contains('model-loaded') &&
-      !confirm('Per a canviar de model cal connexió a Internet i s\'aturarà el model actual. Vols continuar?')) {
+      !confirm(_t('tm.confirm.change'))) {
     return;
   }
 
-  statusTextEl.textContent = '⏳ Carregant model...';
+  setStatus(() => _t('tm.status.loading'));
   loadModelBtn.disabled = true;
-  loadModelBtn.textContent = '⏳ Carregant...';
-  loadModelBtn.classList.remove('model-loaded');
+  setLoadBtnState('loading');
 
   try {
     await loadModel(url, type);
   } catch (e) {
-    statusTextEl.textContent = modelErrorText(e);
+    setStatus(() => modelErrorText(e));
     loadModelBtn.disabled = false;
-    loadModelBtn.textContent = 'Carregar model';
-    loadModelBtn.classList.remove('model-loaded');
+    setLoadBtnState('load');
   }
 };
 
@@ -111,13 +146,13 @@ intervalSlider.addEventListener('input', () => {
   const value = parseInt(intervalSlider.value);
   const seconds = value / 10;  // 1→0,1 s, 30→3,0 s
   sendIntervalMs = seconds * 1000;
-  intervalLabel.textContent = `${seconds.toFixed(1).replace('.', ',')} s`;
+  intervalLabel.textContent = formatSeconds(seconds);
 });
 
 // ── Actualitzar panel de prediccions ─────────────────────────
 function updatePredictionPanel(predictions) {
   if (!predictions || predictions.length === 0) {
-    predictionPanel.innerHTML = '<span class="no-pred">Cap predicció</span>';
+    predictionPanel.innerHTML = `<span class="no-pred" data-i18n="tm.no_pred">${_t('tm.no_pred')}</span>`;
     return;
   }
 
@@ -187,7 +222,13 @@ function scheduleSend() {
 }
 
 // ── Missatges de la connexió Bluetooth ───────────────────────
-onBTStatusChange((connected, msg) => { if (msg) statusTextEl.textContent = msg; });
+// El missatge arriba ja traduït; busquem la seua clau per a poder-lo tornar a pintar si es canvia d'idioma.
+const BT_STATUS_KEYS = ['sh.bt.searching', 'sh.bt.ok', 'sh.bt.error', 'sh.bt.disconnected'];
+onBTStatusChange((connected, msg) => {
+  if (!msg) return;
+  const key = BT_STATUS_KEYS.find(k => _t(k) === msg);
+  setStatus(key ? () => _t(key) : () => msg);
+});
 
 // ── Callbacks del model ──────────────────────────────────────
 onPrediction(predictions => {
@@ -196,17 +237,15 @@ onPrediction(predictions => {
 });
 
 onModelReady(() => {
-  statusTextEl.textContent = '✅ Model carregat! Ja no cal Internet. Connecta Bluetooth per a enviar dades.';
+  setStatus(() => _t('tm.status.ready'));
   loadModelBtn.disabled = false;
-  loadModelBtn.textContent = '✅ Model carregat';
-  loadModelBtn.classList.add('model-loaded');
+  setLoadBtnState('loaded');
   scheduleSend();
 });
 
 onModelError((err) => {
   console.error('Error model:', err);
-  statusTextEl.textContent = modelErrorText(err);
+  setStatus(() => modelErrorText(err));
   loadModelBtn.disabled = false;
-  loadModelBtn.textContent = 'Carregar model';
-  loadModelBtn.classList.remove('model-loaded');
+  setLoadBtnState('load');
 });

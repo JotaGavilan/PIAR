@@ -26,7 +26,7 @@ function _getOrCreateOverlay() {
 }
 
 function showLoadingOverlay(message, details, icon, note) {
-  message = message || 'Carregant model d\'IA...';
+  message = message || _t('sh.loading_model');
   details = details || '';
   icon    = icon    || '🤖';
 

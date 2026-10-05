@@ -19,6 +19,19 @@ const intervalSlider = document.getElementById('intervalSlider');
 const intervalLabel  = document.getElementById('intervalLabel');
 const categoryList   = document.getElementById('category-list');
 
+// ── Idioma: estat de la barra d'estat ─────────────────────────
+// Guardem COM es calcula l'últim missatge (una funció) per a poder tornar-lo a escriure en canviar d'idioma.
+const BT_STATUS_KEYS = ['sh.bt.ios_status', 'sh.bt.unsupported_status', 'sh.bt.searching', 'sh.bt.ok', 'sh.bt.error', 'sh.bt.disconnected'];
+let statusFn = () => _t('rh.status.starting');
+function showStatus(fn) { statusFn = fn; statusTextEl.textContent = fn(); }
+// Els missatges que escriu bluetooth_uart.js arriben ja traduïts: reconeixem la clau per a poder retraduir-los.
+function showTranslatedStatus(msg) {
+  const key = BT_STATUS_KEYS.find(k => _t(k) === msg);
+  showStatus(key ? () => _t(key) : () => msg);
+}
+setStatusText = showTranslatedStatus;       // bluetooth_uart.js crida setStatusText(...) directament en alguns casos
+showStatus(statusFn);
+
 // ── Estat ────────────────────────────────────────────────────
 let sendIntervalMs   = 2000;    // interval d'enviament per UART (ms)
 let lastDetections   = [];      // darrera llista de deteccions filtrades
@@ -40,12 +53,11 @@ async function startVideo() {
     await new Promise(r => video.onloadedmetadata = r);
     canvas.width  = video.videoWidth;
     canvas.height = video.videoHeight;
-    statusTextEl.textContent = '📷 Càmera activa. Carregant model IA...';
+    showStatus(() => _t('rh.status.cam_active'));
   } catch (e) {
     console.error('❌ Error càmera:', e);
-    statusTextEl.textContent = (e && e.name === 'NotAllowedError')
-      ? '❌ Has denegat l\'accés a la càmera. Permet-lo en el navegador i recarrega la pàgina.'
-      : '❌ No s\'ha pogut accedir a la càmera';
+    const key = (e && e.name === 'NotAllowedError') ? 'rh.status.cam_denied' : 'rh.status.cam_fail';
+    showStatus(() => _t(key));
   }
 }
 
@@ -58,7 +70,7 @@ function drawDetections(detections) {
   visible.forEach(det => {
     const [x, y, w, h] = det.bbox;
     const color  = getCategoryColor(det.class);
-    const label  = `${det.label}  ${det.score}%`;
+    const label  = `${getCategoryName(det.class)}  ${det.score}%`;
     const r      = 8;   // radi de les vores
 
     // Marc arrodonit
@@ -122,18 +134,20 @@ function getCategoryColor(cls) {
 }
 
 // ── Panel de deteccions ───────────────────────────────────────
+let panelStarted = false;   // fins que no arriba la primera detecció, el panell diu «Inicialitzant...»
 function updateDetectionPanel(detections) {
+  panelStarted = true;
   const visible = detections.filter(d => activeCategories.has(d.class));
 
   if (visible.length === 0) {
-    detectionPanel.innerHTML = '<span class="no-det">Cap detecció</span>';
+    detectionPanel.innerHTML = `<span class="no-det">${_t('rh.panel.none')}</span>`;
     return;
   }
 
   detectionPanel.innerHTML = visible
     .map(d => `
       <span class="det-item" style="border-color:${getCategoryColor(d.class)}">
-        <span class="det-label">${d.label}</span>
+        <span class="det-label">${getCategoryName(d.class)}</span>
         <span class="det-score">${d.score}%</span>
         <span class="det-bar" style="width:${d.score}%;background:${getCategoryColor(d.class)}"></span>
       </span>`)
@@ -187,22 +201,23 @@ onDetection(detections => {
 
 onModelReady(() => {
   // Si la càmera ha fallat, es conserva el missatge d'error de la càmera
-  if (video.srcObject) statusTextEl.textContent = '🤖 Model IA llest · Ja no cal Internet';
+  if (video.srcObject) showStatus(() => _t('rh.status.ready'));
   startDetection(video, 300);   // detecció cada 300 ms (independent de l'enviament)
   scheduleSend();
 });
 
 onModelError((err, keptPrevious) => {
   console.error('Model error:', err);
-  statusTextEl.textContent = looksLikeNetworkError(err)
-    ? netErrorText('el model IA') + (keptPrevious ? ' Es manté el model anterior.' : ' Recarrega la pàgina quan tingues connexió.')
-    : '❌ Error carregant el model IA';
+  const netErr = looksLikeNetworkError(err);
+  showStatus(() => netErr
+    ? netErrorText(_t('rh.what.model')) + ' ' + _t(keptPrevious ? 'rh.status.kept' : 'rh.status.reload')
+    : _t('rh.status.model_error'));
 });
 
 // ── Bluetooth ─────────────────────────────────────────────────
 onBTStatusChange((connected, msg) => {
   // El text i la classe del botó els gestiona bluetooth_uart.js (iguals en totes les apps)
-  if (msg) statusTextEl.textContent = msg;
+  if (msg) showTranslatedStatus(msg);
 });
 
 connectBtn.onclick = connectBluetooth;
@@ -229,12 +244,11 @@ document.getElementById('closeConfigBtn').onclick = () => {
 // Construir llista de categories dinàmicament
 function buildCategoryList() {
   const cats = getCategories();
-  const trans = getTranslations();
   categoryList.innerHTML = cats.map(c => `
     <label class="cat-item">
       <input type="checkbox" value="${c}" checked onchange="toggleCategory('${c}', this.checked)">
       <span class="cat-color" style="background:${getCategoryColor(c)}"></span>
-      <span>${trans[c] || c}</span>
+      <span data-i18n="rh.cat.${c}">${getCategoryName(c)}</span>
     </label>
   `).join('');
 }
@@ -249,8 +263,8 @@ function buildModelSelector() {
       <input type="radio" name="modelChoice" value="${key}" ${key === current ? 'checked' : ''}
              onchange="changeModel('${key}')">
       <span class="model-info">
-        <span class="model-label">${m.label}</span>
-        <span class="model-desc">${m.description}</span>
+        <span class="model-label" data-i18n="rh.model.${key}.label">${m.label}</span>
+        <span class="model-desc" data-i18n="rh.model.${key}.desc">${m.description}</span>
       </span>
     </label>
   `).join('');
@@ -262,14 +276,15 @@ function syncModelRadio() {
 }
 
 async function changeModel(key) {
-  // Canviar de model descarrega un model nou: sense Internet segur que falla.
+  // Sense Internet, canviar de model només funciona si el model nou ja està guardat al dispositiu.
   // Ho comprovem abans per a no parar el model que ja funciona.
-  if (isDefinitelyOffline()) {
+  const modelPart = key === 'lite' ? 'ssdlite_mobilenet_v2' : 'ssdmobilenet_v2';
+  if (isDefinitelyOffline() && !(await isModelCached(modelPart))) {
     syncModelRadio();
-    statusTextEl.textContent = '🌐 ' + NET_NOTE_CHANGE_MODEL + ' Ara no tens connexió: es manté el model actual.';
+    showStatus(() => '🌐 ' + NET_NOTE_CHANGE_MODEL + ' ' + _t('rh.status.offline_keep'));
     return;
   }
-  statusTextEl.textContent = '⏳ Carregant model... ' + NET_NOTE_CHANGE_MODEL;
+  showStatus(() => _t('rh.status.changing') + ' ' + NET_NOTE_CHANGE_MODEL);
   stopDetection();
   await initModel(key);
   syncModelRadio();            // si ha fallat, torna a marcar el model anterior
@@ -288,12 +303,21 @@ intervalSlider.addEventListener('input', () => {
   intervalLabel.textContent = `${secs} s`;
 });
 
+// ── Idioma: selector (dins de Configuració) i repintat dels textos dinàmics ──
+PIAR_I18N.mountSelector(document.getElementById('langSelectHost'));
+PIAR_I18N.onChange(() => {
+  showStatus(statusFn);
+  // Panell de deteccions: si ja hi ha hagut deteccions es torna a pintar amb els noms nous
+  // (abans, mentre diu «Inicialitzant...», ho actualitza apply() amb data-i18n)
+  if (panelStarted) updateDetectionPanel(lastDetections);
+});
+
 // ── Arrencada ─────────────────────────────────────────────────
 (async () => {
   buildCategoryList();
   buildModelSelector();
   if (missingLibs(['cocoSsd', 'tf']).length) {
-    statusTextEl.textContent = NET_LIBS_MISSING_TEXT;
+    showStatus(() => NET_LIBS_MISSING_TEXT);
     return;
   }
   await startVideo();

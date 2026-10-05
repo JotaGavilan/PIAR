@@ -4,15 +4,13 @@
   <meta charset="UTF-8">
   <meta name="theme-color" content="#090812">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test del mòbil – PIAR</title>
+  <title data-i18n="tt.title">Test del mòbil – PIAR</title>
   <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
   <link rel="manifest" href="icons/site.webmanifest">
   <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../vendor/fonts/fonts.css">
   <style>
     :root {
       --bg-dark:   #13111c;
@@ -48,6 +46,16 @@
     .top h1 { font-size: 1.15em; font-weight: 600; flex: 1; min-width: 0; }
     .top .back { font-size: 0.85em; text-decoration: none; color: var(--accent-dim); flex: none;
       border: 1px solid var(--border); border-radius: 10px; padding: 0.3rem 0.7rem; }
+
+    .top { flex-wrap: wrap; row-gap: 0.4rem; }
+    .langbar { flex: 1 1 100%; display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+    .langlabel { font-size: 0.85em; color: var(--accent-dim); white-space: nowrap; flex: none; }
+    #langSelectHost { flex: 1; min-width: 0; max-width: 16rem; }
+    #langSelectHost select.piar-lang-select {
+      width: 100%; min-height: 44px; background: var(--bg-light); border: 1px solid var(--border); border-radius: 12px;
+      color: var(--text); font-family: inherit; font-size: 0.9em; padding: 0.4rem 0.8rem; cursor: pointer;
+    }
+    @media (min-width: 640px) { .langbar { flex: none; } }
 
     main { max-width: 720px; margin: 0 auto; padding: 1rem 16px 0; }
     h2 { font-size: 1.05em; font-weight: 600; margin: 1.4rem 0 0.6rem; color: var(--text); }
@@ -135,98 +143,103 @@
 </head>
 <body>
   <div class="top">
-    <img src="icons/android-chrome-192x192.png" alt="Icona del test">
-    <h1>Test del mòbil</h1>
+    <img src="icons/android-chrome-192x192.png" alt="Icona del test" data-i18n-attr="alt:tt.icon_alt">
+    <h1 data-i18n="tt.h1">Test del mòbil</h1>
     <a class="back" href="../">← PIAR</a>
+    <div class="langbar">
+      <label class="langlabel" for="langSel" data-i18n="sh.lang.label">🌐 Idioma</label>
+      <div id="langSelectHost"></div>
+    </div>
   </div>
 
   <main>
     <section class="hero">
-      <p>Comprova si les aplicacions de PIAR funcionaran en este mòbil, tauleta o ordinador.
+      <p data-i18n="tt.hero.p1">Comprova si les aplicacions de PIAR funcionaran en este mòbil, tauleta o ordinador.
         Et dirà, app per app, si anirà bé, i si no, per què i com arreglar-ho.</p>
       <button class="big" id="startBtn">▶ Començar el test</button>
-      <p class="dim" style="margin-top:.8rem">Et demanarà permís per a usar la càmera i el micròfon només per a provar-los.
+      <p class="dim" style="margin-top:.8rem" data-i18n="tt.hero.p2">Et demanarà permís per a usar la càmera i el micròfon només per a provar-los.
         No es grava res ni s'envia a cap servidor.</p>
     </section>
 
-    <h2>📱 Este dispositiu</h2>
+    <h2 data-i18n="tt.h2.device">📱 Este dispositiu</h2>
     <div class="card"><dl class="devgrid" id="devInfo"></dl></div>
 
-    <h2>🔎 Proves</h2>
+    <h2 data-i18n="tt.h2.tests">🔎 Proves</h2>
     <div class="card">
       <ul class="checks" id="checks"></ul>
       <div class="media" id="media">
         <video id="camPrev" muted playsinline></video>
-        <div id="micWrap">🎤 Parla o fes un soroll…<div id="micTrack"><div id="micBar"></div></div></div>
+        <div id="micWrap"><span data-i18n="tt.mic.hint">🎤 Parla o fes un soroll…</span><div id="micTrack"><div id="micBar"></div></div></div>
       </div>
       <div class="optrow" id="btOpt">
-        <p>🔵 <b>Prova opcional amb la micro:bit.</b> Encén la micro:bit amb el teu programa de Bluetooth i prem el botó: s'obrirà el cercador del mòbil.
+        <p data-i18n-html="tt.bt.opt">🔵 <b>Prova opcional amb la micro:bit.</b> Encén la micro:bit amb el teu programa de Bluetooth i prem el botó: s'obrirà el cercador del mòbil.
           Així comprovem de veritat que pot connectar-s'hi.</p>
-        <button class="btn" id="btBtn">Provar amb una micro:bit</button>
+        <button class="btn" id="btBtn" data-i18n="tt.bt.btn">Provar amb una micro:bit</button>
       </div>
     </div>
 
-    <h2>✅ Resultat per aplicació</h2>
+    <h2 data-i18n="tt.h2.apps">✅ Resultat per aplicació</h2>
     <div id="apps"></div>
 
-    <h2>👨‍👩‍👧 Control parental (Family Link)</h2>
+    <h2 data-i18n="tt.h2.fam">👨‍👩‍👧 Control parental (Family Link)</h2>
     <div class="card fam">
       <details id="famDet">
-        <summary>El mòbil té Family Link? Llig açò</summary>
+        <summary data-i18n="tt.fam.summary">El mòbil té Family Link? Llig açò</summary>
 
-        <h4>Què pot passar</h4>
-        <p>Family Link és l'aplicació de control parental de Google. Pot fer que el navegador Chrome:</p>
+        <h4 data-i18n="tt.fam.h_what">Què pot passar</h4>
+        <p data-i18n="tt.fam.what_p">Family Link és l'aplicació de control parental de Google. Pot fer que el navegador Chrome:</p>
         <ul>
-          <li>només òbriga <b>llocs aprovats</b> (i bloquege els servidors d'on les apps agafen els models d'IA);</li>
-          <li><b>limite els permisos</b> que Chrome pot donar a una web: càmera, micròfon, ubicació o dispositius propers (Bluetooth);</li>
-          <li>impedisca que el xiquet o la xiqueta canvie eixos permisos des del seu mòbil.</li>
+          <li data-i18n-html="tt.fam.what1">només òbriga <b>llocs aprovats</b> (i bloquege els servidors d'on les apps agafen els models d'IA);</li>
+          <li data-i18n-html="tt.fam.what2"><b>limite els permisos</b> que Chrome pot donar a una web: càmera, micròfon, ubicació o dispositius propers (Bluetooth);</li>
+          <li data-i18n="tt.fam.what3">impedisca que el xiquet o la xiqueta canvie eixos permisos des del seu mòbil.</li>
         </ul>
 
-        <h4>Com saber si és això</h4>
+        <h4 data-i18n="tt.fam.h_how">Com saber si és això</h4>
         <ul>
-          <li>El test diu que la càmera, el micròfon o el Bluetooth estan <b>bloquejats «a l'instant»</b>, sense haver preguntat res.</li>
-          <li>L'interruptor del permís apareix en gris, o es torna a desactivar sol.</li>
-          <li>Falla algun servidor d'Internet encara que la Wi-Fi o les dades vagen bé.</li>
+          <li data-i18n-html="tt.fam.how1">El test diu que la càmera, el micròfon o el Bluetooth estan <b>bloquejats «a l'instant»</b>, sense haver preguntat res.</li>
+          <li data-i18n="tt.fam.how2">L'interruptor del permís apareix en gris, o es torna a desactivar sol.</li>
+          <li data-i18n="tt.fam.how3">Falla algun servidor d'Internet encara que la Wi-Fi o les dades vagen bé.</li>
         </ul>
 
-        <h4>Qui ho ha d'arreglar</h4>
-        <p>La persona adulta responsable (pare, mare o tutor/a), des de l'app <b>Family Link</b> o des de <code>familylink.google.com</code>. El xiquet o la xiqueta no ho pot canviar sol.</p>
+        <h4 data-i18n="tt.fam.h_who">Qui ho ha d'arreglar</h4>
+        <p data-i18n-html="tt.fam.who">La persona adulta responsable (pare, mare o tutor/a), des de l'app <b>Family Link</b> o des de <code>familylink.google.com</code>. El xiquet o la xiqueta no ho pot canviar sol.</p>
 
-        <h4>Passos per a l'adult</h4>
-        <p class="dim">Els noms dels menús poden canviar un poc segons la versió de l'app.</p>
+        <h4 data-i18n="tt.fam.h_steps">Passos per a l'adult</h4>
+        <p class="dim" data-i18n="tt.fam.steps_note">Els noms dels menús poden canviar un poc segons la versió de l'app.</p>
         <ol>
-          <li>Obri l'app <b>Family Link</b> i tria el perfil del menor.</li>
-          <li>Entra a <b>Controls → Restriccions de contingut → Google Chrome</b>.
+          <li data-i18n-html="tt.fam.st1">Obri l'app <b>Family Link</b> i tria el perfil del menor.</li>
+          <li data-i18n-html="tt.fam.st2">Entra a <b>Controls → Restriccions de contingut → Google Chrome</b>.
             Tria «Permet tots els llocs». Si es prefereix «Només permet llocs aprovats», entra a <b>Gestiona llocs</b> i afig els que el test diu que fallen
-            (normalment: <code>jotagavilan.github.io</code>, <code>cdn.jsdelivr.net</code>, <code>storage.googleapis.com</code>, <code>tfhub.dev</code> i <code>teachablemachine.withgoogle.com</code>).</li>
-          <li>Comprova que no hi haja límits als permisos que les webs poden demanar (càmera, micròfon, ubicació), en la configuració de Chrome del menor.</li>
-          <li>En els permisos de les aplicacions del menor, deixa que <b>Chrome</b> use la <b>càmera</b>, el <b>micròfon</b> i <b>«Dispositius propers»</b> (en Android 11 o anterior: la <b>ubicació</b>).</li>
-          <li>Al mòbil del menor, tanca Chrome del tot, obri-lo de nou i <b>repeteix este test</b>.</li>
+            (normalment: <code>jotagavilan.github.io</code>, <code>storage.googleapis.com</code>, <code>tfhub.dev</code> i <code>teachablemachine.withgoogle.com</code>).</li>
+          <li data-i18n="tt.fam.st3">Comprova que no hi haja límits als permisos que les webs poden demanar (càmera, micròfon, ubicació), en la configuració de Chrome del menor.</li>
+          <li data-i18n-html="tt.fam.st4">En els permisos de les aplicacions del menor, deixa que <b>Chrome</b> use la <b>càmera</b>, el <b>micròfon</b> i <b>«Dispositius propers»</b> (en Android 11 o anterior: la <b>ubicació</b>).</li>
+          <li data-i18n-html="tt.fam.st5">Al mòbil del menor, tanca Chrome del tot, obri-lo de nou i <b>repeteix este test</b>.</li>
         </ol>
-        <p class="dim" style="margin-top:.6rem">Family Link filtra sobretot les pàgines que s'obrin; no sempre bloqueja els fitxers que carrega una pàgina. Per això el test comprova cada servidor un per un.</p>
+        <p class="dim" style="margin-top:.6rem" data-i18n="tt.fam.note">Family Link filtra sobretot les pàgines que s'obrin; no sempre bloqueja els fitxers que carrega una pàgina. Per això el test comprova cada servidor un per un.</p>
 
-        <h4>Altres opcions</h4>
+        <h4 data-i18n="tt.fam.h_other">Altres opcions</h4>
         <ul>
-          <li>Si el mòbil o la tauleta són del centre educatiu (Google Workspace for Education, Chromebook), els permisos els gestiona l'<b>administració del centre</b>.</li>
-          <li>Si no es pot tocar el control parental: usa un altre dispositiu (un ordinador amb Chrome o Edge, o una tauleta sense restriccions).</li>
+          <li data-i18n-html="tt.fam.o1">Si el mòbil o la tauleta són del centre educatiu (Google Workspace for Education, Chromebook), els permisos els gestiona l'<b>administració del centre</b>.</li>
+          <li data-i18n="tt.fam.o2">Si no es pot tocar el control parental: usa un altre dispositiu (un ordinador amb Chrome o Edge, o una tauleta sense restriccions).</li>
         </ul>
 
-        <div class="actions"><button class="btn" id="famCopy">📋 Copiar missatge per a la família</button></div>
+        <div class="actions"><button class="btn" id="famCopy" data-i18n="tt.fam.copy">📋 Copiar missatge per a la família</button></div>
       </details>
     </div>
 
     <div class="actions">
-      <button class="btn" id="copyBtn" disabled>📋 Copiar el resultat</button>
-      <button class="btn" id="againBtn" disabled>🔄 Tornar a provar</button>
+      <button class="btn" id="copyBtn" disabled data-i18n="tt.copy">📋 Copiar el resultat</button>
+      <button class="btn" id="againBtn" disabled data-i18n="tt.again">🔄 Tornar a provar</button>
     </div>
   </main>
 
   <footer>
-    <p>Fet per Jose L. Gavilán amb ❤️ i IA</p>
-    <p>IES Jorge Juan, Alacant, 2026</p>
+    <p data-i18n="tt.footer1">Fet per Jose L. Gavilán amb ❤️ i IA</p>
+    <p data-i18n="tt.footer2">IES Jorge Juan, Alacant, 2026</p>
   </footer>
   <div id="toast"></div>
 
+<script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════
 //  Test del mòbil – PIAR
@@ -238,7 +251,24 @@ const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>'
 const PIAR_URL = new URL('../', location.href).href;
 const UART_SERVICE = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const UART_RX      = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
-const SITES = ['jotagavilan.github.io', 'cdn.jsdelivr.net', 'storage.googleapis.com', 'tfhub.dev', 'teachablemachine.withgoogle.com'];
+const SITES = ['jotagavilan.github.io', 'storage.googleapis.com', 'tfhub.dev', 'teachablemachine.withgoogle.com'];
+
+// ── Idioma (valencià / castellà / anglés) ───────────────────
+//  Els textos de les proves no es guarden ja traduïts, sinó com a «missatge» {k: clau, v: variables}.
+//  Es tradueixen en pintar-los (tr), així en canviar d'idioma es torna a pintar tot en l'idioma nou.
+//  Una variable pot ser un text, un número o un altre missatge (es tradueix també).
+const M = (k, v) => ({ k, v: v || null });
+function tr(m) {
+  if (m == null) return '';
+  if (typeof m !== 'object') return String(m);
+  if (!m.v) return _t(m.k);
+  const v = {}; for (const n of Object.keys(m.v)) v[n] = tr(m.v[n]);
+  return _t(m.k, v);
+}
+const T = id => _t('tt.t.' + id);                                   // títol de cada prova
+const fmtNum = n => PIAR_I18N.lang === 'en' ? String(n) : String(n).replace('.', ',');   // coma decimal en ca/es
+const UNK = M('tt.unknown');                                        // «Desconegut»
+const BR = () => DEV.browser || UNK;                                // nom del navegador (o «Desconegut»)
 
 // ── Dispositiu ──────────────────────────────────────────────
 function detectDevice() {
@@ -247,8 +277,8 @@ function detectDevice() {
   const android = /Android/.test(ua);
   let os = iOS ? (/iPad/.test(ua) || (/Macintosh/.test(ua)) ? 'iPad / iPhone (iOS)' : 'iPhone (iOS)')
     : android ? 'Android' : /Windows/.test(ua) ? 'Windows' : /Mac OS X/.test(ua) ? 'macOS'
-    : /CrOS/.test(ua) ? 'ChromeOS' : /Linux/.test(ua) ? 'Linux' : 'Desconegut';
-  let browser = 'Desconegut', ver = 0, m;
+    : /CrOS/.test(ua) ? 'ChromeOS' : /Linux/.test(ua) ? 'Linux' : '';      // '' = desconegut
+  let browser = '', ver = 0, m;                                            // '' = desconegut
   if ((m = ua.match(/EdgA?\/(\d+)/))) { browser = 'Edge'; ver = +m[1]; }
   else if ((m = ua.match(/OPR\/(\d+)/))) { browser = 'Opera'; ver = +m[1]; }
   else if ((m = ua.match(/SamsungBrowser\/(\d+)/))) { browser = 'Samsung Internet'; ver = +m[1]; }
@@ -262,35 +292,31 @@ function detectDevice() {
 const DEV = detectDevice();
 
 function renderDeviceInfo() {
+  const b = tr(BR()) + (DEV.ver ? ' ' + DEV.ver : '');
   const rows = [
-    ['Sistema', DEV.os],
-    ['Navegador', DEV.browser + (DEV.ver ? ' ' + DEV.ver : '') + (DEV.inApp ? ' (dins d\'una altra app)' : '')],
-    ['Pantalla', `${screen.width}×${screen.height} (${window.innerWidth}×${window.innerHeight} visibles)`],
-    ['Processadors', navigator.hardwareConcurrency ? String(navigator.hardwareConcurrency) : 'no es pot saber'],
-    ['Memòria', navigator.deviceMemory ? `≈ ${navigator.deviceMemory} GB` : 'no es pot saber'],
-    ['Adreça', location.protocol === 'https:' ? 'segura (https)' : 'no segura (' + location.protocol.replace(':', '') + ')'],
+    [_t('tt.dev.system'), tr(DEV.os || UNK)],
+    [_t('tt.dev.browser'), DEV.inApp ? _t('tt.dev.browser_inapp', { b }) : b],
+    [_t('tt.dev.screen'), _t('tt.dev.screen_val', { sw: screen.width, sh: screen.height, iw: window.innerWidth, ih: window.innerHeight })],
+    [_t('tt.dev.cpus'), navigator.hardwareConcurrency ? String(navigator.hardwareConcurrency) : _t('tt.dev.unknown_val')],
+    [_t('tt.dev.mem'), navigator.deviceMemory ? `≈ ${fmtNum(navigator.deviceMemory)} GB` : _t('tt.dev.unknown_val')],
+    [_t('tt.dev.addr'), location.protocol === 'https:' ? _t('tt.dev.secure') : _t('tt.dev.insecure', { proto: location.protocol.replace(':', '') })],
   ];
   $('#devInfo').innerHTML = rows.map(([a, b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('');
 }
 
 // ── Resultats ───────────────────────────────────────────────
-const R = {};   // id → {status:'pend'|'run'|'ok'|'warn'|'fail'|'skip', detail, code}
-const TITLES = {
-  https:'Connexió segura', browser:'Navegador', wasm:'WebAssembly', webgl:'Gràfics (WebGL)', speed:'Velocitat',
-  net_cdn:'Llibreries d\'IA (jsDelivr)', net_google:'Models d\'IA (Google)', net_tfhub:'Model d\'imatges (TF Hub)', net_tm:'Teachable Machine',
-  cam:'Càmera', mic:'Micròfon', bt:'Bluetooth', btmb:'Connexió amb la micro:bit'
-};
-const ORDER = ['https','browser','wasm','webgl','speed','net_cdn','net_google','net_tfhub','net_tm','cam','mic','bt','btmb'];
+const R = {};   // id → {status:'pend'|'run'|'ok'|'warn'|'fail'|'skip', detail (missatge: text o M(clau, vars)), code}
+const ORDER = ['https','browser','wasm','webgl','speed','net_google','net_tfhub','net_tm','cam','mic','bt','btmb'];
 const ICON = { pend:'⚪', run:'<span class="spin">⏳</span>', ok:'✅', warn:'⚠️', fail:'❌', skip:'➖' };
 
 function setR(id, status, detail, code) { R[id] = { status, detail: detail || '', code: code || null }; renderChecks(); renderApps(); }
-function resetR() { ORDER.forEach(id => R[id] = { status:'pend', detail:'', code:null }); R.btmb = { status:'skip', detail:'Opcional: no s\'ha provat', code:null }; }
+function resetR() { ORDER.forEach(id => R[id] = { status:'pend', detail:'', code:null }); R.btmb = { status:'skip', detail:M('tt.d.mb_skip0'), code:null }; }
 
 function renderChecks() {
   $('#checks').innerHTML = ORDER.map(id => {
     const r = R[id];
-    return `<li class="st-${r.status}"><span class="ico">${ICON[r.status]}</span><div><div class="ctitle">${esc(TITLES[id])}</div>` +
-           (r.detail ? `<div class="cdetail">${esc(r.detail)}</div>` : '') + `</div></li>`;
+    return `<li class="st-${r.status}"><span class="ico">${ICON[r.status]}</span><div><div class="ctitle">${esc(T(id))}</div>` +
+           (r.detail ? `<div class="cdetail">${esc(tr(r.detail))}</div>` : '') + `</div></li>`;
   }).join('');
 }
 
@@ -298,21 +324,21 @@ function renderChecks() {
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
 async function testHttps() {
-  if (location.protocol === 'file:') return ['fail', 'La pàgina s\'ha obert com a fitxer (file://)', 'file'];
-  if (!window.isSecureContext) return ['fail', 'L\'adreça no és segura (cal https)', 'insecure'];
-  return ['ok', 'Pàgina oberta amb https'];
+  if (location.protocol === 'file:') return ['fail', M('tt.d.file'), 'file'];
+  if (!window.isSecureContext) return ['fail', M('tt.d.insecure'), 'insecure'];
+  return ['ok', M('tt.d.https_ok')];
 }
 
 async function testBrowser() {
-  if (DEV.inApp) return ['warn', `Estàs dins d'una altra app (${DEV.browser}). Pot bloquejar la càmera o el Bluetooth`, 'inapp'];
+  if (DEV.inApp) return ['warn', M('tt.d.inapp', { browser: BR() }), 'inapp'];
   const minimum = { Chrome:84, Edge:84, 'Samsung Internet':14, Opera:70, Firefox:90, Safari:14 };
-  if (minimum[DEV.browser] && DEV.ver && DEV.ver < minimum[DEV.browser]) return ['warn', `${DEV.browser} ${DEV.ver} és massa antic`, 'old_browser'];
-  if (DEV.browser === 'Desconegut') return ['warn', 'Navegador no reconegut: millor usar Chrome', 'old_browser'];
+  if (minimum[DEV.browser] && DEV.ver && DEV.ver < minimum[DEV.browser]) return ['warn', M('tt.d.old_browser', { browser: DEV.browser, ver: DEV.ver }), 'old_browser'];
+  if (!DEV.browser) return ['warn', M('tt.d.unknown_browser'), 'old_browser'];
   return ['ok', `${DEV.browser} ${DEV.ver || ''}`.trim()];
 }
 
 async function testWasm() {
-  return typeof WebAssembly === 'object' ? ['ok', 'Disponible'] : ['fail', 'El navegador no admet WebAssembly', 'no_wasm'];
+  return typeof WebAssembly === 'object' ? ['ok', M('tt.d.wasm_ok')] : ['fail', M('tt.d.no_wasm'), 'no_wasm'];
 }
 
 async function testWebgl() {
@@ -321,7 +347,7 @@ async function testWebgl() {
     const c = document.createElement('canvas');
     gl = c.getContext('webgl2') || c.getContext('webgl') || c.getContext('experimental-webgl');
   } catch (e) {}
-  if (!gl) return ['fail', 'No es pot usar la targeta gràfica des del navegador', 'no_webgl'];
+  if (!gl) return ['fail', M('tt.d.no_webgl'), 'no_webgl'];
   const v2 = typeof WebGL2RenderingContext !== 'undefined' && gl instanceof WebGL2RenderingContext;
   let renderer = '';
   try { const dbg = gl.getExtension('WEBGL_debug_renderer_info'); renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : ''; } catch (e) {}
@@ -331,8 +357,8 @@ async function testWebgl() {
   let rn = renderer;
   const am = rn.match(/^ANGLE \((.*)\)$/); if (am) { const p = am[1].split(',').map(x => x.trim()); rn = p[1] || p[0]; }
   const short = rn ? ' · ' + rn.replace(/\s*\(.*$/, '').trim().slice(0, 40) : '';
-  if (/swiftshader|llvmpipe|software|softpipe/i.test(renderer)) return ['warn', 'WebGL funciona però per programari (lent)' + short, 'webgl_soft'];
-  if (!floatOK) return ['warn', 'La targeta gràfica és molt limitada' + short, 'webgl_float'];
+  if (/swiftshader|llvmpipe|software|softpipe/i.test(renderer)) return ['warn', M('tt.d.webgl_soft', { gpu: short }), 'webgl_soft'];
+  if (!floatOK) return ['warn', M('tt.d.webgl_float', { gpu: short }), 'webgl_float'];
   return ['ok', (v2 ? 'WebGL 2' : 'WebGL 1') + short];
 }
 
@@ -343,8 +369,8 @@ async function testSpeed() {
   for (let rep = 0; rep < 12; rep++)
     for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { let s = 0; for (let k = 0; k < n; k++) s += a[i * n + k] * b[k * n + j]; c[i * n + j] = s; }
   const ms = Math.round(performance.now() - t0);
-  if (ms > 500) return ['warn', `Prova de càlcul: ${ms} ms (lent)`, 'slow'];
-  return ['ok', `Prova de càlcul: ${ms} ms (${ms < 150 ? 'ràpid' : 'correcte'})`];
+  if (ms > 500) return ['warn', M('tt.d.speed_slow', { ms }), 'slow'];
+  return ['ok', M(ms < 150 ? 'tt.d.speed_fast' : 'tt.d.speed_ok', { ms })];
 }
 
 // Servidors ------------------------------------------------
@@ -369,12 +395,11 @@ function probeScript(url) {
   });
 }
 function netResult(p, code, host) {
-  if (p.ok) return ['ok', `${host} respon (${p.ms} ms)`];
-  if (navigator.onLine === false) return ['fail', 'El dispositiu no té connexió a Internet', 'offline'];
-  const why = p.err && /temps|abort/i.test(p.err.message + p.err.name) ? 'no respon (temps esgotat)' : 'no s\'ha pogut accedir';
-  return ['fail', `${host}: ${why}`, code];
+  if (p.ok) return ['ok', M('tt.d.net_ok', { host, ms: p.ms })];
+  if (navigator.onLine === false) return ['fail', M('tt.d.offline'), 'offline'];
+  const timeout = p.err && /temps|abort/i.test(p.err.message + p.err.name);
+  return ['fail', M(timeout ? 'tt.d.net_timeout' : 'tt.d.net_fail', { host }), code];
 }
-const testNetCdn    = async () => netResult(await probeScript('https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js'), 'net_cdn', 'cdn.jsdelivr.net');
 const testNetGoogle = async () => netResult(await probeFetch('https://storage.googleapis.com/tfjs-models/savedmodel/ssdlite_mobilenet_v2/model.json', true, j => j && j.modelTopology), 'net_google', 'storage.googleapis.com');
 const testNetTfhub  = async () => netResult(await probeFetch('https://tfhub.dev/', false), 'net_tfhub', 'tfhub.dev');
 const testNetTm     = async () => netResult(await probeFetch('https://teachablemachine.withgoogle.com/', false), 'net_tm', 'teachablemachine.withgoogle.com');
@@ -384,17 +409,17 @@ function mediaError(kind, e, ms, permState) {
   const n = (e && e.name) || '';
   if (/NotAllowed|PermissionDenied|Security/.test(n)) {
     const fast = permState === 'denied' || ms < 350 || /Security/.test(n);
-    return ['fail', fast ? 'Bloquejat a l\'instant, sense preguntar' : 'Permís denegat', kind + (fast ? '_denied_fast' : '_denied')];
+    return ['fail', M(fast ? 'tt.d.denied_fast' : 'tt.d.denied'), kind + (fast ? '_denied_fast' : '_denied')];
   }
-  if (/NotFound|DevicesNotFound/.test(n)) return ['fail', kind === 'cam' ? 'No s\'ha trobat cap càmera' : 'No s\'ha trobat cap micròfon', kind + '_none'];
-  if (/NotReadable|TrackStart|Abort/.test(n)) return ['fail', 'No s\'ha pogut engegar (potser l\'usa una altra app)', kind + '_busy'];
-  return ['fail', `Error inesperat (${n || (e && e.message) || 'desconegut'})`, kind + '_other'];
+  if (/NotFound|DevicesNotFound/.test(n)) return ['fail', M(kind === 'cam' ? 'tt.d.cam_none' : 'tt.d.mic_none'), kind + '_none'];
+  if (/NotReadable|TrackStart|Abort/.test(n)) return ['fail', M('tt.d.media_busy'), kind + '_busy'];
+  return ['fail', M('tt.d.media_other', { what: n || (e && e.message) || M('tt.unknown_l') }), kind + '_other'];
 }
 async function permState(name) {
   try { return (await navigator.permissions.query({ name })).state; } catch (e) { return null; }
 }
 async function testCam() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return ['fail', 'El navegador no permet usar la càmera', 'cam_unsupported'];
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return ['fail', M('tt.d.cam_unsupported'), 'cam_unsupported'];
   const ps = await permState('camera'), t0 = performance.now();
   let stream;
   try { stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } }); }
@@ -414,15 +439,15 @@ async function testCam() {
     }
     let cams = 0; try { cams = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput').length; } catch (e) {}
     const w = v.videoWidth, h = v.videoHeight;
-    if (!w) return ['fail', 'La càmera s\'ha obert però no dóna imatge', 'cam_busy'];
-    if (mean < 4 && sd < 2) return ['warn', 'La càmera funciona però la imatge és negra', 'cam_black'];
-    return ['ok', `Funciona (${w}×${h}${cams > 1 ? `, ${cams} càmeres` : ''})`];
+    if (!w) return ['fail', M('tt.d.cam_noimg'), 'cam_busy'];
+    if (mean < 4 && sd < 2) return ['warn', M('tt.d.cam_black'), 'cam_black'];
+    return ['ok', cams > 1 ? M('tt.d.cam_ok_multi', { w, h, n: cams }) : M('tt.d.cam_ok', { w, h })];
   } finally {
     stream.getTracks().forEach(t => t.stop()); v.srcObject = null; v.style.display = 'none';
   }
 }
 async function testMic() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return ['fail', 'El navegador no permet usar el micròfon', 'mic_unsupported'];
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return ['fail', M('tt.d.mic_unsupported'), 'mic_unsupported'];
   const ps = await permState('microphone'), t0 = performance.now();
   let stream;
   try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
@@ -431,7 +456,7 @@ async function testMic() {
   let ctx, peak = 0;
   try {
     const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return ['warn', 'El micròfon s\'ha obert però no es pot mesurar el so', 'mic_silent'];
+    if (!AC) return ['warn', M('tt.d.mic_nomeasure'), 'mic_silent'];
     ctx = new AC(); if (ctx.state === 'suspended') { try { await ctx.resume(); } catch (e) {} }
     const an = ctx.createAnalyser(); an.fftSize = 512; ctx.createMediaStreamSource(stream).connect(an);
     const buf = new Uint8Array(an.fftSize), t1 = performance.now();
@@ -441,8 +466,8 @@ async function testMic() {
       peak = Math.max(peak, m); $('#micBar').style.width = Math.min(100, m * 400) + '%';
       await wait(60);
     }
-    if (peak < 0.004) return ['warn', 'El micròfon s\'ha obert però no s\'ha sentit cap so', 'mic_silent'];
-    return ['ok', 'Funciona i detecta so'];
+    if (peak < 0.004) return ['warn', M('tt.d.mic_silent'), 'mic_silent'];
+    return ['ok', M('tt.d.mic_ok')];
   } finally {
     stream.getTracks().forEach(t => t.stop()); if (ctx) try { ctx.close(); } catch (e) {}
     $('#micWrap').style.display = 'none'; $('#micBar').style.width = '0';
@@ -452,34 +477,34 @@ async function testMic() {
 // Bluetooth ---------------------------------------------------
 async function testBt() {
   if (!('bluetooth' in navigator)) {
-    if (!window.isSecureContext) return ['fail', 'No disponible: la pàgina no és segura', 'insecure'];
-    if (DEV.iOS) return ['fail', 'Els iPhone i iPad no admeten Bluetooth al navegador', 'ios_bt'];
-    if (DEV.browser === 'Firefox') return ['fail', 'Firefox no admet Bluetooth en pàgines web', 'firefox_bt'];
-    if (DEV.inApp) return ['fail', 'Este navegador integrat no admet Bluetooth', 'inapp'];
-    return ['fail', 'Este navegador no admet Bluetooth en pàgines web', 'nobt_api'];
+    if (!window.isSecureContext) return ['fail', M('tt.d.bt_insecure'), 'insecure'];
+    if (DEV.iOS) return ['fail', M('tt.d.bt_ios'), 'ios_bt'];
+    if (DEV.browser === 'Firefox') return ['fail', M('tt.d.bt_firefox'), 'firefox_bt'];
+    if (DEV.inApp) return ['fail', M('tt.d.bt_inapp'), 'inapp'];
+    return ['fail', M('tt.d.bt_nobt'), 'nobt_api'];
   }
   if (typeof navigator.bluetooth.getAvailability === 'function') {
     try {
       const ok = await navigator.bluetooth.getAvailability();
-      if (!ok) return ['warn', 'Bluetooth admés, però sembla apagat o sense adaptador', 'bt_off'];
-      return ['ok', 'Bluetooth disponible i encés'];
+      if (!ok) return ['warn', M('tt.d.bt_off'), 'bt_off'];
+      return ['ok', M('tt.d.bt_ok')];
     } catch (e) {}
   }
-  return ['ok', 'El navegador admet Bluetooth (no es pot saber si està encés)'];
+  return ['ok', M('tt.d.bt_unsure')];
 }
 async function testMicrobit() {
   const btn = $('#btBtn'); btn.disabled = true;
-  setR('btmb', 'run', 'Esperant que triïs la micro:bit…');
+  setR('btmb', 'run', M('tt.d.mb_wait'));
   try {
     if (!navigator.bluetooth) { const [s, d, c] = await testBt(); setR('btmb', 'fail', d, c); return; }
     let dev;
     try { dev = await navigator.bluetooth.requestDevice({ filters: [{ namePrefix: 'BBC micro:bit' }], optionalServices: [UART_SERVICE] }); }
     catch (e) {
       if (e.name === 'NotFoundError') {
-        if (/cancel/i.test(e.message)) setR('btmb', 'skip', 'Has tancat el cercador sense triar cap micro:bit');
-        else setR('btmb', 'fail', 'No s\'ha trobat cap micro:bit a prop', 'bt_nodev');
-      } else if (/NotAllowed|Security/.test(e.name)) setR('btmb', 'fail', 'El navegador no ha deixat buscar dispositius Bluetooth', 'bt_denied');
-      else setR('btmb', 'fail', 'Error inesperat: ' + e.name, 'bt_other');
+        if (/cancel/i.test(e.message)) setR('btmb', 'skip', M('tt.d.mb_cancel'));
+        else setR('btmb', 'fail', M('tt.d.mb_nodev'), 'bt_nodev');
+      } else if (/NotAllowed|Security/.test(e.name)) setR('btmb', 'fail', M('tt.d.mb_denied'), 'bt_denied');
+      else setR('btmb', 'fail', M('tt.d.mb_other', { name: e.name }), 'bt_other');
       return;
     }
     try {
@@ -487,103 +512,105 @@ async function testMicrobit() {
       const svc = await server.getPrimaryService(UART_SERVICE);
       await svc.getCharacteristic(UART_RX);
       try { dev.gatt.disconnect(); } catch (e) {}
-      setR('btmb', 'ok', `Connexió correcta amb ${dev.name || 'la micro:bit'} (servei UART trobat)`);
+      setR('btmb', 'ok', M('tt.d.mb_ok', { name: dev.name || M('tt.d.mb_the') }));
     } catch (e) {
       try { dev.gatt.disconnect(); } catch (_) {}
-      if (e.name === 'NotFoundError') setR('btmb', 'fail', 'S\'ha connectat però el programa de la micro:bit no té el servei UART', 'bt_nouart');
-      else if (e.name === 'NetworkError') setR('btmb', 'fail', 'S\'ha trobat la micro:bit però no s\'ha pogut connectar', 'bt_connect');
-      else setR('btmb', 'fail', 'Error en connectar: ' + e.name, 'bt_other');
+      if (e.name === 'NotFoundError') setR('btmb', 'fail', M('tt.d.mb_nouart'), 'bt_nouart');
+      else if (e.name === 'NetworkError') setR('btmb', 'fail', M('tt.d.mb_connect'), 'bt_connect');
+      else setR('btmb', 'fail', M('tt.d.mb_connerr', { name: e.name }), 'bt_other');
     }
   } finally { btn.disabled = false; }
 }
 
 // ── Guia d'arreglaments ──────────────────────────────────────
-const FAMILY = 'Si el mòbil té <b>Family Link</b>, pot ser el control parental: mira la guia de més avall («Control parental»).';
+//  Cada codi d'error té un «per què» (tt.fix.<codi>.why) i una llista de passos (claus del diccionari).
+//  Un pas pot dur variables: [clau, {variables}]. Tot es tradueix en pintar (FIXOF), no ací.
+const URL_HTML = esc(PIAR_URL);
 const FIX = {
-  file:      { why: 'Has obert la pàgina com un fitxer guardat al mòbil, i el navegador no deixa usar càmera, micròfon ni Bluetooth així.', steps: [`Obri l'adreça de la web: <code>${esc(PIAR_URL)}</code>`, 'Usa sempre l\'enllaç que comença per https://'] },
-  insecure:  { why: 'La pàgina no s\'ha obert amb una adreça segura (https). Per seguretat, el navegador bloqueja càmera, micròfon i Bluetooth.', steps: [`Obri l'adreça que comença per https://, per exemple <code>${esc(PIAR_URL)}</code>`, 'No uses adreces amb http:// ni fitxers descarregats.'] },
-  inapp:     { why: 'Estàs dins d\'una altra aplicació (WhatsApp, Instagram, TikTok, el correu…) que obri les webs amb un navegador reduït. Eixos navegadors solen bloquejar la càmera, el micròfon i el Bluetooth.', steps: ['Toca els tres punts ⋮ (o la icona de compartir) i tria «Obri en Chrome» o «Obri en el navegador».', 'Si no apareix, copia l\'enllaç, obri Chrome i apega\'l a la barra d\'adreces.', 'Torna a fer el test.'] },
-  old_browser: { why: 'El navegador és massa antic o no el conec, i pot no admetre tot el que necessiten les apps.', steps: ['Obri Play Store (o App Store), busca Chrome i toca «Actualitza».', 'Si no es pot actualitzar, prova amb un altre navegador o un altre dispositiu.'] },
-  no_wasm:   { why: 'El navegador no admet WebAssembly, que necessiten alguns models d\'IA.', steps: ['Actualitza Chrome.', 'Si el mòbil és molt antic, usa un altre dispositiu.'] },
-  no_webgl:  { why: 'El navegador no pot usar la targeta gràfica del mòbil. Les apps necessiten acceleració gràfica (WebGL) per a fer funcionar la IA.', steps: ['Actualitza Chrome.', 'Tanca el navegador del tot i obri-lo de nou; si no, reinicia el mòbil.', 'Desactiva l\'estalvi de bateria, que a vegades limita els gràfics.', 'Si segueix igual, este mòbil és massa antic: prova amb un altre.'] },
-  webgl_soft:{ why: 'El navegador fa els gràfics amb el processador en lloc de la targeta gràfica, i això és molt més lent.', steps: ['Actualitza Chrome i reinicia el mòbil.', 'Desactiva l\'estalvi de bateria.', 'Si segueix igual, anirà lent: prova amb un altre dispositiu.'] },
-  webgl_float: { why: 'La targeta gràfica d\'este dispositiu és molt limitada per a la IA.', steps: ['Actualitza Chrome.', 'Si segueix igual, pot anar lent o fallar: prova amb un altre dispositiu.'] },
-  slow:      { why: 'Este dispositiu ha tardat bastant en la prova de càlcul: potser és antic, està escalfat o té moltes coses obertes.', steps: ['Tanca les altres aplicacions i pestanyes.', 'Desactiva l\'estalvi de bateria.', 'En RobHort tria el model «Ràpid», i en JFace i Teachable puja l\'interval d\'enviament.'] },
-  offline:   { why: 'Ara mateix el dispositiu no té Internet. Les apps necessiten Internet per a descarregar els models d\'IA (després ja no cal).', steps: ['Activa la Wi-Fi o les dades mòbils.', 'Comprova que el mode avió està desactivat.', 'Torna a fer el test.'] },
-  net_cdn:   { why: 'No s\'ha pogut arribar a <code>cdn.jsdelivr.net</code>, d\'on les apps descarreguen les seues llibreries d\'IA. Pot ser que la Wi-Fi del centre ho bloquege, que Internet vaja molt lent o que hi haja un control parental.', steps: ['Prova amb les dades mòbils en lloc de la Wi-Fi (o al revés).', 'Si estàs en la xarxa del centre, demana a qui l\'administra que permeta <code>cdn.jsdelivr.net</code>.', FAMILY, 'Torna a fer el test.'] },
-  net_google:{ why: 'No s\'ha pogut arribar a <code>storage.googleapis.com</code>, on Google guarda els models d\'IA (detecció d\'objectes, postura i àudio). Pot ser la xarxa del centre, un Internet molt lent o un control parental.', steps: ['Prova amb les dades mòbils en lloc de la Wi-Fi (o al revés).', 'Si estàs en la xarxa del centre, demana que permeten <code>storage.googleapis.com</code>.', FAMILY, 'Torna a fer el test.'] },
-  net_tfhub: { why: 'No s\'ha pogut arribar a <code>tfhub.dev</code>, d\'on es descarrega el model d\'imatges (MobileNet) de Màquina Ensenyable.', steps: ['Prova amb les dades mòbils en lloc de la Wi-Fi (o al revés).', 'Si estàs en la xarxa del centre, demana que permeten <code>tfhub.dev</code>.', FAMILY, 'Torna a fer el test.'] },
-  net_tm:    { why: 'No s\'ha pogut arribar a <code>teachablemachine.withgoogle.com</code>, d\'on Teachable Microbit descarrega els teus models.', steps: ['Prova amb les dades mòbils en lloc de la Wi-Fi (o al revés).', 'Si estàs en la xarxa del centre, demana que permeten <code>teachablemachine.withgoogle.com</code>.', FAMILY, 'Torna a fer el test.'] },
-  cam_denied: { why: 'El permís de la càmera està denegat: potser el vas denegar en algun moment o no es va contestar quan el navegador va preguntar.', steps: ['Toca el cadenat 🔒 (o la icona d\'ajustos) a l\'esquerra de la barra d\'adreces → Permisos → Càmera → Permet.', 'Recarrega la pàgina i repeteix el test; quan pregunte, tria «Permet».', 'Si no funciona: Ajustos del mòbil → Aplicacions → Chrome → Permisos → Càmera → «Permet només mentre s\'usa l\'app».', FAMILY] },
-  cam_denied_fast: { why: 'El navegador ha denegat la càmera a l\'instant, sense preguntar. Això vol dir que ja estava bloquejada abans: per tu, pel sistema del mòbil o pel control parental (Family Link).', steps: ['Toca el cadenat 🔒 a l\'esquerra de la barra d\'adreces → Permisos → Càmera → Permet, i recarrega.', 'Ajustos del mòbil → Aplicacions → Chrome → Permisos → Càmera → «Permet només mentre s\'usa l\'app».', 'Si l\'opció està en gris o es desactiva sola, probablement és el control parental (Family Link): el responsable ha de permetre-ho. Mira la guia de més avall («Control parental»).', 'Si estàs dins d\'una altra app (WhatsApp, Instagram…), obri la pàgina directament en Chrome.'] },
-  cam_none:  { why: 'El navegador no troba cap càmera en este dispositiu.', steps: ['Comprova que el dispositiu té càmera i que no està tapada ni desactivada.', 'Reinicia el mòbil i torna a provar.', 'Si és un ordinador, connecta una càmera web.'] },
-  cam_busy:  { why: 'Una altra aplicació està usant la càmera, o no s\'ha pogut engegar.', steps: ['Tanca les aplicacions que puguen usar la càmera (càmera, videotrucades, Zoom, Meet…).', 'Tanca altres pestanyes del navegador.', 'Reinicia el mòbil i torna a provar.'] },
-  cam_black: { why: 'La càmera funciona però només veu negre: pot estar tapada, o tindre el protector posat.', steps: ['Mira que la càmera no estiga tapada.', 'Prova en un lloc amb més llum.', 'Torna a fer el test.'] },
-  cam_unsupported: { why: 'Este navegador no permet usar la càmera des d\'una web (o la pàgina no s\'ha obert amb https).', steps: ['Obri la pàgina amb Chrome, amb l\'adreça https://.', 'Si estàs dins d\'una altra app, obri-la en el navegador.', 'Actualitza el navegador.'] },
-  cam_other: { why: 'La càmera ha donat un error inesperat.', steps: ['Tanca el navegador del tot i obri-lo de nou.', 'Reinicia el mòbil.', 'Si continua, prova amb un altre navegador o dispositiu.'] },
-  mic_denied: { why: 'El permís del micròfon està denegat: potser el vas denegar en algun moment o no es va contestar quan el navegador va preguntar.', steps: ['Toca el cadenat 🔒 a l\'esquerra de la barra d\'adreces → Permisos → Micròfon → Permet.', 'Recarrega la pàgina i repeteix el test; quan pregunte, tria «Permet».', 'Si no funciona: Ajustos del mòbil → Aplicacions → Chrome → Permisos → Micròfon → «Permet només mentre s\'usa l\'app».', FAMILY] },
-  mic_denied_fast: { why: 'El navegador ha denegat el micròfon a l\'instant, sense preguntar. Això vol dir que ja estava bloquejat abans: per tu, pel sistema del mòbil o pel control parental (Family Link).', steps: ['Toca el cadenat 🔒 a l\'esquerra de la barra d\'adreces → Permisos → Micròfon → Permet, i recarrega.', 'Ajustos del mòbil → Aplicacions → Chrome → Permisos → Micròfon → «Permet només mentre s\'usa l\'app».', 'Si l\'opció està en gris o es desactiva sola, probablement és el control parental (Family Link): el responsable ha de permetre-ho. Mira la guia de més avall («Control parental»).', 'Si estàs dins d\'una altra app, obri la pàgina directament en Chrome.'] },
-  mic_none:  { why: 'El navegador no troba cap micròfon.', steps: ['Comprova que el dispositiu té micròfon.', 'Si és un ordinador, connecta uns cascs amb micròfon.', 'Reinicia i torna a provar.'] },
-  mic_busy:  { why: 'Una altra aplicació està usant el micròfon, o no s\'ha pogut engegar.', steps: ['Tanca les aplicacions de trucades, vídeo o gravació.', 'Tanca altres pestanyes del navegador.', 'Reinicia el mòbil i torna a provar.'] },
-  mic_silent:{ why: 'El micròfon s\'ha obert però no ha sentit cap so durant la prova. Pot estar silenciat, o simplement hi havia silenci absolut.', steps: ['Repeteix el test parlant o fent soroll prop del mòbil.', 'Comprova que el micròfon no està silenciat ni tapat.', 'Tanca altres apps que puguen estar usant el micròfon.'] },
-  mic_unsupported: { why: 'Este navegador no permet usar el micròfon des d\'una web (o la pàgina no s\'ha obert amb https).', steps: ['Obri la pàgina amb Chrome, amb l\'adreça https://.', 'Si estàs dins d\'una altra app, obri-la en el navegador.'] },
-  mic_other: { why: 'El micròfon ha donat un error inesperat.', steps: ['Tanca el navegador del tot i obri-lo de nou.', 'Reinicia el mòbil.'] },
-  ios_bt:    { why: 'Els iPhone i iPad no permeten usar Bluetooth des del navegador (Apple no ho admet, siga quin siga el navegador). No es pot arreglar en este dispositiu.', steps: ['Per a enviar dades a la micro:bit, usa un mòbil o tauleta <b>Android amb Chrome</b>, o un ordinador amb Chrome o Edge.', 'Mentrestant pots obrir l\'app: veuràs la detecció en pantalla, però no s\'enviarà res a la micro:bit.'] },
-  firefox_bt:{ why: 'Firefox no admet Bluetooth en pàgines web.', steps: ['Obri la pàgina amb <b>Chrome</b> (o Edge, o Samsung Internet).'] },
-  nobt_api:  { why: 'Este navegador no admet Bluetooth en pàgines web, o el té bloquejat.', steps: ['Obri la pàgina amb <b>Chrome</b> (Android o ordinador) o amb Edge.', 'Si ja uses Chrome, actualitza\'l.', FAMILY] },
-  bt_off:    { why: 'El Bluetooth del dispositiu està apagat, o el dispositiu no en té.', steps: ['Activa el Bluetooth des del tauler ràpid del mòbil.', 'En Android 12 o posterior, Chrome necessita el permís «Dispositius propers» per a buscar la micro:bit (Ajustos → Aplicacions → Chrome → Permisos).', 'En Android 11 o anterior, cal tindre la <b>ubicació</b> del mòbil activada i donar-li permís a Chrome.', 'Torna a fer el test.', FAMILY] },
-  bt_denied: { why: 'El navegador no ha deixat obrir el cercador de Bluetooth. Pot ser un permís bloquejat o un control parental.', steps: ['Activa el Bluetooth i el permís «Dispositius propers» per a Chrome (en Android 11 o anterior, la ubicació).', 'Recarrega la pàgina i prem el botó de nou.', FAMILY] },
-  bt_nodev:  { why: 'El cercador no ha trobat cap micro:bit a prop.', steps: ['Comprova que la micro:bit està encesa i amb el programa carregat.', 'Acosta-la al mòbil.', 'Comprova que no està connectada a una altra app o mòbil: només admet una connexió cada vegada.', 'Prem el botó de reinici de la micro:bit i torna a provar.'] },
-  bt_connect:{ why: 'S\'ha trobat la micro:bit però no s\'ha pogut connectar.', steps: ['Apaga i torna a encendre la micro:bit.', 'Si la micro:bit estava aparellada abans amb el mòbil, oblida-la en els ajustos de Bluetooth i torna a provar.', 'Comprova que cap altra app (o mòbil) estiga connectada a la micro:bit.'] },
-  bt_nouart: { why: 'La micro:bit s\'ha connectat, però el seu programa no té el servei Bluetooth UART, que és el que fan servir estes apps.', steps: ['Al teu programa de MakeCode, afig l\'extensió de Bluetooth i el bloc «Bluetooth UART service».', 'Als ajustos del projecte, activa que no calga aparellament («No pairing required»).', 'Torna a descarregar el programa a la micro:bit i repeteix la prova.'] },
-  bt_other:  { why: 'El Bluetooth ha donat un error inesperat.', steps: ['Apaga i torna a encendre el Bluetooth del dispositiu.', 'Reinicia la micro:bit.', 'Torna a provar.'] },
+  file:             [ ['tt.fix.file.s1', { url: URL_HTML }], 'tt.fix.file.s2' ],
+  insecure:         [ ['tt.fix.insecure.s1', { url: URL_HTML }], 'tt.fix.insecure.s2' ],
+  inapp:            [ 'tt.fix.inapp.s1', 'tt.fix.inapp.s2', 'tt.fix.again' ],
+  old_browser:      [ 'tt.fix.old_browser.s1', 'tt.fix.old_browser.s2' ],
+  no_wasm:          [ 'tt.fix.update_chrome', 'tt.fix.no_wasm.s2' ],
+  no_webgl:         [ 'tt.fix.update_chrome', 'tt.fix.no_webgl.s2', 'tt.fix.no_webgl.s3', 'tt.fix.no_webgl.s4' ],
+  webgl_soft:       [ 'tt.fix.webgl_soft.s1', 'tt.fix.battery', 'tt.fix.webgl_soft.s3' ],
+  webgl_float:      [ 'tt.fix.update_chrome', 'tt.fix.webgl_float.s2' ],
+  slow:             [ 'tt.fix.slow.s1', 'tt.fix.battery', 'tt.fix.slow.s3' ],
+  offline:          [ 'tt.fix.offline.s1', 'tt.fix.offline.s2', 'tt.fix.again' ],
+  net_google:       [ 'tt.fix.try_data', 'tt.fix.net_google.s2', 'tt.fix.family', 'tt.fix.again' ],
+  net_tfhub:        [ 'tt.fix.try_data', 'tt.fix.net_tfhub.s2', 'tt.fix.family', 'tt.fix.again' ],
+  net_tm:           [ 'tt.fix.try_data', 'tt.fix.net_tm.s2', 'tt.fix.family', 'tt.fix.again' ],
+  cam_denied:       [ 'tt.fix.cam_denied.s1', 'tt.fix.reload_allow', 'tt.fix.cam_denied.s3', 'tt.fix.family' ],
+  cam_denied_fast:  [ 'tt.fix.cam_denied_fast.s1', 'tt.fix.cam_denied_fast.s2', 'tt.fix.denied_fast_fl', 'tt.fix.cam_denied_fast.s4' ],
+  cam_none:         [ 'tt.fix.cam_none.s1', 'tt.fix.restart_retry', 'tt.fix.cam_none.s3' ],
+  cam_busy:         [ 'tt.fix.cam_busy.s1', 'tt.fix.close_tabs', 'tt.fix.restart_retry' ],
+  cam_black:        [ 'tt.fix.cam_black.s1', 'tt.fix.cam_black.s2', 'tt.fix.again' ],
+  cam_unsupported:  [ 'tt.fix.open_chrome_https', 'tt.fix.in_app_open_browser', 'tt.fix.cam_unsupported.s3' ],
+  cam_other:        [ 'tt.fix.close_browser', 'tt.fix.restart', 'tt.fix.cam_other.s3' ],
+  mic_denied:       [ 'tt.fix.mic_denied.s1', 'tt.fix.reload_allow', 'tt.fix.mic_denied.s3', 'tt.fix.family' ],
+  mic_denied_fast:  [ 'tt.fix.mic_denied_fast.s1', 'tt.fix.mic_denied_fast.s2', 'tt.fix.denied_fast_fl', 'tt.fix.mic_denied_fast.s4' ],
+  mic_none:         [ 'tt.fix.mic_none.s1', 'tt.fix.mic_none.s2', 'tt.fix.mic_none.s3' ],
+  mic_busy:         [ 'tt.fix.mic_busy.s1', 'tt.fix.close_tabs', 'tt.fix.restart_retry' ],
+  mic_silent:       [ 'tt.fix.mic_silent.s1', 'tt.fix.mic_silent.s2', 'tt.fix.mic_silent.s3' ],
+  mic_unsupported:  [ 'tt.fix.open_chrome_https', 'tt.fix.in_app_open_browser' ],
+  mic_other:        [ 'tt.fix.close_browser', 'tt.fix.restart' ],
+  ios_bt:           [ 'tt.fix.ios_bt.s1', 'tt.fix.ios_bt.s2' ],
+  firefox_bt:       [ 'tt.fix.firefox_bt.s1' ],
+  nobt_api:         [ 'tt.fix.nobt_api.s1', 'tt.fix.nobt_api.s2', 'tt.fix.family' ],
+  bt_off:           [ 'tt.fix.bt_off.s1', 'tt.fix.bt_off.s2', 'tt.fix.bt_off.s3', 'tt.fix.again', 'tt.fix.family' ],
+  bt_denied:        [ 'tt.fix.bt_denied.s1', 'tt.fix.bt_denied.s2', 'tt.fix.family' ],
+  bt_nodev:         [ 'tt.fix.bt_nodev.s1', 'tt.fix.bt_nodev.s2', 'tt.fix.bt_nodev.s3', 'tt.fix.bt_nodev.s4' ],
+  bt_connect:       [ 'tt.fix.bt_connect.s1', 'tt.fix.bt_connect.s2', 'tt.fix.bt_connect.s3' ],
+  bt_nouart:        [ 'tt.fix.bt_nouart.s1', 'tt.fix.bt_nouart.s2', 'tt.fix.bt_nouart.s3' ],
+  bt_other:         [ 'tt.fix.bt_other.s1', 'tt.fix.bt_other.s2', 'tt.fix.bt_other.s3' ],
+  default:          [ 'tt.fix.again', 'tt.fix.default.s2' ],
 };
-function FIXOF(code) { return FIX[code] || { why: 'Ha passat una cosa inesperada en esta prova.', steps: ['Torna a fer el test.', 'Si continua, prova amb Chrome o amb un altre dispositiu.'] }; }
+function FIXOF(code) {
+  const c = Object.prototype.hasOwnProperty.call(FIX, code) ? code : 'default';
+  return { why: _t('tt.fix.' + c + '.why'), steps: FIX[c].map(s => Array.isArray(s) ? _t(s[0], s[1]) : _t(s)) };
+}
 
 // ── Aplicacions: què necessita cadascuna ─────────────────────
 //  level: must → si falla, l'app NO funcionarà; soft → funciona amb limitacions; opt → només informa
 //  any: grup on n'hi ha prou amb que funcione algun dels elements
-const BT_NOTE = 'No podràs enviar dades a la micro:bit (sí veuràs la detecció en pantalla).';
+//  note: clau del diccionari amb la conseqüència (per cada prova); label: clau de l'etiqueta del grup
+const BT_NOTE = 'tt.n.bt', BTMB_NOTE = 'tt.n.btmb', BROWSER_NOTE = 'tt.n.browser_cam_bt';
 const APPS = [
   { id: 'jface', name: 'JFace', icon: '../jface/icons/android-chrome-512x512.png', href: '../jface/',
     reqs: [
-      { ids: ['https'], level: 'must' }, { ids: ['wasm'], level: 'must', note: { wasm: 'Sense WebAssembly no es pot fer el seguiment facial.' } },
-      { ids: ['webgl'], level: 'must', note: { webgl: 'Sense gràfics (WebGL) no es pot fer el seguiment facial.' } },
-      { ids: ['net_cdn'], level: 'must', note: { net_cdn: 'Sense este servidor no es poden descarregar les llibreries ni el model facial.' } },
-      { ids: ['cam'], level: 'must', note: { cam: 'JFace necessita la càmera frontal.' } },
-      { ids: ['browser'], level: 'soft', note: { browser: 'Pot fallar la càmera o el Bluetooth.' } },
-      { ids: ['speed'], level: 'soft', note: { speed: 'Pot anar a pocs fotogrames per segon.' } },
-      { ids: ['bt'], level: 'soft', note: { bt: BT_NOTE } }, { ids: ['btmb'], level: 'opt', note: { btmb: 'La connexió real amb la micro:bit no ha funcionat.' } } ] },
+      { ids: ['https'], level: 'must' }, { ids: ['wasm'], level: 'must', note: { wasm: 'tt.n.jface_wasm' } },
+      { ids: ['webgl'], level: 'must', note: { webgl: 'tt.n.jface_webgl' } },
+      { ids: ['cam'], level: 'must', note: { cam: 'tt.n.jface_cam' } },
+      { ids: ['browser'], level: 'soft', note: { browser: BROWSER_NOTE } },
+      { ids: ['speed'], level: 'soft', note: { speed: 'tt.n.jface_speed' } },
+      { ids: ['bt'], level: 'soft', note: { bt: BT_NOTE } }, { ids: ['btmb'], level: 'opt', note: { btmb: BTMB_NOTE } } ] },
   { id: 'robhort', name: 'RobHort', icon: '../robhort/icons/android-chrome-512x512.png', href: '../robhort/',
     reqs: [
       { ids: ['https'], level: 'must' },
-      { ids: ['net_cdn'], level: 'must', note: { net_cdn: 'Sense este servidor no es poden descarregar les llibreries d\'IA.' } },
-      { ids: ['net_google'], level: 'must', note: { net_google: 'Sense este servidor no es pot descarregar el model de detecció.' } },
-      { ids: ['cam'], level: 'must', note: { cam: 'RobHort necessita la càmera.' } },
-      { ids: ['webgl'], level: 'soft', note: { webgl: 'Anirà molt lent sense acceleració gràfica.' } },
-      { ids: ['browser'], level: 'soft', note: { browser: 'Pot fallar la càmera o el Bluetooth.' } },
-      { ids: ['speed'], level: 'soft', note: { speed: 'Tria el model «Ràpid»: els altres poden anar lents.' } },
-      { ids: ['bt'], level: 'soft', note: { bt: BT_NOTE } }, { ids: ['btmb'], level: 'opt', note: { btmb: 'La connexió real amb la micro:bit no ha funcionat.' } } ] },
+      { ids: ['net_google'], level: 'must', note: { net_google: 'tt.n.rob_google' } },
+      { ids: ['cam'], level: 'must', note: { cam: 'tt.n.rob_cam' } },
+      { ids: ['webgl'], level: 'soft', note: { webgl: 'tt.n.rob_webgl' } },
+      { ids: ['browser'], level: 'soft', note: { browser: BROWSER_NOTE } },
+      { ids: ['speed'], level: 'soft', note: { speed: 'tt.n.rob_speed' } },
+      { ids: ['bt'], level: 'soft', note: { bt: BT_NOTE } }, { ids: ['btmb'], level: 'opt', note: { btmb: BTMB_NOTE } } ] },
   { id: 'teachable', name: 'Teachable Microbit', icon: '../teachable-microbit/icons/android-chrome-512x512.png', href: '../teachable-microbit/',
     reqs: [
       { ids: ['https'], level: 'must' },
-      { ids: ['net_cdn'], level: 'must', note: { net_cdn: 'Sense este servidor no es poden descarregar les llibreries d\'IA.' } },
-      { ids: ['net_tm'], level: 'must', note: { net_tm: 'Sense este servidor no es poden descarregar els teus models.' } },
-      { ids: ['cam', 'mic'], any: true, level: 'must', label: 'Càmera o micròfon', note: { cam: 'Sense càmera només podràs usar models d\'àudio.', mic: 'Sense micròfon només podràs usar models d\'imatge i postura.' } },
-      { ids: ['webgl'], level: 'soft', note: { webgl: 'Anirà lent sense acceleració gràfica.' } },
-      { ids: ['browser'], level: 'soft', note: { browser: 'Pot fallar la càmera o el Bluetooth.' } },
-      { ids: ['bt'], level: 'soft', note: { bt: BT_NOTE } }, { ids: ['btmb'], level: 'opt', note: { btmb: 'La connexió real amb la micro:bit no ha funcionat.' } } ] },
+      { ids: ['net_tm'], level: 'must', note: { net_tm: 'tt.n.tm_net' } },
+      { ids: ['cam', 'mic'], any: true, level: 'must', label: 'tt.l.cam_or_mic', note: { cam: 'tt.n.tm_cam', mic: 'tt.n.tm_mic' } },
+      { ids: ['webgl'], level: 'soft', note: { webgl: 'tt.n.tm_webgl' } },
+      { ids: ['browser'], level: 'soft', note: { browser: BROWSER_NOTE } },
+      { ids: ['bt'], level: 'soft', note: { bt: BT_NOTE } }, { ids: ['btmb'], level: 'opt', note: { btmb: BTMB_NOTE } } ] },
   { id: 'maquina', name: 'Màquina Ensenyable', icon: '../maquina-ensenyable/icons/android-chrome-512x512.png', href: '../maquina-ensenyable/',
     reqs: [
       { ids: ['https'], level: 'must' },
-      { ids: ['net_cdn'], level: 'must', note: { net_cdn: 'Sense este servidor no es poden descarregar les llibreries d\'IA.' } },
-      { ids: ['net_google', 'net_tfhub'], any: true, level: 'must', label: 'Models d\'IA (Google / TF Hub)', note: { net_google: 'Sense este servidor no funcionaran els models de postura ni d\'àudio.', net_tfhub: 'Sense este servidor no funcionarà el model d\'imatges.' } },
-      { ids: ['cam'], level: 'soft', note: { cam: 'Sense càmera només podràs usar imatges de la galeria i el micròfon (postura i mans necessiten càmera).' } },
-      { ids: ['mic'], level: 'soft', note: { mic: 'Sense micròfon no podràs fer models d\'àudio.' } },
-      { ids: ['wasm'], level: 'soft', note: { wasm: 'Sense WebAssembly no funcionarà el tipus «Mans».' } },
-      { ids: ['webgl'], level: 'soft', note: { webgl: 'L\'entrenament anirà molt lent sense acceleració gràfica.' } },
-      { ids: ['browser'], level: 'soft', note: { browser: 'Pot fallar la càmera o el micròfon.' } },
-      { ids: ['speed'], level: 'soft', note: { speed: 'L\'entrenament pot tardar molt.' } } ] },
+      { ids: ['net_google', 'net_tfhub'], any: true, level: 'must', label: 'tt.l.models', note: { net_google: 'tt.n.me_google', net_tfhub: 'tt.n.me_tfhub' } },
+      { ids: ['cam'], level: 'soft', note: { cam: 'tt.n.me_cam' } },
+      { ids: ['mic'], level: 'soft', note: { mic: 'tt.n.me_mic' } },
+      { ids: ['wasm'], level: 'soft', note: { wasm: 'tt.n.me_wasm' } },
+      { ids: ['webgl'], level: 'soft', note: { webgl: 'tt.n.me_webgl' } },
+      { ids: ['browser'], level: 'soft', note: { browser: 'tt.n.me_browser' } },
+      { ids: ['speed'], level: 'soft', note: { speed: 'tt.n.me_speed' } } ] },
 ];
 const BAD = new Set(['warn', 'fail']);
 const PENDING = new Set(['pend', 'run']);
@@ -594,7 +621,7 @@ function evalApp(app) {
   for (const rq of app.reqs) {
     const sts = rq.ids.map(id => R[id].status);
     if (sts.some(s => PENDING.has(s))) { pending = true; }
-    const label = rq.label || TITLES[rq.ids[0]];
+    const label = rq.label ? _t(rq.label) : T(rq.ids[0]);
     let st;
     if (rq.any) {
       const bad = sts.filter(s => BAD.has(s)).length, good = sts.filter(s => s === 'ok').length;
@@ -622,11 +649,12 @@ function problemsOf(app, ev) {
   }
   return out;
 }
-const VERDICT = {
-  ok:   ['Funcionarà', 'Tot el que necessita esta app funciona en este dispositiu.', '✅'],
-  warn: ['Funcionarà amb limitacions', 'Funcionarà, però amb alguna cosa que no anirà bé:', '⚠️'],
-  fail: ['No funcionarà', 'Ara mateix esta app no podrà funcionar en este dispositiu:', '❌'],
-  pend: ['Pendent', 'Prem «Començar el test» per a saber-ho.', '⚪'],
+const VERDICT = {   // [títol, explicació, icona] (claus del diccionari)
+  ok:   ['tt.v.ok', 'tt.v.ok_s', '✅'],
+  warn: ['tt.v.warn', 'tt.v.warn_s', '⚠️'],
+  fail: ['tt.v.fail', 'tt.v.fail_s', '❌'],
+  pend: ['tt.v.pend', 'tt.v.pend_s', '⚪'],
+  run:  ['tt.v.run', 'tt.v.run_s', '⏳'],
 };
 function renderApps() {
   $('#apps').innerHTML = APPS.map(app => {
@@ -634,54 +662,55 @@ function renderApps() {
     const v = ev.verdict;
     const hasStarted = ORDER.some(id => id !== 'btmb' && R[id].status !== 'pend');
     const vv = (v === 'pend' && hasStarted) ? 'run' : v;
-    const label = vv === 'run' ? ['Provant…', 'Esperant els resultats de les proves…', '⏳'] : VERDICT[v];
+    const label = VERDICT[vv];
     const chips = ev.items.map(it => `<span class="chip ${it.st === 'pend' ? '' : it.st}">${it.st === 'ok' ? '✓' : it.st === 'warn' ? '!' : it.st === 'fail' ? '✗' : '·'} ${esc(it.label)}</span>`).join('');
     let probs = '', cons = '';
     if (v === 'warn' || v === 'fail') {
       const list = problemsOf(app, ev);
-      cons = list.filter(p => p.note).map(p => p.note);
+      cons = list.filter(p => p.note).map(p => _t(p.note));
       const seen = new Set();
       probs = list.filter(p => { const k = p.r.code + '|' + p.id; if (seen.has(k)) return false; seen.add(k); return true; }).map(p => {
         const f = FIXOF(p.r.code);
-        return `<details class="prob"${p.severe ? ' open' : ''}><summary>${p.severe ? '❌' : '⚠️'} ${esc(TITLES[p.id])}: ${esc(p.r.detail)}</summary><div class="body">` +
-          (p.note ? `<div class="consq">➜ ${esc(p.note)}</div>` : '') +
-          `<h4>Per què passa</h4><p>${f.why}</p><h4>Com ho arregle</h4><ol>${f.steps.map(s => `<li>${s}</li>`).join('')}</ol></div></details>`;
+        return `<details class="prob"${p.severe ? ' open' : ''}><summary>${p.severe ? '❌' : '⚠️'} ${esc(T(p.id))}: ${esc(tr(p.r.detail))}</summary><div class="body">` +
+          (p.note ? `<div class="consq">➜ ${esc(_t(p.note))}</div>` : '') +
+          `<h4>${esc(_t('tt.app.why'))}</h4><p>${f.why}</p><h4>${esc(_t('tt.app.how'))}</h4><ol>${f.steps.map(s => `<li>${s}</li>`).join('')}</ol></div></details>`;
       }).join('');
     }
     return `<div class="app v-${vv}"><div class="apphead"><img src="${app.icon}" alt=""><div><div class="nm">${esc(app.name)}</div>` +
-      `<span class="badge">${label[2]} ${label[0]}</span></div></div>` +
-      `<p class="appsum">${esc(label[1])}</p><div class="chips">${chips}</div>${probs}` +
-      `<a class="open" href="${app.href}">Obrir ${esc(app.name)} →</a></div>`;
+      `<span class="badge">${label[2]} ${esc(_t(label[0]))}</span></div></div>` +
+      `<p class="appsum">${esc(_t(label[1]))}</p><div class="chips">${chips}</div>${probs}` +
+      `<a class="open" href="${app.href}">${esc(_t('tt.app.open', { name: app.name }))}</a></div>`;
   }).join('');
 }
 
 // ── Execució ─────────────────────────────────────────────────
 const STEPS = [
   ['https', testHttps], ['browser', testBrowser], ['wasm', testWasm], ['webgl', testWebgl], ['speed', testSpeed],
-  [['net_cdn', testNetCdn], ['net_google', testNetGoogle], ['net_tfhub', testNetTfhub], ['net_tm', testNetTm]],
+  [['net_google', testNetGoogle], ['net_tfhub', testNetTfhub], ['net_tm', testNetTm]],
   ['cam', testCam], ['mic', testMic], ['bt', testBt],
 ];
 let running = false, finished = false;
+function renderStartBtn() { $('#startBtn').textContent = _t(running ? 'tt.running' : 'tt.start'); }   // el text depén de l'estat
 async function runOne(id, fn) {
-  setR(id, 'run', id === 'cam' ? 'Accepta el permís de la càmera quan el navegador ho pregunte…' : id === 'mic' ? 'Accepta el permís del micròfon i parla o fes soroll…' : id.startsWith('net_') ? 'Comprovant…' : '');
+  setR(id, 'run', id === 'cam' ? M('tt.d.run_cam') : id === 'mic' ? M('tt.d.run_mic') : id.startsWith('net_') ? M('tt.d.run_net') : '');
   try { const [s, d, c] = await fn(); setR(id, s, d, c); }
-  catch (e) { console.error(id, e); setR(id, 'fail', 'Error inesperat: ' + (e && e.message || e), id === 'cam' ? 'cam_other' : id === 'mic' ? 'mic_other' : null); }
+  catch (e) { console.error(id, e); setR(id, 'fail', M('tt.d.err_unexpected', { msg: e && e.message || e }), id === 'cam' ? 'cam_other' : id === 'mic' ? 'mic_other' : null); }
 }
 async function runAll() {
   if (running) return; running = true; finished = false;
   $('#startBtn').disabled = true; $('#copyBtn').disabled = true; $('#againBtn').disabled = true;
-  $('#startBtn').textContent = '⏳ Provant…';
+  renderStartBtn();
   resetR(); renderChecks(); renderApps();
   for (const st of STEPS) {
     if (Array.isArray(st[0])) await Promise.all(st.map(([id, fn]) => runOne(id, fn)));
     else await runOne(st[0], st[1]);
   }
   running = false; finished = true;
-  $('#startBtn').textContent = '▶ Començar el test'; $('#startBtn').disabled = false;
+  renderStartBtn(); $('#startBtn').disabled = false;
   $('#copyBtn').disabled = false; $('#againBtn').disabled = false;
   renderApps(); openFamilyIfNeeded();
   const ok = APPS.filter(a => evalApp(a).verdict === 'ok').length;
-  toast(`Test acabat: ${ok} de ${APPS.length} apps funcionaran del tot`);
+  toast(_t('tt.toast.done', { ok, n: APPS.length }));
   $('#apps').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 function allCodes() { return Object.values(R).filter(r => BAD.has(r.status)).map(r => r.code).filter(Boolean); }
@@ -690,25 +719,27 @@ function openFamilyIfNeeded() {
 }
 
 // ── Informe i missatge per a la família ──────────────────────
+const DATE_LOCALE = { ca: 'ca-ES', es: 'es-ES', en: 'en-GB' };
 function reportText() {
-  const L = ['TEST DEL MÒBIL – PIAR', new Date().toLocaleString('ca-ES'), `Dispositiu: ${DEV.os} · ${DEV.browser} ${DEV.ver || ''}${DEV.inApp ? ' (dins d\'una app)' : ''}`, `Pantalla: ${screen.width}x${screen.height}`, ''];
-  ORDER.forEach(id => L.push(`${({ ok:'OK', warn:'AVÍS', fail:'ERROR', skip:'-', pend:'-', run:'...' })[R[id].status]}  ${TITLES[id]}: ${R[id].detail}`));
+  const dv = { os: tr(DEV.os || UNK), browser: tr(BR()), ver: DEV.ver || '', w: screen.width, h: screen.height };
+  const L = [_t('tt.rep.title'), new Date().toLocaleString(DATE_LOCALE[PIAR_I18N.lang] || 'ca-ES'), _t(DEV.inApp ? 'tt.rep.device_inapp' : 'tt.rep.device', dv), _t('tt.rep.screen', dv), ''];
+  ORDER.forEach(id => L.push(`${({ ok:_t('tt.rep.ok'), warn:_t('tt.rep.warn'), fail:_t('tt.rep.fail'), skip:'-', pend:'-', run:'...' })[R[id].status]}  ${T(id)}: ${tr(R[id].detail)}`));
   L.push('');
-  APPS.forEach(a => L.push(`${a.name}: ${VERDICT[evalApp(a).verdict][0]}`));
+  APPS.forEach(a => L.push(`${a.name}: ${_t(VERDICT[evalApp(a).verdict][0])}`));
   return L.join('\n');
 }
 function familyText() {
   const codes = allCodes(), need = [];
-  if (codes.some(c => /^cam_/.test(c))) need.push('la càmera');
-  if (codes.some(c => /^mic_/.test(c))) need.push('el micròfon');
-  if (codes.some(c => /^bt_|^nobt_/.test(c))) need.push('«Dispositius propers» / Bluetooth (en Android 11 o anterior, la ubicació)');
-  const hosts = []; if (R.net_cdn.status === 'fail') hosts.push('cdn.jsdelivr.net'); if (R.net_google.status === 'fail') hosts.push('storage.googleapis.com');
+  if (codes.some(c => /^cam_/.test(c))) need.push(_t('tt.fm.cam'));
+  if (codes.some(c => /^mic_/.test(c))) need.push(_t('tt.fm.mic'));
+  if (codes.some(c => /^bt_|^nobt_/.test(c))) need.push(_t('tt.fm.bt'));
+  const hosts = []; if (R.net_google.status === 'fail') hosts.push('storage.googleapis.com');
   if (R.net_tfhub.status === 'fail') hosts.push('tfhub.dev'); if (R.net_tm.status === 'fail') hosts.push('teachablemachine.withgoogle.com');
-  const L = ['Hola! Per a poder usar les apps d\'intel·ligència artificial de classe (PIAR) en el meu mòbil necessite que, des de Family Link, em deixeu:', ''];
-  L.push(`1. Obrir esta web en Chrome: ${PIAR_URL}`);
-  L.push(`2. Permetre que Chrome use: ${need.length ? need.join(', ') : 'la càmera, el micròfon i «Dispositius propers» (Bluetooth)'}.`);
-  L.push(`3. Si hi ha una llista de llocs aprovats, afegir: ${hosts.length ? hosts.join(', ') : SITES.join(', ')}.`);
-  L.push('', 'Només es fa servir la càmera i el micròfon en el moment de la classe; no es grava res ni s\'envia a cap servidor. Gràcies!');
+  const L = [_t('tt.fm.hello'), ''];
+  L.push(_t('tt.fm.l1', { url: PIAR_URL }));
+  L.push(_t('tt.fm.l2', { what: need.length ? need.join(', ') : _t('tt.fm.all') }));
+  L.push(_t('tt.fm.l3', { hosts: hosts.length ? hosts.join(', ') : SITES.join(', ') }));
+  L.push('', _t('tt.fm.bye'));
   return L.join('\n');
 }
 let toastT;
@@ -717,7 +748,7 @@ async function copyText(txt, okMsg) {
   try { await navigator.clipboard.writeText(txt); toast(okMsg); }
   catch (e) {
     const ta = document.createElement('textarea'); ta.value = txt; ta.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); toast(okMsg); } catch (_) { toast('No s\'ha pogut copiar'); }
+    try { document.execCommand('copy'); toast(okMsg); } catch (_) { toast(_t('tt.toast.copy_fail')); }
     ta.remove();
   }
 }
@@ -726,9 +757,19 @@ async function copyText(txt, okMsg) {
 $('#startBtn').onclick = runAll;
 $('#againBtn').onclick = () => { $('#media').classList.remove('show'); runAll(); };
 $('#btBtn').onclick = testMicrobit;
-$('#copyBtn').onclick = () => copyText(reportText(), 'Resultat copiat');
-$('#famCopy').onclick = () => copyText(familyText(), 'Missatge copiat: envia-lo a la família');
-resetR(); renderDeviceInfo(); renderChecks(); renderApps();
+$('#copyBtn').onclick = () => copyText(reportText(), _t('tt.toast.copied'));
+$('#famCopy').onclick = () => copyText(familyText(), _t('tt.toast.fam_copied'));
+resetR(); renderDeviceInfo(); renderChecks(); renderApps(); renderStartBtn();
+
+// Selector d'idioma (a la capçalera) i repintat en directe: l'estat de les proves es conserva (R, running)
+// i tot el que escriu el JS es torna a generar en l'idioma nou. Els estàtics els canvia PIAR_I18N.apply().
+PIAR_I18N.mountSelector($('#langSelectHost'), { id: 'langSel' });
+PIAR_I18N.onChange(() => {
+  const open = Array.from(document.querySelectorAll('#apps details.prob')).map(d => d.open);   // conserva els desplegables oberts
+  renderDeviceInfo(); renderChecks(); renderApps(); renderStartBtn();
+  document.querySelectorAll('#apps details.prob').forEach((d, i) => { if (open[i] !== undefined) d.open = open[i]; });
+});
 </script>
+<script src="../shared/pwa.js"></script>
 </body>
 </html>
