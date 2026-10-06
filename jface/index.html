@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="theme-color" content="#090812">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script src="../shared/viewport.js"></script>
   <title data-i18n="jf.title">JFace – Seguiment facial amb IA</title>
+  <link rel="stylesheet" href="../shared/piar-ui.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/jface-fixes.css">
   <link rel="stylesheet" href="../shared/loading_overlay.css">
@@ -17,9 +19,9 @@
 </head>
 <body>
   <!-- Capçalera -->
-  <header style="display: flex; align-items: center; justify-content: center; gap: 0.8em;">
-    <img src="icons/android-chrome-512x512.png" alt="Icona JFace" data-i18n-attr="alt:jf.alt.app" style="width: 32px; height: 32px;">
-    <h1 style="margin: 0;" data-i18n="jf.title">JFace – Seguiment facial amb IA</h1>
+  <header class="piar-header">
+    <img src="icons/android-chrome-512x512.png" alt="Icona JFace" data-i18n-attr="alt:jf.alt.app">
+    <h1 data-i18n="jf.title">JFace – Seguiment facial amb IA</h1>
   </header>
 
   <!-- Contenidor del vídeo i canvas -->
@@ -30,7 +32,7 @@
 
   <!-- Panel de dades facials -->
   <div id="data-panel">
-    <span id="device-indicator" style="display:none; margin-right: 1rem; color: var(--accent-dim);"></span>
+    <span id="device-indicator" style="display:none;"></span>
     <span data-i18n="jf.data.yaw">Gir:</span> <span id="yaw">--</span>
     <span data-i18n="jf.data.mouth">| Boca:</span> <span id="mouth">--</span>
     <span data-i18n="jf.data.eyel">| Ull E:</span> <span id="eyeL">-</span>
@@ -38,11 +40,11 @@
   </div>
 
   <!-- Controls inferiors -->
-  <div id="controls">
-    <button id="connectBtn" class="btn-bluetooth">🔵 Connectar Bluetooth</button>
+  <div id="controls" class="piar-controls">
+    <button id="connectBtn" class="btn-bluetooth btn-primary">🔵 Connectar Bluetooth</button>
     <button id="configBtn" data-i18n="jf.btn.config">⚙️ Configurar</button>
     <button id="infoBtn" data-i18n="jf.btn.help">ℹ️ Ajuda</button>
-    <div id="status"><span id="status-text">⏳ Iniciant càmera...</span></div>
+    <div id="status" class="piar-status"><span id="status-text">⏳ Iniciant càmera...</span></div>
   </div>
 
   <!-- Capa de configuració -->
@@ -91,7 +93,7 @@
         i envia estes dades a una micro:bit per Bluetooth.
       </p>
 
-      <a class="guide-btn" href="guia.html" style="display:block;text-align:center;background:#6c63ff;color:#fff;padding:.75rem 1rem;border-radius:12px;text-decoration:none;font-weight:600;margin:1rem 0;box-shadow:0 0 18px rgba(108,99,255,.45)" data-i18n="jf.help.guide">📖 Guia completa pas a pas</a>
+      <a class="guide-btn" href="guia.html" data-i18n="jf.help.guide">📖 Guia completa pas a pas</a>
 
       <p data-i18n-html="jf.help.format"><strong>Format de dades enviades (6 dígits):</strong></p>
       <ul>

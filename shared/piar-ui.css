@@ -1,0 +1,169 @@
+/* ============================================================
+   piar-ui.css – Aparença comuna de PIAR (portada, JFace, RobHort, Teachable Microbit,
+   Màquina Ensenyable i Test del mòbil)
+
+   Fons fosc · lila/blau · Poppins · cantons arredonits · botons còmodes per al dit (≥ 44 px).
+   Les icones de les apps són quadrades (verd neó sobre fosc), per això es mostren amb cantons arredonits.
+
+   Ús: <link rel="stylesheet" href="../shared/piar-ui.css"> ABANS del CSS propi de l'app.
+   El CSS de cada app només ha de tindre el que és exclusiu d'ella (vídeo, deteccions, pestanyes…).
+   ============================================================ */
+
+/* ── Variables (úniques per a tot PIAR) ─────────────────────── */
+:root {
+  --bg:          #13111c;
+  --bg2:         #1e1a2e;
+  --bg3:         #2a2540;
+  --bg-dark:     #090812;
+  --bg-medium:   #1e1a2e;
+  --bg-light:    #2a2540;
+  --accent:      #6c63ff;
+  --accent2:     #a89cff;
+  --accent-dim:  #a89cff;
+  --accent-glow: rgba(108,99,255,0.35);
+  --text:        #f0eeff;
+  --text-dim:    #8b82b8;
+  --border:      rgba(108,99,255,0.2);
+  --border2:     rgba(108,99,255,0.08);
+  --ok:          #4ade80;
+  --warn:        #fbbf24;
+  --danger:      #ff5c7a;
+  --radius:      12px;
+  --radius-lg:   18px;
+  --tap:         44px;
+  --header-h:    52px;
+  --font:        'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { font-family: var(--font); background: var(--bg-dark); color: var(--text); -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
+
+/* ── Capçalera de l'app: icona + títol ──────────────────────── */
+.piar-header {
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; gap: .65rem;
+  min-height: var(--header-h);
+  padding: 6px 12px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(0,0,0,.35);
+}
+.piar-header img { width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0; box-shadow: 0 0 0 1px var(--border), 0 0 12px rgba(77,245,160,.18); }
+.piar-header h1 { margin: 0; font-family: var(--font); font-size: 1.02rem; font-weight: 600; line-height: 1.2; color: var(--text); text-align: center; min-width: 0; overflow-wrap: anywhere; }
+.piar-header .back { margin-left: auto; }
+
+/* ── Botons ──────────────────────────────────────────────────
+   .btn = botó normal (contorn lila) · .btn-primary = acció principal · .btn-ok = connectat · .btn-danger = esborrar */
+button, .btn {
+  font-family: var(--font);
+  font-size: .85rem; font-weight: 600; letter-spacing: .01em; line-height: 1.2;
+  min-height: var(--tap);
+  padding: 9px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(108,99,255,.12);
+  color: var(--accent2);
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+  text-decoration: none; white-space: nowrap;
+  transition: background .2s, border-color .2s, box-shadow .2s, color .2s;
+}
+button:hover, button:active, .btn:hover, .btn:active { background: rgba(108,99,255,.26); border-color: var(--accent); color: #fff; box-shadow: 0 2px 12px var(--accent-glow); }
+button:disabled, .btn[disabled], .btn.disabled { opacity: .5; cursor: default; box-shadow: none; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn-primary:hover, .btn-primary:active { background: #7d75ff; box-shadow: 0 4px 18px var(--accent-glow); }
+.btn-ok, button.connected { border-color: var(--ok); color: var(--ok); background: rgba(74,222,128,.1); }
+.btn-ok:hover, button.connected:hover { background: rgba(74,222,128,.2); border-color: var(--ok); color: var(--ok); box-shadow: 0 2px 12px rgba(74,222,128,.25); }
+.btn-danger { border-color: rgba(255,92,122,.5); color: var(--danger); background: rgba(255,92,122,.08); }
+.btn-danger:hover, .btn-danger:active { background: rgba(255,92,122,.2); border-color: var(--danger); color: #fff; box-shadow: 0 2px 12px rgba(255,92,122,.25); }
+.btn-warn, button.no-bt, button.no-bt:hover, button.no-bt:active, .no-bt { border-color: rgba(251,191,36,.5); color: var(--warn); background: rgba(251,191,36,.08); }
+.btn-block { width: 100%; }
+
+/* Barra de controls inferior */
+.piar-controls {
+  flex-shrink: 0; width: 100%;
+  background: rgba(19,17,28,.97);
+  border-top: 1px solid var(--border);
+  padding: 8px 10px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px;
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+}
+.piar-status { width: 100%; text-align: center; font-size: .72rem; color: var(--text-dim); line-height: 1.35; }
+
+/* ── Capes de Configuració i Ajuda ─────────────────────────── */
+.layer {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(10,8,20,.9);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  z-index: 10001;
+  align-items: center; justify-content: center;
+  padding: 16px; overflow-y: auto;
+}
+.layer-box {
+  width: 100%; max-width: 520px; max-height: 90dvh; overflow-y: auto;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.3rem;
+  text-align: left;
+  box-shadow: 0 8px 40px rgba(0,0,0,.6), 0 0 0 1px var(--border2);
+  font-size: .9rem; line-height: 1.6; color: var(--text);
+}
+.layer-header { display: flex; align-items: center; gap: .7rem; margin-bottom: .9rem; }
+.layer-header img { width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0; box-shadow: 0 0 0 1px var(--border); }
+.layer-header h2 { margin: 0; font-size: 1.15rem; font-weight: 600; color: var(--text); }
+.layer-box p, .layer-box li { color: var(--text-dim); font-size: .9rem; line-height: 1.6; }
+.layer-box p { margin: .6rem 0; }
+.layer-box strong, .layer-box b { color: var(--text); font-weight: 600; }
+.layer-box ul, .layer-box ol { padding-left: 1.2rem; margin: .4rem 0 .8rem; }
+.layer-box li { margin: .3rem 0; }
+.layer-box a { color: var(--accent2); }
+.layer-box code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85em; background: rgba(108,99,255,.15); color: var(--accent2); padding: .1em .4em; border-radius: 6px; }
+.info-footer { font-size: .78rem !important; text-align: center; color: var(--text-dim); margin-top: 1.2rem !important; line-height: 1.7; }
+.close-btn { width: 100%; margin-top: 1rem; background: var(--accent); border-color: var(--accent); color: #fff; }
+.close-btn:hover, .close-btn:active { background: #7d75ff; border-color: var(--accent2); }
+.guide-btn { display: flex; align-items: center; justify-content: center; text-align: center; background: var(--accent); color: #fff !important; padding: .75rem 1rem; border-radius: var(--radius); text-decoration: none; font-weight: 600; margin: 1rem 0; box-shadow: 0 0 18px var(--accent-glow); }
+
+/* ── Configuració: seccions i formularis ──────────────────── */
+.config-section { margin: 1rem 0; padding-top: .9rem; border-top: 1px solid var(--border); }
+.config-section:first-of-type { border-top: none; padding-top: 0; }
+.section-title { margin: 0 0 .6rem; font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent2); }
+.config-note, .layer-box .config-note { font-size: .8rem; color: var(--text-dim); line-height: 1.55; margin-top: .5rem; }
+.layer-box label { font-size: .88rem; color: var(--text); }
+
+select, input[type="text"], input[type="number"], input[type="search"], textarea {
+  font-family: var(--font); font-size: .9rem; color: var(--text);
+  min-height: var(--tap);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  max-width: 100%;
+}
+select:focus, input:focus, textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-glow); }
+select { cursor: pointer; }
+input[type="range"] { accent-color: var(--accent); min-height: 32px; }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); width: 20px; height: 20px; }
+.piar-lang-select { width: 100%; }
+
+/* Fila «etiqueta + control + valor» (p. ex. interval d'enviament) */
+.interval-control { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.interval-control input[type="range"] { flex: 1 1 140px; min-width: 120px; }
+
+/* ── Targetes, etiquetes i missatges ──────────────────────── */
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem; }
+.chip, .tag { display: inline-block; font-size: .75rem; font-weight: 500; padding: .25rem .7rem; border-radius: 12px; background: rgba(108,99,255,.18); border: 1px solid var(--border); color: var(--accent2); }
+.msg-err { color: var(--danger); } .msg-ok { color: var(--ok); } .msg-warn { color: var(--warn); }
+
+/* Títols de secció de pàgina */
+.piar-title { font-size: 1.15rem; font-weight: 600; margin: 0 0 .6rem; color: var(--text); }
+.piar-muted { color: var(--text-dim); }
+
+/* Imatges d'icona de les apps (quadrades) */
+.app-icon { border-radius: 22%; box-shadow: 0 0 0 1px var(--border), 0 0 24px rgba(77,245,160,.18); display: block; }
+
+/* Moviment reduït */
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }

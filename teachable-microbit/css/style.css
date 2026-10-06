@@ -1,67 +1,30 @@
-@import url('../../vendor/fonts/fonts.css');
+/* style.css – Teachable Microbit
+   Només el que és exclusiu d'esta app. La resta (tokens, capçalera, botons, capes,
+   formularis, targetes…) ve de ../shared/piar-ui.css, que es carrega abans. */
 
-/* style.css – Teachable Microbit */
-
-/* ── Variables ────────────────────────────────────────────── */
-:root {
-  --bg-dark:     #13111c;
-  --bg-medium:   #1e1a2e;
-  --bg-light:    #2a2540;
-  --accent:      #6c63ff;
-  --accent-dim:  #a89cff;
-  --text:        #f0eeff;
-  --text-dim:    #8b82b8;
-  --border:      rgba(108,99,255,0.2);
-  --danger:      #ff5c7a;
-}
-
-/* ── Base ───────────────────────────────────────────────── */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+/* ── Base: columna a pantalla completa ──────────────────────
+   · --app-h la mesura shared/viewport.js (100dvh queda com a alternativa).
+   · env(safe-area-inset-*) evita que la barra de navegació o la mosca (notch) tapen els botons.
+   · Si en una pantalla molt baixa (mòbil en horitzontal) no cap tot, es pot desplaçar en vertical
+     en lloc de quedar tallat per baix. */
 body {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg-dark);
-  color: var(--text);
+  margin: 0;
   display: flex;
   flex-direction: column;
   height: 100vh;
   height: 100dvh;
-  overflow: hidden;
+  height: var(--app-h, 100dvh);
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: none;
 }
 
-
-/* ── Capçalera ──────────────────────────────────────────── */
-header {
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8em;
-  background: linear-gradient(135deg, var(--bg-medium), #261f45);
-  border-bottom: 1px solid var(--border);
-  padding: 0 1rem;
-  flex-shrink: 0;
-}
-
-header img {
-  width: 32px;
-  height: 32px;
-}
-
-header h1 {
-  font-size: 1.3em;
-  font-weight: 600;
-  color: var(--text);
-}
-
-/* ── Vídeo container ────────────────────────────────────── */
+/* ── Vídeo ──────────────────────────────────────────────── */
 #video-container {
   position: relative;
   flex: 1 1 auto;
+  min-height: 110px;
   background: var(--bg-dark);
   display: flex;
   align-items: center;
@@ -78,59 +41,57 @@ header h1 {
   max-height: 100%;
   object-fit: contain;
 }
+#video  { z-index: 1; }
+#canvas { z-index: 2; }
 
-#video {
-  z-index: 1;
-}
-
-#canvas {
-  z-index: 2;
-}
-
-/* ── Panel de prediccions ───────────────────────────────── */
+/* ── Panel de prediccions (mateixes targetes/barres que les deteccions de RobHort) ── */
 #prediction-panel {
-  min-height: 52px;
-  background: rgba(30,26,46,0.92);
+  flex-shrink: 0;
+  min-height: var(--header-h);
+  background: rgba(19,17,28,.92);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-top: 1px solid var(--border);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   padding: 8px 12px;
-  flex-wrap: wrap;
-  flex-shrink: 0;
 }
 
 .no-pred {
+  font-size: .8rem;
+  font-style: italic;
   color: var(--text-dim);
-  font-size: 0.85em;
 }
 
 .pred-item {
-  background: rgba(108,99,255,0.15);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 6px 14px;
-  display: flex;
+  position: relative;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.85em;
-  position: relative;
+  min-width: 110px;
+  min-height: 36px;
+  padding: 5px 12px 8px;
+  background: var(--border2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   overflow: hidden;
 }
 
 .pred-item .pred-label {
+  font-size: .85rem;
   font-weight: 600;
   color: var(--text);
-  z-index: 1;
+  overflow-wrap: anywhere;
 }
 
 .pred-item .pred-score {
-  font-weight: 500;
-  color: var(--accent-dim);
-  z-index: 1;
+  margin-left: auto;
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--accent2);
 }
 
 .pred-item .pred-bar {
@@ -139,413 +100,103 @@ header h1 {
   left: 0;
   height: 3px;
   background: var(--accent);
-  transition: width 0.2s ease;
+  border-radius: 0 2px 2px 0;
+  transition: width .2s ease;
 }
 
-/* ── Controls ───────────────────────────────────────────── */
-#controls {
-  min-height: 80px;
-  background: rgba(30,26,46,0.95);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border-top: 1px solid var(--border);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px;
-  flex-shrink: 0;
+/* ── Controls inferiors ─────────────────────────────────── */
+#controls #connectBtn { flex: 1 1 100%; }
+#controls #configBtn,
+#controls #infoBtn    { flex: 1 1 40%; }
+/* El «✓» de «Bluetooth connectat» el posa el CSS (el text el posa shared/bluetooth_uart.js) */
+#connectBtn.connected::before { content: '✓ '; white-space: pre; }
+
+/* Mòbil en horitzontal: tots els botons en una sola fila per a no perdre alçada de vídeo */
+@media (orientation: landscape) and (max-height: 500px) {
+  #controls #connectBtn,
+  #controls #configBtn,
+  #controls #infoBtn { flex: 0 1 auto; }
 }
 
-button {
-  background: rgba(108,99,255,0.2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  color: var(--text);
-  font-family: inherit;
-  font-size: 0.9em;
-  font-weight: 500;
-  padding: 10px 18px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-button:hover {
-  background: rgba(108,99,255,0.3);
-  box-shadow: 0 0 15px rgba(108,99,255,0.4);
-  transform: translateY(-1px);
-}
-
-button:active {
-  transform: translateY(0);
-}
-
-#status {
-  flex-basis: 100%;
-  text-align: center;
-  font-size: 0.85em;
-  color: var(--text-dim);
-  margin-top: 4px;
-}
-
-/* ── Capes (configuració i ajuda) ───────────────────────── */
+/* ── Capes: alçada real i zones segures ───────────────────── */
 .layer {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(19,17,28,0.97);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  z-index: 1000;
-  overflow-y: auto;
-  padding: 20px;
-  align-items: flex-start;
-  justify-content: center;
+  bottom: auto;
+  height: 100vh;
+  height: 100dvh;
+  height: var(--app-h, 100dvh);
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(16px + env(safe-area-inset-left, 0px));
+  padding-right: calc(16px + env(safe-area-inset-right, 0px));
 }
+.layer-box { max-height: calc(var(--app-h, 100dvh) - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }
+/* Els codis llargs (p. ex. l'URL de Teachable Machine) han de poder partir-se en 320 px */
+.layer-box code { overflow-wrap: anywhere; }
 
-.layer[style*="display: block"] {
-  display: flex !important;
-}
-
-.layer-box {
-  background: var(--bg-medium);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 24px;
-  max-width: 500px;
-  width: 100%;
-  margin: auto;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-}
-
-.layer-header {
-  display: flex;
-  align-items: center;
-  gap: 0.6em;
-  margin-bottom: 1.5rem;
-}
-
-.layer-header img {
-  width: 2.2em;
-  height: 2.2em;
-  border-radius: 50%;
-  background: rgba(108,99,255,0.1);
-  padding: 0.3em;
-  border: 2px solid var(--accent);
-}
-
-.layer-header h2 {
-  font-size: 1.4em;
-  font-weight: 600;
-  color: var(--text);
-}
-
-/* ── Configuració ───────────────────────────────────────── */
-.config-section {
-  margin-bottom: 2rem;
-}
-
-.section-title {
-  font-size: 1em;
-  font-weight: 600;
-  color: var(--accent-dim);
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
+/* ── Configuració: model ───────────────────────────────────── */
+.model-source input[type="radio"] { flex: none; }
 .model-source label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: .6rem;
+  min-height: var(--tap);
   cursor: pointer;
 }
-
-.model-source input[type="radio"] {
-  accent-color: var(--accent);
-}
-
+/* Camps de codi/URL: l'única tipografia monoespaiada de la pàgina */
 .model-source input[type="text"] {
   width: 100%;
-  background: var(--bg-light);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-family: 'Courier New', monospace;
-  font-size: 0.9em;
-  padding: 10px 12px;
-  margin-bottom: 12px;
+  margin-bottom: .5rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .85rem;
 }
-
-.model-source input[type="text"]:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+.model-source input[type="text"]:disabled { opacity: .5; cursor: not-allowed; }
 
 .model-type {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 12px;
+  flex-wrap: wrap;
+  gap: .5rem .8rem;
+  margin-top: .6rem;
 }
+.model-type select { flex: 1 1 160px; min-width: 0; }
 
-.model-type label {
-  font-size: 0.9em;
-  color: var(--text-dim);
-}
+.load-btn { margin-top: .9rem; }
 
-.model-type select {
-  flex: 1;
-  background: var(--bg-light);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-family: inherit;
-  font-size: 0.9em;
-  padding: 8px 12px;
-  cursor: pointer;
-}
-
-.load-btn {
-  width: 100%;
-  background: var(--accent);
-  border: none;
-  padding: 12px;
-  font-size: 1em;
-  font-weight: 600;
-  margin-top: 12px;
-}
-
-.load-btn:hover {
-  background: #5a52e0;
-  box-shadow: 0 0 20px rgba(108,99,255,0.6);
-}
-
+/* ── Configuració: enviament de dades ─────────────────────── */
 .interval-control, .classes-control, .probability-control {
+  margin-top: .7rem;
+  padding: .6rem .9rem;
+  background: var(--border2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.classes-control {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 1rem;
-  padding: 12px;
-  background: var(--bg-light);
-  border-radius: 8px;
+  flex-wrap: wrap;
+  gap: .5rem .8rem;
 }
-
-.interval-control label, .classes-control label {
-  font-size: 0.85em;
-  color: var(--text-dim);
-  min-width: 120px;
-}
-
-.interval-control input[type="range"] {
-  flex: 1;
-  accent-color: var(--accent);
+.classes-control select { flex: 1 1 160px; min-width: 0; text-overflow: ellipsis; }
+.interval-control label, .classes-control label { font-size: .85rem; color: var(--text-dim); }
+.interval-control label { flex: 1 1 100%; }
+.probability-control label {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  min-height: 32px;
   cursor: pointer;
 }
-
 #intervalLabel {
-  font-weight: 600;
-  color: var(--accent-dim);
-  min-width: 40px;
+  min-width: 52px;
   text-align: right;
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--accent2);
 }
 
-.classes-control select {
-  flex: 1;
-  background: var(--bg-dark);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-  font-family: inherit;
-  font-size: 0.85em;
-  padding: 6px 10px;
-}
-
-.probability-control {
-  justify-content: flex-start;
-}
-
-.probability-control input[type="checkbox"] {
-  accent-color: var(--accent);
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-.probability-control span {
-  font-size: 0.9em;
-  color: var(--text);
-}
-
-.config-note {
-  font-size: 0.75em;
-  line-height: 1.6;
-  color: var(--text-dim);
-  background: rgba(108,99,255,0.1);
-  padding: 10px 12px;
-  border-radius: 6px;
-  border-left: 3px solid var(--accent);
-}
-
-.config-note code {
-  background: rgba(0,0,0,0.3);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-family: 'Courier New', monospace;
-  color: var(--accent-dim);
-}
-
-/* ── Ajuda ──────────────────────────────────────────────── */
-.layer-box p {
-  margin-bottom: 1rem;
-  line-height: 1.6;
-  color: var(--text);
-}
-
-.layer-box ol, .layer-box ul {
-  margin-bottom: 1rem;
-  padding-left: 1.5rem;
-  line-height: 1.8;
-  color: var(--text);
-}
-
-.layer-box a {
-  color: var(--accent-dim);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.layer-box a:hover {
-  text-decoration: underline;
-}
-
-.layer-box code {
-  overflow-wrap: anywhere;
-  background: rgba(108,99,255,0.2);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9em;
-  color: var(--accent-dim);
-}
-
-.info-footer {
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-  text-align: center;
-  font-size: 0.85em;
-  color: var(--text-dim);
-}
-
-.close-btn {
-  width: 100%;
-  background: var(--danger);
-  border: none;
-  padding: 12px;
-  margin-top: 1.5rem;
-  font-weight: 600;
-}
-
-.close-btn:hover {
-  background: #e6445f;
-  box-shadow: 0 0 20px rgba(255,92,122,0.4);
-}
-
-/* ── Responsive (escriptori) ────────────────────────────── */
+/* ── Escriptori: columna de 480 px com a les altres apps ──── */
 @media (min-width: 768px) {
-  body {
-    max-width: 480px;
-    margin: 0 auto;
-    border-radius: 20px;
-    overflow: hidden;
-  }
-  
-  header {
-    border-radius: 20px 20px 0 0;
-  }
-}
-
-/* ── Botó Bluetooth amb estat ──────────────────────────── */
-.btn-bluetooth {
-  background: rgba(59, 130, 246, 0.2) !important;
-  border-color: rgba(59, 130, 246, 0.3) !important;
-  color: #3b82f6 !important;
-  transition: all 0.3s ease !important;
-}
-
-.btn-bluetooth.connected {
-  background: rgba(16, 185, 129, 0.2) !important;
-  border-color: rgba(16, 185, 129, 0.4) !important;
-  color: #10b981 !important;
-}
-
-.btn-bluetooth.connected::before {
-  content: '✓ ';
-}
-
-/* Botó Bluetooth - Vermell desconnectat, Verd connectat */
-#connectBtn {
-  background: rgba(239, 68, 68, 0.3) !important;
-  border-color: rgba(239, 68, 68, 0.5) !important;
-  color: #ef4444 !important;
-}
-
-#connectBtn.connected {
-  background: rgba(16, 185, 129, 0.3) !important;
-  border-color: rgba(16, 185, 129, 0.5) !important;
-  color: #10b981 !important;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-}
-
-/* Botó Carregar Model - Vermell sense model, Verd amb model */
-#loadModelBtn {
-  background: rgba(239, 68, 68, 0.3) !important;
-  border-color: rgba(239, 68, 68, 0.5) !important;
-  color: #ef4444 !important;
-}
-
-#loadModelBtn.model-loaded {
-  background: rgba(16, 185, 129, 0.3) !important;
-  border-color: rgba(16, 185, 129, 0.5) !important;
-  color: #10b981 !important;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-}
-
-
-/* ── Correccions per a pantalles estretes (320–360 px) ─────── */
-.interval-control { flex-wrap: wrap; }
-.interval-control label { min-width: 0; }
-.interval-control input[type="range"] { min-width: 90px; }
-#intervalLabel { white-space: nowrap; min-width: 52px; }
-
-/* Nota sobre Internet en la configuració */
-.net-note {
-  font-size: 0.78em;
-  line-height: 1.5;
-  color: var(--text-dim);
-  margin-top: 10px;
-}
-
-/* Evita que els desplegables desborden la pantalla en mòbils estrets */
-.classes-control select, .model-type select { min-width: 0; max-width: 100%; text-overflow: ellipsis; }
-@media (max-width: 400px) {
-  .interval-control label, .classes-control label { min-width: 90px; }
-}
-
-/* Selector d'idioma (configuració) */
-#langSelectHost select.piar-lang-select {
-  width: 100%;
-  min-height: 44px;
-  background: var(--bg-light);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-family: inherit;
-  font-size: 0.9em;
-  padding: 8px 12px;
-  cursor: pointer;
+  body { max-width: 480px; margin: 0 auto; }
+  .piar-header { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  #controls { border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
 }

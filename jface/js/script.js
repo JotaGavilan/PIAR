@@ -29,6 +29,9 @@ PIAR_I18N.onChange(() => { updateIntervalLabel(); showStatus(statusFn); });
 // Events
 connectBtn.onclick = connectBluetooth;
 
+// Sense Web Bluetooth (iPhone, Firefox…): el botó passa d'acció principal a estat d'avís (groc, vegeu style.css)
+if (!navigator.bluetooth) { connectBtn.classList.remove('btn-primary'); connectBtn.classList.add('no-bt'); }
+
 // Mostra en pantalla els missatges de la connexió Bluetooth
 onBTStatusChange((connected, msg) => { if (msg) showTranslatedStatus(msg); });
 configBtn.onclick = () => { configLayer.style.display = 'flex'; };

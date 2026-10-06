@@ -8,8 +8,10 @@
   <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
   <meta charset="UTF-8">
   <meta name="theme-color" content="#090812">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script src="../shared/viewport.js"></script>
   <title data-i18n="rh.title">RobHort – El guardià del teu bancal</title>
+  <link rel="stylesheet" href="../shared/piar-ui.css">
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="../shared/loading_overlay.css">
   <link rel="stylesheet" href="../vendor/fonts/fonts.css">
@@ -17,10 +19,10 @@
 <body>
 
   <!-- Capçalera -->
-  <h1>
+  <header class="piar-header">
     <img src="icons/android-chrome-512x512.png" alt="Icona RobHort" data-i18n-attr="alt:rh.alt.app">
-    <span data-i18n="rh.title">RobHort – El guardià del teu bancal</span>
-  </h1>
+    <h1 data-i18n="rh.title">RobHort – El guardià del teu bancal</h1>
+  </header>
 
   <!-- Vídeo + Canvas -->
   <div id="video-container">
@@ -34,11 +36,11 @@
   </div>
 
   <!-- Controls inferiors -->
-  <div id="controls">
-    <button id="connectBtn" class="btn-bluetooth">🔵 Connectar Bluetooth</button>
+  <div id="controls" class="piar-controls">
+    <button id="connectBtn" class="btn-bluetooth btn-primary">🔵 Connectar Bluetooth</button>
     <button id="configBtn" data-i18n="rh.btn.config">⚙️ Configurar</button>
     <button id="infoBtn" data-i18n="rh.btn.help">ℹ️ Ajuda</button>
-    <div id="status"><span id="device-indicator" style="display:none; margin-right: 0.5rem;"></span><span id="status-text">⏳ Inicialitzant càmera...</span></div>
+    <div id="status" class="piar-status"><span id="device-indicator" style="display:none;"></span><span id="status-text">⏳ Inicialitzant càmera...</span></div>
   </div>
 
   <!-- Capa de configuració -->
@@ -49,25 +51,31 @@
         <h2 data-i18n="rh.cfg.title">⚙️ Configuració</h2>
       </div>
 
-      <p class="section-title" data-i18n="rh.cfg.detect">Què detectar</p>
-      <div id="category-list"></div>
-
-      <p class="section-title" data-i18n="rh.cfg.model">Model d'intel·ligència artificial</p>
-      <div id="model-selector"></div>
-      <p style="font-size:0.75em; color:#8b82b8; margin-top:0.4rem; line-height:1.5;" data-i18n-html="rh.cfg.model_note">
-        💡 Si no saps quin triar, usa <strong>Ràpid</strong>.<br>
-        <strong>Llarga distància</strong> fa 4 anàlisis per fotograma: pot anar lent en mòbils antics.<br>
-        🌐 <strong>Canviar de model necessita Internet</strong> (es descarrega de nou). Si falla, es manté el model anterior.
-      </p>
-
-      <div class="interval-control">
-        <label for="intervalSlider" data-i18n="rh.cfg.interval">Interval d'enviament</label>
-        <input type="range" id="intervalSlider" min="1" max="15" value="2" step="1">
-        <span id="intervalLabel">2 s</span>
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="rh.cfg.detect">Què detectar</h3>
+        <div id="category-list"></div>
       </div>
-      <p style="font-size:0.75em; color:#8b82b8; margin-top:0.4rem;" data-i18n="rh.cfg.interval_note">
-        Cada quants segons s'envien les dades a la micro:bit per Bluetooth.
-      </p>
+
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="rh.cfg.model">Model d'intel·ligència artificial</h3>
+        <div id="model-selector"></div>
+        <p class="config-note" data-i18n-html="rh.cfg.model_note">
+          💡 Si no saps quin triar, usa <strong>Ràpid</strong>.<br>
+          <strong>Llarga distància</strong> fa 4 anàlisis per fotograma: pot anar lent en mòbils antics.<br>
+          🌐 <strong>Canviar de model necessita Internet</strong> (es descarrega de nou). Si falla, es manté el model anterior.
+        </p>
+      </div>
+
+      <div class="config-section">
+        <div class="interval-control">
+          <label for="intervalSlider" data-i18n="rh.cfg.interval">Interval d'enviament</label>
+          <input type="range" id="intervalSlider" min="1" max="15" value="2" step="1">
+          <span id="intervalLabel">2 s</span>
+        </div>
+        <p class="config-note" data-i18n="rh.cfg.interval_note">
+          Cada quants segons s'envien les dades a la micro:bit per Bluetooth.
+        </p>
+      </div>
 
       <div class="config-section">
         <h3 class="section-title" data-i18n="sh.lang.label">🌐 Idioma</h3>
@@ -92,7 +100,7 @@
         La imatge de la càmera es processa al mateix dispositiu i no s'envia a cap servidor.
       </p>
 
-      <a class="guide-btn" href="guia.html" style="display:block;text-align:center;background:#6c63ff;color:#fff;padding:.75rem 1rem;border-radius:12px;text-decoration:none;font-weight:600;margin:1rem 0;box-shadow:0 0 18px rgba(108,99,255,.45)" data-i18n="rh.help.guide">📖 Guia completa pas a pas</a>
+      <a class="guide-btn" href="guia.html" data-i18n="rh.help.guide">📖 Guia completa pas a pas</a>
 
       <p data-i18n-html="rh.help.net_title"><strong>Internet i mode avió:</strong></p>
       <ul>

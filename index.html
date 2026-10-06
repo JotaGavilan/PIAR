@@ -15,28 +15,12 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="PIAR">
   <link rel="stylesheet" href="vendor/fonts/fonts.css">
+  <link rel="stylesheet" href="shared/piar-ui.css">
   <style>
-    :root {
-      --bg-dark:     #13111c;
-      --bg-medium:   #1e1a2e;
-      --bg-light:    #2a2540;
-      --accent:      #6c63ff;
-      --accent-dim:  #a89cff;
-      --text:        #f0eeff;
-      --text-dim:    #8b82b8;
-      --border:      rgba(108,99,255,0.2);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    /* Tokens, tipografia, botons, targetes i etiquetes: shared/piar-ui.css. Ací només la maquetació de la portada. */
+    * { margin: 0; padding: 0; }
 
     body {
-      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg-dark);
-      color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -75,13 +59,10 @@
     }
 
     .project-card {
-      background: var(--bg-medium);
-      border: 1px solid var(--border);
-      border-radius: 20px;
       padding: 2rem;
       text-decoration: none;
       color: var(--text);
-      transition: all 0.3s ease;
+      transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -112,21 +93,17 @@
       transform: scaleX(1);
     }
 
+    /* La icona ja és quadrada, fosca i amb neó verd: s'omple tot el quadrat (cantons i resplendor: .app-icon) */
     .project-icon {
       width: 120px;
       height: 120px;
       margin-bottom: 1.5rem;
-      border-radius: 20px;
-      padding: 1rem;
-      background: var(--bg-light);
-      border: 2px solid var(--border);
-      transition: all 0.3s ease;
+      transition: transform .3s ease, box-shadow .3s ease;
     }
 
     .project-card:hover .project-icon {
       transform: scale(1.1);
-      border-color: var(--accent);
-      box-shadow: 0 0 30px rgba(108,99,255,0.4);
+      box-shadow: 0 0 0 1px var(--accent), 0 0 30px rgba(77,245,160,.3);
     }
 
     .project-title {
@@ -151,16 +128,6 @@
       margin-top: auto;
     }
 
-    .tech-tag {
-      background: rgba(108,99,255,0.2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 0.3rem 0.8rem;
-      font-size: 0.75em;
-      font-weight: 500;
-      color: var(--accent-dim);
-    }
-
     footer {
       text-align: center;
       margin-top: 4rem;
@@ -171,7 +138,7 @@
     }
 
     footer a {
-      color: var(--accent-dim);
+      color: var(--accent2);
       text-decoration: none;
       font-weight: 500;
     }
@@ -196,46 +163,45 @@
     }
 
     .lang-bar { display: flex; align-items: center; justify-content: center; gap: .6rem; margin: 0 auto 1.4rem; font-size: .9em; color: var(--text-dim); }
-    .lang-bar select { font-family: inherit; font-size: 1em; color: var(--text); background: var(--bg-medium); border: 1px solid var(--border); border-radius: 12px; padding: .5rem .9rem; min-height: 44px; cursor: pointer; }
-    .lang-bar select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .lang-bar label { white-space: nowrap; }
+    /* el selector (.piar-lang-select) ocupa el 100 % per defecte; en esta barra, a la seua mida */
+    .lang-bar .piar-lang-select { width: auto; min-width: 9rem; background: var(--bg2); }
 
     /* ── Instal·lació i ús sense Internet ───────────────────── */
-    .piar-logo { width: 96px; height: 96px; border-radius: 22px; margin: 0 auto 1rem; display: block; border: 2px solid var(--border); box-shadow: 0 0 30px rgba(77,245,160,0.25); }
-    .install { max-width: 760px; margin: 2.5rem auto 0; padding: 1.5rem; background: var(--bg-medium); border: 1px solid var(--border); border-radius: 20px; }
+    .piar-logo { width: 96px; height: 96px; margin: 0 auto 1rem; }   /* + .app-icon: cantons 22 % i resplendor verd */
+    .install { max-width: 760px; margin: 2.5rem auto 0; padding: 1.5rem; }   /* + .card */
     .install h2 { font-size: 1.25em; margin-bottom: .6rem; }
-    .install h3 { font-size: 1.02em; margin: 1.4rem 0 .4rem; color: var(--accent-dim); }
+    .install h3 { font-size: 1.02em; margin: 1.4rem 0 .4rem; color: var(--accent2); }
     .install p, .install li { font-size: .9em; line-height: 1.6; color: var(--text-dim); }
     .install ul { padding-left: 1.2rem; margin: .4rem 0; }
-    .install .btn { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; font-family: inherit; font-size: .95em; font-weight: 600; cursor: pointer; border: none; border-radius: 12px; padding: .75rem 1.2rem; min-height: 46px; color: #fff; background: var(--accent); margin: .6rem .6rem .2rem 0; }
-    .install .btn.sec { background: var(--bg-light); color: var(--accent-dim); border: 1px solid var(--border); }
-    .install .btn[disabled] { opacity: .55; cursor: default; }
+    .install .btn { margin: .6rem .6rem .2rem 0; white-space: normal; text-align: center; }
     .install .state { display: inline-block; font-size: .8em; border-radius: 10px; padding: .15rem .6rem; border: 1px solid var(--border); margin: .15rem .3rem .15rem 0; }
-    .install .state.ok { color: #4ade80; border-color: rgba(74,222,128,.4); }
-    .install .state.wait { color: #fbbf24; border-color: rgba(251,191,36,.4); }
-    .install .bar { height: 10px; border-radius: 6px; background: var(--bg-light); overflow: hidden; margin: .7rem 0 .3rem; }
-    .install .bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), #4df5a0); transition: width .25s; }
+    .install .state.ok { color: var(--ok); border-color: rgba(74,222,128,.4); }
+    .install .state.wait { color: var(--warn); border-color: rgba(251,191,36,.4); }
+    .install .bar { height: 10px; border-radius: 6px; background: var(--bg3); overflow: hidden; margin: .7rem 0 .3rem; }
+    .install .bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--ok)); transition: width .25s; }
     .install table { width: 100%; border-collapse: collapse; margin: .6rem 0; font-size: .85em; }
     .install td, .install th { padding: .4rem .3rem; border-top: 1px solid var(--border); text-align: left; color: var(--text); vertical-align: top; }
-    .install th { color: var(--accent-dim); font-weight: 600; border-top: none; }
+    .install th { color: var(--accent2); font-weight: 600; border-top: none; }
     .install [hidden] { display: none !important; }
     .install .msg { font-size: .85em; min-height: 1.3em; }
-    .install .msg.err { color: #ff5c7a; }
-    .install .msg.ok { color: #4ade80; }
+    .install .msg.err { color: var(--danger); }
+    .install .msg.ok { color: var(--ok); }
   </style>
 </head>
 <body>
   <header>
     <div class="lang-bar"><label for="piarLang" data-i18n="sh.lang.label">🌐 Idioma</label><span id="langHost"></span></div>
-    <img src="icons/android-chrome-192x192.png" alt="Icona de PIAR" data-i18n-attr="alt:pt.logo_alt" class="piar-logo" width="96" height="96">
+    <img src="icons/android-chrome-192x192.png" alt="Icona de PIAR" data-i18n-attr="alt:pt.logo_alt" class="piar-logo app-icon" width="96" height="96">
     <h1>PIAR</h1>
     <p class="subtitle" data-i18n="pt.subtitle">Intel·ligència artificial connectada al món real</p>
   </header>
 
   <div class="projects-container">
     <!-- JFace -->
-    <a href="jface/" class="project-card">
+    <a href="jface/" class="project-card card">
       <img src="jface/icons/android-chrome-512x512.png" 
-           alt="JFace" class="project-icon">
+           alt="JFace" class="project-icon app-icon">
       <h2 class="project-title">JFace</h2>
       <p class="project-description" data-i18n="pt.card.jface">
         Seguiment facial en temps real. Detecta el gir del cap, l'obertura de la boca
@@ -243,16 +209,16 @@
         Ideal per a controlar robots o interfícies amb gestos facials.
       </p>
       <div class="project-tech">
-        <span class="tech-tag">MediaPipe</span>
-        <span class="tech-tag">Face Mesh</span>
-        <span class="tech-tag">Bluetooth</span>
+        <span class="chip tech-tag">MediaPipe</span>
+        <span class="chip tech-tag">Face Mesh</span>
+        <span class="chip tech-tag">Bluetooth</span>
       </div>
     </a>
 
     <!-- RobHort -->
-    <a href="robhort/" class="project-card">
+    <a href="robhort/" class="project-card card">
       <img src="robhort/icons/android-chrome-512x512.png" 
-           alt="RobHort" class="project-icon">
+           alt="RobHort" class="project-icon app-icon">
       <h2 class="project-title">RobHort</h2>
       <p class="project-description" data-i18n="pt.card.robhort">
         El guardià del teu bancal. Detecta gats, ocells i persones amb la càmera
@@ -260,16 +226,16 @@
         ràpid, precís o llarga distància.
       </p>
       <div class="project-tech">
-        <span class="tech-tag">COCO-SSD</span>
-        <span class="tech-tag">TensorFlow.js</span>
-        <span class="tech-tag" data-i18n="pt.tag.objects">Detecció d'objectes</span>
+        <span class="chip tech-tag">COCO-SSD</span>
+        <span class="chip tech-tag">TensorFlow.js</span>
+        <span class="chip tech-tag" data-i18n="pt.tag.objects">Detecció d'objectes</span>
       </div>
     </a>
 
     <!-- Teachable Microbit -->
-    <a href="teachable-microbit/" class="project-card">
+    <a href="teachable-microbit/" class="project-card card">
       <img src="teachable-microbit/icons/android-chrome-512x512.png" 
-           alt="Teachable Microbit" class="project-icon">
+           alt="Teachable Microbit" class="project-icon app-icon">
       <h2 class="project-title">Teachable Microbit</h2>
       <p class="project-description" data-i18n="pt.card.teachable">
         Connecta els teus models de Teachable Machine amb la micro:bit.
@@ -277,16 +243,16 @@
         aplicacions d'IA sense programar.
       </p>
       <div class="project-tech">
-        <span class="tech-tag">Teachable Machine</span>
-        <span class="tech-tag" data-i18n="pt.tag.iap">Imatge / Àudio / Postura</span>
-        <span class="tech-tag" data-i18n="pt.tag.custom">IA personalitzada</span>
+        <span class="chip tech-tag">Teachable Machine</span>
+        <span class="chip tech-tag" data-i18n="pt.tag.iap">Imatge / Àudio / Postura</span>
+        <span class="chip tech-tag" data-i18n="pt.tag.custom">IA personalitzada</span>
       </div>
     </a>
 
     <!-- Màquina Ensenyable -->
-    <a href="maquina-ensenyable/" class="project-card">
+    <a href="maquina-ensenyable/" class="project-card card">
       <img src="maquina-ensenyable/icons/android-chrome-512x512.png" 
-           alt="Màquina Ensenyable" class="project-icon">
+           alt="Màquina Ensenyable" class="project-icon app-icon">
       <h2 class="project-title">Màquina Ensenyable</h2>
       <p class="project-description" data-i18n="pt.card.maquina">
         Entrena models d'IA directament al navegador, sense programar ni necessitar cap compte.
@@ -294,17 +260,17 @@
         Exporta els models i usa'ls en altres projectes.
       </p>
       <div class="project-tech">
-        <span class="tech-tag" data-i18n="pt.tag.transfer">Aprenentatge per transferència</span>
-        <span class="tech-tag">MobileNet</span>
-        <span class="tech-tag">PoseNet</span>
-        <span class="tech-tag">MediaPipe Hands</span>
+        <span class="chip tech-tag" data-i18n="pt.tag.transfer">Aprenentatge per transferència</span>
+        <span class="chip tech-tag">MobileNet</span>
+        <span class="chip tech-tag">PoseNet</span>
+        <span class="chip tech-tag">MediaPipe Hands</span>
       </div>
     </a>
 
     <!-- Test del mòbil -->
-    <a href="test-mobil/" class="project-card">
+    <a href="test-mobil/" class="project-card card">
       <img src="test-mobil/icons/android-chrome-512x512.png"
-           alt="Test del mòbil" data-i18n-attr="alt:pt.card.test_name" class="project-icon">
+           alt="Test del mòbil" data-i18n-attr="alt:pt.card.test_name" class="project-icon app-icon">
       <h2 class="project-title" data-i18n="pt.card.test_name">Test del mòbil</h2>
       <p class="project-description" data-i18n="pt.card.test">
         Comprova si les aplicacions funcionaran en el teu dispositiu. Prova la càmera, el micròfon,
@@ -312,20 +278,20 @@
         i com arreglar-ho (també amb Family Link).
       </p>
       <div class="project-tech">
-        <span class="tech-tag" data-i18n="pt.tag.diag">Diagnòstic</span>
-        <span class="tech-tag" data-i18n="pt.tag.cammic">Càmera / Micròfon</span>
-        <span class="tech-tag">Bluetooth</span>
-        <span class="tech-tag">Family Link</span>
+        <span class="chip tech-tag" data-i18n="pt.tag.diag">Diagnòstic</span>
+        <span class="chip tech-tag" data-i18n="pt.tag.cammic">Càmera / Micròfon</span>
+        <span class="chip tech-tag">Bluetooth</span>
+        <span class="chip tech-tag">Family Link</span>
       </div>
     </a>
   </div>
 
 
-  <section class="install" id="instal-la" aria-labelledby="inst-t" hidden>
+  <section class="install card" id="instal-la" aria-labelledby="inst-t" hidden>
     <h2 id="inst-t" data-i18n="pt.inst.title">📲 Instal·la PIAR en el teu mòbil</h2>
     <p data-i18n="pt.inst.intro">Instal·lada, PIAR té la seua icona a la pantalla d'inici, s'obri a pantalla completa i les apps carreguen més ràpid.</p>
     <div>
-      <button type="button" class="btn" id="installBtn" hidden data-i18n="pt.inst.btn">📲 Instal·lar PIAR</button>
+      <button type="button" class="btn btn-primary" id="installBtn" hidden data-i18n="pt.inst.btn">📲 Instal·lar PIAR</button>
       <span class="state ok" id="installedState" hidden data-i18n="pt.inst.done">✅ PIAR ja està instal·lada</span>
     </div>
     <p id="installHelp"></p>
@@ -336,7 +302,7 @@
       <tr><th data-i18n="pt.off.col_app">App</th><th data-i18n="pt.off.col_libs">Llibreries</th><th data-i18n="pt.off.col_models">Models</th></tr>
       <tbody id="offRows"></tbody>
     </table>
-    <button type="button" class="btn" id="prepBtn" data-i18n="pt.prep.btn">📥 Descarregar per a ús sense Internet</button>
+    <button type="button" class="btn btn-primary" id="prepBtn" data-i18n="pt.prep.btn">📥 Descarregar per a ús sense Internet</button>
     <div class="bar" id="prepBar" hidden><i id="prepFill"></i></div>
     <p class="msg" id="prepMsg" role="status" aria-live="polite"></p>
     <ul>
@@ -345,7 +311,7 @@
       <li data-i18n-html="pt.off.b3">Els models de <b>Teachable Microbit</b> són els teus: es guarden la primera vegada que els carregues amb Internet.</li>
       <li data-i18n-html="pt.off.b4">El <b>Bluetooth</b> no necessita Internet. No actives el mode avió (o torna a activar el Bluetooth després).</li>
     </ul>
-    <button type="button" class="btn sec" id="clearBtn" data-i18n="pt.clear.btn" hidden>🗑 Esborrar el que s'ha descarregat</button>
+    <button type="button" class="btn btn-danger" id="clearBtn" data-i18n="pt.clear.btn" hidden>🗑 Esborrar el que s'ha descarregat</button>
   </section>
 
   <footer>

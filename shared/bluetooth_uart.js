@@ -37,6 +37,7 @@ function updateConnectButton() {
   const connectBtn = document.getElementById('connectBtn');
   if (!connectBtn) return;
   if (!navigator.bluetooth) {          // sense Web Bluetooth (iPhone, Firefox…): text curt perquè càpiga en 320 px
+    connectBtn.classList.remove('btn-primary'); connectBtn.classList.add('no-bt');   // avís (groc), igual en totes les apps
     connectBtn.textContent = _t('sh.bt.none');
     connectBtn.title = isIOSDevice() ? _t('sh.bt.none_ios_title') : _t('sh.bt.none_title');
     return;

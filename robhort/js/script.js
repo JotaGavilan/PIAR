@@ -23,7 +23,16 @@ const categoryList   = document.getElementById('category-list');
 // Guardem COM es calcula l'últim missatge (una funció) per a poder tornar-lo a escriure en canviar d'idioma.
 const BT_STATUS_KEYS = ['sh.bt.ios_status', 'sh.bt.unsupported_status', 'sh.bt.searching', 'sh.bt.ok', 'sh.bt.error', 'sh.bt.disconnected'];
 let statusFn = () => _t('rh.status.starting');
-function showStatus(fn) { statusFn = fn; statusTextEl.textContent = fn(); }
+// To del missatge d'estat (colors ok/avís/error de piar-ui) segons el símbol inicial: ✅ 🤖 correcte · ❌ error · ⚠️ 🌐 avís
+function paintStatusTone() {
+  const el = document.getElementById('status-text');
+  if (!el) return;
+  const t = el.textContent.trim();
+  el.classList.toggle('msg-ok', /^(✅|🤖)/u.test(t));
+  el.classList.toggle('msg-err', /^❌/u.test(t));
+  el.classList.toggle('msg-warn', /^(⚠|🌐)/u.test(t));
+}
+function showStatus(fn) { statusFn = fn; statusTextEl.textContent = fn(); paintStatusTone(); }
 // Els missatges que escriu bluetooth_uart.js arriben ja traduïts: reconeixem la clau per a poder retraduir-los.
 function showTranslatedStatus(msg) {
   const key = BT_STATUS_KEYS.find(k => _t(k) === msg);
@@ -221,6 +230,9 @@ onBTStatusChange((connected, msg) => {
 });
 
 connectBtn.onclick = connectBluetooth;
+
+// Sense Web Bluetooth (iPhone, Firefox…): el botó passa d'acció principal a estat d'avís (groc, vegeu style.css)
+if (!navigator.bluetooth) { connectBtn.classList.remove('btn-primary'); connectBtn.classList.add('no-bt'); }
 
 // ── Capa d'informació ─────────────────────────────────────────
 infoBtn.onclick = () => {

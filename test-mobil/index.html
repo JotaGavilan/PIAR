@@ -11,72 +11,35 @@
   <link rel="manifest" href="icons/site.webmanifest">
   <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="../vendor/fonts/fonts.css">
+  <link rel="stylesheet" href="../shared/piar-ui.css">
   <style>
-    :root {
-      --bg-dark:   #13111c;
-      --bg-medium: #1e1a2e;
-      --bg-light:  #2a2540;
-      --accent:    #6c63ff;
-      --accent-dim:#a89cff;
-      --text:      #f0eeff;
-      --text-dim:  #8b82b8;
-      --border:    rgba(108,99,255,0.2);
-      --ok:        #4ade80;
-      --warn:      #fbbf24;
-      --fail:      #ff5c7a;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-text-size-adjust: 100%; }
-    body {
-      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #090812;
-      color: var(--text);
-      line-height: 1.5;
-      padding-bottom: 3rem;
-    }
-    a { color: var(--accent-dim); }
-    code { background: rgba(108,99,255,0.18); padding: 1px 6px; border-radius: 6px; font-size: 0.9em; word-break: break-all; }
+    /* Tokens, tipografia, capçalera, botons, targetes i etiquetes: ../shared/piar-ui.css. Ací només el que és propi del test. */
+    * { margin: 0; padding: 0; }
+    body { line-height: 1.5; padding-bottom: 3rem; }
+    a { color: var(--accent2); }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: rgba(108,99,255,0.18); padding: 1px 6px; border-radius: 6px; font-size: 0.9em; word-break: break-all; }
 
-    .top {
-      display: flex; align-items: center; gap: 0.7rem;
-      padding: 0.7rem 1rem; background: var(--bg-medium);
-      border-bottom: 1px solid var(--border);
-    }
-    .top img { width: 36px; height: 36px; flex: none; }
-    .top h1 { font-size: 1.15em; font-weight: 600; flex: 1; min-width: 0; }
-    .top .back { font-size: 0.85em; text-decoration: none; color: var(--accent-dim); flex: none;
-      border: 1px solid var(--border); border-radius: 10px; padding: 0.3rem 0.7rem; }
-
-    .top { flex-wrap: wrap; row-gap: 0.4rem; }
+    /* Capçalera: .piar-header (icona + títol + «← PIAR» a la dreta) amb la fila de l'idioma a sota */
+    .piar-header { flex-wrap: wrap; row-gap: 0.4rem; justify-content: flex-start; }
+    .piar-header h1 { text-align: left; }
     .langbar { flex: 1 1 100%; display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
-    .langlabel { font-size: 0.85em; color: var(--accent-dim); white-space: nowrap; flex: none; }
+    .langlabel { font-size: 0.85rem; color: var(--accent2); white-space: nowrap; flex: none; }
     #langSelectHost { flex: 1; min-width: 0; max-width: 16rem; }
-    #langSelectHost select.piar-lang-select {
-      width: 100%; min-height: 44px; background: var(--bg-light); border: 1px solid var(--border); border-radius: 12px;
-      color: var(--text); font-family: inherit; font-size: 0.9em; padding: 0.4rem 0.8rem; cursor: pointer;
-    }
-    @media (min-width: 640px) { .langbar { flex: none; } }
+    /* en pantalles amples tot cap en una fila: idioma a la dreta i «← PIAR» al final */
+    @media (min-width: 640px) { .langbar { flex: none; order: 1; margin-left: auto; } .piar-header .back { order: 2; margin-left: 0; } }
 
     main { max-width: 720px; margin: 0 auto; padding: 1rem 16px 0; }
     h2 { font-size: 1.05em; font-weight: 600; margin: 1.4rem 0 0.6rem; color: var(--text); }
-    .card { background: var(--bg-medium); border: 1px solid var(--border); border-radius: 16px; padding: 1rem; margin-bottom: 0.9rem; }
+    .card { margin-bottom: 0.9rem; }
     .dim { color: var(--text-dim); font-size: 0.85em; }
 
     .hero { text-align: center; padding: 1.2rem 0.5rem 0.4rem; }
     .hero p { color: var(--text-dim); font-size: 0.92em; margin-bottom: 1rem; }
-    .big {
-      font-family: inherit; font-size: 1.05em; font-weight: 600; cursor: pointer;
-      background: var(--accent); color: #fff; border: none; border-radius: 14px;
-      padding: 0.85rem 1.6rem; min-height: 48px; max-width: 100%;
-      box-shadow: 0 0 24px rgba(108,99,255,0.45);
-    }
-    .big:disabled { opacity: .55; cursor: default; box-shadow: none; }
-    .btn {
-      font-family: inherit; font-size: 0.9em; cursor: pointer; min-height: 44px;
-      background: var(--bg-light); color: var(--accent-dim); border: 1px solid var(--border);
-      border-radius: 12px; padding: 0.55rem 1rem;
-    }
-    .btn:disabled { opacity: .5; }
+    /* CTA «Començar el test»: .btn-primary un poc més gran */
+    .big { font-size: 1.05rem; padding: 0.85rem 1.6rem; min-height: 48px; max-width: 100%; box-shadow: 0 0 24px var(--accent-glow); }
+    .big:disabled { box-shadow: none; }
+    /* .btn és nowrap en piar-ui; ací els textos (es/en) poden ocupar dues línies en 320 px */
+    main .btn { white-space: normal; text-align: center; }
 
     .devgrid { display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 0.8rem; font-size: 0.85em; }
     .devgrid dt { color: var(--text-dim); }
@@ -88,7 +51,13 @@
     .ico { width: 1.6em; flex: none; text-align: center; font-size: 1.05em; }
     .ctitle { font-weight: 500; font-size: 0.92em; }
     .cdetail { font-size: 0.8em; color: var(--text-dim); word-break: break-word; }
-    .st-ok .cdetail { color: #9be7b5; } .st-warn .cdetail { color: #f3d27a; } .st-fail .cdetail { color: #ff9db0; }
+    /* detall en el color del veredicte (ok/warn/danger), aclarit per a llegir-se bé sobre fons fosc */
+    .st-ok .cdetail { color: var(--ok); } .st-warn .cdetail { color: var(--warn); } .st-fail .cdetail { color: var(--danger); }
+    @supports (color: color-mix(in srgb, red, white)) {
+      .st-ok .cdetail { color: color-mix(in srgb, var(--ok) 65%, #fff); }
+      .st-warn .cdetail { color: color-mix(in srgb, var(--warn) 65%, #fff); }
+      .st-fail .cdetail { color: color-mix(in srgb, var(--danger) 65%, #fff); }
+    }
     .spin { display: inline-block; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -96,56 +65,57 @@
     .media.show { display: flex; }
     #camPrev { width: 120px; height: 90px; background: #000; border-radius: 10px; object-fit: cover; display: none; transform: scaleX(-1); }
     #micWrap { display: none; flex: 1; min-width: 150px; font-size: 0.8em; color: var(--text-dim); }
-    #micTrack { height: 10px; background: var(--bg-light); border-radius: 6px; overflow: hidden; margin-top: 4px; }
+    #micTrack { height: 10px; background: var(--bg3); border-radius: 6px; overflow: hidden; margin-top: 4px; }
     #micBar { height: 100%; width: 0; background: var(--ok); transition: width .08s; }
     .optrow { margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid var(--border); }
     .optrow p { font-size: 0.82em; color: var(--text-dim); margin-bottom: 0.5rem; }
 
     /* targetes d'apps */
-    .app { background: var(--bg-medium); border: 1px solid var(--border); border-left-width: 5px; border-radius: 16px; padding: 1rem; margin-bottom: 0.9rem; }
+    .app { border-left-width: 5px; margin-bottom: 0.9rem; }   /* + .card; la vora esquerra té el color del veredicte */
     .app.v-ok { border-left-color: var(--ok); } .app.v-warn { border-left-color: var(--warn); }
-    .app.v-fail { border-left-color: var(--fail); } .app.v-pend, .app.v-run { border-left-color: var(--accent); }
+    .app.v-fail { border-left-color: var(--danger); } .app.v-pend, .app.v-run { border-left-color: var(--accent); }
     .apphead { display: flex; gap: 0.8rem; align-items: center; }
-    .apphead img { width: 52px; height: 52px; border-radius: 12px; background: var(--bg-light); border: 1px solid var(--border); padding: 4px; flex: none; }
+    .apphead img { width: 52px; height: 52px; flex: none; }   /* + .app-icon: icona quadrada a ample complet, cantons 22 % */
     .apphead .nm { font-weight: 600; font-size: 1.02em; }
     .badge { display: inline-block; font-size: 0.8em; font-weight: 600; border-radius: 10px; padding: 0.1rem 0.6rem; margin-top: 2px; }
     .v-ok .badge { background: rgba(74,222,128,.15); color: var(--ok); }
     .v-warn .badge { background: rgba(251,191,36,.15); color: var(--warn); }
-    .v-fail .badge { background: rgba(255,92,122,.15); color: var(--fail); }
-    .v-pend .badge, .v-run .badge { background: rgba(108,99,255,.2); color: var(--accent-dim); }
+    .v-fail .badge { background: rgba(255,92,122,.15); color: var(--danger); }
+    .v-pend .badge, .v-run .badge { background: rgba(108,99,255,.2); color: var(--accent2); }
     .appsum { font-size: 0.85em; color: var(--text-dim); margin: 0.7rem 0 0.5rem; }
     .chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-    .chip { font-size: 0.74em; border: 1px solid var(--border); border-radius: 10px; padding: 0.15rem 0.55rem; color: var(--text-dim); }
-    .chip.ok { color: var(--ok); border-color: rgba(74,222,128,.35); }
-    .chip.warn { color: var(--warn); border-color: rgba(251,191,36,.4); }
-    .chip.fail { color: var(--fail); border-color: rgba(255,92,122,.45); }
+    /* .chip de piar-ui (lila) = estat neutre/pendent; ok/avís/error amb els colors de token */
+    .chips .chip { font-size: 0.74rem; padding: 0.15rem 0.6rem; background: transparent; color: var(--text-dim); }
+    .chips .chip.ok { color: var(--ok); border-color: rgba(74,222,128,.35); background: rgba(74,222,128,.08); }
+    .chips .chip.warn { color: var(--warn); border-color: rgba(251,191,36,.4); background: rgba(251,191,36,.08); }
+    .chips .chip.fail { color: var(--danger); border-color: rgba(255,92,122,.45); background: rgba(255,92,122,.08); }
     .open { display: inline-block; margin-top: 0.7rem; font-size: 0.85em; text-decoration: none; font-weight: 500; }
 
-    details.prob { margin-top: 0.7rem; background: rgba(0,0,0,.18); border: 1px solid var(--border); border-radius: 12px; }
-    details.prob > summary { cursor: pointer; padding: 0.6rem 0.8rem; font-size: 0.86em; font-weight: 500; list-style-position: inside; min-height: 40px; }
+    details.prob { margin-top: 0.7rem; background: rgba(0,0,0,.18); border: 1px solid var(--border); border-radius: var(--radius); }
+    details.prob > summary { cursor: pointer; padding: 0.6rem 0.8rem; font-size: 0.86em; font-weight: 500; list-style-position: inside; min-height: var(--tap); }
     details.prob .body { padding: 0 0.9rem 0.8rem; font-size: 0.84em; }
-    details.prob h4 { font-size: 0.85em; color: var(--accent-dim); margin: 0.6rem 0 0.2rem; }
+    details.prob h4 { font-size: 0.85em; color: var(--accent2); margin: 0.6rem 0 0.2rem; }
     details.prob ol { padding-left: 1.2rem; }
     details.prob li { margin: 0.25rem 0; }
-    .consq { margin-top: 0.5rem; color: #f3d27a; font-size: 0.82em; }
+    .consq { margin-top: 0.5rem; color: var(--warn); font-size: 0.82em; }
 
-    .fam summary { cursor: pointer; font-weight: 600; font-size: 0.98em; min-height: 40px; }
-    .fam h4 { font-size: 0.88em; color: var(--accent-dim); margin: 0.9rem 0 0.25rem; }
+    .fam summary { cursor: pointer; font-weight: 600; font-size: 0.98em; min-height: var(--tap); }
+    .fam h4 { font-size: 0.88em; color: var(--accent2); margin: 0.9rem 0 0.25rem; }
     .fam p, .fam li { font-size: 0.84em; }
     .fam ol, .fam ul { padding-left: 1.2rem; }
     .fam li { margin: 0.3rem 0; }
     .actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.8rem; }
-    #toast { position: fixed; left: 50%; bottom: 1.2rem; transform: translateX(-50%); background: #2a2540; border: 1px solid var(--accent);
-      padding: 0.6rem 1rem; border-radius: 12px; font-size: 0.85em; opacity: 0; pointer-events: none; transition: opacity .25s; max-width: 90vw; text-align: center; z-index: 10; }
+    #toast { position: fixed; left: 50%; bottom: 1.2rem; transform: translateX(-50%); background: var(--bg3); border: 1px solid var(--accent);
+      padding: 0.6rem 1rem; border-radius: var(--radius); font-size: 0.85em; opacity: 0; pointer-events: none; transition: opacity .25s; max-width: 90vw; text-align: center; z-index: 10; }
     #toast.show { opacity: 1; }
     footer { text-align: center; color: var(--text-dim); font-size: 0.8em; margin-top: 2rem; padding: 0 1rem; }
   </style>
 </head>
 <body>
-  <div class="top">
+  <div class="piar-header">
     <img src="icons/android-chrome-192x192.png" alt="Icona del test" data-i18n-attr="alt:tt.icon_alt">
     <h1 data-i18n="tt.h1">Test del mòbil</h1>
-    <a class="back" href="../">← PIAR</a>
+    <a class="btn back" href="../">← PIAR</a>
     <div class="langbar">
       <label class="langlabel" for="langSel" data-i18n="sh.lang.label">🌐 Idioma</label>
       <div id="langSelectHost"></div>
@@ -156,7 +126,7 @@
     <section class="hero">
       <p data-i18n="tt.hero.p1">Comprova si les aplicacions de PIAR funcionaran en este mòbil, tauleta o ordinador.
         Et dirà, app per app, si anirà bé, i si no, per què i com arreglar-ho.</p>
-      <button class="big" id="startBtn">▶ Començar el test</button>
+      <button class="btn btn-primary big" id="startBtn">▶ Començar el test</button>
       <p class="dim" style="margin-top:.8rem" data-i18n="tt.hero.p2">Et demanarà permís per a usar la càmera i el micròfon només per a provar-los.
         No es grava res ni s'envia a cap servidor.</p>
     </section>
@@ -676,7 +646,7 @@ function renderApps() {
           `<h4>${esc(_t('tt.app.why'))}</h4><p>${f.why}</p><h4>${esc(_t('tt.app.how'))}</h4><ol>${f.steps.map(s => `<li>${s}</li>`).join('')}</ol></div></details>`;
       }).join('');
     }
-    return `<div class="app v-${vv}"><div class="apphead"><img src="${app.icon}" alt=""><div><div class="nm">${esc(app.name)}</div>` +
+    return `<div class="app card v-${vv}"><div class="apphead"><img class="app-icon" src="${app.icon}" alt=""><div><div class="nm">${esc(app.name)}</div>` +
       `<span class="badge">${label[2]} ${esc(_t(label[0]))}</span></div></div>` +
       `<p class="appsum">${esc(_t(label[1]))}</p><div class="chips">${chips}</div>${probs}` +
       `<a class="open" href="${app.href}">${esc(_t('tt.app.open', { name: app.name }))}</a></div>`;

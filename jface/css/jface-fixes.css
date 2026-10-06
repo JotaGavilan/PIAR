@@ -1,117 +1,32 @@
-/* Correccions específiques per JFace */
+/* ============================================================
+   Exclusiu de JFace (la part comuna amb RobHort és a style.css)
+   ============================================================ */
 
-/* ── Capçalera amb icona al costat ─────────────────────────── */
-header {
-  flex-shrink: 0;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6em;
-  font-size: 0.95em;
-  font-weight: 700;
-  padding: 0 16px;
-  background: linear-gradient(135deg, #1e1a2e 0%, #261f45 100%);
-  border-bottom: 1px solid rgba(108,99,255,0.2);
-  letter-spacing: 0.03em;
-  color: #f0eeff;
-}
-
-header img {
-  width: 2em;
-  height: 2em;
-  background: #e8f5e9;
-  border-radius: 50%;
-  padding: 3px;
-  flex-shrink: 0;
-  box-shadow: 0 0 0 2px #6c63ff, 0 2px 8px rgba(108,99,255,0.35);
-}
-
-header h1 {
-  font-size: 1em;
-  font-weight: 600;
-  margin: 0;
-}
-
-/* ── Data panel fix per no ocupar espai del video ───────────── */
+/* El vídeo no es mostra: MediaPipe dibuixa al canvas, que es veu en mirall (selfie) */
+#video  { display: none; }
+#canvas { transform: scaleX(-1); }
+/* Panell flotant sobre la part alta del vídeo (no li lleva espai): just davall de la capçalera */
 #data-panel {
   position: fixed;
-  top: 52px;
+  top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
   max-width: 480px;
-  padding: 8px 0;
-  font-size: 0.85em;
-  font-weight: 500;
-  color: #a89cff;
-  background: rgba(30,26,46,0.92);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(108,99,255,0.2);
   z-index: 1000;
+  min-height: 36px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  column-gap: .1em;
+  padding: 6px 8px;
+  font-size: clamp(.75rem, 3.6vw, .9rem);
+  font-weight: 500;
+  color: var(--text-dim);
+  background: rgba(30,26,46,.92);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
   text-align: center;
 }
-
-#data-panel span {
-  font-weight: 600;
-  color: #f0eeff;
-}
-
-/* En mòbil ocupa tot l'ample */
-@media (max-width: 520px) {
-  #data-panel {
-    max-width: 100%;
-  }
-}
-
-/* ── Video container ocupa tot l'espai ──────────────────────── */
-body {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
-}
-
-#video-container {
-  flex: 1 1 auto;
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  background: #000;
-  min-height: 0;
-}
-
-#video, #canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-#video {
-  transform: scaleX(-1);
-  z-index: 1;
-}
-
-#canvas {
-  z-index: 2;
-}
-
-/* ── Pantalles estretes (320–360 px): el títol i el panell de dades s'adapten ── */
-header { padding: 0 10px; }
-header h1 { min-width: 0; font-size: clamp(0.8rem, 4.3vw, 1rem); line-height: 1.15; }
-#data-panel { box-sizing: border-box; max-width: 100vw; padding-left: 6px; padding-right: 6px; font-size: clamp(0.72rem, 3.6vw, 0.9rem); }
-
-/* El nom de la micro:bit connectada va en una línia pròpia, perquè les
-   dades (Gir | Boca | Ull E | Ull D) no es parteixen en pantalles estretes */
-#data-panel { flex-wrap: wrap; }
-#data-panel #device-indicator { flex-basis: 100%; margin: 0 0 2px 0 !important; text-align: center; }
-
-/* Pantalles molt estretes (320 px): el títol de la capçalera, més llarg en altres idiomes, no ha de desbordar */
-@media (max-width: 360px) {
-  html:not([lang^="ca"]) header { padding: 0 8px; }
-  html:not([lang^="ca"]) header h1 { font-size: 0.92em; padding: 0; flex-shrink: 1; min-width: 0; line-height: 1.2; }
-}
+#data-panel span { margin: 0 .2em; font-weight: 600; color: var(--text); }          /* valors */
+#data-panel span[data-i18n] { margin: 0; font-weight: 500; color: var(--text-dim); } /* etiquetes (Gir:, | Boca:…) */
+/* Nom de la micro:bit connectada: en línia pròpia perquè «Gir | Boca | Ull E | Ull D» no es parteixen en pantalles estretes */
+#data-panel #device-indicator { flex-basis: 100%; margin: 0 0 2px; text-align: center; color: var(--accent2); }

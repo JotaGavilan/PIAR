@@ -39,6 +39,9 @@ const LOAD_BTN_KEYS = { load: 'tm.btn.load', loading: 'tm.btn.loading', loaded: 
 function setLoadBtnState(state) {
   loadBtnState = state;
   loadModelBtn.classList.toggle('model-loaded', state === 'loaded');
+  // Estil comú: acció principal (lila) fins que hi ha model; verd («correcte») quan ja està carregat
+  loadModelBtn.classList.toggle('btn-primary', state !== 'loaded');
+  loadModelBtn.classList.toggle('btn-ok', state === 'loaded');
   loadModelBtn.textContent = _t(LOAD_BTN_KEYS[state]);
 }
 

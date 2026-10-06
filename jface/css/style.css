@@ -1,685 +1,127 @@
 /* ============================================================
-   style.css  –  RobHort – El guardià del teu bancal
-   Estètica: Card minimalista modern (Opció 2)
-   Fons fosc · Lila/blau · Poppins · App mòbil 2024
+   style.css – Part comuna de JFace i RobHort (la mateixa en tots dos fitxers)
+   La base visual (tokens, capçalera .piar-header, botons, capes, formularis, targetes)
+   ve de ../shared/piar-ui.css, que es carrega ABANS d'este fitxer. Ací només hi ha
+   la disposició de la pantalla (vídeo + controls) i els ajustos exclusius d'estes dues apps.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
-/* ── Variables ────────────────────────────────────────────── */
-:root {
-  --bg:         #13111c;
-  --bg2:        #1e1a2e;
-  --bg3:        #2a2540;
-  --bg-dark:    #090812;
-  --bg-medium:  #1e1a2e;
-  --accent:     #6c63ff;
-  --accent2:    #a89cff;
-  --accent-glow: rgba(108,99,255,0.35);
-  --text:       #f0eeff;
-  --text-dim:   #8b82b8;
-  --border:     rgba(108,99,255,0.2);
-  --border2:    rgba(108,99,255,0.08);
-  --danger:     #ff5c7a;
-  --radius:     12px;
-  --radius-lg:  18px;
-  --header-h:   52px;
-  --controls-h: 80px;
-  --panel-h:    52px;
-  --font:       'Poppins', sans-serif;
-}
-
-/* ── Reset i base ─────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── Pantalla: capçalera · vídeo · (panell) · controls ──────── */
+html { background: var(--bg-dark); }   /* fons fosc també fora de la columna (escriptori) */
 
 body {
-  font-family:  var(--font);
-  background:   #090812;
-  color:        var(--text);
-  text-align:   center;
-  overflow:     hidden;
-  height:       100vh;
-  height:       100dvh;
-  display:      flex;
+  margin: 0;
+  display: flex;
   flex-direction: column;
-  align-items:  center;
-  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
-/* Embolcall que limita l'amplada en escriptori */
-body > h1,
+/* Embolcall que limita l'amplada en escriptori; en mòbil ocupa tota la pantalla */
+body > .piar-header,
 body > #video-container,
-body > #detection-panel,
-body > #controls,
-body > .layer {
-  width:     100%;
+body > #controls {
+  width: 100%;
   max-width: 480px;
 }
-
-body > h1 {
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+@media (min-width: 521px) {
+  body > .piar-header { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  body > #controls    { border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
 }
 
-body > #controls {
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-}
-
-/* En mòbil ocupa tota la pantalla */
-@media (max-width: 520px) {
-  body > h1,
-  body > #video-container,
-  body > #detection-panel,
-  body > #controls {
-    max-width: 100%;
-    border-radius: 0;
-  }
-}
-
-/* ── Capçalera ────────────────────────────────────────────── */
-h1 {
-  flex-shrink: 0;
-  height:      var(--header-h);
-  display:     flex;
-  align-items: center;
-  justify-content: center;
-  gap:         0.5em;
-  font-size:   0.95em;
-  font-weight: 700;
-  padding:     0 16px;
-  background:  linear-gradient(135deg, var(--bg2) 0%, #261f45 100%);
-  border-bottom: 1px solid var(--border);
-  letter-spacing: 0.03em;
-  color:       var(--text);
-}
-
-h1 img {
-  width:         2em;
-  height:        2em;
-  background:    #e8f5e9;
-  border-radius: 50%;
-  padding:       3px;
-  flex-shrink:   0;
-  box-shadow:    0 0 0 2px var(--accent), 0 2px 8px var(--accent-glow);
-}
-
-/* ── Contenidor de vídeo — ocupa l'espai disponible ──────── */
+/* ── Vídeo ────────────────────────────────────────────────── */
 #video-container {
-  flex:       1 1 auto;
-  position:   relative;
-  width:      100%;
-  max-width:  100%;
-  overflow:   hidden;
+  flex: 1 1 auto;
+  position: relative;
+  isolation: isolate;          /* els z-index de #video/#canvas no surten del contenidor */
+  overflow: hidden;
   background: #000;
   min-height: 0;
 }
-
-#video {
-  position:   absolute;
-  inset:      0;
-  width:      100%;
-  height:     100%;
-  object-fit: cover;
-  z-index:    1;
-}
-
-#canvas {
-  position:   absolute;
-  inset:      0;
-  width:      100%;
-  height:     100%;
-  z-index:    2;
-}
-
-/* ── Panel de deteccions (fix sobre els controls) ─────────── */
-#detection-panel {
-  flex-shrink: 0;
-  width:       100%;
-  min-height:  var(--panel-h);
-  background:  rgba(19,17,28,0.92);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border-top:  1px solid var(--border);
-  display:     flex;
-  flex-wrap:   wrap;
-  justify-content: center;
-  align-items: center;
-  gap:         6px;
-  padding:     8px 12px;
-  z-index:     9999;
-}
-
-.no-det {
-  font-size:   0.78em;
-  color:       var(--text-dim);
-  font-style:  italic;
-}
-
-.det-item {
-  position:    relative;
-  display:     inline-flex;
-  align-items: center;
-  gap:         8px;
-  background:  rgba(108,99,255,0.08);
-  border:      1px solid var(--border);
-  border-radius: 20px;
-  padding:     5px 12px 7px;
-  overflow:    hidden;
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  min-width:   110px;
-  transition:  border-color 0.2s;
-}
-
-.det-bar {
-  position:    absolute;
-  bottom:      0;
-  left:        0;
-  height:      2px;
-  background:  var(--accent);
-  opacity:     0.9;
-  transition:  width 0.3s ease;
-  border-radius: 0 2px 2px 0;
-}
-
-.det-label {
-  font-size:   0.78em;
-  font-weight: 600;
-  color:       var(--text);
-}
-
-.det-score {
-  font-size:   0.75em;
-  color:       var(--accent2);
-  font-weight: 700;
-  margin-left: auto;
-}
-
-/* ── Controls inferiors ───────────────────────────────────── */
-#controls {
-  flex-shrink: 0;
-  width:       100%;
-  min-height:  var(--controls-h);
-  background:  rgba(19,17,28,0.97);
-  border-top:  1px solid var(--border);
-  padding:     8px 10px;
-  display:     flex;
-  justify-content: center;
-  align-items: center;
-  gap:         6px;
-  flex-wrap:   wrap;
-  z-index:     10000;
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-}
-
-button {
-  font-family:  var(--font);
-  font-size:    0.75em;
-  font-weight:  600;
-  padding:      8px 14px;
-  border:       1px solid var(--border);
-  border-radius: 20px;
-  background:   rgba(108,99,255,0.1);
-  color:        var(--accent2);
-  cursor:       pointer;
-  transition:   all 0.2s;
-  white-space:  nowrap;
-  letter-spacing: 0.01em;
-}
-
-button:hover,
-button:active {
-  background:   rgba(108,99,255,0.25);
-  border-color: var(--accent);
-  color:        #fff;
-  box-shadow:   0 2px 12px var(--accent-glow);
-}
-
-button.connected {
-  border-color: #4ade80;
-  color:        #4ade80;
-  background:   rgba(74,222,128,0.1);
-}
-
-#status {
-  width:       100%;
-  text-align:  center;
-  font-size:   0.68em;
-  color:       var(--text-dim);
-  padding-top: 2px;
-}
-
-/* ── Capes (info + config) ────────────────────────────────── */
-.layer {
-  display:     none;
-  position:    fixed;
-  inset:       0;
-  background:  rgba(10,8,20,0.88);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  z-index:     10001;
-  align-items: center;
-  justify-content: center;
-  padding:     16px;
-  overflow-y:  auto;
-}
-
-.layer-box {
-  background:   var(--bg2);
-  border:       1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding:      1.4rem;
-  width:        100%;
-  max-width:    520px;
-  text-align:   left;
-  box-shadow:   0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px var(--border2);
-  max-height:   90vh;
-  max-height:   90dvh;
-  overflow-y:   auto;
-}
-
-/* ── Capçalera de capa amb icona ──────────────────────────── */
-.layer-header {
-  display:      flex;
-  align-items:  center;
-  gap:          0.7em;
-  margin-bottom: 1.1rem;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.8rem;
-}
-
-.layer-header img {
-  width:         2em;
-  height:        2em;
-  background:    #e8f5e9;
-  border-radius: 50%;
-  padding:       3px;
-  box-shadow:    0 0 0 2px var(--accent);
-  flex-shrink:   0;
-}
-
-.layer-header h2 {
-  font-size:     1em;
-  font-weight:   700;
-  color:         var(--text);
-  letter-spacing: 0.02em;
-}
-
-/* ── Contingut de les capes ───────────────────────────────── */
-.layer-box p {
-  font-size:   0.82em;
-  line-height: 1.65;
-  color:       var(--text-dim);
-  margin-bottom: 0.6rem;
-}
-
-.layer-box ul {
-  padding-left: 1.1rem;
-  margin-bottom: 0.8rem;
-}
-
-.layer-box li {
-  font-size:   0.82em;
-  line-height: 1.65;
-  color:       var(--text-dim);
-  margin-bottom: 0.2rem;
-}
-
-.layer-box strong { color: var(--text); }
-
-.layer-box a {
-  color:           var(--accent2);
-  text-decoration: none;
-}
-
-.layer-box a:hover { text-decoration: underline; }
-
-.layer-box code {
-  overflow-wrap: anywhere;
-  background:    var(--bg3);
-  padding:       2px 6px;
-  border-radius: 5px;
-  color:         var(--accent2);
-  font-size:     0.92em;
-  font-family:   'Courier New', monospace;
-}
-
-.info-footer {
-  margin-top:    1rem;
-  padding-top:   0.8rem;
-  border-top:    1px solid var(--border);
-  font-size:     0.75em !important;
-  color:         var(--text-dim);
-  text-align:    center;
-  opacity:       0.7;
-}
-
-.close-btn {
-  background:    var(--danger) !important;
-  border:        none !important;
-  border-radius: var(--radius) !important;
-  color:         #fff !important;
-  width:         100%;
-  margin-top:    1rem;
-  padding:       11px;
-  font-size:     0.85em;
-  font-weight:   600;
-  letter-spacing: 0.02em;
-  box-shadow:    0 4px 14px rgba(255,92,122,0.3);
-}
-
-.close-btn:hover {
-  opacity: 0.88;
-  box-shadow: 0 4px 20px rgba(255,92,122,0.45);
-}
-
-/* ── Config: llista d'animals ─────────────────────────────── */
-#category-list,
-#model-selector {
-  display:        flex;
-  flex-direction: column;
-  gap:            7px;
-  margin:         0.8rem 0;
-}
-
-.cat-item {
-  display:     flex;
-  align-items: center;
-  gap:         10px;
-  cursor:      pointer;
-  padding:     9px 12px;
-  border-radius: var(--radius);
-  border:      1px solid var(--border);
-  background:  var(--border2);
-  transition:  all 0.18s;
-}
-
-.cat-item:hover {
-  border-color: var(--accent);
-  background:   rgba(108,99,255,0.1);
-}
-
-.cat-item input[type="checkbox"],
-.cat-item input[type="radio"] {
-  width:        17px;
-  height:       17px;
-  accent-color: var(--accent);
-  cursor:       pointer;
-  flex-shrink:  0;
-}
-
-.cat-color {
-  display:       inline-block;
-  width:         10px;
-  height:        10px;
-  border-radius: 50%;
-  flex-shrink:   0;
-}
-
-.cat-item span:last-child {
-  font-size:   0.82em;
-  font-weight: 600;
-  color:       var(--text);
-}
-
-.model-info {
-  display:        flex;
-  flex-direction: column;
-  gap:            2px;
-}
-
-.model-label {
-  font-size:   0.82em;
-  font-weight: 600;
-  color:       var(--text);
-}
-
-.model-desc {
-  font-size:   0.72em;
-  font-weight: 400;
-  color:       var(--text-dim);
-}
-
-/* ── Control d'interval ───────────────────────────────────── */
-.interval-control {
-  display:     flex;
-  align-items: center;
-  gap:         12px;
-  margin-top:  0.8rem;
-  padding:     11px 14px;
-  background:  var(--border2);
-  border:      1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.interval-control label {
-  font-size:   0.78em;
-  color:       var(--text-dim);
-  min-width:   120px;
-  font-weight: 500;
-}
-
-.interval-control input[type="range"] {
-  flex:         1;
-  accent-color: var(--accent);
-  cursor:       pointer;
-}
-
-#intervalLabel {
-  font-size:   0.9em;
-  font-weight: 700;
-  color:       var(--accent2);
-  min-width:   28px;
-  text-align:  right;
-}
-
-.section-title {
-  font-size:   0.72em;
-  font-weight: 600;
-  color:       var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-top:  1rem;
-  margin-bottom: 0.2rem;
-}
-
-/* ── Específic de JFace: Data panel ─────────────────────── */
-#data-panel {
-  position: fixed;
-  top: 52px;
-  left: 0;
-  width: 100%;
-  padding: 8px 0;
-  font-size: 0.9em;
-  font-weight: 500;
-  color: var(--accent-dim);
-  background: rgba(30,26,46,0.85);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--border);
-  z-index: 999;
-  text-align: center;
-}
-
-#data-panel span {
-  font-weight: 600;
-  color: var(--text);
-}
-/* ── Específic de JFace: ajustos de vídeo ───────────────── */
-body {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg-dark);
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-}
-
-header {
-  height: 52px;
-  min-height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8em;
-  background: linear-gradient(135deg, var(--bg-medium), #261f45);
-  border-bottom: 1px solid var(--border);
-  padding: 0 1rem;
-  flex-shrink: 0;
-}
-
-header h1 {
-  font-size: 1.3em;
-  font-weight: 600;
-  color: var(--text);
-  margin: 0;
-}
-
-/* Data panel fix per JFace */
-#data-panel {
-  position: relative;
-  top: 0;
-  min-height: 40px;
-  background: rgba(30,26,46,0.92);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border-top: none;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  flex-shrink: 0;
-  font-size: 0.85em;
-  font-weight: 500;
-  color: var(--accent-dim);
-  z-index: 1;
-}
-
-#data-panel span {
-  font-weight: 600;
-  color: var(--text);
-  margin: 0 0.3em;
-}
-
-/* Video container que omple l'espai disponible */
-#video-container {
-  position: relative;
-  flex: 1 1 auto;
-  background: var(--bg-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  min-height: 0;
-}
-
 #video, #canvas {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
-  transform: scaleX(-1);
   object-fit: cover;
 }
+#video  { z-index: 1; }
+#canvas { z-index: 2; }
 
-#video {
-  z-index: 1;
-  display: none !important; /* MediaPipe dibuixa al canvas, no cal el video */
-}
+/* ── Controls inferiors (#controls = .piar-controls, #status = .piar-status) ── */
+#controls { z-index: 10000; }
+/* Els botons es reparteixen la fila (creixen) i, si no caben, baixen a la fila següent */
+#controls button { flex: 1 1 auto; }
+#status   { padding-top: 2px; }
 
-#canvas {
-  z-index: 2;
-}
+/* Botó Bluetooth: «Connectar» és l'acció principal (.btn-primary); en connectar-se, la classe
+   .connected (que posa shared/bluetooth_uart.js) el fa verd amb piar-ui (button.connected). */
+.btn-bluetooth.connected::before { content: '✓'; }   /* el text «Bluetooth connectat» no porta el ✓ */
+/* Sense Web Bluetooth (iPhone, Firefox…): estat d'avís en groc, com els altres avisos de PIAR.
+   La classe .no-bt la posa script.js; el text ja és «⚠️ Sense Bluetooth» (bluetooth_uart.js). */
+#connectBtn.no-bt,
+#connectBtn.no-bt:hover,
+#connectBtn.no-bt:active { background: rgba(251,191,36,.1); border-color: rgba(251,191,36,.55); color: var(--warn); box-shadow: none; }
 
-/* Controls fix */
-#controls {
-  min-height: 70px;
-  background: rgba(30,26,46,0.95);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border-top: 1px solid var(--border);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px;
-  flex-shrink: 0;
-}
+/* Missatge d'estat: la classe del to (.msg-ok / .msg-warn / .msg-err de piar-ui) la posa showStatus() de script.js
+   segons el símbol inicial del missatge (✅ ❌ ⚠️). #status-text hereta la resta de l'estil de .piar-status. */
+#status-text { overflow-wrap: anywhere; }
+#device-indicator { color: var(--accent2); }
 
-#status {
-  flex-basis: 100%;
-  text-align: center;
-  font-size: 0.8em;
-  color: var(--text-dim);
-  margin-top: 2px;
-}
+/* ── Configuració ─────────────────────────────────────────── */
+/* piar-ui posa «.layer-box p» (més específic que «.config-note»): ho reafirmem per a les notes de la capa */
+.layer-box .config-note { font-size: .8rem; line-height: 1.55; margin: .5rem 0 0; }
 
-/* ── Botó Bluetooth amb estat ──────────────────────────── */
-.btn-bluetooth {
-  background: rgba(59, 130, 246, 0.2) !important;
-  border-color: rgba(59, 130, 246, 0.3) !important;
-  color: #3b82f6 !important;
-  transition: all 0.3s ease !important;
-}
+/* Interval d'enviament: el control i la fila vénen de piar-ui (.interval-control); ací només el valor */
+/* etiqueta a pas sencer, i a sota el control lliscant amb el valor al costat */
+.interval-control label { flex-basis: 100%; }
+#intervalLabel { font-weight: 700; color: var(--accent2); white-space: nowrap; min-width: 3.2em; text-align: right; }
 
-.btn-bluetooth.connected {
-  background: rgba(16, 185, 129, 0.2) !important;
-  border-color: rgba(16, 185, 129, 0.4) !important;
-  color: #10b981 !important;
-}
-
-.btn-bluetooth.connected::before {
-  content: '✓ ';
-}
-
-/* Botó Bluetooth - Vermell desconnectat, Verd connectat */
-#connectBtn {
-  background: rgba(239, 68, 68, 0.3) !important;
-  border-color: rgba(239, 68, 68, 0.5) !important;
-  color: #ef4444 !important;
-}
-
-#connectBtn.connected {
-  background: rgba(16, 185, 129, 0.3) !important;
-  border-color: rgba(16, 185, 129, 0.5) !important;
-  color: #10b981 !important;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-}
-
-/* Forçar fons fosc en tota la pantalla (desktop) */
-html {
-  background: var(--bg-dark);
-}
-
-
-/* ── Correccions per a pantalles estretes (320–360 px) ─────── */
-.interval-control { flex-wrap: wrap; }
-.interval-control label { min-width: 0; }
-.interval-control input[type="range"] { min-width: 90px; }
-#intervalLabel { white-space: nowrap; min-width: 52px; }
-
-/* ── Selector d'idioma (Configuració) ─────────────────────── */
-.layer-box select.piar-lang-select {
-  width:         100%;
-  min-height:    44px;
-  margin-top:    0.4rem;
-  padding:       0 12px;
-  background:    var(--bg3);
-  color:         var(--text);
-  border:        1px solid var(--border);
+/* Llista de categories / selector de model: files tàctils (≥ 44 px) amb la forma de les targetes */
+#category-list, #model-selector { display: flex; flex-direction: column; gap: 8px; margin: .5rem 0; }
+.cat-item {
+  display: flex; align-items: center; gap: 12px;
+  min-height: var(--tap);
+  padding: 9px 12px;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  font:          inherit;
-  font-size:     0.9em;
-  cursor:        pointer;
+  background: var(--border2);
+  cursor: pointer;
+  transition: border-color .18s, background .18s;
 }
-.layer-box select.piar-lang-select:focus-visible {
-  outline:        2px solid var(--accent);
-  outline-offset: 2px;
+.cat-item:hover { border-color: var(--accent); background: rgba(108,99,255,.12); }
+.cat-item:has(input[type="radio"]:checked) { border-color: var(--accent); background: rgba(108,99,255,.18); }
+.cat-item input { flex-shrink: 0; cursor: pointer; margin: 0; color-scheme: dark; }   /* caselles fosques, no blanques */
+.cat-item:focus-within { border-color: var(--accent2); }
+.cat-color { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.cat-item > span:last-child { font-size: .88rem; font-weight: 600; color: var(--text); min-width: 0; }
+.model-info  { display: flex; flex-direction: column; gap: 2px; }
+.model-label { font-size: .88rem; font-weight: 600; color: var(--text); }
+.model-desc  { font-size: .75rem; font-weight: 400; color: var(--text-dim); line-height: 1.4; }
+
+/* ── App instal·lada: alçada real i zones segures ─────────────────────────
+   · --app-h la mesura shared/viewport.js (100dvh queda com a alternativa).
+   · env(safe-area-inset-*) evita que la barra de navegació o la mosca (notch) tapen els botons.
+   · Si en una pantalla molt baixa (mòbil en horitzontal) no cap tot, es pot desplaçar en vertical
+     en lloc de quedar tallat per baix. */
+body {
+  height: 100vh;
+  height: 100dvh;
+  height: var(--app-h, 100dvh);
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: none;
 }
+#video-container { min-height: 110px; }
+body { justify-content: safe center; }
+.layer {
+  bottom: auto;
+  height: 100vh;
+  height: 100dvh;
+  height: var(--app-h, 100dvh);
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(16px + env(safe-area-inset-left, 0px));
+  padding-right: calc(16px + env(safe-area-inset-right, 0px));
+}
+.layer-box { max-height: calc(var(--app-h, 100dvh) - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }
