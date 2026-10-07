@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Màquina → Teachable Microbit</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
+</style>
+</head>
+<body>
+<!-- Executor dels models creats a Màquina Ensenyable (imatge, postura i mans).
+     Usa les mateixes llibreries (TF.js 4.15) que Màquina perquè les prediccions siguen idèntiques.
+     S'obri dins de Teachable Microbit (iframe del mateix origen) i li envia les prediccions per postMessage. -->
+<canvas id="c"></canvas>
+<script src="../vendor/tfjs-4.15.0/tf.min.js"></script>
+<script src="../vendor/mobilenet-2.1.0/mobilenet.min.js"></script>
+<script src="../vendor/posenet-2.2.2/posenet.min.js"></script>
+<script src="../vendor/mediapipe-hands/hands.js"></script>
+<script src="js/maquina_runner.js"></script>
+</body>
+</html>

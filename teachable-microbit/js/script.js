@@ -62,6 +62,7 @@ PIAR_I18N.onChange(() => {
   if (statusRender) statusTextEl.textContent = statusRender();
   loadModelBtn.textContent = _t(LOAD_BTN_KEYS[loadBtnState]);
   renderIntervalLabel();
+  if (typeof renderMqList === 'function') { renderMqList(); if (mqInfoRender) mqInfo.textContent = mqInfoRender(); }
 });
 
 // ── Botons ───────────────────────────────────────────────────
@@ -76,26 +77,113 @@ window.toggleModelInput = function() {
   const source = document.querySelector('input[name="modelSource"]:checked').value;
   const tmCode = document.getElementById('tmCode');
   const customUrl = document.getElementById('customUrl');
-  
-  if (source === 'tm') {
-    tmCode.disabled = false;
-    customUrl.disabled = true;
-  } else {
-    tmCode.disabled = true;
-    customUrl.disabled = false;
-  }
+
+  tmCode.disabled = source !== 'tm';
+  customUrl.disabled = source !== 'custom';
+  document.getElementById('mqBox').style.display = source === 'maquina' ? 'flex' : 'none';
+  // El tipus es tria sol quan el model ve de Màquina Ensenyable
+  document.getElementById('tmTypeRow').style.display = source === 'maquina' ? 'none' : 'flex';
 };
+
+// ── Models de Màquina Ensenyable (guardats en este dispositiu) ──
+const mqList = document.getElementById('mqList');
+const mqInfo = document.getElementById('mqInfo');
+const mqFile = document.getElementById('mqFile');
+const mqDelete = document.getElementById('mqDelete');
+const mqCamera = document.getElementById('mqCamera');
+let mqModels = [];
+let mqInfoRender = null;   // torna a pintar el missatge d'informació en l'idioma actual
+
+function setMqInfo(render, isError) {
+  mqInfoRender = render;
+  mqInfo.textContent = render ? render() : '';
+  mqInfo.classList.toggle('msg-err', !!isError);
+}
+function mqTypeLabel(t) { return _t('tm.type.' + t); }
+function renderMqInfoForSelection() {
+  const m = mqModels.find(x => x.id === mqList.value);
+  if (!m) { setMqInfo(() => _t('tm.mq.none')); return; }
+  setMqInfo(() => _t('tm.mq.info', { type: mqTypeLabel(m.modelType), n: m.classNames.length, names: m.classNames.join(', ') }));
+}
+function renderMqList(selectId) {
+  const keep = selectId || mqList.value;
+  mqList.innerHTML = '';
+  mqModels.forEach(m => {
+    const o = document.createElement('option');
+    o.value = m.id; o.textContent = m.name + ' · ' + mqTypeLabel(m.modelType);
+    mqList.appendChild(o);
+  });
+  if (mqModels.some(m => m.id === keep)) mqList.value = keep;
+  mqDelete.disabled = mqModels.length === 0;
+  mqList.disabled = mqModels.length === 0;
+  renderMqInfoForSelection();
+}
+async function refreshMqModels(selectId) {
+  try { mqModels = await PIAR_MODELS.list(); } catch (e) { mqModels = []; }
+  renderMqList(selectId);
+}
+mqList.addEventListener('change', renderMqInfoForSelection);
+
+// Carregar un fitxer .mia.json: es guarda en este dispositiu i queda triat
+mqFile.addEventListener('change', async () => {
+  const file = mqFile.files[0];
+  mqFile.value = '';
+  if (!file) return;
+  try {
+    let entry;
+    try { entry = PIAR_MODELS.fromProject(JSON.parse(await file.text())); }
+    catch (e) { throw (e && e.code) ? e : Object.assign(new Error('format'), { code: 'format' }); }
+    await PIAR_MODELS.save(entry);
+    await refreshMqModels(entry.id);
+    setMqInfo(() => _t('tm.mq.saved', { name: entry.name }));
+  } catch (e) {
+    const code = e && e.code ? e.code : 'format';
+    setMqInfo(() => _t('tm.err.mq_' + code), true);
+  }
+});
+
+mqDelete.addEventListener('click', async () => {
+  const m = mqModels.find(x => x.id === mqList.value);
+  if (!m || !confirm(_t('tm.mq.confirm_delete', { name: m.name }))) return;
+  try { await PIAR_MODELS.remove(m.id); } catch (e) {}
+  await refreshMqModels();
+});
+mqCamera.addEventListener('change', () => setMaquinaCamera(mqCamera.value));
+
+refreshMqModels();
 
 // ── Carregar model ───────────────────────────────────────────
 function modelErrorText(e) {
+  if (e && e.mqCode) {
+    const k = { net: 'tm.err.mq_net', cam: 'tm.err.mq_cam', bad: 'tm.err.mq_bad' }[e.mqCode];
+    return k ? _t(k) : _t('tm.err.load');
+  }
   return looksLikeNetworkError(e)
     ? netErrorText(_t('tm.what_model')) + ' ' + _t('tm.err.check_code')
     : _t('tm.err.load');
 }
 
+// Carrega el model de Màquina Ensenyable triat (o el que s'ha obert des de Màquina)
+async function loadFromMaquina(id) {
+  let entry = null;
+  try { entry = await PIAR_MODELS.get(id); } catch (e) {}
+  if (!entry) { setStatus(() => _t('tm.mq.missing')); return; }
+  if (loadModelBtn.classList.contains('model-loaded') && !confirm(_t('tm.confirm.change'))) return;
+  setStatus(() => _t('tm.status.loading'));
+  loadModelBtn.disabled = true;
+  setLoadBtnState('loading');
+  await loadMaquinaModel(entry, mqCamera.value);
+}
+
 loadModelBtn.onclick = async () => {
   const source = document.querySelector('input[name="modelSource"]:checked').value;
   const type = document.getElementById('modelType').value;
+
+  if (source === 'maquina') {
+    if (!mqList.value) { alert(_t('tm.alert.no_mq')); return; }
+    await loadFromMaquina(mqList.value);
+    return;
+  }
   
   let url;
   if (source === 'tm') {
@@ -120,7 +208,7 @@ loadModelBtn.onclick = async () => {
     setStatus(() => _t(keepKey));
     return;
   }
-  const libsNeeded = { image: ['tf', 'tmImage'], audio: ['tf', 'speechCommands'], pose: ['tf', 'tmPose'] }[type] || ['tf'];
+  const libsNeeded = { image: ['tf', 'tmImage'], pose: ['tf', 'tmPose'] }[type] || ['tf'];
   if (missingLibs(libsNeeded).length) {
     setStatus(() => NET_LIBS_MISSING_TEXT);
     return;
@@ -252,3 +340,19 @@ onModelError((err) => {
   loadModelBtn.disabled = false;
   setLoadBtnState('load');
 });
+
+
+// ── Obrir directament un model guardat a Màquina Ensenyable: index.html?model=<id> ──
+(async function openFromMaquina() {
+  let id = null;
+  try { id = new URLSearchParams(location.search).get('model'); } catch (e) {}
+  if (!id) return;
+  try { history.replaceState(null, '', location.pathname); } catch (e) {}
+  await refreshMqModels(id);
+  document.querySelector('input[name="modelSource"][value="maquina"]').checked = true;
+  toggleModelInput();
+  if (!mqModels.some(m => m.id === id)) { setStatus(() => _t('tm.mq.missing')); return; }
+  const m = mqModels.find(x => x.id === id);
+  setMqInfo(() => _t('tm.mq.opened', { name: m.name }));
+  await loadFromMaquina(id);
+})();

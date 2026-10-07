@@ -65,13 +65,33 @@
             <span data-i18n="tm.cfg.src_custom">URL personalitzada</span>
           </label>
           <input type="text" id="customUrl" placeholder="https://..." disabled>
+
+          <label>
+            <input type="radio" name="modelSource" value="maquina" onchange="toggleModelInput()">
+            <span data-i18n="tm.cfg.src_mq">Model de Màquina Ensenyable (imatge, postura o mans)</span>
+          </label>
+          <div id="mqBox" class="mq-box" style="display:none">
+            <select id="mqList" aria-label="Model de Màquina Ensenyable" data-i18n-attr="aria-label:tm.mq.list_label"></select>
+            <div class="mq-actions">
+              <label class="btn" for="mqFile" data-i18n="tm.mq.file">📂 Carregar fitxer .mia.json</label>
+              <input type="file" id="mqFile" accept=".json,.mia.json" style="display:none">
+              <button id="mqDelete" class="btn btn-danger" type="button" aria-label="Esborrar" data-i18n-attr="aria-label:tm.mq.delete">🗑</button>
+            </div>
+            <label class="cam-row"><span data-i18n="tm.mq.cam_label">Càmera:</span>
+              <select id="mqCamera">
+                <option value="auto" data-i18n="tm.mq.cam_auto">Automàtica</option>
+                <option value="user" data-i18n="tm.mq.cam_user">Frontal</option>
+                <option value="environment" data-i18n="tm.mq.cam_back">Posterior</option>
+              </select>
+            </label>
+            <p id="mqInfo" class="config-note"></p>
+          </div>
         </div>
 
-        <div class="model-type">
+        <div class="model-type" id="tmTypeRow">
           <label for="modelType" data-i18n="tm.cfg.type_label">Tipus de model:</label>
           <select id="modelType">
             <option value="image" data-i18n="tm.type.image">🖼️ Imatge</option>
-            <option value="audio" data-i18n="tm.type.audio">🎤 Àudio</option>
             <option value="pose" data-i18n="tm.type.pose">🧍 Postura</option>
           </select>
         </div>
@@ -145,10 +165,17 @@
         <li data-i18n-html="tm.help.how_5">Les prediccions s'enviaran automàticament!</li>
       </ol>
 
+      <p><strong data-i18n="tm.help.mq_title">Models de Màquina Ensenyable:</strong></p>
+      <ul>
+        <li data-i18n-html="tm.help.mq_1">Si has entrenat el model a <strong>Màquina Ensenyable</strong>, en la pestanya <em>Guardar</em> prem <em>Obrir a Teachable Microbit</em>: s'obri ací amb el model ja carregat.</li>
+        <li data-i18n-html="tm.help.mq_2">També pots triar <em>Model de Màquina Ensenyable</em> a Configuració i carregar un fitxer <code>.mia.json</code> (imatge, postura o mans). Queda guardat en este dispositiu.</li>
+        <li data-i18n-html="tm.help.mq_3">Els models de <strong>mans</strong> només existixen a Màquina Ensenyable. Cal Internet només la primera vegada, per a descarregar els models base (MobileNet o PoseNet).</li>
+      </ul>
+
       <p><strong data-i18n="tm.help.net_title">Internet i mode avió:</strong></p>
       <ul>
         <li data-i18n-html="tm.help.net_1">Cal Internet <strong>només per a descarregar el model</strong>: la primera vegada que el carregues. Després queda guardat en el dispositiu i també el pots carregar sense connexió.</li>
-        <li data-i18n-html="tm.help.net_2">Quan veges «Model carregat», pots llevar el Wi-Fi i les dades mòbils: la càmera o el micròfon es processen en el dispositiu i no s'envia res a cap servidor.</li>
+        <li data-i18n-html="tm.help.net_2">Quan veges «Model carregat», pots llevar el Wi-Fi i les dades mòbils: la càmera es processa en el dispositiu i no s'envia res a cap servidor.</li>
         <li data-i18n-html="tm.help.net_3"><strong>No actives el mode avió</strong> (o torna a activar el Bluetooth després), perquè la micro:bit es connecta per Bluetooth.</li>
         <li data-i18n-html="tm.help.net_4">Sense Internet, l'app només s'obri si ja l'has instal·lat o usat abans amb connexió, i només funcionen els models ja descarregats. Des de la portada, «📥 Ús sense Internet» els descarrega tots.</li>
       </ul>
@@ -156,8 +183,8 @@
       <p><strong data-i18n="tm.help.types_title">Tipus de models compatibles:</strong></p>
       <ul>
         <li data-i18n-html="tm.help.type_image">🖼️ <strong>Imatge</strong> — detecta objectes, gestos, posicions davant la càmera</li>
-        <li data-i18n-html="tm.help.type_audio">🎤 <strong>Àudio</strong> — reconeix sons, paraules, música (requereix micròfon)</li>
         <li data-i18n-html="tm.help.type_pose">🧍 <strong>Postura</strong> — detecta posicions del cos sencer</li>
+        <li data-i18n-html="tm.help.type_hands">✋ <strong>Mans</strong> — detecta gestos de la mà (només amb models de Màquina Ensenyable)</li>
       </ul>
 
       <p><strong data-i18n="tm.help.fmt_title">Format de les dades enviades:</strong></p>
@@ -180,14 +207,11 @@
   <script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
   <script src="../vendor/tfjs-3.11.0/tf.min.js"></script>
   <script src="../vendor/teachablemachine-image-0.8.5/teachablemachine-image.min.js"></script>
-  <!-- NOTA: no existeix cap paquet "@teachablemachine/audio" (mai ha existit a
-       npm/jsdelivr: dona 404). Google implementa l'àudio de Teachable Machine
-       amb la llibreria speech-commands, que és la que carreguem ací. -->
-  <script src="../vendor/speech-commands-0.5.4/speech-commands.min.js"></script>
   <script src="../vendor/teachablemachine-pose-0.8.6/teachablemachine-pose.min.js"></script>
 
   <!-- Mòduls de l'app -->
   <script src="../shared/internet_notice.js"></script>
+  <script src="../shared/piar_models.js"></script>
   <script src="../shared/loading_overlay.js"></script>
   <script src="../shared/bluetooth_uart.js"></script>
   <script src="js/model_loader.js"></script>

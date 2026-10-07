@@ -64,9 +64,6 @@
     .media { display: none; gap: 0.8rem; align-items: center; margin-top: 0.7rem; flex-wrap: wrap; }
     .media.show { display: flex; }
     #camPrev { width: 120px; height: 90px; background: #000; border-radius: 10px; object-fit: cover; display: none; transform: scaleX(-1); }
-    #micWrap { display: none; flex: 1; min-width: 150px; font-size: 0.8em; color: var(--text-dim); }
-    #micTrack { height: 10px; background: var(--bg3); border-radius: 6px; overflow: hidden; margin-top: 4px; }
-    #micBar { height: 100%; width: 0; background: var(--ok); transition: width .08s; }
     .optrow { margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid var(--border); }
     .optrow p { font-size: 0.82em; color: var(--text-dim); margin-bottom: 0.5rem; }
 
@@ -127,7 +124,7 @@
       <p data-i18n="tt.hero.p1">Comprova si les aplicacions de PIAR funcionaran en este mòbil, tauleta o ordinador.
         Et dirà, app per app, si anirà bé, i si no, per què i com arreglar-ho.</p>
       <button class="btn btn-primary big" id="startBtn">▶ Començar el test</button>
-      <p class="dim" style="margin-top:.8rem" data-i18n="tt.hero.p2">Et demanarà permís per a usar la càmera i el micròfon només per a provar-los.
+      <p class="dim" style="margin-top:.8rem" data-i18n="tt.hero.p2">Et demanarà permís per a usar la càmera només per a provar-la.
         No es grava res ni s'envia a cap servidor.</p>
     </section>
 
@@ -139,7 +136,6 @@
       <ul class="checks" id="checks"></ul>
       <div class="media" id="media">
         <video id="camPrev" muted playsinline></video>
-        <div id="micWrap"><span data-i18n="tt.mic.hint">🎤 Parla o fes un soroll…</span><div id="micTrack"><div id="micBar"></div></div></div>
       </div>
       <div class="optrow" id="btOpt">
         <p data-i18n-html="tt.bt.opt">🔵 <b>Prova opcional amb la micro:bit.</b> Encén la micro:bit amb el teu programa de Bluetooth i prem el botó: s'obrirà el cercador del mòbil.
@@ -160,13 +156,13 @@
         <p data-i18n="tt.fam.what_p">Family Link és l'aplicació de control parental de Google. Pot fer que el navegador Chrome:</p>
         <ul>
           <li data-i18n-html="tt.fam.what1">només òbriga <b>llocs aprovats</b> (i bloquege els servidors d'on les apps agafen els models d'IA);</li>
-          <li data-i18n-html="tt.fam.what2"><b>limite els permisos</b> que Chrome pot donar a una web: càmera, micròfon, ubicació o dispositius propers (Bluetooth);</li>
+          <li data-i18n-html="tt.fam.what2"><b>limite els permisos</b> que Chrome pot donar a una web: càmera, ubicació o dispositius propers (Bluetooth);</li>
           <li data-i18n="tt.fam.what3">impedisca que el xiquet o la xiqueta canvie eixos permisos des del seu mòbil.</li>
         </ul>
 
         <h4 data-i18n="tt.fam.h_how">Com saber si és això</h4>
         <ul>
-          <li data-i18n-html="tt.fam.how1">El test diu que la càmera, el micròfon o el Bluetooth estan <b>bloquejats «a l'instant»</b>, sense haver preguntat res.</li>
+          <li data-i18n-html="tt.fam.how1">El test diu que la càmera o el Bluetooth estan <b>bloquejats «a l'instant»</b>, sense haver preguntat res.</li>
           <li data-i18n="tt.fam.how2">L'interruptor del permís apareix en gris, o es torna a desactivar sol.</li>
           <li data-i18n="tt.fam.how3">Falla algun servidor d'Internet encara que la Wi-Fi o les dades vagen bé.</li>
         </ul>
@@ -181,8 +177,8 @@
           <li data-i18n-html="tt.fam.st2">Entra a <b>Controls → Restriccions de contingut → Google Chrome</b>.
             Tria «Permet tots els llocs». Si es prefereix «Només permet llocs aprovats», entra a <b>Gestiona llocs</b> i afig els que el test diu que fallen
             (normalment: <code>jotagavilan.github.io</code>, <code>storage.googleapis.com</code>, <code>tfhub.dev</code> i <code>teachablemachine.withgoogle.com</code>).</li>
-          <li data-i18n="tt.fam.st3">Comprova que no hi haja límits als permisos que les webs poden demanar (càmera, micròfon, ubicació), en la configuració de Chrome del menor.</li>
-          <li data-i18n-html="tt.fam.st4">En els permisos de les aplicacions del menor, deixa que <b>Chrome</b> use la <b>càmera</b>, el <b>micròfon</b> i <b>«Dispositius propers»</b> (en Android 11 o anterior: la <b>ubicació</b>).</li>
+          <li data-i18n="tt.fam.st3">Comprova que no hi haja límits als permisos que les webs poden demanar (càmera, ubicació), en la configuració de Chrome del menor.</li>
+          <li data-i18n-html="tt.fam.st4">En els permisos de les aplicacions del menor, deixa que <b>Chrome</b> use la <b>càmera</b> i <b>«Dispositius propers»</b> (en Android 11 o anterior: la <b>ubicació</b>).</li>
           <li data-i18n-html="tt.fam.st5">Al mòbil del menor, tanca Chrome del tot, obri-lo de nou i <b>repeteix este test</b>.</li>
         </ol>
         <p class="dim" style="margin-top:.6rem" data-i18n="tt.fam.note">Family Link filtra sobretot les pàgines que s'obrin; no sempre bloqueja els fitxers que carrega una pàgina. Per això el test comprova cada servidor un per un.</p>
@@ -213,7 +209,7 @@
 <script>
 // ═══════════════════════════════════════════════════════════
 //  Test del mòbil – PIAR
-//  Comprova càmera, micròfon, Bluetooth, gràfics i accés als
+//  Comprova càmera, Bluetooth, gràfics i accés als
 //  servidors, i resumeix si funcionarà cada aplicació.
 // ═══════════════════════════════════════════════════════════
 const $ = s => document.querySelector(s);
@@ -276,7 +272,7 @@ function renderDeviceInfo() {
 
 // ── Resultats ───────────────────────────────────────────────
 const R = {};   // id → {status:'pend'|'run'|'ok'|'warn'|'fail'|'skip', detail (missatge: text o M(clau, vars)), code}
-const ORDER = ['https','browser','wasm','webgl','speed','net_google','net_tfhub','net_tm','cam','mic','bt','btmb'];
+const ORDER = ['https','browser','wasm','webgl','speed','net_google','net_tfhub','net_tm','cam','bt','btmb'];
 const ICON = { pend:'⚪', run:'<span class="spin">⏳</span>', ok:'✅', warn:'⚠️', fail:'❌', skip:'➖' };
 
 function setR(id, status, detail, code) { R[id] = { status, detail: detail || '', code: code || null }; renderChecks(); renderApps(); }
@@ -374,16 +370,16 @@ const testNetGoogle = async () => netResult(await probeFetch('https://storage.go
 const testNetTfhub  = async () => netResult(await probeFetch('https://tfhub.dev/', false), 'net_tfhub', 'tfhub.dev');
 const testNetTm     = async () => netResult(await probeFetch('https://teachablemachine.withgoogle.com/', false), 'net_tm', 'teachablemachine.withgoogle.com');
 
-// Càmera i micròfon ------------------------------------------
-function mediaError(kind, e, ms, permState) {
+// Càmera ------------------------------------------
+function mediaError(e, ms, permState) {
   const n = (e && e.name) || '';
   if (/NotAllowed|PermissionDenied|Security/.test(n)) {
     const fast = permState === 'denied' || ms < 350 || /Security/.test(n);
-    return ['fail', M(fast ? 'tt.d.denied_fast' : 'tt.d.denied'), kind + (fast ? '_denied_fast' : '_denied')];
+    return ['fail', M(fast ? 'tt.d.denied_fast' : 'tt.d.denied'), fast ? 'cam_denied_fast' : 'cam_denied'];
   }
-  if (/NotFound|DevicesNotFound/.test(n)) return ['fail', M(kind === 'cam' ? 'tt.d.cam_none' : 'tt.d.mic_none'), kind + '_none'];
-  if (/NotReadable|TrackStart|Abort/.test(n)) return ['fail', M('tt.d.media_busy'), kind + '_busy'];
-  return ['fail', M('tt.d.media_other', { what: n || (e && e.message) || M('tt.unknown_l') }), kind + '_other'];
+  if (/NotFound|DevicesNotFound/.test(n)) return ['fail', M('tt.d.cam_none'), 'cam_none'];
+  if (/NotReadable|TrackStart|Abort/.test(n)) return ['fail', M('tt.d.media_busy'), 'cam_busy'];
+  return ['fail', M('tt.d.media_other', { what: n || (e && e.message) || M('tt.unknown_l') }), 'cam_other'];
 }
 async function permState(name) {
   try { return (await navigator.permissions.query({ name })).state; } catch (e) { return null; }
@@ -393,7 +389,7 @@ async function testCam() {
   const ps = await permState('camera'), t0 = performance.now();
   let stream;
   try { stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } }); }
-  catch (e) { return mediaError('cam', e, performance.now() - t0, ps); }
+  catch (e) { return mediaError(e, performance.now() - t0, ps); }
   const v = $('#camPrev'); $('#media').classList.add('show'); v.style.display = 'block';
   try {
     v.srcObject = stream; v.muted = true; v.setAttribute('playsinline', '');
@@ -416,34 +412,6 @@ async function testCam() {
     stream.getTracks().forEach(t => t.stop()); v.srcObject = null; v.style.display = 'none';
   }
 }
-async function testMic() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return ['fail', M('tt.d.mic_unsupported'), 'mic_unsupported'];
-  const ps = await permState('microphone'), t0 = performance.now();
-  let stream;
-  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
-  catch (e) { return mediaError('mic', e, performance.now() - t0, ps); }
-  $('#media').classList.add('show'); $('#micWrap').style.display = 'block';
-  let ctx, peak = 0;
-  try {
-    const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return ['warn', M('tt.d.mic_nomeasure'), 'mic_silent'];
-    ctx = new AC(); if (ctx.state === 'suspended') { try { await ctx.resume(); } catch (e) {} }
-    const an = ctx.createAnalyser(); an.fftSize = 512; ctx.createMediaStreamSource(stream).connect(an);
-    const buf = new Uint8Array(an.fftSize), t1 = performance.now();
-    while (performance.now() - t1 < 2600) {
-      an.getByteTimeDomainData(buf); let m = 0;
-      for (const x of buf) m = Math.max(m, Math.abs(x - 128) / 128);
-      peak = Math.max(peak, m); $('#micBar').style.width = Math.min(100, m * 400) + '%';
-      await wait(60);
-    }
-    if (peak < 0.004) return ['warn', M('tt.d.mic_silent'), 'mic_silent'];
-    return ['ok', M('tt.d.mic_ok')];
-  } finally {
-    stream.getTracks().forEach(t => t.stop()); if (ctx) try { ctx.close(); } catch (e) {}
-    $('#micWrap').style.display = 'none'; $('#micBar').style.width = '0';
-  }
-}
-
 // Bluetooth ---------------------------------------------------
 async function testBt() {
   if (!('bluetooth' in navigator)) {
@@ -517,13 +485,6 @@ const FIX = {
   cam_black:        [ 'tt.fix.cam_black.s1', 'tt.fix.cam_black.s2', 'tt.fix.again' ],
   cam_unsupported:  [ 'tt.fix.open_chrome_https', 'tt.fix.in_app_open_browser', 'tt.fix.cam_unsupported.s3' ],
   cam_other:        [ 'tt.fix.close_browser', 'tt.fix.restart', 'tt.fix.cam_other.s3' ],
-  mic_denied:       [ 'tt.fix.mic_denied.s1', 'tt.fix.reload_allow', 'tt.fix.mic_denied.s3', 'tt.fix.family' ],
-  mic_denied_fast:  [ 'tt.fix.mic_denied_fast.s1', 'tt.fix.mic_denied_fast.s2', 'tt.fix.denied_fast_fl', 'tt.fix.mic_denied_fast.s4' ],
-  mic_none:         [ 'tt.fix.mic_none.s1', 'tt.fix.mic_none.s2', 'tt.fix.mic_none.s3' ],
-  mic_busy:         [ 'tt.fix.mic_busy.s1', 'tt.fix.close_tabs', 'tt.fix.restart_retry' ],
-  mic_silent:       [ 'tt.fix.mic_silent.s1', 'tt.fix.mic_silent.s2', 'tt.fix.mic_silent.s3' ],
-  mic_unsupported:  [ 'tt.fix.open_chrome_https', 'tt.fix.in_app_open_browser' ],
-  mic_other:        [ 'tt.fix.close_browser', 'tt.fix.restart' ],
   ios_bt:           [ 'tt.fix.ios_bt.s1', 'tt.fix.ios_bt.s2' ],
   firefox_bt:       [ 'tt.fix.firefox_bt.s1' ],
   nobt_api:         [ 'tt.fix.nobt_api.s1', 'tt.fix.nobt_api.s2', 'tt.fix.family' ],
@@ -567,7 +528,7 @@ const APPS = [
     reqs: [
       { ids: ['https'], level: 'must' },
       { ids: ['net_tm'], level: 'must', note: { net_tm: 'tt.n.tm_net' } },
-      { ids: ['cam', 'mic'], any: true, level: 'must', label: 'tt.l.cam_or_mic', note: { cam: 'tt.n.tm_cam', mic: 'tt.n.tm_mic' } },
+      { ids: ['cam'], level: 'must', note: { cam: 'tt.n.tm_cam' } },
       { ids: ['webgl'], level: 'soft', note: { webgl: 'tt.n.tm_webgl' } },
       { ids: ['browser'], level: 'soft', note: { browser: BROWSER_NOTE } },
       { ids: ['bt'], level: 'soft', note: { bt: BT_NOTE } }, { ids: ['btmb'], level: 'opt', note: { btmb: BTMB_NOTE } } ] },
@@ -576,7 +537,6 @@ const APPS = [
       { ids: ['https'], level: 'must' },
       { ids: ['net_google', 'net_tfhub'], any: true, level: 'must', label: 'tt.l.models', note: { net_google: 'tt.n.me_google', net_tfhub: 'tt.n.me_tfhub' } },
       { ids: ['cam'], level: 'soft', note: { cam: 'tt.n.me_cam' } },
-      { ids: ['mic'], level: 'soft', note: { mic: 'tt.n.me_mic' } },
       { ids: ['wasm'], level: 'soft', note: { wasm: 'tt.n.me_wasm' } },
       { ids: ['webgl'], level: 'soft', note: { webgl: 'tt.n.me_webgl' } },
       { ids: ['browser'], level: 'soft', note: { browser: 'tt.n.me_browser' } },
@@ -657,14 +617,14 @@ function renderApps() {
 const STEPS = [
   ['https', testHttps], ['browser', testBrowser], ['wasm', testWasm], ['webgl', testWebgl], ['speed', testSpeed],
   [['net_google', testNetGoogle], ['net_tfhub', testNetTfhub], ['net_tm', testNetTm]],
-  ['cam', testCam], ['mic', testMic], ['bt', testBt],
+  ['cam', testCam], ['bt', testBt],
 ];
 let running = false, finished = false;
 function renderStartBtn() { $('#startBtn').textContent = _t(running ? 'tt.running' : 'tt.start'); }   // el text depén de l'estat
 async function runOne(id, fn) {
-  setR(id, 'run', id === 'cam' ? M('tt.d.run_cam') : id === 'mic' ? M('tt.d.run_mic') : id.startsWith('net_') ? M('tt.d.run_net') : '');
+  setR(id, 'run', id === 'cam' ? M('tt.d.run_cam') : id.startsWith('net_') ? M('tt.d.run_net') : '');
   try { const [s, d, c] = await fn(); setR(id, s, d, c); }
-  catch (e) { console.error(id, e); setR(id, 'fail', M('tt.d.err_unexpected', { msg: e && e.message || e }), id === 'cam' ? 'cam_other' : id === 'mic' ? 'mic_other' : null); }
+  catch (e) { console.error(id, e); setR(id, 'fail', M('tt.d.err_unexpected', { msg: e && e.message || e }), id === 'cam' ? 'cam_other' : null); }
 }
 async function runAll() {
   if (running) return; running = true; finished = false;
@@ -701,7 +661,6 @@ function reportText() {
 function familyText() {
   const codes = allCodes(), need = [];
   if (codes.some(c => /^cam_/.test(c))) need.push(_t('tt.fm.cam'));
-  if (codes.some(c => /^mic_/.test(c))) need.push(_t('tt.fm.mic'));
   if (codes.some(c => /^bt_|^nobt_/.test(c))) need.push(_t('tt.fm.bt'));
   const hosts = []; if (R.net_google.status === 'fail') hosts.push('storage.googleapis.com');
   if (R.net_tfhub.status === 'fail') hosts.push('tfhub.dev'); if (R.net_tm.status === 'fail') hosts.push('teachablemachine.withgoogle.com');

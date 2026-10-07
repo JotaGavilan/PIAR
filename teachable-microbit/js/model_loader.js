@@ -1,14 +1,12 @@
 // ============================================================
 //  model_loader.js – Carregador de models Teachable Machine
-//  Admet: imatge, àudio i postura
+//  Admet: imatge i postura (Teachable Machine) i models de Màquina Ensenyable (imatge, postura i mans)
 // ============================================================
 
 let model = null;
 let modelType = null;
 let maxPredictions = 0;
 let webcam = null;
-let audioContext = null;
-let recognizer = null;
 
 let onPredictionCallback = null;
 let onModelReadyCallback = null;
@@ -20,6 +18,7 @@ async function loadModel(url, type) {
     stopPrediction();
     model = null;
     modelType = type;
+    showCanvas();
 
     const modelURL = url + 'model.json';
     const metadataURL = url + 'metadata.json';
@@ -36,16 +35,6 @@ async function loadModel(url, type) {
       model = await tmImage.load(modelURL, metadataURL);
       maxPredictions = model.getTotalClasses();
       await startImagePrediction();
-
-    } else if (type === 'audio') {
-      // No existeix cap llibreria "tmAudio" (@teachablemachine/audio no està
-      // publicada a npm). Teachable Machine fa servir per sota la llibreria
-      // speech-commands de Google per a models d'àudio: li passem les
-      // mateixes URLs de model.json/metadata.json que exporta TM.
-      model = speechCommands.create('BROWSER_FFT', undefined, modelURL, metadataURL);
-      await model.ensureModelLoaded();
-      maxPredictions = model.wordLabels().length;
-      await startAudioPrediction();
 
     } else if (type === 'pose') {
       model = await tmPose.load(modelURL, metadataURL);
@@ -93,30 +82,6 @@ async function loopImage() {
 
   if (onPredictionCallback) onPredictionCallback(prediction);
   window.requestAnimationFrame(loopImage);
-}
-
-// ─────────────────────────────────────────────────────────────
-//  AUDIO
-// ─────────────────────────────────────────────────────────────
-async function startAudioPrediction() {
-  recognizer = model;
-
-  // Teachable Machine Audio usa la seua pròpia API listen()
-  // Necessita que l'usuari haja interactuat primer (política autoplay)
-  await recognizer.listen(
-    prediction => {
-      if (onPredictionCallback) onPredictionCallback(prediction.scores.map((score, i) => ({
-        className: recognizer.wordLabels()[i],
-        probability: score
-      })));
-    },
-    {
-      includeSpectrogram: false,
-      probabilityThreshold: 0.75,
-      invokeCallbackOnNoiseAndUnknown: true,
-      overlapFactor: 0.50
-    }
-  );
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -185,19 +150,83 @@ function drawPose(pose, ctx) {
   }
 }
 
+// ─────────────────────────────────────────────────────────────
+//  MODELS DE MÀQUINA ENSENYABLE (imatge, postura, mans)
+//  S'executen dins d'un iframe del mateix origen (maquina-runner.html) perquè
+//  Màquina usa TF.js 4.15 i Teachable Machine 3.11; així no es barregen.
+// ─────────────────────────────────────────────────────────────
+let mqFrame = null, mqListener = null, mqLoadTimer = null;
+
+function showCanvas() {
+  const c = document.getElementById('canvas');
+  if (c) c.style.display = '';
+}
+
+function stopMaquina() {
+  clearTimeout(mqLoadTimer); mqLoadTimer = null;
+  if (mqListener) { window.removeEventListener('message', mqListener); mqListener = null; }
+  if (mqFrame) {
+    try { mqFrame.contentWindow.postMessage({ type: 'stop' }, location.origin); } catch (e) {}
+    mqFrame.remove();   // en descarregar la pàgina, la càmera s'atura
+    mqFrame = null;
+  }
+}
+
+// entry: model guardat (PIAR_MODELS) · facing: 'auto' | 'user' | 'environment'
+async function loadMaquinaModel(entry, facing) {
+  stopPrediction();
+  model = null;
+  modelType = entry.modelType;
+  maxPredictions = entry.classNames.length;
+  const fail = (code, message) => {
+    stopMaquina(); showCanvas(); hideLoadingOverlay();
+    const err = new Error(message || code); err.mqCode = code;
+    if (onModelErrorCallback) onModelErrorCallback(err);
+  };
+  const title = _t('tm.overlay.title', { type: _t('tm.type.' + entry.modelType) });
+  showLoadingOverlay(title, _t('tm.mq.stage_model'), undefined, NET_NOTE_LOADING);
+
+  const container = document.getElementById('video-container');
+  const frame = document.createElement('iframe');
+  frame.id = 'mq-frame';
+  frame.src = 'maquina-runner.html';
+  frame.setAttribute('allow', 'camera');
+  frame.title = entry.name;
+  mqFrame = frame;
+  document.getElementById('canvas').style.display = 'none';
+
+  mqListener = e => {
+    if (e.origin !== location.origin || e.source !== frame.contentWindow) return;
+    const m = e.data || {};
+    if (m.type === 'loaded') {
+      clearTimeout(mqLoadTimer);
+      frame.contentWindow.postMessage({ type: 'start', entry, facing: facing || 'auto' }, location.origin);
+    } else if (m.type === 'stage') {
+      updateLoadingMessage(undefined, _t('tm.mq.stage_' + m.stage));
+    } else if (m.type === 'ready') {
+      hideLoadingOverlay();
+      if (onModelReadyCallback) onModelReadyCallback();
+    } else if (m.type === 'pred') {
+      if (onPredictionCallback) onPredictionCallback(m.preds || []);
+    } else if (m.type === 'error') {
+      fail(m.code, m.message);
+    }
+  };
+  window.addEventListener('message', mqListener);
+  mqLoadTimer = setTimeout(() => fail('other', 'runner timeout'), 20000);
+  container.appendChild(frame);
+}
+
+function setMaquinaCamera(facing) {
+  if (mqFrame && mqFrame.contentWindow) mqFrame.contentWindow.postMessage({ type: 'facing', facing }, location.origin);
+}
+
 // ── Aturar predicció ─────────────────────────────────────────
 function stopPrediction() {
+  stopMaquina();
   if (webcam) {
     webcam.stop();
     webcam = null;
-  }
-  if (recognizer && recognizer.isListening && recognizer.isListening()) {
-    recognizer.stopListening();
-    recognizer = null;
-  }
-  if (audioContext) {
-    audioContext.close();
-    audioContext = null;
   }
 }
 

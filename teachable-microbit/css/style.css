@@ -200,3 +200,17 @@ body {
   .piar-header { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
   #controls { border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
 }
+
+/* ── Executor de models de Màquina Ensenyable (iframe del mateix origen) ── */
+#mq-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 3; background: #000; }
+
+/* ── Font «Màquina Ensenyable» a Configuració ── */
+.mq-box { margin: 0 0 .5rem 1.7rem; display: flex; flex-direction: column; gap: .5rem; }
+.mq-box select { width: 100%; }
+.mq-actions { display: flex; gap: .5rem; flex-wrap: nowrap; }
+.mq-actions .btn { flex: 1 1 auto; white-space: normal; }
+.mq-actions .btn-danger { flex: 0 0 var(--tap); padding: 0; }
+.mq-box label.cam-row { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.mq-box label.cam-row select { flex: 1 1 140px; min-width: 0; width: auto; }
+.mq-box .config-note { margin: 0; }
+.mq-box .config-note.msg-err { color: var(--danger); }

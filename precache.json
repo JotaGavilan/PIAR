@@ -1,5 +1,5 @@
 {
- "version": "d72b9a2d938f",
+ "version": "38f256c36bb7",
  "shell": [
   "./",
   "index.html",
@@ -85,10 +85,12 @@
   "shared/loading_overlay.css",
   "shared/loading_overlay.js",
   "shared/piar-ui.css",
+  "shared/piar_models.js",
   "shared/pwa.js",
   "shared/viewport.js",
   "teachable-microbit/guia.html",
   "teachable-microbit/index.html",
+  "teachable-microbit/maquina-runner.html",
   "teachable-microbit/css/style.css",
   "teachable-microbit/guia-img/teachable-1-config.webp",
   "teachable-microbit/guia-img/teachable-2-enviament.webp",
@@ -105,6 +107,7 @@
   "teachable-microbit/icons/maskable-512x512.png",
   "teachable-microbit/icons/site.webmanifest",
   "teachable-microbit/js/i18n.js",
+  "teachable-microbit/js/maquina_runner.js",
   "teachable-microbit/js/model_loader.js",
   "teachable-microbit/js/script.js",
   "test-mobil/index.html",
@@ -201,8 +204,52 @@
    "name": "Teachable Microbit",
    "files": [
     {
-     "u": "vendor/speech-commands-0.5.4/speech-commands.min.js",
-     "s": 48338
+     "u": "vendor/mediapipe-hands/hand_landmark_full.tflite",
+     "s": 5478688
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands.binarypb",
+     "s": 550
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands.js",
+     "s": 45581
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_packed_assets.data",
+     "s": 4326731
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_packed_assets_loader.js",
+     "s": 8327
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_simd_wasm_bin.data",
+     "s": 0
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_simd_wasm_bin.js",
+     "s": 276479
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_simd_wasm_bin.wasm",
+     "s": 6026259
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_wasm_bin.js",
+     "s": 276474
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_wasm_bin.wasm",
+     "s": 5917209
+    },
+    {
+     "u": "vendor/mobilenet-2.1.0/mobilenet.min.js",
+     "s": 33612
+    },
+    {
+     "u": "vendor/posenet-2.2.2/posenet.min.js",
+     "s": 18814
     },
     {
      "u": "vendor/teachablemachine-image-0.8.5/teachablemachine-image.min.js",
@@ -215,6 +262,10 @@
     {
      "u": "vendor/tfjs-3.11.0/tf.min.js",
      "s": 1244053
+    },
+    {
+     "u": "vendor/tfjs-4.15.0/tf.min.js",
+     "s": 1469043
     }
    ],
    "preload": null
@@ -270,10 +321,6 @@
     {
      "u": "vendor/posenet-2.2.2/posenet.min.js",
      "s": 18814
-    },
-    {
-     "u": "vendor/speech-commands-0.5.4/speech-commands.min.js",
-     "s": 48338
     },
     {
      "u": "vendor/tfjs-4.15.0/tf.min.js",

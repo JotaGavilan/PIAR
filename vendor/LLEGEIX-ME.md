@@ -9,14 +9,13 @@ Són còpies sense modificar dels paquets de npm indicats.
 | `coco-ssd-2.2.3` | `@tensorflow-models/coco-ssd` | Apache-2.0 |
 | `mobilenet-2.1.0` | `@tensorflow-models/mobilenet` | Apache-2.0 |
 | `posenet-2.2.2` | `@tensorflow-models/posenet` | Apache-2.0 |
-| `speech-commands-0.5.4` | `@tensorflow-models/speech-commands` | Apache-2.0 |
 | `teachablemachine-image-0.8.5`, `teachablemachine-pose-0.8.6` | `@teachablemachine/image`, `@teachablemachine/pose` | Apache-2.0 |
 | `mediapipe-face_mesh` (0.4.1633559619) | `@mediapipe/face_mesh` | Apache-2.0 |
 | `mediapipe-hands` (0.4.1675469240) | `@mediapipe/hands` | Apache-2.0 |
 | `mediapipe-camera_utils`, `mediapipe-drawing_utils` | `@mediapipe/camera_utils`, `@mediapipe/drawing_utils` | Apache-2.0 |
 | `fonts/` | Poppins, Space Mono, DM Sans (subconjunt llatí, via `@fontsource`) | SIL OFL 1.1 |
 
-Els **pesos dels models** de COCO-SSD, MobileNet, PoseNet i speech-commands no estan ací: cada app els descarrega de
+Els **pesos dels models** de COCO-SSD, MobileNet i PoseNet no estan ací: cada app els descarrega de
 Google la primera vegada i el service worker (`/sw.js`) els guarda al dispositiu (vegeu la portada → «Ús sense Internet»).
 
 Després d'afegir o canviar fitxers del repositori, executa `python3 tools/build-pwa.py` (actualitza `precache.json` i la versió de `sw.js`).
