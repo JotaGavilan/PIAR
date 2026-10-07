@@ -134,6 +134,6 @@ const T = (k, v, fb) => (window._t && window.PIAR_I18N ? _t(k, v) : fb);
     supported, ready, status, prepare, install, isStandalone, fmtMB,
     canInstall: () => !!deferredPrompt,
     onChange: (fn) => listeners.push(fn),
-    clear: async () => { await caches.delete(VENDOR_CACHE); await caches.delete(MODEL_CACHE); localStorage.removeItem(KEY); },   // les pàgines (piar-shell) es queden: l'app instal·lada continua obrint-se
+    clear: async () => { await caches.delete(VENDOR_CACHE); await caches.delete(MODEL_CACHE); await caches.delete('transformers-cache'); localStorage.removeItem(KEY); },   // les pàgines (piar-shell) es queden: l'app instal·lada continua obrint-se
   };
 })();

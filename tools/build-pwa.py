@@ -10,6 +10,8 @@ import hashlib, json, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SKIP_DIRS = {'.git', 'tools', 'node_modules', '__pycache__', '_testlibs', '_fonts'}
 SKIP_FILES = {'sw.js', 'precache.json', '.DS_Store'}
+# Carpetes de vendor/ que NO es descarreguen amb el botó de la portada (es guarden en usar-les): model avançat de «Què veuen de tu»
+OPTIONAL_VENDOR = ['transformers-4.3.1/']
 SHELL_EXT = {'.html', '.css', '.js', '.json', '.webmanifest', '.png', '.jpg', '.jpeg', '.webp', '.ico', '.svg', '.woff2'}
 
 def walk():
@@ -32,6 +34,8 @@ for p in files:
     ext = os.path.splitext(p)[1].lower()
     if p.startswith('vendor/') and not p.startswith('vendor/fonts/'):
         if ext in {'.md'}: continue
+        # Fitxers OPCIONALS (pesats): no entren en «Ús sense Internet»; el service worker els guarda quan s'usen per primera vegada
+        if any(p.startswith('vendor/' + x) for x in OPTIONAL_VENDOR): continue
         vendor.append(p)
     elif ext in SHELL_EXT:
         shell.append(p)

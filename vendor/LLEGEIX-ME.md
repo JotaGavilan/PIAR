@@ -17,9 +17,12 @@ Són còpies sense modificar dels paquets de npm indicats.
 | `face-api-1.7.15` (inclou TF.js 4.22 i els models de cares) | `@vladmandic/face-api` | MIT |
 | `tesseract.js-7.0.0`, `tesseract.js-core-7.0.0` | `tesseract.js`, `tesseract.js-core` | Apache-2.0 |
 | `tesseract-lang-4.0.0` (català, castellà i anglés) | `@tesseract.js-data/cat`, `spa`, `eng` | Apache-2.0 |
+| `transformers-4.3.1` (`vlm-bundle.js` = transformers.js 4.3.1 + ONNX Runtime Web 1.31 empaquetats amb esbuild; `ort-wasm-simd-threaded.asyncify.*`) | `@huggingface/transformers`, `onnxruntime-web` | Apache-2.0 / MIT |
 | `fonts/` | Poppins, Space Mono, DM Sans (subconjunt llatí, via `@fontsource`) | SIL OFL 1.1 |
 
 Els **pesos dels models** de COCO-SSD, MobileNet i PoseNet no estan ací: cada app els descarrega de
 Google la primera vegada i el service worker (`/sw.js`) els guarda al dispositiu (vegeu la portada → «Ús sense Internet»).
+
+`transformers-4.3.1/` és **opcional** (≈27 MB): no entra en «Ús sense Internet»; el service worker el guarda la primera vegada que es genera una «descripció avançada» a *Què veuen de tu*. El model Florence-2 (≈250 MB) el descarrega transformers.js de Hugging Face i el guarda en la memòria del navegador (`transformers-cache`).
 
 Després d'afegir o canviar fitxers del repositori, executa `python3 tools/build-pwa.py` (actualitza `precache.json` i la versió de `sw.js`).

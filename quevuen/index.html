@@ -68,6 +68,20 @@
         <div id="summary" class="summary"></div>
       </div>
 
+      <div class="card" id="vlmCard" hidden>
+        <h3 class="section-title" data-i18n="qv.vlm.title">🧠 Descripció avançada amb IA</h3>
+        <p class="note" data-i18n="qv.vlm.intro"></p>
+        <div id="vlmOut" hidden>
+          <h4 class="cap-h" data-i18n="qv.vlm.caption_h">El que «veu» el model</h4>
+          <blockquote class="cap" id="vlmCaption"></blockquote>
+          <p class="note" data-i18n="qv.vlm.caption_note"></p>
+        </div>
+        <div class="vlm-bar" id="vlmBar" hidden><span id="vlmFill"></span></div>
+        <p class="note" id="vlmMsg" aria-live="polite"></p>
+        <p class="note" id="vlmSize"></p>
+        <button class="btn btn-primary" id="vlmBtn" data-i18n="qv.vlm.btn">✨ Generar descripció avançada</button>
+      </div>
+
       <div class="card" id="findingsCard" hidden>
         <h3 class="section-title" data-i18n="qv.r.findings">Què s'ha trobat</h3>
         <ul id="findings" class="findings"></ul>
@@ -119,6 +133,7 @@
           <label class="opt"><input type="checkbox" id="cfgOcrSpa"> <span data-i18n="qv.cfg.ocr.es">Castellà</span></label>
           <label class="opt"><input type="checkbox" id="cfgOcrEng"> <span data-i18n="qv.cfg.ocr.en">Anglés</span></label>
         </div>
+        <label class="opt"><input type="checkbox" id="cfgVlm"> <span data-i18n="qv.cfg.vlm">Descripció avançada</span></label>
         <label class="opt"><input type="checkbox" id="cfgTech"> <span data-i18n="qv.cfg.tech">Mostrar detalls tècnics</span></label>
         <p class="config-note" data-i18n="qv.cfg.net">🌐 …</p>
       </div>
@@ -142,7 +157,7 @@
       <p><strong data-i18n="qv.help.how_title">Què analitza:</strong></p>
       <ul>
         <li data-i18n-html="qv.help.how_1"></li><li data-i18n-html="qv.help.how_2"></li><li data-i18n-html="qv.help.how_3"></li>
-        <li data-i18n-html="qv.help.how_4"></li><li data-i18n-html="qv.help.how_5"></li>
+        <li data-i18n-html="qv.help.how_4"></li><li data-i18n-html="qv.help.how_5"></li><li data-i18n-html="qv.help.how_6"></li>
       </ul>
       <p><strong data-i18n="qv.help.priv_title">Privacitat:</strong></p>
       <ul><li data-i18n-html="qv.help.priv_1"></li><li data-i18n-html="qv.help.priv_2"></li></ul>
@@ -167,6 +182,7 @@
   <script src="../shared/loading_overlay.js"></script>
   <script src="js/analyzer.js"></script>
   <script src="js/insights.js"></script>
+  <script src="js/vlm.js"></script>
   <script src="js/app.js"></script>
   <script src="../shared/piar_home.js"></script>
   <script src="../shared/pwa.js"></script>

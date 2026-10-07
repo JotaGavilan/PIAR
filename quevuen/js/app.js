@@ -11,7 +11,7 @@
 
   // ── Configuració (es recorda en este dispositiu) ──
   const CFG_KEY = 'qv.cfg.v1';
-  const cfg = { faces: true, objects: true, text: true, tech: false, ocr: { cat: true, spa: true, eng: true } };
+  const cfg = { faces: true, objects: true, text: true, vlm: true, tech: false, ocr: { cat: true, spa: true, eng: true } };
   try { const s = JSON.parse(localStorage.getItem(CFG_KEY) || 'null'); if (s) { Object.assign(cfg, s); cfg.ocr = Object.assign({ cat: true, spa: true, eng: true }, s.ocr || {}); } } catch (e) {}
   const saveCfg = () => { try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {} };
 
@@ -37,6 +37,9 @@
     if (v.counts) v.counts = Object.keys(v.counts).map((c) => _t('qv.obj.item', { name: clsName(c), n: v.counts[c] })).join(', ');
     if (v.moods) v.moods = Object.keys(v.moods).map((m) => _t('qv.mood.' + m) + (v.moods[m] > 1 ? ' (' + v.moods[m] + ')' : '')).join(', ');
     if (v.card) v.card = _t('qv.card.' + v.card);
+    if (v.place) v.place = _t('qv.s.place.' + v.place);
+    if (v.region) v.region = _t('qv.s.reg.' + v.region);
+    if (Array.isArray(v.act)) v.act = v.act.map((x) => _t('qv.s.act.' + x)).join('; ');
     if (Array.isArray(v.faces)) v.faces = v.faces.map((f) => _t('qv.s.face', { gender: _t('qv.g.' + f.gender), age: f.age, mood: _t('qv.mood.' + f.mood) })).join('; ');
     // Tot el que ve de la foto s'escapa abans d'entrar en HTML
     Object.keys(v).forEach((k) => { if (typeof v[k] === 'string' && !['when'].includes(k)) v[k] = esc(v[k]); else if (k === 'when') v[k] = esc(v[k]); });
@@ -94,8 +97,64 @@
     $('findings').innerHTML = ins.findings.map((f) => `<li class="${f.sev}"><span class="fi">${f.icon}</span><span>${textOf(f.key, f.vars)}</span></li>`).join('');
     renderMeta(); renderFaces(); renderObjects(); renderText(); renderColors();
     $('protectCard').hidden = false;
-    renderToggles(); drawPhoto();
+    renderToggles(); drawPhoto(); renderVlm();
   }
+
+
+  // ── Descripció avançada (model Florence-2 al dispositiu) ──
+  let vlmMsg = null;   // { key, vars, cls } perquè es puga tornar a escriure en canviar d'idioma
+  const analysisDone = () => STEP_DEF.every(([id]) => ['done', 'err', 'off', 'skip'].includes((S.steps[id] || {}).state));
+  function setVlmMsg(key, vars, cls) { vlmMsg = key ? { key, vars, cls } : null; paintVlmMsg(); }
+  function paintVlmMsg() {
+    const el = $('vlmMsg'); el.className = 'note' + (vlmMsg && vlmMsg.cls ? ' ' + vlmMsg.cls : '');
+    el.textContent = vlmMsg ? (vlmMsg.raw !== undefined ? vlmMsg.raw : _t(vlmMsg.key, vlmMsg.vars)) : '';
+  }
+  async function renderVlm() {
+    const card = $('vlmCard');
+    const sup = window.QVLM ? QVLM.supported() : { ok: false };
+    card.hidden = !(S.a && cfg.vlm && sup.ok && analysisDone());
+    if (card.hidden) return;
+    $('vlmOut').hidden = !S.a.caption;
+    $('vlmCaption').textContent = S.a.caption || '';
+    $('vlmBtn').textContent = _t(S.a.caption ? 'qv.vlm.btn_again' : 'qv.vlm.btn');
+    $('vlmBtn').disabled = !!S.vlmBusy;
+    const cached = await QVLM.cached();
+    $('vlmSize').textContent = _t(cached ? 'qv.vlm.size_ok' : 'qv.vlm.size');
+  }
+  async function runVlm() {
+    if (S.vlmBusy || !S.a || !S.img) return;
+    const run = S.run, img = S.img;
+    const cached = await QVLM.cached();
+    if (!cached) {
+      if (!navigator.onLine) { setVlmMsg('qv.vlm.err_net', null, 'err'); return; }
+      if (!confirm(_t('qv.vlm.confirm_dl'))) return;
+    }
+    S.vlmBusy = true; $('vlmBtn').disabled = true; setVlmMsg('qv.vlm.init'); $('vlmBar').hidden = false; $('vlmFill').style.width = '2%';
+    try {
+      const info = await QVLM.load((p) => {
+        if (p.total > 0) {
+          $('vlmFill').style.width = Math.max(2, Math.min(95, Math.round(p.loaded / p.total * 95))) + '%';
+          if (p.total > 2e6 && p.loaded < p.total) setVlmMsg('qv.vlm.dl', { done: (p.loaded / 1e6).toFixed(0), total: (p.total / 1e6).toFixed(0) });
+        }
+      });
+      if (run !== S.run) return;
+      $('vlmFill').style.width = '97%'; setVlmMsg('qv.vlm.run');
+      const text = await QVLM.describe(img.canvas);
+      if (run !== S.run) return;
+      $('vlmFill').style.width = '100%';
+      S.a.caption = text;
+      renderAll();
+      setVlmMsg('qv.vlm.done', { device: _t('qv.vlm.dev.' + (info.device === 'webgpu' ? 'webgpu' : 'wasm')) });
+    } catch (e) {
+      const m = String((e && e.message) || e);
+      if (/fetch|network|load failed/i.test(m)) setVlmMsg('qv.vlm.err_net', null, 'err');
+      else { vlmMsg = { key: 'qv.vlm.err', vars: { msg: m }, cls: 'err', raw: undefined }; paintVlmMsg(); }
+      if (window.console) console.warn('[qv] vlm', e);
+    } finally {
+      S.vlmBusy = false; $('vlmBar').hidden = true; $('vlmBtn').disabled = false;
+    }
+  }
+  $('vlmBtn').addEventListener('click', runVlm);
 
   function kv(rows) { return '<dl class="kv">' + rows.filter((r) => r[1] !== null && r[1] !== undefined && r[1] !== '').map(([k, v]) => `<dt>${esc(_t(k))}</dt><dd>${v}</dd>`).join('') + '</dl>'; }
   function renderMeta() {
@@ -161,7 +220,8 @@
     const run = ++S.run;
     S.file = file; S.a = null; S.steps = {}; S.strip = null;
     $('pickView').hidden = true; $('resultView').hidden = false; $('newBtn').hidden = false;
-    ['summaryCard', 'findingsCard', 'metaCard', 'facesCard', 'objectsCard', 'textCard', 'colorsCard', 'protectCard'].forEach((id) => { $(id).hidden = true; });
+    setVlmMsg(null);
+    ['vlmCard', 'summaryCard', 'findingsCard', 'metaCard', 'facesCard', 'objectsCard', 'textCard', 'colorsCard', 'protectCard'].forEach((id) => { $(id).hidden = true; });
     STEP_DEF.forEach(([id]) => { S.steps[id] = { state: 'wait' }; });
     setStatus('qv.status.running'); renderSteps();
     let img;
@@ -194,7 +254,7 @@
   let statusKey = 'qv.status.initial';
   function setStatus(k) { statusKey = k; $('status-text').textContent = _t(k); }
   function reset() {
-    S.run++; S.a = null; S.img = null; S.file = null;
+    S.run++; S.a = null; S.img = null; S.file = null; setVlmMsg(null); $('vlmCard').hidden = true;
     $('pickView').hidden = false; $('resultView').hidden = true; $('newBtn').hidden = true;
     setStatus('qv.status.initial'); window.scrollTo(0, 0);
     QV.stopOcr();
@@ -229,6 +289,7 @@
   bind('cfgObjects', () => cfg.objects, (v) => { cfg.objects = v; });
   bind('cfgText', () => cfg.text, (v) => { cfg.text = v; });
   bind('cfgTech', () => cfg.tech, (v) => { cfg.tech = v; });
+  bind('cfgVlm', () => cfg.vlm, (v) => { cfg.vlm = v; renderVlm(); });
   bind('cfgOcrCat', () => cfg.ocr.cat, (v) => { cfg.ocr.cat = v; });
   bind('cfgOcrSpa', () => cfg.ocr.spa, (v) => { cfg.ocr.spa = v; });
   bind('cfgOcrEng', () => cfg.ocr.eng, (v) => { cfg.ocr.eng = v; });
@@ -237,7 +298,7 @@
   $('closeConfigBtn').onclick = () => { $('config-layer').style.display = 'none'; };
   $('closeInfoBtn').onclick = () => { $('info-layer').style.display = 'none'; };
   PIAR_I18N.mountSelector($('langSelectHost'));
-  PIAR_I18N.onChange(() => { $('status-text').textContent = _t(statusKey); renderSteps(); if (S.a) renderAll(); });
+  PIAR_I18N.onChange(() => { $('status-text').textContent = _t(statusKey); renderSteps(); paintVlmMsg(); if (S.a) renderAll(); });
   renderSteps();
 
   // Ajuda per a proves: accés a l'estat
