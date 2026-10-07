@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#090812">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title data-i18n="qv.title">Què veuen de tu</title>
+  <link rel="stylesheet" href="../vendor/fonts/fonts.css">
+  <link rel="stylesheet" href="../shared/piar-ui.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../shared/loading_overlay.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="manifest" href="icons/site.webmanifest">
+  <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <!-- Capçalera -->
+  <header class="piar-header has-home">
+    <a class="btn piar-home" href="../" aria-label="Tornar a la pantalla principal" title="Tornar a la pantalla principal" data-i18n-attr="aria-label:sh.home;title:sh.home">🏠</a>
+    <img src="icons/android-chrome-512x512.png" alt="Icona Què veuen de tu" data-i18n-attr="alt:qv.alt.app">
+    <h1 data-i18n="qv.title">Què veuen de tu</h1>
+  </header>
+
+  <main id="main">
+    <!-- Presentació + tria de foto -->
+    <section id="pickView">
+      <div class="card hero">
+        <h2 data-i18n="qv.hero.t">Les teues fotos revelen molt més del que penses</h2>
+        <p data-i18n-html="qv.hero.p">Tria una foto…</p>
+        <span class="chip priv" data-i18n="qv.priv.badge">🔒 La foto no surt del teu dispositiu</span>
+      </div>
+
+      <div class="card">
+        <h3 class="section-title" data-i18n="qv.pick.title">Tria una foto</h3>
+        <label class="dropzone" id="dropzone" for="fileGallery">
+          <span class="dz-ic">📸</span>
+          <span class="dz-t" data-i18n="qv.pick.drop">Toca ací per a triar una foto</span>
+          <span class="dz-s" data-i18n="qv.pick.drop2">o arrossega-la fins ací</span>
+        </label>
+        <div class="pick-btns">
+          <label class="btn btn-primary" for="fileCamera" data-i18n="qv.pick.cam">📷 Fer una foto</label>
+          <label class="btn" for="fileGallery" data-i18n="qv.pick.file">🖼 Triar de la galeria</label>
+        </div>
+        <input type="file" id="fileCamera" accept="image/*" capture="environment" hidden>
+        <input type="file" id="fileGallery" accept="image/*" hidden>
+        <p class="piar-muted ex-lbl" data-i18n="qv.pick.examples">o prova un exemple</p>
+        <div class="examples">
+          <button class="ex" data-ex="examples/ex1.jpg"><img src="examples/ex1.jpg" alt="Foto d'exemple" data-i18n-attr="alt:qv.ex.alt"><span data-i18n="qv.ex.1">Cartell amb ubicació</span></button>
+          <button class="ex" data-ex="examples/ex2.jpg"><img src="examples/ex2.jpg" alt="Foto d'exemple" data-i18n-attr="alt:qv.ex.alt"><span data-i18n="qv.ex.2">El mateix, sense metadades</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resultats -->
+    <section id="resultView" hidden>
+      <div class="card photo-card">
+        <div class="photo-wrap"><canvas id="photo"></canvas></div>
+        <div class="toggles" id="toggles"></div>
+      </div>
+
+      <div class="card" id="stepsCard"><ul id="steps" class="steps"></ul></div>
+
+      <div class="card" id="summaryCard" hidden>
+        <h3 class="section-title" data-i18n="qv.r.summary">El resum</h3>
+        <div class="risk" id="risk"></div>
+        <div id="summary" class="summary"></div>
+      </div>
+
+      <div class="card" id="findingsCard" hidden>
+        <h3 class="section-title" data-i18n="qv.r.findings">Què s'ha trobat</h3>
+        <ul id="findings" class="findings"></ul>
+      </div>
+
+      <div class="card" id="metaCard" hidden><h3 class="section-title" data-i18n="qv.r.meta">📍 Ubicació, aparell i data</h3><div id="metaBody"></div></div>
+      <div class="card" id="facesCard" hidden><h3 class="section-title" data-i18n="qv.r.faces">🧑 Persones</h3><div id="facesBody"></div></div>
+      <div class="card" id="objectsCard" hidden><h3 class="section-title" data-i18n="qv.r.objects">🔍 Objectes</h3><div id="objectsBody"></div></div>
+      <div class="card" id="textCard" hidden><h3 class="section-title" data-i18n="qv.r.text">🔤 Text a la imatge</h3><div id="textBody"></div></div>
+      <div class="card" id="colorsCard" hidden><h3 class="section-title" data-i18n="qv.r.colors">🎨 Colors i llum</h3><div id="colorsBody"></div></div>
+
+      <div class="card" id="protectCard" hidden>
+        <h3 class="section-title" data-i18n="qv.r.protect">🛡 Com protegir-te</h3>
+        <ul class="tips">
+          <li data-i18n="qv.tip.1"></li><li data-i18n="qv.tip.2"></li><li data-i18n="qv.tip.3"></li>
+          <li data-i18n="qv.tip.4"></li><li data-i18n="qv.tip.5"></li><li data-i18n="qv.tip.6"></li>
+        </ul>
+        <div class="protect-btns">
+          <button class="btn btn-primary" id="stripBtn" data-i18n="qv.btn.strip">⬇ Descarregar sense metadades</button>
+          <button class="btn btn-danger" id="clearBtn" data-i18n="qv.btn.clear">🗑 Esborrar l'anàlisi</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Controls inferiors -->
+  <div id="controls" class="piar-controls">
+    <button id="newBtn" class="btn-primary" data-i18n="qv.btn.new" hidden>🔄 Altra foto</button>
+    <button id="configBtn" data-i18n="qv.btn.config">⚙️ Configurar</button>
+    <button id="infoBtn" data-i18n="qv.btn.help">ℹ️ Ajuda</button>
+    <div id="status" class="piar-status"><span id="status-text" data-i18n="qv.status.initial">Tria una foto per a començar</span></div>
+  </div>
+
+  <!-- Configuració -->
+  <div id="config-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona" data-i18n-attr="alt:qv.alt.app">
+        <h2 data-i18n="qv.cfg.title">⚙️ Configuració</h2>
+      </div>
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="qv.cfg.analyses">Què analitzar</h3>
+        <label class="opt"><input type="checkbox" id="cfgFaces"> <span data-i18n="qv.cfg.a.faces">Cares</span></label>
+        <label class="opt"><input type="checkbox" id="cfgObjects"> <span data-i18n="qv.cfg.a.objects">Objectes</span></label>
+        <label class="opt"><input type="checkbox" id="cfgText"> <span data-i18n="qv.cfg.a.text">Text</span></label>
+        <h3 class="section-title sub" data-i18n="qv.cfg.ocr">Idiomes del text</h3>
+        <div class="ocr-langs">
+          <label class="opt"><input type="checkbox" id="cfgOcrCat"> <span data-i18n="qv.cfg.ocr.ca">Català</span></label>
+          <label class="opt"><input type="checkbox" id="cfgOcrSpa"> <span data-i18n="qv.cfg.ocr.es">Castellà</span></label>
+          <label class="opt"><input type="checkbox" id="cfgOcrEng"> <span data-i18n="qv.cfg.ocr.en">Anglés</span></label>
+        </div>
+        <label class="opt"><input type="checkbox" id="cfgTech"> <span data-i18n="qv.cfg.tech">Mostrar detalls tècnics</span></label>
+        <p class="config-note" data-i18n="qv.cfg.net">🌐 …</p>
+      </div>
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="sh.lang.label">🌐 Idioma</h3>
+        <div id="langSelectHost"></div>
+      </div>
+      <button class="close-btn" id="closeConfigBtn" data-i18n="qv.btn.close">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Ajuda -->
+  <div id="info-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona" data-i18n-attr="alt:qv.alt.app">
+        <h2 data-i18n="qv.help.title">ℹ️ Ajuda</h2>
+      </div>
+      <p data-i18n-html="qv.help.intro"></p>
+      <a class="guide-btn" href="guia.html" data-i18n="qv.help.guide">📖 Guia completa</a>
+      <p><strong data-i18n="qv.help.how_title">Què analitza:</strong></p>
+      <ul>
+        <li data-i18n-html="qv.help.how_1"></li><li data-i18n-html="qv.help.how_2"></li><li data-i18n-html="qv.help.how_3"></li>
+        <li data-i18n-html="qv.help.how_4"></li><li data-i18n-html="qv.help.how_5"></li>
+      </ul>
+      <p><strong data-i18n="qv.help.priv_title">Privacitat:</strong></p>
+      <ul><li data-i18n-html="qv.help.priv_1"></li><li data-i18n-html="qv.help.priv_2"></li></ul>
+      <p><strong data-i18n="qv.help.net_title">Internet i mode avió:</strong></p>
+      <ul><li data-i18n-html="qv.help.net_1"></li><li data-i18n-html="qv.help.net_2"></li></ul>
+      <p><strong data-i18n="qv.help.lim_title">Limitacions:</strong></p>
+      <ul><li data-i18n-html="qv.help.lim_1"></li><li data-i18n-html="qv.help.lim_2"></li><li data-i18n-html="qv.help.lim_3"></li></ul>
+      <p class="info-footer" data-i18n-html="qv.help.footer"></p>
+      <button class="close-btn" id="closeInfoBtn" data-i18n="qv.btn.close">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Idioma (abans dels altres scripts de l'app) -->
+  <script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
+  <!-- Llibreries (totes dins de vendor/, també funcionen sense Internet) -->
+  <script src="../vendor/exifr-7.1.3/full.umd.js"></script>
+  <script src="../vendor/face-api-1.7.15/face-api.js"></script>
+  <script>window.tf = window.faceapi && faceapi.tf;   /* COCO-SSD usa el mateix TF.js que les cares */</script>
+  <script src="../vendor/coco-ssd-2.2.3/coco-ssd.min.js"></script>
+  <script src="../vendor/tesseract.js-7.0.0/tesseract.min.js"></script>
+  <script src="../shared/internet_notice.js"></script>
+  <script src="../shared/loading_overlay.js"></script>
+  <script src="js/analyzer.js"></script>
+  <script src="js/insights.js"></script>
+  <script src="js/app.js"></script>
+  <script src="../shared/piar_home.js"></script>
+  <script src="../shared/pwa.js"></script>
+</body>
+</html>

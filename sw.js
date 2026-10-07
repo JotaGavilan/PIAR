@@ -10,7 +10,7 @@
 
    La versió la posa tools/build-pwa.py. No edites la línia de VERSION a mà.
    ============================================================ */
-const VERSION = '38f256c36bb7';
+const VERSION = '1f11015bfd99';
 const SHELL_CACHE  = 'piar-shell-' + VERSION;
 const VENDOR_CACHE = 'piar-vendor-v1';
 const MODEL_CACHE  = 'piar-models-v1';
@@ -56,7 +56,18 @@ async function shellStrategy(event, req, url) {
     if (resp && resp.ok && resp.status === 200 && !resp.redirected) await cache.put(req, resp.clone()).catch(() => {});
     return resp;
   });
-  if (hit) { event.waitUntil(refresh.catch(() => {})); return hit; }       // ràpid i funciona sense xarxa; s'actualitza darrere
+  if (hit) {
+    const old = req.mode === 'navigate' ? hit.clone() : null;   // còpia per a comparar (el cos de «hit» se'l queda la pàgina)
+    // ràpid i funciona sense xarxa; s'actualitza darrere (i s'avisa la pàgina si hi ha una versió nova)
+    event.waitUntil(refresh.then(async (resp) => {
+      if (req.mode !== 'navigate' || !resp || !resp.ok || resp.status !== 200) return;
+      const [a, b] = await Promise.all([old.text(), resp.clone().text()]);
+      if (a === b) return;
+      await new Promise((r) => setTimeout(r, 1200));
+      for (const c of await self.clients.matchAll({ includeUncontrolled: true })) if (c.url === req.url || c.url.split('#')[0] === req.url.split('#')[0]) c.postMessage({ piarUpdate: true });
+    }).catch(() => {}));
+    return hit;
+  }
   try { return await refresh; } catch (e) {
     if (req.mode === 'navigate') { const home = await cache.match(new URL('index.html', SCOPE)); if (home) return home; }
     throw e;

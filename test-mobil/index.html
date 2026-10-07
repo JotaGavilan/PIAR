@@ -541,6 +541,14 @@ const APPS = [
       { ids: ['webgl'], level: 'soft', note: { webgl: 'tt.n.me_webgl' } },
       { ids: ['browser'], level: 'soft', note: { browser: 'tt.n.me_browser' } },
       { ids: ['speed'], level: 'soft', note: { speed: 'tt.n.me_speed' } } ] },
+  { id: 'quevuen', name: 'Què veuen de tu', nameKey: 'tt.app.qv', icon: '../quevuen/icons/android-chrome-512x512.png', href: '../quevuen/',
+    reqs: [
+      { ids: ['https'], level: 'must' },
+      { ids: ['wasm'], level: 'must', note: { wasm: 'tt.n.qv_wasm' } },
+      { ids: ['webgl'], level: 'soft', note: { webgl: 'tt.n.qv_webgl' } },
+      { ids: ['net_google'], level: 'soft', note: { net_google: 'tt.n.qv_google' } },
+      { ids: ['browser'], level: 'soft', note: { browser: 'tt.n.me_browser' } },
+      { ids: ['speed'], level: 'soft', note: { speed: 'tt.n.qv_speed' } } ] },
 ];
 const BAD = new Set(['warn', 'fail']);
 const PENDING = new Set(['pend', 'run']);
@@ -606,7 +614,7 @@ function renderApps() {
           `<h4>${esc(_t('tt.app.why'))}</h4><p>${f.why}</p><h4>${esc(_t('tt.app.how'))}</h4><ol>${f.steps.map(s => `<li>${s}</li>`).join('')}</ol></div></details>`;
       }).join('');
     }
-    return `<div class="app card v-${vv}"><div class="apphead"><img class="app-icon" src="${app.icon}" alt=""><div><div class="nm">${esc(app.name)}</div>` +
+    return `<div class="app card v-${vv}"><div class="apphead"><img class="app-icon" src="${app.icon}" alt=""><div><div class="nm">${esc(app.nameKey ? _t(app.nameKey) : app.name)}</div>` +
       `<span class="badge">${label[2]} ${esc(_t(label[0]))}</span></div></div>` +
       `<p class="appsum">${esc(_t(label[1]))}</p><div class="chips">${chips}</div>${probs}` +
       `<a class="open" href="${app.href}">${esc(_t('tt.app.open', { name: app.name }))}</a></div>`;
@@ -655,7 +663,7 @@ function reportText() {
   const L = [_t('tt.rep.title'), new Date().toLocaleString(DATE_LOCALE[PIAR_I18N.lang] || 'ca-ES'), _t(DEV.inApp ? 'tt.rep.device_inapp' : 'tt.rep.device', dv), _t('tt.rep.screen', dv), ''];
   ORDER.forEach(id => L.push(`${({ ok:_t('tt.rep.ok'), warn:_t('tt.rep.warn'), fail:_t('tt.rep.fail'), skip:'-', pend:'-', run:'...' })[R[id].status]}  ${T(id)}: ${tr(R[id].detail)}`));
   L.push('');
-  APPS.forEach(a => L.push(`${a.name}: ${_t(VERDICT[evalApp(a).verdict][0])}`));
+  APPS.forEach(a => L.push(`${a.nameKey ? _t(a.nameKey) : a.name}: ${_t(VERDICT[evalApp(a).verdict][0])}`));
   return L.join('\n');
 }
 function familyText() {

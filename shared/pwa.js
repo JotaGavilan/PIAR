@@ -25,6 +25,19 @@ const T = (k, v, fb) => (window._t && window.PIAR_I18N ? _t(k, v) : fb);
   });
   window.addEventListener('appinstalled', () => { deferredPrompt = null; emit(); });
 
+  // Avís de «versió nova»: el service worker ens el diu quan la còpia guardada d'esta pàgina és més antiga que la del servidor
+  function showUpdateBanner() {
+    if (document.getElementById('piar-update')) return;
+    const b = document.createElement('div'); b.id = 'piar-update'; b.setAttribute('role', 'status');
+    b.style.cssText = 'position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:2147483000;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 12px;background:#2a2540;color:#f0eeff;border:1px solid #6c63ff;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.5);font:600 .85rem/1.3 Poppins,system-ui,sans-serif';
+    const t = document.createElement('span'); t.textContent = T('sh.upd.msg', null, 'Hi ha una versió nova de PIAR.');
+    const btn = document.createElement('button'); btn.textContent = T('sh.upd.btn', null, 'Actualitzar');
+    btn.style.cssText = 'flex:none;min-height:40px;padding:8px 14px;border:0;border-radius:10px;background:#6c63ff;color:#fff;font:inherit;cursor:pointer';
+    btn.onclick = () => location.reload();
+    b.append(t, btn); document.body.appendChild(b);
+  }
+  if (supported) navigator.serviceWorker.addEventListener('message', (e) => { if (e.data && e.data.piarUpdate) showUpdateBanner(); });
+
   const ready = supported
     ? navigator.serviceWorker.register(SW_URL, { scope: ROOT.pathname }).then(() => navigator.serviceWorker.ready).catch((e) => { console.warn('SW no registrat:', e); return null; })
     : Promise.resolve(null);

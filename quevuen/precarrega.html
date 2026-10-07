@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<title>Què veuen de tu – descàrrega de models</title>
+</head>
+<body>
+<!-- Pàgina oculta: la crida la portada («Descarregar per a ús sense Internet»). Carrega el model d'objectes (COCO-SSD),
+     l'únic que no és dins de /vendor/, perquè el service worker el guarde i després funcione sense Internet.
+     Els models de cares i de text ja són dins de /vendor/. No usa càmera. -->
+<script src="../vendor/face-api-1.7.15/face-api.js"></script>
+<script>window.tf = window.faceapi && faceapi.tf;</script>
+<script src="../vendor/coco-ssd-2.2.3/coco-ssd.min.js"></script>
+<script>
+(async () => {
+  const steps = []; let ok = true, error = null;
+  try { const m = await cocoSsd.load({ base: 'lite_mobilenet_v2' }); if (m && m.dispose) m.dispose(); steps.push({ name: 'objectes (COCO-SSD)', ok: true }); }
+  catch (e) { ok = false; error = String(e && e.message || e); steps.push({ name: 'objectes (COCO-SSD)', ok: false, error }); }
+  parent.postMessage({ piarPreload: 'quevuen', finished: true, ok, steps, error }, location.origin);
+})();
+</script>
+</body>
+</html>

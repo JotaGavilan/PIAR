@@ -135,8 +135,8 @@ select.num-inp { width: 96px; padding: 9px 8px; text-align-last: center; }
 .top-conf { font-size: .8rem; color: var(--text-dim); font-variant-numeric: tabular-nums; }
 .test-modes { display: flex; gap: 6px; margin-bottom: 10px; }
 .test-modes .btn { flex: 1; min-width: 0; }
-.card.media { padding: 0; overflow: hidden; margin-bottom: 10px; }
-#testVideo { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; transform: scaleX(-1); }
+.card.media { padding: 0; overflow: hidden; margin: 0 auto 10px; width: 100%; max-width: 320px; background: var(--bg); }
+#testVideo { width: 100%; aspect-ratio: 4/3; max-height: 36vh; max-height: 36dvh; object-fit: cover; display: block; transform: scaleX(-1); }
 .pred-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .pred-lbl { font-size: .82rem; min-width: 74px; max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pred-bg { flex: 1; height: 22px; background: var(--bg2); border: 1px solid var(--border2); border-radius: 8px; overflow: hidden; }
@@ -144,7 +144,8 @@ select.num-inp { width: 96px; padding: 9px 8px; text-align-last: center; }
 .pred-pct { font-size: .8rem; min-width: 44px; text-align: right; color: var(--text-dim); font-variant-numeric: tabular-nums; }
 #predCon, #predConImg, #predCon-pose, #predCon-hands { margin: 12px 0; }
 .test-img-prev { width: 100%; border-radius: var(--radius); margin-bottom: 8px; max-height: 240px; object-fit: contain; background: var(--bg2); display: none; }
-#poseCanvas, #handsCanvas { width: 100%; display: block; background: var(--bg); }
+#poseCanvas, #handsCanvas { width: 100%; max-height: 36vh; max-height: 36dvh; object-fit: contain; display: block; background: var(--bg); }
+.tm-shortcut { display: none; margin-bottom: 10px; }
 
 /* ── Exportar ── */
 .exp-opt { display: flex; align-items: center; gap: 12px; padding: 12px 14px; cursor: pointer; transition: border-color .2s, background .2s; margin-bottom: 8px; }
@@ -198,6 +199,7 @@ select.piar-lang-select { color-scheme: dark; }
 <body>
 
 <header class="piar-header">
+  <a class="btn piar-home" href="../" aria-label="Tornar a la pantalla principal" title="Tornar a la pantalla principal" data-i18n-attr="aria-label:sh.home;title:sh.home">🏠</a>
   <img src="icons/android-chrome-512x512.png" aria-hidden="true" width="34" height="34">
   <h1>Màquina<span>Ensenyable</span></h1>
   <button class="help-btn" onclick="switchTab('help')" aria-label="Ajuda" title="Ajuda" data-i18n-attr="aria-label:mq.help.title;title:mq.help.title">❓</button>
@@ -284,6 +286,7 @@ select.piar-lang-select { color-scheme: dark; }
 <!-- ── PROBAR ── -->
 <div class="panel" id="panel-test">
   <div id="noModelMsg" class="empty"><div class="icon">🤖</div><p data-i18n="mq.test.no_model">Entrena primer un model per a provar-lo ací.</p></div>
+  <button class="btn btn-block tm-shortcut" id="tmShortcut" onclick="openInTeachable()" data-i18n="mq.tm.open">🚀 Obrir a Teachable Microbit</button>
 
   <!-- IMAGE -->
   <div id="ts-image" style="display:none">
@@ -591,6 +594,7 @@ function setModelType(t) {
   renderClasses(); renderExamples();
   ['image','pose','hands'].forEach(x => { const el=document.getElementById('ts-'+x); if(el) el.style.display='none'; });
   document.getElementById('noModelMsg').style.display='block';
+  updateSaveTab();
   if (needsDownload) {
     if (offlineNow()) netFail(t);
     else toast(_t('mq.net.type_change', { what: baseName(t) }), '', 5000);
@@ -1024,6 +1028,7 @@ function finishTrain(valid, type) {
   else if (type==='hands') setupPredRows('predCon-hands', model._classNames, model._classColors);
   toast(_t('mq.toast.trained'),'success');
   endTrainUI();
+  updateSaveTab();
 }
 
 function drawChart() {
@@ -1268,6 +1273,8 @@ function updateSaveTab() {
   tr.textContent=model?_t('mq.tm.ready_ok',{type:typeName()}):_t('mq.tm.ready_no');
   tr.className='save-desc '+(model?'ok':'no');
   ['tmOpenBtn','tmShareBtn','tmDownBtn'].forEach(id=>{ document.getElementById(id).disabled=!model; });
+  document.getElementById('tmShortcut').style.display=model?'flex':'none';
+  document.querySelector('#tab-save .ic').textContent=model?'⭐':'💾';
 }
 async function buildJSON() {
   let modelData=null;
@@ -1418,6 +1425,7 @@ PIAR_I18N.onChange(() => {
 });
 setTimeout(()=>{ if (modelType==='image') loadBase().catch(e=>netFail('image')); },1200);   // només si seguim en «Imatge»
 </script>
+<script src="../shared/piar_home.js"></script>
 <script src="../shared/pwa.js"></script>
 </body>
 </html>

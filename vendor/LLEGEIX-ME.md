@@ -13,6 +13,10 @@ Són còpies sense modificar dels paquets de npm indicats.
 | `mediapipe-face_mesh` (0.4.1633559619) | `@mediapipe/face_mesh` | Apache-2.0 |
 | `mediapipe-hands` (0.4.1675469240) | `@mediapipe/hands` | Apache-2.0 |
 | `mediapipe-camera_utils`, `mediapipe-drawing_utils` | `@mediapipe/camera_utils`, `@mediapipe/drawing_utils` | Apache-2.0 |
+| `exifr-7.1.3` | `exifr` | MIT |
+| `face-api-1.7.15` (inclou TF.js 4.22 i els models de cares) | `@vladmandic/face-api` | MIT |
+| `tesseract.js-7.0.0`, `tesseract.js-core-7.0.0` | `tesseract.js`, `tesseract.js-core` | Apache-2.0 |
+| `tesseract-lang-4.0.0` (català, castellà i anglés) | `@tesseract.js-data/cat`, `spa`, `eng` | Apache-2.0 |
 | `fonts/` | Poppins, Space Mono, DM Sans (subconjunt llatí, via `@fontsource`) | SIL OFL 1.1 |
 
 Els **pesos dels models** de COCO-SSD, MobileNet i PoseNet no estan ací: cada app els descarrega de

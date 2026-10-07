@@ -1,5 +1,5 @@
 {
- "version": "38f256c36bb7",
+ "version": "1f11015bfd99",
  "shell": [
   "./",
   "index.html",
@@ -55,6 +55,32 @@
   "maquina-ensenyable/icons/maskable-512x512.png",
   "maquina-ensenyable/icons/site.webmanifest",
   "maquina-ensenyable/js/i18n.js",
+  "quevuen/guia.html",
+  "quevuen/index.html",
+  "quevuen/precarrega.html",
+  "quevuen/css/style.css",
+  "quevuen/examples/ex1.jpg",
+  "quevuen/examples/ex2.jpg",
+  "quevuen/guia-img/quevuen-1-inici.webp",
+  "quevuen/guia-img/quevuen-2-resultat.webp",
+  "quevuen/guia-img/quevuen-3-resum.webp",
+  "quevuen/guia-img/quevuen-4-troballes.webp",
+  "quevuen/guia-img/quevuen-5-ubicacio.webp",
+  "quevuen/guia-img/quevuen-6-protegir.webp",
+  "quevuen/guia-img/quevuen-7-config.webp",
+  "quevuen/icons/android-chrome-192x192.png",
+  "quevuen/icons/android-chrome-512x512.png",
+  "quevuen/icons/apple-touch-icon.png",
+  "quevuen/icons/favicon-16x16.png",
+  "quevuen/icons/favicon-32x32.png",
+  "quevuen/icons/favicon.ico",
+  "quevuen/icons/maskable-192x192.png",
+  "quevuen/icons/maskable-512x512.png",
+  "quevuen/icons/site.webmanifest",
+  "quevuen/js/analyzer.js",
+  "quevuen/js/app.js",
+  "quevuen/js/i18n.js",
+  "quevuen/js/insights.js",
   "robhort/guia.html",
   "robhort/index.html",
   "robhort/precarrega.html",
@@ -85,6 +111,7 @@
   "shared/loading_overlay.css",
   "shared/loading_overlay.js",
   "shared/piar-ui.css",
+  "shared/piar_home.js",
   "shared/piar_models.js",
   "shared/pwa.js",
   "shared/viewport.js",
@@ -328,6 +355,77 @@
     }
    ],
    "preload": "maquina-ensenyable/precarrega.html"
+  },
+  {
+   "id": "quevuen",
+   "name": "Què veuen de tu",
+   "files": [
+    {
+     "u": "vendor/coco-ssd-2.2.3/coco-ssd.min.js",
+     "s": 9299
+    },
+    {
+     "u": "vendor/exifr-7.1.3/LICENSE",
+     "s": 1081
+    },
+    {
+     "u": "vendor/exifr-7.1.3/full.umd.js",
+     "s": 75848
+    },
+    {
+     "u": "vendor/face-api-1.7.15/face-api.js",
+     "s": 1333943
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/age_gender_model-weights_manifest.json",
+     "s": 8392
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/age_gender_model.bin",
+     "s": 429708
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/face_expression_model-weights_manifest.json",
+     "s": 6980
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/face_expression_model.bin",
+     "s": 329468
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/tiny_face_detector_model-weights_manifest.json",
+     "s": 3219
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/tiny_face_detector_model.bin",
+     "s": 193321
+    },
+    {
+     "u": "vendor/tesseract-lang-4.0.0/cat.traineddata.gz",
+     "s": 639438
+    },
+    {
+     "u": "vendor/tesseract-lang-4.0.0/eng.traineddata.gz",
+     "s": 2952873
+    },
+    {
+     "u": "vendor/tesseract-lang-4.0.0/spa.traineddata.gz",
+     "s": 2100190
+    },
+    {
+     "u": "vendor/tesseract.js-7.0.0/tesseract.min.js",
+     "s": 62961
+    },
+    {
+     "u": "vendor/tesseract.js-7.0.0/worker.min.js",
+     "s": 111307
+    },
+    {
+     "u": "vendor/tesseract.js-core-7.0.0/tesseract-core-lstm.wasm.js",
+     "s": 3896484
+    }
+   ],
+   "preload": "quevuen/precarrega.html"
   }
  ]
 }

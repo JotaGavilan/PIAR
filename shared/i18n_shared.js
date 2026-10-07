@@ -25,7 +25,11 @@ PIAR_I18N.add({
     'sh.bt.error': '❌ Error en la connexió',
     'sh.bt.disconnected': '🔌 micro:bit desconnectada',
 
-    'sh.lang.label': '🌐 Idioma'
+    'sh.lang.label': '🌐 Idioma',
+    'sh.home': 'Tornar a la pantalla principal',
+    'sh.home.confirm': 'Si tornes a la pantalla principal, es desconnectarà la micro:bit. Vols continuar?',
+    'sh.upd.msg': 'Hi ha una versió nova de PIAR.',
+    'sh.upd.btn': 'Actualitzar'
   },
   es: {
     'sh.loading_model': 'Cargando modelo de IA...',
@@ -51,7 +55,11 @@ PIAR_I18N.add({
     'sh.bt.error': '❌ Error en la conexión',
     'sh.bt.disconnected': '🔌 micro:bit desconectada',
 
-    'sh.lang.label': '🌐 Idioma'
+    'sh.lang.label': '🌐 Idioma',
+    'sh.home': 'Volver a la pantalla principal',
+    'sh.home.confirm': 'Si vuelves a la pantalla principal, se desconectará la micro:bit. ¿Quieres continuar?',
+    'sh.upd.msg': 'Hay una versión nueva de PIAR.',
+    'sh.upd.btn': 'Actualizar'
   },
   en: {
     'sh.loading_model': 'Loading AI model...',
@@ -77,6 +85,10 @@ PIAR_I18N.add({
     'sh.bt.error': '❌ Connection error',
     'sh.bt.disconnected': '🔌 micro:bit disconnected',
 
-    'sh.lang.label': '🌐 Language'
+    'sh.lang.label': '🌐 Language',
+    'sh.home': 'Back to the home screen',
+    'sh.home.confirm': 'If you go back to the home screen, the micro:bit will be disconnected. Continue?',
+    'sh.upd.msg': 'There is a new version of PIAR.',
+    'sh.upd.btn': 'Update'
   }
 });
