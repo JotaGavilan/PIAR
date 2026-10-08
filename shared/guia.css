@@ -202,3 +202,8 @@ td .leds { margin: 0 auto; }
 table.t td, table.t th { overflow-wrap: break-word; }
 @media (max-width: 520px) { table.t { font-size: .76em; } table.t th, table.t td { padding: .3rem .4rem; } }
 .msg { word-break: break-all; }
+
+/* Icona de casa (línia, en lloc de l'emoji) */
+.ico { width: 1.25em; height: 1.25em; flex: none; vertical-align: -.22em; }
+.g-top a.btn .ico { width: 20px; height: 20px; vertical-align: middle; }
+.nav2 a .ico { margin-right: .25em; }

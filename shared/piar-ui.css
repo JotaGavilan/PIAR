@@ -53,6 +53,7 @@ body { font-family: var(--font); background: var(--bg-dark); color: var(--text);
 .piar-header img { width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0; box-shadow: 0 0 0 1px var(--border), 0 0 12px rgba(77,245,160,.18); }
 .piar-header h1 { margin: 0; font-family: var(--font); font-size: 1.02rem; font-weight: 600; line-height: 1.2; color: var(--text); text-align: center; min-width: 0; overflow-wrap: anywhere; }
 .piar-header .back { margin-left: auto; }
+.piar-home .ico { width: 22px; height: 22px; display: block; }
 
 /* ── Botons ──────────────────────────────────────────────────
    .btn = botó normal (contorn lila) · .btn-primary = acció principal · .btn-ok = connectat · .btn-danger = esborrar */

@@ -28,6 +28,8 @@ PIAR_I18N.add({
     'sh.lang.label': '🌐 Idioma',
     'sh.home': 'Tornar a la pantalla principal',
     'sh.home.confirm': 'Si tornes a la pantalla principal, es desconnectarà la micro:bit. Vols continuar?',
+    'sh.help.home': 'El botó de la casa, dalt a l\'esquerra, torna a la pantalla principal de PIAR.',
+    'sh.help.home_bt': 'El botó de la casa, dalt a l\'esquerra, torna a la pantalla principal de PIAR. Si la micro:bit està connectada, abans et demana confirmació, perquè es desconnectaria.',
     'sh.upd.msg': 'Hi ha una versió nova de PIAR.',
     'sh.upd.btn': 'Actualitzar'
   },
@@ -58,6 +60,8 @@ PIAR_I18N.add({
     'sh.lang.label': '🌐 Idioma',
     'sh.home': 'Volver a la pantalla principal',
     'sh.home.confirm': 'Si vuelves a la pantalla principal, se desconectará la micro:bit. ¿Quieres continuar?',
+    'sh.help.home': 'El botón de la casa, arriba a la izquierda, vuelve a la pantalla principal de PIAR.',
+    'sh.help.home_bt': 'El botón de la casa, arriba a la izquierda, vuelve a la pantalla principal de PIAR. Si la micro:bit está conectada, antes te pide confirmación, porque se desconectaría.',
     'sh.upd.msg': 'Hay una versión nueva de PIAR.',
     'sh.upd.btn': 'Actualizar'
   },
@@ -88,6 +92,8 @@ PIAR_I18N.add({
     'sh.lang.label': '🌐 Language',
     'sh.home': 'Back to the home screen',
     'sh.home.confirm': 'If you go back to the home screen, the micro:bit will be disconnected. Continue?',
+    'sh.help.home': 'The house button, top left, takes you back to the PIAR home screen.',
+    'sh.help.home_bt': 'The house button, top left, takes you back to the PIAR home screen. If the micro:bit is connected, it asks for confirmation first, because it would be disconnected.',
     'sh.upd.msg': 'There is a new version of PIAR.',
     'sh.upd.btn': 'Update'
   }
