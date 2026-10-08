@@ -104,3 +104,20 @@ details.raw dl { margin-top: 6px; }
 #controls button { flex: 1 1 0; min-width: 0; padding-left: 8px; padding-right: 8px; white-space: nowrap; }
 #controls { flex-wrap: wrap; position: sticky; bottom: 0; z-index: 50; padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
 @media (max-width: 360px) { .hero h2 { font-size: 1.1rem; } .steps .nm { min-width: 76px; } .kv { grid-template-columns: 1fr; gap: 0 10px; } .kv dd { margin-bottom: 6px; } }
+
+/* ── Descripció al núvol (IA de Google) ── */
+.cloud-text { white-space: pre-wrap; }
+#cloudBtn { width: 100%; white-space: normal; margin-top: .4rem; }
+#cloudMsg.err { color: var(--warn); }
+#cloudMsg.block { color: var(--danger); font-weight: 600; }
+.qv-in, input[type="password"].qv-in { display: block; width: 100%; box-sizing: border-box; margin: .3rem 0; font-family: var(--font); font-size: .9rem; color: var(--text); min-height: var(--tap); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 9px 12px; }
+.qv-in:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-glow); }
+.key-btns { display: flex; flex-wrap: wrap; gap: 8px; margin: .3rem 0; }
+.key-btns button { flex: 1 1 140px; white-space: normal; }
+#cloudFields label { display: block; margin-top: .6rem; }
+#cloudFields select { width: 100%; margin: .3rem 0; }
+.cloud-preview { display: block; width: 100%; max-height: 38dvh; object-fit: contain; border-radius: var(--radius); border: 1px solid var(--border); background: #000; }
+.cloud-list { list-style: none; padding: 0 !important; margin: .7rem 0 0 !important; }
+.cloud-list li { font-size: .84rem; margin: .35rem 0; }
+.cloud-list li.warn { color: var(--warn); }
+.close-btn.cancel { background: transparent; color: var(--text); border-color: var(--border); }

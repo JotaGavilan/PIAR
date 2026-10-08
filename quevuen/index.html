@@ -82,6 +82,18 @@
         <button class="btn btn-primary" id="vlmBtn" data-i18n="qv.vlm.btn">✨ Generar descripció avançada</button>
       </div>
 
+      <div class="card" id="cloudCard" hidden>
+        <h3 class="section-title" data-i18n="qv.cloud.title">☁️ Descripció amb la IA de Google</h3>
+        <p class="note" data-i18n="qv.cloud.intro"></p>
+        <div id="cloudOut" hidden>
+          <h4 class="cap-h" data-i18n="qv.cloud.out_h">El que «veu» la IA de Google</h4>
+          <blockquote class="cap cloud-text" id="cloudText"></blockquote>
+          <p class="note" data-i18n="qv.cloud.out_note"></p>
+        </div>
+        <p class="note" id="cloudMsg" aria-live="polite"></p>
+        <button class="btn btn-primary" id="cloudBtn" data-i18n="qv.cloud.btn">☁️ Preparar i revisar l'enviament</button>
+      </div>
+
       <div class="card" id="findingsCard" hidden>
         <h3 class="section-title" data-i18n="qv.r.findings">Què s'ha trobat</h3>
         <ul id="findings" class="findings"></ul>
@@ -138,10 +150,48 @@
         <p class="config-note" data-i18n="qv.cfg.net">🌐 …</p>
       </div>
       <div class="config-section">
+        <h3 class="section-title" data-i18n="qv.cfg.cloud_h">☁️ IA de Google (opcional)</h3>
+        <label class="opt"><input type="checkbox" id="cfgCloud"> <span data-i18n="qv.cfg.cloud">Permetre descripcions amb la IA de Google</span></label>
+        <div id="cloudFields" hidden>
+          <p class="config-note" data-i18n="qv.cfg.cloud_warn"></p>
+          <label for="cfgKey" data-i18n="qv.cfg.key">La teua clau d'API de Google AI Studio</label>
+          <input type="password" id="cfgKey" class="qv-in" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
+          <div class="key-btns">
+            <button type="button" id="keyShow" data-i18n="qv.cfg.key_show">👁 Mostrar</button>
+            <button type="button" id="keyClear" class="btn-danger" data-i18n="qv.cfg.key_clear">🗑 Esborrar la clau</button>
+          </div>
+          <p class="config-note" id="keyState"></p>
+          <p class="config-note" data-i18n="qv.cfg.key_hint"></p>
+          <p class="config-note"><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" data-i18n="qv.cfg.key_get">Com aconseguir una clau gratuïta ↗</a></p>
+          <label for="cfgModel" data-i18n="qv.cfg.model">Model de Google</label>
+          <select id="cfgModel">
+            <option value="gemini-3.5-flash" data-i18n="qv.cfg.model.flash">Gemini 3.5 Flash (millor)</option>
+            <option value="gemini-3.5-flash-lite" data-i18n="qv.cfg.model.lite">Gemini 3.5 Flash-Lite (ràpid)</option>
+            <option value="custom" data-i18n="qv.cfg.model.custom">Un altre (escriu el nom)</option>
+          </select>
+          <input type="text" id="cfgModelCustom" class="qv-in" hidden autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-attr="placeholder:qv.cfg.model_ph">
+        </div>
+      </div>
+      <div class="config-section">
         <h3 class="section-title" data-i18n="sh.lang.label">🌐 Idioma</h3>
         <div id="langSelectHost"></div>
       </div>
       <button class="close-btn" id="closeConfigBtn" data-i18n="qv.btn.close">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Confirmació abans d'enviar a Google -->
+  <div id="cloud-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona" data-i18n-attr="alt:qv.alt.app">
+        <h2 data-i18n="qv.cloud.conf.title">☁️ Revisa-ho abans d'enviar</h2>
+      </div>
+      <p data-i18n="qv.cloud.conf.intro"></p>
+      <img id="cloudPreview" class="cloud-preview" alt="">
+      <ul class="cloud-list" id="cloudList"></ul>
+      <button class="close-btn" id="cloudSend" data-i18n="qv.cloud.conf.ok">📤 Enviar a Google</button>
+      <button class="close-btn cancel" id="cloudCancel" data-i18n="qv.cloud.conf.cancel">Cancel·lar</button>
     </div>
   </div>
 
@@ -157,7 +207,7 @@
       <p><strong data-i18n="qv.help.how_title">Què analitza:</strong></p>
       <ul>
         <li data-i18n-html="qv.help.how_1"></li><li data-i18n-html="qv.help.how_2"></li><li data-i18n-html="qv.help.how_3"></li>
-        <li data-i18n-html="qv.help.how_4"></li><li data-i18n-html="qv.help.how_5"></li><li data-i18n-html="qv.help.how_6"></li>
+        <li data-i18n-html="qv.help.how_4"></li><li data-i18n-html="qv.help.how_5"></li><li data-i18n-html="qv.help.how_6"></li><li data-i18n-html="qv.help.how_7"></li>
       </ul>
       <p><strong data-i18n="qv.help.priv_title">Privacitat:</strong></p>
       <ul><li data-i18n-html="qv.help.priv_1"></li><li data-i18n-html="qv.help.priv_2"></li></ul>
@@ -183,6 +233,7 @@
   <script src="js/analyzer.js"></script>
   <script src="js/insights.js"></script>
   <script src="js/vlm.js"></script>
+  <script src="js/cloud.js"></script>
   <script src="js/app.js"></script>
   <script src="../shared/piar_home.js"></script>
   <script src="../shared/pwa.js"></script>

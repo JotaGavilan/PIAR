@@ -197,5 +197,55 @@
     return new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.92));
   }
 
-  window.QV = { loadImage, readMeta, colors, detectFaces, detectObjects, readText, stopOcr, stripMetadata, loadFaceNets, loadCoco };
+
+  // ── Protecció de cares abans d'enviar res al núvol ─────────
+  // Detecta cares amb llindar baix i a diverses mides (millor una cara de més que una de menys).
+  function iou(a, b) {
+    const x1 = Math.max(a.x, b.x), y1 = Math.max(a.y, b.y), x2 = Math.min(a.x + a.w, b.x + b.w), y2 = Math.min(a.y + a.h, b.y + b.h);
+    const i = Math.max(0, x2 - x1) * Math.max(0, y2 - y1); return i / (a.w * a.h + b.w * b.h - i || 1);
+  }
+  async function detectFacesWide(canvas) {
+    await loadFaceNets();
+    const s = scaled(canvas, DETECT_SIDE), all = [];
+    for (const size of [320, 416, 512, 608]) {
+      const res = await faceapi.detectAllFaces(s.canvas, new faceapi.TinyFaceDetectorOptions({ inputSize: size, scoreThreshold: 0.2 })).withAgeAndGender();
+      res.forEach((r) => { const b = r.detection.box; all.push({ box: { x: b.x / s.k, y: b.y / s.k, w: b.width / s.k, h: b.height / s.k }, score: r.detection.score, age: r.age, gender: r.gender }); });
+    }
+    all.sort((p, q) => q.score - p.score);
+    // Agrupa les deteccions de les distintes mides: es conserva la millor de cada grup
+    const groups = [];
+    all.forEach((f) => { const g = groups.find((o) => iou(o.best.box, f.box) > 0.35); if (g) g.n++; else groups.push({ best: f, n: 1 }); });
+    // Una cara es dóna per bona si té confiança alta, o confiança mitjana confirmada per almenys dues mides (evita taques falses que farien pixelar de més)
+    const out = groups.filter((g) => g.best.score >= 0.5 || (g.n >= 2 && g.best.score >= 0.25)).map((g) => g.best);
+    return out;
+  }
+  // Còpia de la imatge amb un mosaic gros damunt de cada regió (amb marge perquè entren cabells i orelles)
+  function pixelateRegions(canvas, boxes) {
+    const out = document.createElement('canvas'); out.width = canvas.width; out.height = canvas.height;
+    const ctx = out.getContext('2d'); ctx.drawImage(canvas, 0, 0);
+    const regions = [];
+    boxes.forEach((b) => {
+      const mx = b.w * 0.35, myT = b.h * 0.55, myB = b.h * 0.3;
+      const x0 = Math.max(0, Math.floor(b.x - mx)), y0 = Math.max(0, Math.floor(b.y - myT));
+      const x1 = Math.min(canvas.width, Math.ceil(b.x + b.w + mx)), y1 = Math.min(canvas.height, Math.ceil(b.y + b.h + myB));
+      const w = x1 - x0, h = y1 - y0; if (w < 2 || h < 2) return;
+      const cells = 5;                                             // ~5 caselles en el costat més curt: no es pot reconéixer
+      const bs = Math.max(6, Math.round(Math.min(w, h) / cells));
+      const tw = Math.max(1, Math.ceil(w / bs)), th = Math.max(1, Math.ceil(h / bs));
+      const tmp = document.createElement('canvas'); tmp.width = tw; tmp.height = th;
+      const tctx = tmp.getContext('2d'); tctx.imageSmoothingEnabled = true; tctx.drawImage(canvas, x0, y0, w, h, 0, 0, tw, th);
+      ctx.imageSmoothingEnabled = false; ctx.drawImage(tmp, 0, 0, tw, th, x0, y0, w, h); ctx.imageSmoothingEnabled = true;
+      regions.push({ x: x0, y: y0, w, h });
+    });
+    return { canvas: out, regions };
+  }
+  // JPEG redimensionat (sense EXIF: el canvas no en porta mai)
+  function toJpegBlob(canvas, maxSide, q) {
+    const k = Math.min(1, maxSide / Math.max(canvas.width, canvas.height));
+    let c = canvas;
+    if (k < 1) { c = document.createElement('canvas'); c.width = Math.round(canvas.width * k); c.height = Math.round(canvas.height * k); c.getContext('2d').drawImage(canvas, 0, 0, c.width, c.height); }
+    return new Promise((resolve) => c.toBlob(resolve, 'image/jpeg', q || 0.85));
+  }
+
+  window.QV = { loadImage, readMeta, colors, detectFaces, detectObjects, readText, stopOcr, stripMetadata, loadFaceNets, loadCoco, detectFacesWide, pixelateRegions, toJpegBlob, iou };
 })();

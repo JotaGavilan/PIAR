@@ -11,7 +11,7 @@
 
   // ── Configuració (es recorda en este dispositiu) ──
   const CFG_KEY = 'qv.cfg.v1';
-  const cfg = { faces: true, objects: true, text: true, vlm: true, tech: false, ocr: { cat: true, spa: true, eng: true } };
+  const cfg = { faces: true, objects: true, text: true, vlm: true, cloud: false, cloudModel: 'gemini-3.5-flash', cloudModelCustom: '', tech: false, ocr: { cat: true, spa: true, eng: true } };
   try { const s = JSON.parse(localStorage.getItem(CFG_KEY) || 'null'); if (s) { Object.assign(cfg, s); cfg.ocr = Object.assign({ cat: true, spa: true, eng: true }, s.ocr || {}); } } catch (e) {}
   const saveCfg = () => { try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {} };
 
@@ -97,7 +97,7 @@
     $('findings').innerHTML = ins.findings.map((f) => `<li class="${f.sev}"><span class="fi">${f.icon}</span><span>${textOf(f.key, f.vars)}</span></li>`).join('');
     renderMeta(); renderFaces(); renderObjects(); renderText(); renderColors();
     $('protectCard').hidden = false;
-    renderToggles(); drawPhoto(); renderVlm();
+    renderToggles(); drawPhoto(); renderVlm(); renderCloud();
   }
 
 
@@ -155,6 +155,75 @@
     }
   }
   $('vlmBtn').addEventListener('click', runVlm);
+
+
+  // ── Descripció al núvol (IA de Google) – opcional, amb cares pixelades i confirmació ──
+  let cloudMsg = null, cloudUrl = null;
+  const cloudModel = () => (cfg.cloudModel === 'custom' ? (cfg.cloudModelCustom || '').trim() : cfg.cloudModel) || 'gemini-3.5-flash';
+  function setCloudMsg(key, vars, cls) { cloudMsg = key ? { key, vars, cls } : null; paintCloudMsg(); }
+  function paintCloudMsg() {
+    const el = $('cloudMsg'); el.className = 'note' + (cloudMsg && cloudMsg.cls ? ' ' + cloudMsg.cls : '');
+    el.textContent = cloudMsg ? _t(cloudMsg.key, cloudMsg.vars) : '';
+  }
+  function renderCloud() {
+    const card = $('cloudCard');
+    card.hidden = !(S.a && cfg.cloud && window.QVCLOUD && analysisDone());
+    if (card.hidden) return;
+    $('cloudOut').hidden = !S.a.cloud;
+    $('cloudText').textContent = S.a.cloud || '';
+    $('cloudBtn').textContent = _t(S.a.cloud ? 'qv.cloud.btn_again' : 'qv.cloud.btn');
+    $('cloudBtn').disabled = !!S.cloudBusy;
+  }
+  function freeCloudUrl() { if (cloudUrl) { try { URL.revokeObjectURL(cloudUrl); } catch (e) {} cloudUrl = null; } $('cloudPreview').removeAttribute('src'); }
+  function closeCloudLayer() { $('cloud-layer').style.display = 'none'; freeCloudUrl(); S.cloudBlob = null; }
+  async function runCloud() {
+    if (S.cloudBusy || !S.a || !S.img) return;
+    if (!QVCLOUD.getKey()) { setCloudMsg('qv.cloud.nokey', null, 'err'); $('config-layer').style.display = 'flex'; return; }
+    if (!navigator.onLine) { setCloudMsg('qv.cloud.offline', null, 'err'); return; }
+    const run = S.run;
+    S.cloudBusy = true; $('cloudBtn').disabled = true; setCloudMsg('qv.cloud.prep');
+    let prep;
+    try { prep = await QVCLOUD.prepare(S.img, S.a); }
+    catch (e) { if (window.console) console.warn('[qv] cloud prepare', e); prep = { ok: false, reason: 'nocheck' }; }
+    S.cloudBusy = false; $('cloudBtn').disabled = false;
+    if (run !== S.run) return;
+    if (!prep.ok) { setCloudMsg('qv.cloud.block.' + (prep.reason === 'minors' ? 'minors' : prep.reason === 'people' ? 'people' : 'nocheck'), null, 'block'); return; }
+    setCloudMsg(null);
+    freeCloudUrl(); cloudUrl = prep.url; S.cloudBlob = prep.blob; S.cloudRun = run;
+    $('cloudPreview').src = prep.url;
+    const li = [];
+    li.push(`<li>${esc(prep.faces ? _t('qv.cloud.conf.faces_n', { n: prep.faces }) : _t('qv.cloud.conf.faces_0'))}</li>`);
+    li.push(`<li>${esc(_t('qv.cloud.conf.meta'))}</li>`);
+    if (prep.text) li.push(`<li class="warn">${esc(_t('qv.cloud.conf.text'))}</li>`);
+    li.push(`<li>${esc(_t('qv.cloud.conf.model', { model: cloudModel() }))}</li>`);
+    li.push(`<li class="warn">${esc(_t('qv.cloud.conf.free'))}</li>`);
+    $('cloudList').innerHTML = li.join('');
+    $('cloud-layer').style.display = 'flex';
+  }
+  async function sendCloud() {
+    const blob = S.cloudBlob, run = S.cloudRun, model = cloudModel();
+    if (!blob || run !== S.run) { closeCloudLayer(); return; }
+    closeCloudLayer();
+    S.cloudBusy = true; $('cloudBtn').disabled = true; setCloudMsg('qv.cloud.sending');
+    try {
+      const text = await QVCLOUD.describe(blob, { model, lang: PIAR_I18N.lang });
+      if (run !== S.run) return;
+      S.a.cloud = text; S.a.cloudModel = model;
+      setCloudMsg('qv.cloud.done', { model }); setStatus('qv.status.cloud_sent');
+    } catch (e) {
+      if (run !== S.run) return;
+      const c = (e && e.code) || 'other';
+      if (c === 'nokey') setCloudMsg('qv.cloud.nokey', null, 'err');
+      else if (['key', 'quota', 'model', 'net', 'blocked', 'server', 'empty', 'region'].includes(c)) setCloudMsg('qv.cloud.err.' + c, { model }, 'err');
+      else setCloudMsg('qv.cloud.err.other', { msg: String((e && e.message) || e).slice(0, 200) }, 'err');
+      if (window.console) console.warn('[qv] cloud', e);
+    } finally {
+      S.cloudBusy = false; if (run === S.run) renderCloud(); else $('cloudBtn').disabled = false;
+    }
+  }
+  $('cloudBtn').addEventListener('click', runCloud);
+  $('cloudSend').addEventListener('click', sendCloud);
+  $('cloudCancel').addEventListener('click', closeCloudLayer);
 
   function kv(rows) { return '<dl class="kv">' + rows.filter((r) => r[1] !== null && r[1] !== undefined && r[1] !== '').map(([k, v]) => `<dt>${esc(_t(k))}</dt><dd>${v}</dd>`).join('') + '</dl>'; }
   function renderMeta() {
@@ -220,8 +289,8 @@
     const run = ++S.run;
     S.file = file; S.a = null; S.steps = {}; S.strip = null;
     $('pickView').hidden = true; $('resultView').hidden = false; $('newBtn').hidden = false;
-    setVlmMsg(null);
-    ['vlmCard', 'summaryCard', 'findingsCard', 'metaCard', 'facesCard', 'objectsCard', 'textCard', 'colorsCard', 'protectCard'].forEach((id) => { $(id).hidden = true; });
+    setVlmMsg(null); setCloudMsg(null); closeCloudLayer();
+    ['vlmCard', 'cloudCard', 'summaryCard', 'findingsCard', 'metaCard', 'facesCard', 'objectsCard', 'textCard', 'colorsCard', 'protectCard'].forEach((id) => { $(id).hidden = true; });
     STEP_DEF.forEach(([id]) => { S.steps[id] = { state: 'wait' }; });
     setStatus('qv.status.running'); renderSteps();
     let img;
@@ -254,7 +323,7 @@
   let statusKey = 'qv.status.initial';
   function setStatus(k) { statusKey = k; $('status-text').textContent = _t(k); }
   function reset() {
-    S.run++; S.a = null; S.img = null; S.file = null; setVlmMsg(null); $('vlmCard').hidden = true;
+    S.run++; S.a = null; S.img = null; S.file = null; setVlmMsg(null); setCloudMsg(null); closeCloudLayer(); S.cloudBusy = false; $('vlmCard').hidden = true; $('cloudCard').hidden = true;
     $('pickView').hidden = false; $('resultView').hidden = true; $('newBtn').hidden = true;
     setStatus('qv.status.initial'); window.scrollTo(0, 0);
     QV.stopOcr();
@@ -293,12 +362,30 @@
   bind('cfgOcrCat', () => cfg.ocr.cat, (v) => { cfg.ocr.cat = v; });
   bind('cfgOcrSpa', () => cfg.ocr.spa, (v) => { cfg.ocr.spa = v; });
   bind('cfgOcrEng', () => cfg.ocr.eng, (v) => { cfg.ocr.eng = v; });
+  // IA de Google: interruptor, clau (només en este navegador) i model
+  (function () {
+    const fields = $('cloudFields'), key = $('cfgKey'), sel = $('cfgModel'), cust = $('cfgModelCustom');
+    const paintKey = () => { $('keyState').textContent = _t(QVCLOUD.getKey() ? 'qv.cfg.key_ok' : 'qv.cfg.key_none'); $('keyShow').textContent = _t(key.type === 'password' ? 'qv.cfg.key_show' : 'qv.cfg.key_hide'); };
+    const paintModel = () => { cust.hidden = sel.value !== 'custom'; };
+    $('cfgCloud').checked = !!cfg.cloud; fields.hidden = !cfg.cloud;
+    $('cfgCloud').addEventListener('change', () => { cfg.cloud = $('cfgCloud').checked; fields.hidden = !cfg.cloud; saveCfg(); renderCloud(); });
+    key.value = QVCLOUD.getKey();
+    key.addEventListener('input', () => { QVCLOUD.setKey(key.value); paintKey(); });
+    $('keyShow').addEventListener('click', () => { key.type = key.type === 'password' ? 'text' : 'password'; paintKey(); });
+    $('keyClear').addEventListener('click', () => { QVCLOUD.clearKey(); key.value = ''; key.type = 'password'; paintKey(); });
+    sel.value = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'custom'].includes(cfg.cloudModel) ? cfg.cloudModel : 'custom';
+    cust.value = cfg.cloudModelCustom || (sel.value === 'custom' && !['gemini-3.5-flash', 'gemini-3.5-flash-lite'].includes(cfg.cloudModel) ? cfg.cloudModel : '');
+    sel.addEventListener('change', () => { cfg.cloudModel = sel.value; paintModel(); saveCfg(); });
+    cust.addEventListener('input', () => { cfg.cloudModelCustom = cust.value.trim(); saveCfg(); });
+    paintModel(); paintKey();
+    PIAR_I18N.onChange(paintKey);
+  })();
   $('configBtn').onclick = () => { $('config-layer').style.display = 'flex'; };
   $('infoBtn').onclick = () => { $('info-layer').style.display = 'flex'; };
   $('closeConfigBtn').onclick = () => { $('config-layer').style.display = 'none'; };
   $('closeInfoBtn').onclick = () => { $('info-layer').style.display = 'none'; };
   PIAR_I18N.mountSelector($('langSelectHost'));
-  PIAR_I18N.onChange(() => { $('status-text').textContent = _t(statusKey); renderSteps(); paintVlmMsg(); if (S.a) renderAll(); });
+  PIAR_I18N.onChange(() => { $('status-text').textContent = _t(statusKey); renderSteps(); paintVlmMsg(); paintCloudMsg(); if (S.a) renderAll(); });
   renderSteps();
 
   // Ajuda per a proves: accés a l'estat

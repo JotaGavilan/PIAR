@@ -1,5 +1,5 @@
 {
- "version": "e2ba8c1b5188",
+ "version": "aa3aeee50ae1",
  "shell": [
   "./",
   "index.html",
@@ -63,6 +63,10 @@
   "quevuen/examples/ex2.jpg",
   "quevuen/guia-img/quevuen-1-inici.webp",
   "quevuen/guia-img/quevuen-10-resum-deduccions.webp",
+  "quevuen/guia-img/quevuen-11-nuvol-config.webp",
+  "quevuen/guia-img/quevuen-12-nuvol-abans.webp",
+  "quevuen/guia-img/quevuen-13-nuvol-confirma.webp",
+  "quevuen/guia-img/quevuen-14-nuvol-resultat.webp",
   "quevuen/guia-img/quevuen-2-resultat.webp",
   "quevuen/guia-img/quevuen-3-resum.webp",
   "quevuen/guia-img/quevuen-4-troballes.webp",
@@ -82,6 +86,7 @@
   "quevuen/icons/site.webmanifest",
   "quevuen/js/analyzer.js",
   "quevuen/js/app.js",
+  "quevuen/js/cloud.js",
   "quevuen/js/i18n.js",
   "quevuen/js/insights.js",
   "quevuen/js/vlm-worker.js",
