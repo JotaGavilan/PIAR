@@ -219,25 +219,36 @@
     const out = groups.filter((g) => g.best.score >= 0.5 || (g.n >= 2 && g.best.score >= 0.25)).map((g) => g.best);
     return out;
   }
-  // Còpia de la imatge amb un mosaic gros damunt de cada regió (amb marge perquè entren cabells i orelles)
-  function pixelateRegions(canvas, boxes) {
+  // Còpia de la imatge amb un mosaic damunt de cada cara. Nivells de protecció:
+  //   max   → quadrat amplit (cabells, orelles i coll inclosos), mosaic gros
+  //   bal   → òval ajustat a la cara (equilibrat)
+  //   tight → òval molt ajustat (és la que tapa menys foto)
+  const PIX_LEVELS = {
+    max:   { mx: 0.35, mt: 0.55, mb: 0.30, cells: 5, ellipse: false },
+    bal:   { mx: 0.18, mt: 0.28, mb: 0.10, cells: 6, ellipse: true },
+    tight: { mx: 0.12, mt: 0.22, mb: 0.08, cells: 6, ellipse: true }
+  };
+  function pixelateRegions(canvas, boxes, level) {
+    const L = PIX_LEVELS[level] || PIX_LEVELS.bal;
     const out = document.createElement('canvas'); out.width = canvas.width; out.height = canvas.height;
     const ctx = out.getContext('2d'); ctx.drawImage(canvas, 0, 0);
-    const regions = [];
+    const regions = []; let area = 0;
     boxes.forEach((b) => {
-      const mx = b.w * 0.35, myT = b.h * 0.55, myB = b.h * 0.3;
-      const x0 = Math.max(0, Math.floor(b.x - mx)), y0 = Math.max(0, Math.floor(b.y - myT));
-      const x1 = Math.min(canvas.width, Math.ceil(b.x + b.w + mx)), y1 = Math.min(canvas.height, Math.ceil(b.y + b.h + myB));
+      const x0 = Math.max(0, Math.floor(b.x - b.w * L.mx)), y0 = Math.max(0, Math.floor(b.y - b.h * L.mt));
+      const x1 = Math.min(canvas.width, Math.ceil(b.x + b.w * (1 + L.mx))), y1 = Math.min(canvas.height, Math.ceil(b.y + b.h * (1 + L.mb)));
       const w = x1 - x0, h = y1 - y0; if (w < 2 || h < 2) return;
-      const cells = 5;                                             // ~5 caselles en el costat més curt: no es pot reconéixer
-      const bs = Math.max(6, Math.round(Math.min(w, h) / cells));
+      const bs = Math.max(6, Math.round(Math.min(w, h) / L.cells));          // ~5-6 caselles en el costat més curt: no es pot reconéixer
       const tw = Math.max(1, Math.ceil(w / bs)), th = Math.max(1, Math.ceil(h / bs));
       const tmp = document.createElement('canvas'); tmp.width = tw; tmp.height = th;
       const tctx = tmp.getContext('2d'); tctx.imageSmoothingEnabled = true; tctx.drawImage(canvas, x0, y0, w, h, 0, 0, tw, th);
-      ctx.imageSmoothingEnabled = false; ctx.drawImage(tmp, 0, 0, tw, th, x0, y0, w, h); ctx.imageSmoothingEnabled = true;
+      const m = document.createElement('canvas'); m.width = w; m.height = h;
+      const mc = m.getContext('2d'); mc.imageSmoothingEnabled = false; mc.drawImage(tmp, 0, 0, tw, th, 0, 0, w, h);
+      if (L.ellipse) { mc.globalCompositeOperation = 'destination-in'; mc.beginPath(); mc.ellipse(w / 2, h / 2, w / 2, h / 2, 0, 0, Math.PI * 2); mc.fill(); area += Math.PI * w * h / 4; }
+      else area += w * h;
+      ctx.drawImage(m, x0, y0);
       regions.push({ x: x0, y: y0, w, h });
     });
-    return { canvas: out, regions };
+    return { canvas: out, regions, coverage: area / (canvas.width * canvas.height) };
   }
   // JPEG redimensionat (sense EXIF: el canvas no en porta mai)
   function toJpegBlob(canvas, maxSide, q) {

@@ -23,7 +23,7 @@
 
   const inside = (px, py, b, m) => px >= b.x - m && px <= b.x + b.w + m && py >= b.y - m && py <= b.y + b.h + m;
 
-  async function prepare(img, a) {
+  async function prepare(img, a, level) {
     const canvas = img.canvas;
     let faces;
     try { faces = await QV.detectFacesWide(canvas); } catch (e) { return { ok: false, reason: 'nocheck' }; }
@@ -40,17 +40,17 @@
     });
     if (lost.length) return { ok: false, reason: 'people', n: lost.length };
     // 3) Pixelat + JPEG sense metadades
-    const px = QV.pixelateRegions(canvas, faces.map((f) => f.box));
+    const px = QV.pixelateRegions(canvas, faces.map((f) => f.box), level);
     const blob = await QV.toJpegBlob(px.canvas, SEND_SIDE, 0.85);
     if (!blob) return { ok: false, reason: 'nocheck' };
     const hasText = !!(a && a.text && a.text.text && window.QVI && QVI.findPII(a.text.text).length);
-    return { ok: true, blob, url: URL.createObjectURL(blob), faces: faces.length, text: hasText };
+    return { ok: true, blob, url: URL.createObjectURL(blob), faces: faces.length, text: hasText, coverage: px.coverage };
   }
 
   const PROMPTS = {
-    ca: 'Ets un ajudant d\'una activitat escolar sobre privacitat digital. Descriu esta foto amb detall: escena, lloc probable, persones (SENSE identificar-les: les cares estan pixelades a propòsit), objectes, roba, text visible i moment del dia. Després afig una secció «Què es podria deduir» amb 4 a 6 punts (hàbits, aficions, entorn, context escolar o familiar…) deixant clar que són hipòtesis. No endevines dades molt personals (salut, religió, orientació, ideologia) ni intentes saber qui és ningú. Escriu en valencià, en text pla sense Markdown ni asteriscs, amb un màxim de 220 paraules.',
-    es: 'Eres un ayudante de una actividad escolar sobre privacidad digital. Describe esta foto con detalle: escena, lugar probable, personas (SIN identificarlas: las caras están pixeladas a propósito), objetos, ropa, texto visible y momento del día. Después añade una sección «Qué se podría deducir» con 4 a 6 puntos (hábitos, aficiones, entorno, contexto escolar o familiar…) dejando claro que son hipótesis. No adivines datos muy personales (salud, religión, orientación, ideología) ni intentes saber quién es nadie. Escribe en español, en texto plano sin Markdown ni asteriscos, con un máximo de 220 palabras.',
-    en: 'You are a helper in a school activity about digital privacy. Describe this photo in detail: scene, likely place, people (WITHOUT identifying them: the faces are pixelated on purpose), objects, clothing, visible text and time of day. Then add a section called "What could be inferred" with 4 to 6 points (habits, hobbies, surroundings, school or family context…) making clear these are hypotheses. Do not guess very personal data (health, religion, orientation, ideology) and do not try to work out who anyone is. Write in English, in plain text without Markdown or asterisks, in at most 220 words.'
+    ca: "Ets un ajudant d'una activitat escolar sobre privacitat digital. Descriu esta foto amb detall: escena, lloc probable, persones (SENSE identificar-les: les cares estan pixelades a propòsit), objectes, roba, text visible i moment del dia. Després afig la secció «Què es podria deduir» amb 5 a 8 punts, deixant clar que són hipòtesis: hàbits i aficions, entorn i context (escolar, familiar, laboral), possible situació socioeconòmica (tipus d'habitatge, objectes, roba, marques, vehicle) i, només si hi ha símbols visibles (banderes, samarretes, cartells, pegatines), pistes polítiques o ideològiques de l'entorn, sense atribuir una ideologia a cap persona concreta. No endevines salut, religió ni orientació sexual, ni intentes saber qui és ningú. Escriu en valencià, en text pla sense Markdown ni asteriscs, amb un màxim de 280 paraules.",
+    es: "Eres un ayudante de una actividad escolar sobre privacidad digital. Describe esta foto con detalle: escena, lugar probable, personas (SIN identificarlas: las caras están pixeladas a propósito), objetos, ropa, texto visible y momento del día. Después añade la sección «Qué se podría deducir» con 5 a 8 puntos, dejando claro que son hipótesis: hábitos y aficiones, entorno y contexto (escolar, familiar, laboral), posible situación socioeconómica (tipo de vivienda, objetos, ropa, marcas, vehículo) y, solo si hay símbolos visibles (banderas, camisetas, carteles, pegatinas), pistas políticas o ideológicas del entorno, sin atribuir una ideología a ninguna persona concreta. No adivines salud, religión ni orientación sexual, ni intentes saber quién es nadie. Escribe en español, en texto plano sin Markdown ni asteriscos, con un máximo de 280 palabras.",
+    en: "You are a helper in a school activity about digital privacy. Describe this photo in detail: scene, likely place, people (WITHOUT identifying them: the faces are pixelated on purpose), objects, clothing, visible text and time of day. Then add a section called \"What could be inferred\" with 5 to 8 points, making clear they are hypotheses: habits and hobbies, surroundings and context (school, family, work), possible socioeconomic situation (type of housing, objects, clothing, brands, vehicle) and, only if there are visible symbols (flags, t-shirts, posters, stickers), political or ideological cues of the setting, without attributing an ideology to any specific person. Do not guess health, religion or sexual orientation, and do not try to work out who anyone is. Write in English, in plain text without Markdown or asterisks, in at most 280 words."
   };
 
   function blobToB64(blob) {
@@ -69,7 +69,7 @@
     const data = await blobToB64(blob);
     const body = {
       contents: [{ role: 'user', parts: [{ text: PROMPTS[lang] || PROMPTS.ca }, { inline_data: { mime_type: 'image/jpeg', data } }] }],
-      generationConfig: { temperature: 0.5, maxOutputTokens: 2500 }
+      generationConfig: { temperature: 0.5, maxOutputTokens: 3000 }
     };
     const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
     const timer = ctl ? setTimeout(() => ctl.abort(), 90000) : null;

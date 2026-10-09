@@ -11,7 +11,7 @@
 
   // ── Configuració (es recorda en este dispositiu) ──
   const CFG_KEY = 'qv.cfg.v1';
-  const cfg = { faces: true, objects: true, text: true, vlm: true, cloud: false, cloudModel: 'gemini-3.5-flash', cloudModelCustom: '', tech: false, ocr: { cat: true, spa: true, eng: true } };
+  const cfg = { faces: true, objects: true, text: true, vlm: true, cloud: false, cloudModel: 'gemini-3.5-flash', cloudPix: 'bal', cloudModelCustom: '', tech: false, ocr: { cat: true, spa: true, eng: true } };
   try { const s = JSON.parse(localStorage.getItem(CFG_KEY) || 'null'); if (s) { Object.assign(cfg, s); cfg.ocr = Object.assign({ cat: true, spa: true, eng: true }, s.ocr || {}); } } catch (e) {}
   const saveCfg = () => { try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {} };
 
@@ -183,7 +183,7 @@
     const run = S.run;
     S.cloudBusy = true; $('cloudBtn').disabled = true; setCloudMsg('qv.cloud.prep');
     let prep;
-    try { prep = await QVCLOUD.prepare(S.img, S.a); }
+    try { prep = await QVCLOUD.prepare(S.img, S.a, cfg.cloudPix); }
     catch (e) { if (window.console) console.warn('[qv] cloud prepare', e); prep = { ok: false, reason: 'nocheck' }; }
     S.cloudBusy = false; $('cloudBtn').disabled = false;
     if (run !== S.run) return;
@@ -193,6 +193,7 @@
     $('cloudPreview').src = prep.url;
     const li = [];
     li.push(`<li>${esc(prep.faces ? _t('qv.cloud.conf.faces_n', { n: prep.faces }) : _t('qv.cloud.conf.faces_0'))}</li>`);
+    if (prep.faces) li.push(`<li>${esc(_t('qv.cloud.conf.pix', { level: _t('qv.cloud.lvl.' + (['max', 'bal', 'tight'].includes(cfg.cloudPix) ? cfg.cloudPix : 'bal')), pct: (prep.coverage * 100).toFixed(1) }))}</li>`);
     li.push(`<li>${esc(_t('qv.cloud.conf.meta'))}</li>`);
     if (prep.text) li.push(`<li class="warn">${esc(_t('qv.cloud.conf.text'))}</li>`);
     li.push(`<li>${esc(_t('qv.cloud.conf.model', { model: cloudModel() }))}</li>`);
@@ -375,6 +376,8 @@
     $('keyClear').addEventListener('click', () => { QVCLOUD.clearKey(); key.value = ''; key.type = 'password'; paintKey(); });
     sel.value = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'custom'].includes(cfg.cloudModel) ? cfg.cloudModel : 'custom';
     cust.value = cfg.cloudModelCustom || (sel.value === 'custom' && !['gemini-3.5-flash', 'gemini-3.5-flash-lite'].includes(cfg.cloudModel) ? cfg.cloudModel : '');
+    const pix = $('cfgPix'); pix.value = ['max', 'bal', 'tight'].includes(cfg.cloudPix) ? cfg.cloudPix : 'bal';
+    pix.addEventListener('change', () => { cfg.cloudPix = pix.value; saveCfg(); });
     sel.addEventListener('change', () => { cfg.cloudModel = sel.value; paintModel(); saveCfg(); });
     cust.addEventListener('input', () => { cfg.cloudModelCustom = cust.value.trim(); saveCfg(); });
     paintModel(); paintKey();
