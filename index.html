@@ -16,6 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="PIAR">
   <link rel="stylesheet" href="vendor/fonts/fonts.css">
   <link rel="stylesheet" href="shared/piar-ui.css">
+  <link rel="stylesheet" href="shared/loading_overlay.css">
   <style>
     /* Tokens, tipografia, botons, targetes i etiquetes: shared/piar-ui.css. Ací només la maquetació de la portada. */
     * { margin: 0; padding: 0; }
@@ -215,6 +216,22 @@
       </div>
     </a>
 
+    <!-- JVeu -->
+    <a href="jveu/" class="project-card card">
+      <img src="jveu/icons/android-chrome-512x512.png"
+           alt="JVeu" class="project-icon app-icon">
+      <h2 class="project-title">JVeu</h2>
+      <p class="project-description" data-i18n="pt.card.jveu">
+        El cap de JFace, però manat per la veu. Digues «mira a l'esquerra, obri la boca i parpelleja tres voltes» i l'app ho
+        entén, ho converteix en dades i ho envia a la micro:bit per Bluetooth. Funciona en valencià, castellà i anglés.
+      </p>
+      <div class="project-tech">
+        <span class="chip tech-tag" data-i18n="pt.tag.voice">Veu</span>
+        <span class="chip tech-tag">Whisper</span>
+        <span class="chip tech-tag">Bluetooth</span>
+      </div>
+    </a>
+
     <!-- RobHort -->
     <a href="robhort/" class="project-card card">
       <img src="robhort/icons/android-chrome-512x512.png" 
@@ -327,6 +344,7 @@
       <li data-i18n-html="pt.off.b2">Els models de <b>RobHort</b> i <b>Màquina</b> (imatge i postura) es descarreguen de Google en este pas.</li>
       <li data-i18n-html="pt.off.b3">Els models de <b>Teachable Microbit</b> són els teus: es guarden la primera vegada que els carregues amb Internet.</li>
       <li data-i18n-html="pt.off.b5">La <b>descripció avançada</b> de <b>Què veuen de tu</b> (≈ 250 MB) no entra en este pas: es descarrega des de la pròpia app, només si la uses.</li>
+      <li data-i18n-html="pt.off.b7">El <b>reconeixement de veu</b> de <b>JVeu</b> amb Whisper (≈ 40–80 MB) es descarrega en este pas; el del navegador necessita Internet.</li>
       <li data-i18n-html="pt.off.b6">La <b>IA de Google</b> de <b>Què veuen de tu</b> (opcional) sempre necessita Internet: no es pot descarregar.</li>
       <li data-i18n-html="pt.off.b4">El <b>Bluetooth</b> no necessita Internet. No actives el mode avió (o torna a activar el Bluetooth després).</li>
     </ul>
@@ -346,6 +364,7 @@
   <script src="shared/i18n_shared.js"></script>
   <script src="shared/i18n_portada.js"></script>
   <script>PIAR_I18N.mountSelector(document.getElementById('langHost'), { id: 'piarLang' });</script>
+  <script src="shared/loading_overlay.js"></script>
   <script src="shared/pwa.js"></script>
   <script>
   (function () {
@@ -401,18 +420,24 @@
 
     $('prepBtn').onclick = function () {
       if (busy) return; busy = true; $('prepBtn').disabled = true; $('prepBar').hidden = false; $('prepFill').style.width = '0%'; msg('pt.prep.start');
+      // Capa de bloqueig: la descàrrega no s'ha d'interrompre canviant de pàgina
+      var endBusy = PIAR_BUSY.begin({ message: _t('pt.busy.prep'), details: _t('pt.busy.prep_d'), icon: '📥', progress: 0.01 });
       P.prepare(function (p) {
-        if (p.phase === 'libs') { $('prepFill').style.width = Math.round(p.done / p.total * 90) + '%'; msg('pt.prep.libs', { done: P.fmtMB(p.done), total: P.fmtMB(p.total) }); }
-        else if (p.phase === 'models') { $('prepFill').style.width = '92%'; msg('pt.prep.models', { name: p.name }); }
+        if (p.phase === 'libs') { $('prepFill').style.width = Math.round(p.done / p.total * 90) + '%'; PIAR_BUSY.setProgress(p.done / p.total * 0.9); msg('pt.prep.libs', { done: P.fmtMB(p.done), total: P.fmtMB(p.total) }); PIAR_BUSY.update(undefined, _t('pt.prep.libs', { done: P.fmtMB(p.done), total: P.fmtMB(p.total) })); }
+        else if (p.phase === 'models') { $('prepFill').style.width = '92%'; PIAR_BUSY.setProgress(0.92); msg('pt.prep.models', { name: p.name }); PIAR_BUSY.update(undefined, _t('pt.prep.models', { name: p.name })); }
       }).then(function (res) {
         $('prepFill').style.width = '100%';
         var bad = Object.keys(res).filter(function (k) { return !res[k].ok; });
         if (bad.length) msg('pt.prep.partial', { bad: bad.join(', ') }, 'err');
         else msg('pt.prep.done', null, 'ok');
       }).catch(function (e) { msg(null, null, 'err', '❌ ' + (e && e.message || e)); })
-        .then(function () { busy = false; $('prepBtn').disabled = false; refresh(); });
+        .then(function () { busy = false; $('prepBtn').disabled = false; endBusy(); refresh(); });
     };
-    $('clearBtn').onclick = function () { if (confirm(_t('pt.clear.confirm'))) P.clear().then(function () { msg('pt.clear.done'); refresh(); }); };
+    $('clearBtn').onclick = function () {
+      if (!confirm(_t('pt.clear.confirm'))) return;
+      var endClear = PIAR_BUSY.begin({ message: _t('pt.busy.clear'), icon: '🗑' });
+      P.clear().then(function () { msg('pt.clear.done'); refresh(); }).catch(function () {}).then(endClear);
+    };
   })();
   </script>
 </body>

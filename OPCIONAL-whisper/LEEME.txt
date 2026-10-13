@@ -1,0 +1,15 @@
+WHISPER LOCAL PARA JVeu (opcional)
+==================================
+JVeu funciona SIN este archivo (voz del navegador + escribir órdenes). Solo hace falta para
+la opción «Whisper local» (reconocimiento de voz sin Internet).
+
+Para activarlo:
+  1. Copia  stt-bundle.js  a  vendor/transformers-4.3.1/  (junto a vlm-bundle.js).
+  2. Ejecuta  python3 tools/build-pwa.py  y súbelo todo a GitHub.
+
+OJO: es el paquete transformers.js 4.3.1 tal cual sale de esbuild (sin modificar). El de
+«Què veuen de tu» (vlm-bundle.js) tuvo que retocarse porque el escáner de secretos de GitHub
+daba falsos positivos con ciertas cadenas del código. Este puede dar los mismos avisos al
+hacer «git push». Si GitHub lo bloquea, te enseña qué detecta: son cadenas de la propia
+librería (nombres de clases, una URL de un gist), no claves. Tú decides si lo permites
+(botón «Allow secret»/«Bypass» de la protección de push) o no lo subes.

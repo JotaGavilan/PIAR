@@ -1,0 +1,37 @@
+{
+  "name": "JVeu – Cap amb veu",
+  "short_name": "JVeu",
+  "description": "Mou el cap de la micro:bit amb la veu: les ordres es transformen en el mateix paquet de 6 dígits que JFace.",
+  "lang": "ca-ES-valencia",
+  "start_url": "../",
+  "scope": "../",
+  "display": "standalone",
+  "background_color": "#090812",
+  "theme_color": "#1e1a2e",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -23,6 +23,8 @@ Són còpies sense modificar dels paquets de npm indicats.
 Els **pesos dels models** de COCO-SSD, MobileNet i PoseNet no estan ací: cada app els descarrega de
 Google la primera vegada i el service worker (`/sw.js`) els guarda al dispositiu (vegeu la portada → «Ús sense Internet»).
 
+`transformers-4.3.1/stt-bundle.js` (opcional) és el motor de **Whisper local** de *JVeu* (transformers.js 4.3.1 empaquetat amb esbuild: `export { pipeline, env }`). Si no hi és, JVeu usa només la veu del navegador. El model `onnx-community/whisper-base` (o `tiny`) el descarrega transformers.js de Hugging Face i es guarda en `transformers-cache`; el `.wasm` és el mateix de més amunt.
+
 `transformers-4.3.1/` és **opcional** (≈27 MB): no entra en «Ús sense Internet»; el service worker el guarda la primera vegada que es genera una «descripció avançada» a *Què veuen de tu*. El model Florence-2 (≈250 MB) el descarrega transformers.js de Hugging Face i el guarda en la memòria del navegador (`transformers-cache`).
 
 Després d'afegir o canviar fitxers del repositori, executa `python3 tools/build-pwa.py` (actualitza `precache.json` i la versió de `sw.js`).

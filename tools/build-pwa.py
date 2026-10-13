@@ -46,6 +46,7 @@ GROUPS = [
     ('robhort', 'RobHort', ['tfjs-4.17.0/', 'coco-ssd-2.2.3/'], 'robhort/precarrega.html'),
     ('teachable', 'Teachable Microbit', ['tfjs-3.11.0/', 'teachablemachine-image-0.8.5/', 'teachablemachine-pose-0.8.6/', 'tfjs-4.15.0/', 'mobilenet-2.1.0/', 'posenet-2.2.2/', 'mediapipe-hands/'], None),
     ('maquina', 'Màquina Ensenyable', ['tfjs-4.15.0/', 'mobilenet-2.1.0/', 'posenet-2.2.2/', 'mediapipe-hands/'], 'maquina-ensenyable/precarrega.html'),
+    ('jveu', 'JVeu', [], 'jveu/precarrega.html'),
     ('quevuen', 'Què veuen de tu', ['exifr-', 'face-api-', 'coco-ssd-2.2.3/', 'tesseract.js-', 'tesseract.js-core-', 'tesseract-lang-'], 'quevuen/precarrega.html'),
 ]
 groups = []

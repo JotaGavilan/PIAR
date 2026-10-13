@@ -1,0 +1,138 @@
+/* ============================================================
+   style.css – JVeu (cap amb veu)
+   La base visual (tokens, capçalera, botons, capes, formularis, targetes) ve de ../shared/piar-ui.css,
+   que es carrega ABANS d'este fitxer. Ací només hi ha la disposició de la pantalla.
+   ============================================================ */
+html { background: var(--bg-dark); }
+
+body {
+  margin: 0;
+  display: flex; flex-direction: column; align-items: center;
+  height: 100vh; height: 100dvh; height: var(--app-h, 100dvh);
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  overflow: hidden;
+}
+body > .piar-header, body > #stage, body > #talk, body > #controls { width: 100%; max-width: 480px; }
+@media (min-width: 521px) {
+  body > .piar-header { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  body > #controls    { border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+}
+
+/* ── Escena (es pot desplaçar si la pantalla és baixa) ─────── */
+#stage {
+  flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+  display: flex; flex-direction: column; align-items: stretch; gap: 8px;
+  padding: 8px 12px 6px;
+  background: radial-gradient(120% 80% at 50% 0%, #101d17 0%, var(--bg-dark) 70%);
+}
+#head-box {
+  flex: 0 0 auto;
+  height: clamp(96px, 21vh, 230px);
+  display: flex; align-items: center; justify-content: center;
+}
+#head-box .vhead-svg { height: 100%; width: auto; max-width: 100%; display: block; }
+
+/* Dades enviades (igual que JFace) */
+#data-panel {
+  flex: 0 0 auto;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; column-gap: .1em;
+  padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: rgba(30,26,46,.8);
+  font-size: clamp(.72rem, 3.4vw, .88rem); font-weight: 500; color: var(--text-dim); text-align: center;
+}
+#data-panel span { margin: 0 .2em; font-weight: 600; color: var(--text); }
+#data-panel span[data-i18n] { margin: 0; font-weight: 500; color: var(--text-dim); }
+#data-panel code { margin: 0 .2em; padding: 1px 6px; border-radius: 6px; background: rgba(74,222,128,.1); color: var(--ok); font-weight: 700; letter-spacing: .08em; }
+#data-panel #device-indicator { flex-basis: 100%; margin: 0 0 2px; color: var(--accent2); order: -1; }
+
+/* Què s'ha dit i entés */
+#heard { flex: 0 0 auto; padding: 10px 12px; }
+#heard p { margin: 0; }
+.heard-none { color: var(--text-dim); font-size: .85rem; line-height: 1.5; }
+.heard-line { font-size: .95rem; line-height: 1.5; overflow-wrap: anywhere; }
+.heard-line q { color: var(--text); font-weight: 600; quotes: "«" "»"; }
+.heard-label { font-size: .74rem; color: var(--text-dim); font-weight: 600; letter-spacing: .03em; text-transform: none; }
+#stepsLabel { margin-top: 8px; }
+#heardSrc:empty { display: none; }
+#heardSrc { font-size: .68rem; vertical-align: middle; }
+.steps { display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; margin-top: 4px; overflow-x: auto; overscroll-behavior-x: contain; padding-bottom: 4px; scrollbar-width: thin; }
+.steps > * { flex: 0 0 auto; }
+.step { display: inline-flex; flex-wrap: nowrap; gap: 4px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 10px; background: var(--border2); transition: border-color .15s, background .15s, box-shadow .15s; }
+.step.now { border-color: var(--ok); background: rgba(74,222,128,.14); box-shadow: 0 0 10px rgba(74,222,128,.3); }
+.step.done { opacity: .55; }
+.step .chip { font-size: .7rem; }
+.steps .sep { color: var(--text-dim); font-size: .8rem; }
+.say { margin-top: 8px !important; font-size: .82rem; line-height: 1.5; color: var(--text-dim); overflow-wrap: anywhere; }
+.say.warn { color: var(--warn); }
+.say.err { color: var(--danger); }
+
+/* Exemples */
+.ex-title { margin: 2px 2px 4px; font-size: .74rem; color: var(--text-dim); font-weight: 600; }
+.ex-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.ex { flex: 0 1 auto; min-height: 36px; padding: 6px 12px; font-size: .78rem; border-radius: 999px; font-weight: 500; }
+
+/* ── Parlar / escriure ───────────────────────────────────── */
+#talk {
+  flex: 0 0 auto; z-index: 10;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 8px 12px 6px;
+  background: var(--bg2); border-top: 1px solid var(--border);
+}
+.mic {
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  width: 100%; min-height: 56px; border-radius: 999px;
+  font-size: .95rem; font-weight: 600; line-height: 1.2; text-align: center; white-space: normal;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: none;
+  position: relative;
+}
+.mic .mic-ico { font-size: 1.5rem; line-height: 1; }
+@media (max-width: 350px) { .mic { gap: .3rem; padding-left: 8px; padding-right: 8px; font-size: .85rem; } .mic .mic-ico { font-size: 1.2rem; } .talk-main .side { width: 48px; } }
+.mic.listening { background: var(--danger); border-color: var(--danger); color: #fff; box-shadow: 0 0 0 0 rgba(255,92,122,.6); animation: micPulse 1.1s infinite; }
+.mic.thinking { background: var(--warn); border-color: var(--warn); color: #1b1300; }
+.mic[disabled] { opacity: .55; }
+@keyframes micPulse { 0% { box-shadow: 0 0 0 0 rgba(255,92,122,.55); } 70% { box-shadow: 0 0 0 16px rgba(255,92,122,0); } 100% { box-shadow: 0 0 0 0 rgba(255,92,122,0); } }
+@media (prefers-reduced-motion: reduce) { .mic.listening { animation: none; } }
+
+#textForm { display: flex; gap: 6px; margin: 0; }
+#textForm input { flex: 1 1 auto; min-width: 0; margin: 0; }
+#textForm button { flex: 0 0 auto; min-width: var(--tap); padding: 0 14px; }
+.talk-main { display: flex; gap: 6px; align-items: stretch; }
+.talk-main .mic { flex: 1 1 auto; width: auto; min-width: 0; }
+.talk-main .side { flex: 0 0 auto; width: 56px; min-height: 56px; padding: 0; font-size: 1.35rem; border-radius: 18px; }
+
+/* ── Controls inferiors ───────────────────────────────────── */
+#controls { z-index: 10000; }
+#controls button { flex: 1 1 auto; }
+#status { padding-top: 2px; }
+.btn-bluetooth.connected::before { content: '✓'; }
+#connectBtn.no-bt, #connectBtn.no-bt:hover, #connectBtn.no-bt:active { background: rgba(251,191,36,.1); border-color: rgba(251,191,36,.55); color: var(--warn); box-shadow: none; }
+#status-text { overflow-wrap: anywhere; }
+
+/* ── Configuració ─────────────────────────────────────────── */
+.layer-box .config-note { font-size: .8rem; line-height: 1.55; margin: .5rem 0 0; }
+.layer-box label { display: block; margin-top: .6rem; }
+.layer-box label.check { display: flex; align-items: flex-start; gap: 10px; min-height: var(--tap); padding: 6px 0; cursor: pointer; }
+.layer-box label.check input { flex-shrink: 0; margin-top: 3px; color-scheme: dark; }
+.layer-box select, .layer-box input[type="password"], .layer-box input[type="text"] { width: 100%; margin-top: 4px; }
+.layer-box input[type="password"] { min-height: var(--tap); padding: 8px 12px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-family: var(--font); font-size: .9rem; }
+.interval-control label { flex-basis: 100%; margin-top: .4rem; }
+#intervalLabel { font-weight: 700; color: var(--accent2); white-space: nowrap; min-width: 3.2em; text-align: right; }
+.cal-row { display: flex; gap: 6px; margin-top: 8px; }
+.cal-row button { flex: 1 1 0; padding-left: 4px; padding-right: 4px; font-size: .82rem; }
+#whisperBox button, #gemBox button { margin-top: 8px; }
+#whState { font-weight: 600; }
+
+/* ── Pantalles molt baixes (mòbil en horitzontal): tot es pot desplaçar ── */
+@media (max-height: 520px) {
+  body { overflow-y: auto; }
+  #stage { overflow: visible; flex: 0 0 auto; }
+  #head-box { height: 120px; }
+}
+/* App instal·lada: alçada real i zones segures (igual que JFace) */
+.layer {
+  bottom: auto; height: 100vh; height: 100dvh; height: var(--app-h, 100dvh);
+  padding-top: calc(16px + env(safe-area-inset-top, 0px)); padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(16px + env(safe-area-inset-left, 0px)); padding-right: calc(16px + env(safe-area-inset-right, 0px));
+}
+.layer-box { max-height: calc(var(--app-h, 100dvh) - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<title>JVeu – descàrrega del model de veu</title>
+</head>
+<body>
+<!-- Pàgina oculta: la crida la portada («Descarregar per a ús sense Internet»). Baixa el model de veu local (Whisper)
+     de Hugging Face perquè el navegador el guarde («transformers-cache») i JVeu funcione sense Internet.
+     Si el motor Whisper no és dins de /vendor/, no falla: ho indica i continua. No usa el micròfon. -->
+<script src="js/speech.js"></script>
+<script>
+(async () => {
+  const steps = []; let ok = true, error = null;
+  const NAME = 'veu local (Whisper)';
+  try {
+    let model = 'base';
+    try { const c = JSON.parse(localStorage.getItem('jveu.cfg.v1') || '{}'); if (c.wmodel === 'tiny') model = 'tiny'; } catch (e) {}
+    const probe = await fetch('../vendor/transformers-4.3.1/stt-bundle.js', { method: 'HEAD' }).catch(() => null);
+    if (!probe || !probe.ok) {
+      steps.push({ name: NAME + ' – motor no inclòs', ok: true, skipped: true });
+    } else if (!JVeuSpeech.whisperSupported()) {
+      steps.push({ name: NAME + ' – no compatible amb este navegador', ok: true, skipped: true });
+    } else {
+      await JVeuSpeech.whisperLoad(model);
+      steps.push({ name: NAME + ' (' + model + ')', ok: true });
+    }
+  } catch (e) { ok = false; error = String(e && e.message || e); steps.push({ name: NAME, ok: false, error }); }
+  parent.postMessage({ piarPreload: 'jveu', finished: true, ok, steps, error }, location.origin);
+})();
+</script>
+</body>
+</html>

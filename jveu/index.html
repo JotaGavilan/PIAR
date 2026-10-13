@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#090812">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script src="../shared/viewport.js"></script>
+  <title data-i18n="jv.title">JVeu – Cap amb veu</title>
+  <link rel="stylesheet" href="../shared/piar-ui.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../shared/loading_overlay.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="manifest" href="icons/site.webmanifest">
+  <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="../vendor/fonts/fonts.css">
+</head>
+<body>
+  <!-- Capçalera -->
+  <header class="piar-header has-home">
+    <a class="btn piar-home" href="../" aria-label="Tornar a la pantalla principal" title="Tornar a la pantalla principal" data-i18n-attr="aria-label:sh.home;title:sh.home"><svg class="ico" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg></a>
+    <img src="icons/android-chrome-512x512.png" alt="Icona JVeu" data-i18n-attr="alt:jv.alt.app">
+    <h1 data-i18n="jv.title">JVeu – Cap amb veu</h1>
+  </header>
+
+  <!-- Escena: cap virtual, dades i què s'ha entés -->
+  <main id="stage">
+    <div id="head-box" role="img" aria-label="Cap virtual" data-i18n-attr="aria-label:jv.head.aria"></div>
+
+    <div id="data-panel" aria-live="off">
+      <span data-i18n="jv.data.yaw">Gir:</span> <span id="yaw">--</span>
+      <span data-i18n="jv.data.mouth">| Boca:</span> <span id="mouth">--</span>
+      <span data-i18n="jv.data.eyel">| Ull E:</span> <span id="eyeL">-</span>
+      <span data-i18n="jv.data.eyer">| Ull D:</span> <span id="eyeR">-</span>
+      <span data-i18n="jv.data.packet">| Paquet:</span> <code id="packet">------</code>
+      <span id="device-indicator" style="display:none;"></span>
+    </div>
+
+    <section id="heard" class="card" aria-live="polite">
+      <p id="heardNone" class="heard-none" data-i18n="jv.heard.none">Encara no has dit res. Prova un dels exemples o mantín premut el micròfon.</p>
+      <div id="heardBox" hidden>
+        <p class="heard-line"><span class="heard-label" data-i18n="jv.heard.said">Has dit:</span> <q id="heardTxt"></q> <span id="heardSrc" class="chip"></span></p>
+        <p class="heard-label" id="stepsLabel" data-i18n="jv.heard.understood">He entés:</p>
+        <div id="steps" class="steps"></div>
+        <p id="sayMsg" class="say"></p>
+      </div>
+    </section>
+
+    <section id="examples" aria-label="Exemples">
+      <p class="ex-title" data-i18n="jv.ex.title">Prova amb:</p>
+      <div class="ex-row">
+        <button type="button" class="ex" data-ex="1" data-i18n="jv.ex.1">Mira a l'esquerra</button>
+        <button type="button" class="ex" data-ex="2" data-i18n="jv.ex.2">Obri la boca</button>
+        <button type="button" class="ex" data-ex="3" data-i18n="jv.ex.3">Parpelleja tres vegades</button>
+        <button type="button" class="ex" data-ex="4" data-i18n="jv.ex.4">Di que no</button>
+        <button type="button" class="ex" data-ex="5" data-i18n="jv.ex.5">Gira un poc a la dreta i després al centre</button>
+        <button type="button" class="ex" data-ex="6" data-i18n="jv.ex.6">Fes com si estigueres sorprés</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Parlar o escriure -->
+  <div id="talk">
+    <div class="talk-main">
+      <button id="micBtn" class="btn-primary mic" type="button" aria-label="Botó per a parlar" data-i18n-attr="aria-label:jv.mic.aria">
+        <span class="mic-ico" aria-hidden="true">🎤</span><span id="micLabel" data-i18n="jv.mic.hold">Mantín premut i parla</span>
+      </button>
+      <button id="stopBtn" class="btn-danger side" type="button" aria-label="Parar" title="Parar" data-i18n-attr="aria-label:jv.btn.stop;title:jv.btn.stop" disabled>⏹</button>
+      <button id="centerBtn" class="side" type="button" aria-label="Centrar" title="Centrar" data-i18n-attr="aria-label:jv.btn.center;title:jv.btn.center">↺</button>
+    </div>
+    <form id="textForm" autocomplete="off">
+      <input id="textIn" type="text" maxlength="200" enterkeyhint="send" placeholder="O escriu l'ordre…" aria-label="Ordre escrita" data-i18n-attr="placeholder:jv.text.ph;aria-label:jv.text.aria">
+      <button id="textGo" type="submit" class="btn-primary" aria-label="Enviar l'ordre" data-i18n-attr="aria-label:jv.btn.send">▶</button>
+    </form>
+  </div>
+
+  <!-- Controls inferiors -->
+  <div id="controls" class="piar-controls">
+    <button id="connectBtn" class="btn-bluetooth btn-primary">🔵 Connectar Bluetooth</button>
+    <button id="configBtn" data-i18n="jv.btn.config">⚙️ Configurar</button>
+    <button id="infoBtn" data-i18n="jv.btn.help">ℹ️ Ajuda</button>
+    <div id="status" class="piar-status"><span id="status-text">🎤</span></div>
+  </div>
+
+  <!-- Capa de configuració -->
+  <div id="config-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona" data-i18n-attr="alt:jv.alt.icon">
+        <h2 data-i18n="jv.cfg.title">⚙️ Configuració</h2>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="jv.cfg.voice">🎤 Veu</h3>
+        <label for="cfgEngine" data-i18n="jv.cfg.engine">Reconeixement de veu</label>
+        <select id="cfgEngine">
+          <option value="web" data-i18n="jv.cfg.engine_web">Navegador (ràpid; a Chrome usa Google i cal Internet)</option>
+          <option value="whisper" data-i18n="jv.cfg.engine_whisper">Whisper local (privat, sense Internet)</option>
+        </select>
+        <div id="whisperBox" hidden>
+          <label for="cfgWModel" data-i18n="jv.cfg.wmodel">Model de Whisper</label>
+          <select id="cfgWModel">
+            <option value="base" data-i18n="jv.cfg.wmodel_base">Mitjà (≈ 80 MB): més precís (recomanat)</option>
+            <option value="tiny" data-i18n="jv.cfg.wmodel_tiny">Menut (≈ 40 MB): més ràpid, menys precís</option>
+          </select>
+          <p class="config-note"><span id="whState"></span></p>
+          <button id="whBtn" type="button" class="btn" data-i18n="jv.wh.btn">📥 Descarregar model</button>
+        </div>
+        <label for="cfgSpeechLang" data-i18n="jv.cfg.speechlang">Idioma en què parles</label>
+        <select id="cfgSpeechLang">
+          <option value="auto" data-i18n="jv.cfg.lang_same">El mateix de l'app</option>
+          <option value="ca">Valencià</option>
+          <option value="es">Castellano</option>
+          <option value="en">English</option>
+        </select>
+        <label for="cfgTalk" data-i18n="jv.cfg.talkmode">Botó de parlar</label>
+        <select id="cfgTalk">
+          <option value="hold" data-i18n="jv.cfg.talk_hold">Mantindre premut mentre parles</option>
+          <option value="tap" data-i18n="jv.cfg.talk_tap">Tocar per a començar i per a acabar</option>
+        </select>
+        <p class="config-note" data-i18n="jv.cfg.note_voice">Les ordres s'entenen en valencià, castellà i anglés.</p>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="jv.cfg.send">📡 Enviament i calibratge</h3>
+        <div class="interval-control">
+          <label for="intervalSlider" data-i18n="jv.cfg.interval">Interval entre paquets:</label>
+          <input type="range" id="intervalSlider" min="1" max="10" value="1" step="1">
+          <span id="intervalLabel">0,1 s</span>
+        </div>
+        <p class="config-note" data-i18n="jv.cfg.interval_note">Cada quants segons s'envia un trosset de moviment a la micro:bit.</p>
+        <div class="interval-control">
+          <label for="yawHalf" id="yawHalfLbl">Recorregut del gir: ±10</label>
+          <input type="range" id="yawHalf" min="3" max="14" value="10" step="1">
+        </div>
+        <div class="interval-control">
+          <label for="mouthMax" id="mouthMaxLbl">Obertura màxima de la boca: 20</label>
+          <input type="range" id="mouthMax" min="8" max="40" value="20" step="1">
+        </div>
+        <label class="check"><input type="checkbox" id="cfgInvert"> <span data-i18n="jv.cfg.invert">Invertir l'esquerra i la dreta del gir</span></label>
+        <p class="config-note" data-i18n="jv.cfg.cal_note">Com JFace, el gir 15 és «de cara».</p>
+        <div class="cal-row">
+          <button type="button" class="btn" id="calL" data-i18n="jv.cfg.cal_left">⬅ Esquerra</button>
+          <button type="button" class="btn" id="calC" data-i18n="jv.cfg.cal_center">⬆ Centre</button>
+          <button type="button" class="btn" id="calR" data-i18n="jv.cfg.cal_right">Dreta ➡</button>
+        </div>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="jv.cfg.gem">✨ IA de Google (frases lliures)</h3>
+        <label class="check"><input type="checkbox" id="cfgGem"> <span data-i18n="jv.cfg.gem_use">Preguntar a la IA de Google quan les regles no entenguen la frase</span></label>
+        <div id="gemBox" hidden>
+          <label for="cfgKey" data-i18n="jv.cfg.gem_key">Clau de Google</label>
+          <input type="password" id="cfgKey" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="AIza…" data-i18n-attr="placeholder:jv.cfg.gem_key_ph">
+          <p class="config-note" id="keyState"></p>
+          <label for="cfgGModel" data-i18n="jv.cfg.gem_model">Model</label>
+          <select id="cfgGModel">
+            <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite</option>
+            <option value="gemini-3.5-flash">gemini-3.5-flash</option>
+          </select>
+          <button type="button" class="btn" id="keyClear" data-i18n="jv.cfg.gem_clear">Esborrar la clau</button>
+        </div>
+        <p class="config-note" data-i18n="jv.cfg.gem_note">Només s'envia el TEXT de l'ordre, mai l'àudio.</p>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="sh.lang.label">🌐 Idioma</h3>
+        <div id="langSelectHost"></div>
+      </div>
+
+      <button class="close-btn" id="closeConfigBtn" data-i18n="jv.close">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Capa d'informació/ajuda -->
+  <div id="info-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona" data-i18n-attr="alt:jv.alt.icon">
+        <h2 data-i18n="jv.btn.help">ℹ️ Ajuda</h2>
+      </div>
+      <p data-i18n-html="jv.help.p1"></p>
+      <a class="guide-btn" href="guia.html" data-i18n="jv.help.guide">📖 Guia completa pas a pas</a>
+      <p data-i18n-html="jv.help.orders"></p>
+      <ul>
+        <li data-i18n-html="jv.help.o1"></li>
+        <li data-i18n-html="jv.help.o2"></li>
+        <li data-i18n-html="jv.help.o3"></li>
+        <li data-i18n-html="jv.help.o4"></li>
+        <li data-i18n-html="jv.help.o5"></li>
+      </ul>
+      <p data-i18n-html="jv.help.limit"></p>
+      <p data-i18n-html="jv.help.format"></p>
+      <p data-i18n-html="jv.help.voice"></p>
+      <p data-i18n-html="jv.help.gem"></p>
+      <p data-i18n-html="jv.help.net_title"></p>
+      <ul>
+        <li data-i18n-html="jv.help.net1"></li>
+        <li data-i18n-html="jv.help.net2"></li>
+      </ul>
+      <p data-i18n="sh.help.home_bt">El botó de la casa, dalt a l'esquerra, torna a la pantalla principal de PIAR.</p>
+      <p class="info-footer" data-i18n-html="jv.help.footer"></p>
+      <button class="close-btn" id="closeInfoBtn" data-i18n="jv.close">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Idioma (ha d'anar abans dels altres scripts de l'app) -->
+  <script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
+
+  <!-- Mòduls de l'app -->
+  <script src="../shared/internet_notice.js"></script>
+  <script src="../shared/loading_overlay.js"></script>
+  <script src="../shared/bluetooth_uart.js"></script>
+  <script src="js/commands.js"></script>
+  <script src="js/head.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/gemini.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/script.js"></script>
+<script src="../shared/piar_home.js"></script>
+<script src="../shared/pwa.js"></script>
+</body>
+</html>
