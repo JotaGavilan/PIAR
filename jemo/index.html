@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#090812">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script src="../shared/viewport.js"></script>
+  <title data-i18n="je.title">JEmo – Cara i cos amb emoció</title>
+  <link rel="stylesheet" href="../shared/piar-ui.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../shared/loading_overlay.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="manifest" href="icons/site.webmanifest">
+  <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="../vendor/fonts/fonts.css">
+</head>
+<body>
+  <!-- Capçalera -->
+  <header class="piar-header has-home">
+    <a class="btn piar-home" href="../" aria-label="Tornar a la pantalla principal" title="Tornar a la pantalla principal" data-i18n-attr="aria-label:sh.home;title:sh.home"><svg class="ico" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg></a>
+    <img src="icons/android-chrome-512x512.png" alt="Icona JEmo" data-i18n-attr="alt:je.alt.app">
+    <h1 data-i18n="je.title">JEmo – Cara i cos amb emoció</h1>
+  </header>
+
+  <main id="stage">
+    <!-- Càmera -->
+    <div id="cam-box" role="img" aria-label="Vista de la càmera" data-i18n-attr="aria-label:je.cam.aria">
+      <div id="cam-inner">
+        <video id="video" playsinline muted autoplay></video>
+        <canvas id="overlay"></canvas>
+      </div>
+      <div id="cam-msg">
+        <p id="cam-text" data-i18n="je.cam.intro">Tot es calcula al teu dispositiu: no s'envia cap imatge a Internet.</p>
+        <button id="camStart" type="button" class="btn-primary" data-i18n="je.cam.start">📷 Activar la càmera</button>
+      </div>
+      <div id="cam-tools" hidden>
+        <button id="camSwitch" type="button" aria-label="Canviar de càmera" title="Canviar de càmera" data-i18n-attr="aria-label:je.cam.switch;title:je.cam.switch">🔄</button>
+        <button id="camStop" type="button" aria-label="Apagar la càmera" title="Apagar la càmera" data-i18n-attr="aria-label:je.cam.stop;title:je.cam.stop">⏹</button>
+      </div>
+      <div id="cam-alert" hidden></div>
+    </div>
+
+    <!-- Lectura -->
+    <section id="readout" aria-live="off">
+      <div class="rcard" id="emoCard">
+        <span class="rlabel" data-i18n="je.card.emo">Emoció</span>
+        <div class="rmain"><span class="rico" id="emoEmoji">😐</span><div class="rtxt"><b id="emoName">–</b><code id="emoCode" class="rcode">E0</code></div></div>
+        <div class="rbar"><i id="emoBar"></i></div>
+        <span id="boostChip" class="chip" hidden data-i18n="je.boost">🔗 reforçada pel cos</span>
+      </div>
+      <div class="rcard" id="gesCard">
+        <span class="rlabel" data-i18n="je.card.ges">Gest</span>
+        <div class="rmain"><span class="rico" id="gesEmoji">🧍</span><div class="rtxt"><b id="gesName">–</b><code id="gesCode" class="rcode">G0</code></div></div>
+        <div class="rbar"><i id="gesBar"></i></div>
+      </div>
+    </section>
+
+    <div id="probs" aria-hidden="true"></div>
+
+    <section id="sent" class="card">
+      <p class="sent-title" data-i18n="je.sent.title">Últim enviament</p>
+      <div id="sentLog" class="sent-log"><span class="sent-none" data-i18n="je.sent.none">Encara no s'ha enviat res.</span></div>
+      <span id="device-indicator" style="display:none;"></span>
+    </section>
+  </main>
+
+  <!-- Controls inferiors -->
+  <div id="controls" class="piar-controls">
+    <button id="connectBtn" class="btn-bluetooth btn-primary">🔵 Connectar Bluetooth</button>
+    <button id="calBtn" data-i18n="je.btn.cal">🎯 Calibrar</button>
+    <button id="configBtn" data-i18n="je.btn.config">⚙️ Configurar</button>
+    <button id="infoBtn" data-i18n="je.btn.help">ℹ️ Ajuda</button>
+    <div id="status" class="piar-status"><span id="status-text">📷</span></div>
+  </div>
+
+  <!-- Capa de configuració -->
+  <div id="config-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona" data-i18n-attr="alt:je.alt.icon">
+        <h2 data-i18n="je.cfg.title">⚙️ Configuració</h2>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="je.cfg.read">👁 Què llig</h3>
+        <select id="cfgRead" aria-label="Què llig" data-i18n-attr="aria-label:je.cfg.read">
+          <option value="both" data-i18n="je.cfg.read_both">Cara i cos</option>
+          <option value="face" data-i18n="je.cfg.read_face">Només la cara (emocions)</option>
+          <option value="body" data-i18n="je.cfg.read_body">Només el cos (gestos)</option>
+        </select>
+        <label for="cfgEngine" data-i18n="je.cfg.engine">Model de la cara</label>
+        <select id="cfgEngine">
+          <option value="net" data-i18n="je.cfg.engine_net">Xarxa neuronal (recomanat)</option>
+          <option value="mesh" data-i18n="je.cfg.engine_mesh">Punts de la cara i regles (MediaPipe)</option>
+        </select>
+        <p class="config-note" data-i18n="je.cfg.note_engine">La xarxa neuronal és la més fiable.</p>
+        <label class="check"><input type="checkbox" id="cfgBoost"> <span data-i18n="je.cfg.reinforce">Reforçar l'emoció amb el cos</span></label>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="je.cfg.sens">🎚 Sensibilitat</h3>
+        <div class="interval-control">
+          <label for="cfgSmooth" id="cfgSmoothLbl">Suavitzat</label>
+          <input type="range" id="cfgSmooth" min="0" max="20" value="6" step="1">
+        </div>
+        <p class="config-note" data-i18n="je.cfg.smooth_note">Temps que ha de mantindre's una lectura abans de canviar.</p>
+        <div class="interval-control">
+          <label for="cfgMinConf" id="cfgMinConfLbl">Confiança mínima</label>
+          <input type="range" id="cfgMinConf" min="20" max="80" value="40" step="5">
+        </div>
+        <div class="interval-control">
+          <label for="cfgTilt" id="cfgTiltLbl">Cap inclinat</label>
+          <input type="range" id="cfgTilt" min="8" max="30" value="15" step="1">
+        </div>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="je.cfg.send">📡 Enviament a la micro:bit</h3>
+        <label for="cfgMode" data-i18n="je.cfg.mode">Quan envia</label>
+        <select id="cfgMode">
+          <option value="change" data-i18n="je.cfg.mode_change">Només quan canvia</option>
+          <option value="continuous" data-i18n="je.cfg.mode_cont">Contínuament</option>
+        </select>
+        <div class="interval-control" id="periodBox">
+          <label for="cfgPeriod" id="cfgPeriodLbl">Cada 0,5 s</label>
+          <input type="range" id="cfgPeriod" min="2" max="20" value="5" step="1">
+        </div>
+        <label class="check"><input type="checkbox" id="cfgIntensity"> <span data-i18n="je.cfg.intensity">Afegir la força (E1:87, G2:90)</span></label>
+        <p class="config-note" data-i18n="je.cfg.send_note">Cada missatge és una línia de text curta.</p>
+        <details id="codesBox">
+          <summary data-i18n="je.cfg.codes">🏷 Codis dels missatges (opcional)</summary>
+          <p class="config-note" data-i18n="je.cfg.codes_note">Deixa en blanc per a enviar el codi normal.</p>
+          <div id="codesGrid"></div>
+        </details>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="je.cfg.cal">🎯 Calibratge</h3>
+        <p class="config-note" data-i18n="je.cfg.cal_note">Calibrar guarda la teua cara neutra i la teua postura recta.</p>
+        <p class="config-note"><span id="calState"></span></p>
+        <button type="button" class="btn" id="calReset" data-i18n="je.cfg.cal_reset">Esborrar el calibratge</button>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="sh.lang.label">🌐 Idioma</h3>
+        <div id="langSelectHost"></div>
+      </div>
+
+      <button class="close-btn" id="closeConfigBtn" data-i18n="je.close">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Capa d'informació/ajuda -->
+  <div id="info-layer" class="layer">
+    <div class="layer-box">
+      <div class="layer-header">
+        <img src="icons/android-chrome-512x512.png" alt="Icona" data-i18n-attr="alt:je.alt.icon">
+        <h2 data-i18n="je.btn.help">ℹ️ Ajuda</h2>
+      </div>
+      <p data-i18n-html="je.help.p1"></p>
+      <a class="guide-btn" href="guia.html" data-i18n="je.help.guide">📖 Guia completa pas a pas</a>
+      <p data-i18n-html="je.help.codes"></p>
+      <ul id="helpCodes" class="help-codes"></ul>
+      <p data-i18n-html="je.help.mb"></p>
+      <p data-i18n-html="je.help.cal"></p>
+      <p data-i18n-html="je.help.limit"></p>
+      <p data-i18n-html="je.help.net_title"></p>
+      <ul>
+        <li data-i18n-html="je.help.net1"></li>
+        <li data-i18n-html="je.help.net2"></li>
+      </ul>
+      <p class="info-footer" data-i18n-html="je.help.footer"></p>
+      <button class="close-btn" id="closeInfoBtn" data-i18n="je.close">Tancar</button>
+    </div>
+  </div>
+
+  <!-- Idioma (ha d'anar abans dels altres scripts de l'app) -->
+  <script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
+
+  <!-- Mòduls de l'app (els models d'IA es carreguen quan es necessiten) -->
+  <script src="../shared/internet_notice.js"></script>
+  <script src="../shared/loading_overlay.js"></script>
+  <script src="../shared/bluetooth_uart.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/vision.js"></script>
+  <script src="js/script.js"></script>
+<script src="../shared/piar_home.js"></script>
+<script src="../shared/pwa.js"></script>
+</body>
+</html>

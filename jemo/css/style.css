@@ -1,0 +1,133 @@
+/* ============================================================
+   style.css – JEmo (cara i cos amb emoció)
+   La base visual ve de ../shared/piar-ui.css (es carrega ABANS). Ací només la disposició.
+   ============================================================ */
+html { background: var(--bg-dark); }
+
+body {
+  margin: 0;
+  display: flex; flex-direction: column; align-items: center;
+  height: 100vh; height: 100dvh; height: var(--app-h, 100dvh);
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  overflow: hidden;
+}
+body > .piar-header, body > #stage, body > #controls { width: 100%; max-width: 480px; }
+@media (min-width: 521px) {
+  body > .piar-header { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  body > #controls    { border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+}
+
+/* ── Escena (es pot desplaçar si la pantalla és baixa) ─────── */
+#stage {
+  flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+  display: flex; flex-direction: column; align-items: stretch; gap: 8px;
+  padding: 8px 12px 8px;
+  background: radial-gradient(120% 80% at 50% 0%, #101d17 0%, var(--bg-dark) 70%);
+}
+
+/* Càmera */
+#cam-box {
+  position: relative; flex: 0 0 auto;
+  width: 100%; aspect-ratio: 4 / 3; max-height: 34vh; max-height: 34dvh; margin: 0 auto;
+  border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;
+  background: #05070a;
+  box-shadow: 0 0 0 1px rgba(77,245,160,.08), 0 0 22px rgba(77,245,160,.08);
+}
+#cam-inner { position: absolute; inset: 0; }
+#cam-inner.mirror { transform: scaleX(-1); }
+#video, #overlay { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#video { background: #05070a; }
+#cam-msg {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  padding: 16px; text-align: center; background: rgba(5,7,10,.88);
+}
+#cam-msg[hidden], #cam-tools[hidden], #cam-alert[hidden] { display: none; }
+#cam-text { margin: 0; max-width: 28ch; font-size: .82rem; line-height: 1.5; color: var(--text-dim); }
+#camStart { min-height: 48px; padding: 0 22px; font-size: .95rem; font-weight: 600; border-radius: 999px; }
+#cam-tools { position: absolute; z-index: 3; top: 8px; right: 8px; display: flex; gap: 6px; }
+#cam-tools button { width: 40px; min-height: 40px; padding: 0; font-size: 1.05rem; border-radius: 12px; background: rgba(9,8,18,.72); }
+#cam-alert {
+  position: absolute; z-index: 3; left: 8px; right: 8px; bottom: 8px; padding: 6px 10px;
+  border-radius: 10px; background: rgba(9,8,18,.82); border: 1px solid var(--border);
+  color: var(--accent2); font-size: .78rem; text-align: center;
+}
+
+/* Lectura: emoció + gest */
+#readout { flex: 0 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.rcard {
+  position: relative; display: flex; flex-direction: column; gap: 6px; min-width: 0;
+  padding: 8px 10px 10px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: rgba(30,26,46,.85);
+}
+.rcard.off { opacity: .45; }
+.rlabel { font-size: .68rem; font-weight: 600; letter-spacing: .04em; color: var(--text-dim); text-transform: uppercase; }
+.rmain { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.rico { font-size: clamp(1.9rem, 9vw, 2.6rem); line-height: 1; flex: 0 0 auto; }
+.rtxt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.rtxt b { font-size: clamp(.78rem, 3.6vw, .95rem); font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
+.rcode { align-self: flex-start; padding: 1px 7px; border-radius: 6px; background: rgba(74,222,128,.1); color: var(--ok); font-weight: 700; font-size: .78rem; letter-spacing: .04em; }
+.rbar { height: 6px; border-radius: 4px; background: rgba(139,130,184,.18); overflow: hidden; }
+.rbar i { display: block; height: 100%; width: 0; border-radius: 4px; background: linear-gradient(90deg, #2bd987, #4df5a0); transition: width .15s linear; }
+#boostChip { align-self: flex-start; font-size: .66rem; padding: .1rem .5rem; }
+#boostChip[hidden] { display: none; }
+
+/* Barres de les 7 emocions */
+#probs { flex: 0 0 auto; display: flex; gap: 6px; align-items: flex-end; height: 62px; padding: 4px 6px; border: 1px solid var(--border2); border-radius: var(--radius); background: rgba(19,17,28,.6); }
+.pb { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; height: 100%; min-width: 0; opacity: .6; }
+.pb.on { opacity: 1; }
+.pe { font-size: .95rem; line-height: 1; }
+.pv { display: flex; align-items: flex-end; width: 100%; height: 36px; border-radius: 4px; background: rgba(139,130,184,.14); overflow: hidden; }
+.pv i { display: block; width: 100%; height: 0; border-radius: 4px 4px 0 0; background: #6c63ff; transition: height .15s linear; }
+.pb.on .pv i { background: linear-gradient(0deg, #2bd987, #4df5a0); }
+
+/* Últim enviament */
+#sent { flex: 0 0 auto; padding: 8px 12px; }
+.sent-title { margin: 0 0 4px; font-size: .72rem; font-weight: 600; letter-spacing: .04em; color: var(--text-dim); text-transform: uppercase; }
+.sent-none { font-size: .82rem; color: var(--text-dim); }
+.sent-row { display: flex; align-items: baseline; gap: 10px; padding: 2px 0; opacity: .6; }
+.sent-row.now { opacity: 1; }
+.sent-row code { padding: 1px 7px; border-radius: 6px; background: rgba(74,222,128,.1); color: var(--ok); font-weight: 700; font-size: .85rem; overflow-wrap: anywhere; }
+.sent-t { font-size: .7rem; color: var(--text-dim); }
+#sent #device-indicator { color: var(--accent2); font-size: .74rem; margin-top: 4px; }
+
+/* ── Controls inferiors ───────────────────────────────────── */
+#controls { z-index: 10000; }
+#controls button { flex: 1 1 auto; }
+#status { padding-top: 2px; }
+.btn-bluetooth.connected::before { content: '✓'; }
+#connectBtn.no-bt, #connectBtn.no-bt:hover, #connectBtn.no-bt:active { background: rgba(251,191,36,.1); border-color: rgba(251,191,36,.55); color: var(--warn); box-shadow: none; }
+#status-text { overflow-wrap: anywhere; }
+
+/* ── Configuració ─────────────────────────────────────────── */
+.layer-box .config-note { font-size: .8rem; line-height: 1.55; margin: .5rem 0 0; }
+.layer-box label { display: block; margin-top: .6rem; }
+.layer-box label.check { display: flex; align-items: flex-start; gap: 10px; min-height: var(--tap); padding: 6px 0; cursor: pointer; }
+.layer-box label.check input { flex-shrink: 0; margin-top: 3px; color-scheme: dark; }
+.layer-box select, .layer-box input[type="text"] { width: 100%; margin-top: 4px; }
+.interval-control label { flex-basis: 100%; margin-top: .4rem; }
+#codesBox summary { cursor: pointer; min-height: var(--tap); display: flex; align-items: center; font-weight: 600; font-size: .9rem; }
+.code-row { display: grid !important; grid-template-columns: 1fr 1fr; align-items: center; gap: 8px; margin-top: 4px !important; }
+.code-row span { font-size: .82rem; overflow-wrap: anywhere; }
+.code-row input { min-height: 36px; margin: 0 !important; padding: 4px 10px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-family: var(--font); font-size: .85rem; }
+#calState { font-weight: 600; }
+#calReset { margin-top: 8px; }
+.help-codes { columns: 2; column-gap: 14px; padding-left: 1.1rem; font-size: .85rem; }
+.help-codes li { break-inside: avoid; margin-bottom: 2px; }
+.help-codes code, .layer-box p code { padding: 0 5px; border-radius: 5px; background: rgba(74,222,128,.1); color: var(--ok); font-weight: 700; }
+
+/* ── Pantalles molt baixes (mòbil en horitzontal): tot es pot desplaçar ── */
+@media (max-height: 520px) {
+  body { overflow-y: auto; }
+  #stage { overflow: visible; flex: 0 0 auto; }
+  #cam-box { max-height: none; }
+}
+@media (max-width: 350px) { #probs { gap: 3px; } .pe { font-size: .8rem; } .rmain { gap: 5px; } }
+/* App instal·lada: alçada real i zones segures (igual que JFace) */
+.layer {
+  bottom: auto; height: 100vh; height: 100dvh; height: var(--app-h, 100dvh);
+  padding-top: calc(16px + env(safe-area-inset-top, 0px)); padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(16px + env(safe-area-inset-left, 0px)); padding-right: calc(16px + env(safe-area-inset-right, 0px));
+}
+.layer-box { max-height: calc(var(--app-h, 100dvh) - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }

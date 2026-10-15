@@ -1,5 +1,5 @@
 {
- "version": "83cf3d8387ea",
+ "version": "5d193f24da56",
  "shell": [
   "./",
   "index.html",
@@ -13,6 +13,30 @@
   "icons/maskable-192x192.png",
   "icons/maskable-512x512.png",
   "icons/piar-icon.svg",
+  "jemo/guia.html",
+  "jemo/index.html",
+  "jemo/precarrega.html",
+  "jemo/css/style.css",
+  "jemo/guia-img/jemo-1-inici.webp",
+  "jemo/guia-img/jemo-2-connectat.webp",
+  "jemo/guia-img/jemo-3-lectura.webp",
+  "jemo/guia-img/jemo-4-reforc.webp",
+  "jemo/guia-img/jemo-5-config.webp",
+  "jemo/guia-img/jemo-6-config-enviament.webp",
+  "jemo/guia-img/jemo-7-ajuda.webp",
+  "jemo/icons/android-chrome-192x192.png",
+  "jemo/icons/android-chrome-512x512.png",
+  "jemo/icons/apple-touch-icon.png",
+  "jemo/icons/favicon-16x16.png",
+  "jemo/icons/favicon-32x32.png",
+  "jemo/icons/favicon.ico",
+  "jemo/icons/maskable-192x192.png",
+  "jemo/icons/maskable-512x512.png",
+  "jemo/icons/site.webmanifest",
+  "jemo/js/core.js",
+  "jemo/js/i18n.js",
+  "jemo/js/script.js",
+  "jemo/js/vision.js",
   "jface/guia.html",
   "jface/index.html",
   "jface/css/jface-fixes.css",
@@ -399,6 +423,85 @@
    "name": "JVeu",
    "files": [],
    "preload": "jveu/precarrega.html"
+  },
+  {
+   "id": "jemo",
+   "name": "JEmo",
+   "files": [
+    {
+     "u": "vendor/face-api-1.7.15/face-api.js",
+     "s": 1333943
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/age_gender_model-weights_manifest.json",
+     "s": 8392
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/age_gender_model.bin",
+     "s": 429708
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/face_expression_model-weights_manifest.json",
+     "s": 6980
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/face_expression_model.bin",
+     "s": 329468
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/tiny_face_detector_model-weights_manifest.json",
+     "s": 3219
+    },
+    {
+     "u": "vendor/face-api-1.7.15/model/tiny_face_detector_model.bin",
+     "s": 193321
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh.binarypb",
+     "s": 939
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh.js",
+     "s": 64913
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_packed_assets.data",
+     "s": 3986256
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_packed_assets_loader.js",
+     "s": 8928
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_simd_wasm_bin.data",
+     "s": 0
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_simd_wasm_bin.js",
+     "s": 330166
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_simd_wasm_bin.wasm",
+     "s": 6161697
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_wasm_bin.js",
+     "s": 330161
+    },
+    {
+     "u": "vendor/mediapipe-face_mesh/face_mesh_solution_wasm_bin.wasm",
+     "s": 6084312
+    },
+    {
+     "u": "vendor/posenet-2.2.2/posenet.min.js",
+     "s": 18814
+    },
+    {
+     "u": "vendor/tfjs-4.15.0/tf.min.js",
+     "s": 1469043
+    }
+   ],
+   "preload": "jemo/precarrega.html"
   },
   {
    "id": "quevuen",
