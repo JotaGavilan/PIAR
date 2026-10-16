@@ -90,6 +90,21 @@
           <option value="face" data-i18n="je.cfg.read_face">Només la cara (emocions)</option>
           <option value="body" data-i18n="je.cfg.read_body">Només el cos (gestos)</option>
         </select>
+        <label for="cfgView" data-i18n="je.cfg.view">Com et col·loques davant la càmera</label>
+        <select id="cfgView">
+          <option value="close" data-i18n="je.cfg.view_close">Cerca (càmera frontal)</option>
+          <option value="body" data-i18n="je.cfg.view_body">Cos sencer (càmera allunyada)</option>
+        </select>
+        <p class="config-note" data-i18n="je.cfg.view_note">Amb la càmera frontal del mòbil només es veu la cara i les mans: tria «Cerca». «Cos sencer» necessita veure't des del cap fins a les mans (càmera lluny, amb suport).</p>
+        <div id="closeBox">
+          <label class="check"><input type="checkbox" id="cfgShoulders"> <span data-i18n="je.cfg.shoulders">Llegir també l'esquena caiguda si es veuen les espatlles</span></label>
+          <p class="config-note" data-i18n="je.cfg.shoulders_note">Descarrega el model del cos de Google la primera vegada. Si no es veuen les espatlles, s'ignora.</p>
+          <div class="interval-control">
+            <label for="cfgHeadMove" id="cfgHeadMoveLbl">Moviment del cap</label>
+            <input type="range" id="cfgHeadMove" min="6" max="30" value="12" step="1">
+          </div>
+          <p class="config-note" data-i18n="je.cfg.headmove_note">Com de gran ha de ser el «sí» o el «no» amb el cap per a comptar. Més baix = més sensible.</p>
+        </div>
         <label for="cfgEngine" data-i18n="je.cfg.engine">Model de la cara</label>
         <select id="cfgEngine">
           <option value="net" data-i18n="je.cfg.engine_net">Xarxa neuronal (recomanat)</option>
@@ -164,6 +179,7 @@
       <p data-i18n-html="je.help.codes"></p>
       <ul id="helpCodes" class="help-codes"></ul>
       <p data-i18n-html="je.help.mb"></p>
+      <p data-i18n-html="je.help.view"></p>
       <p data-i18n-html="je.help.cal"></p>
       <p data-i18n-html="je.help.limit"></p>
       <p data-i18n-html="je.help.net_title"></p>

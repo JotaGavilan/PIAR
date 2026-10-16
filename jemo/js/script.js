@@ -1,6 +1,7 @@
 // ============================================================
 //  script.js – JEmo (cara i cos amb emoció)
-//  Càmera → models locals → emoció (E0–E6) i gest (G0–G6) suavitzats → text curt → Bluetooth UART → micro:bit
+//  Càmera → models locals → emoció (E0–E6) i gest (G0–G12) suavitzats → text curt → Bluetooth UART → micro:bit
+//  Dues vistes per als gestos:  «Cerca» (càmera frontal: mans, cap, espatlles si es veuen)  ·  «Cos sencer» (PoseNet)
 // ============================================================
 (function () {
   'use strict';
@@ -9,11 +10,11 @@
 
   // ── Configuració i calibratge (es guarden al dispositiu) ──
   const CFG_KEY = 'jemo.cfg.v1', CAL_KEY = 'jemo.cal.v1';
-  const DEF = { read: 'both', engine: 'net', boost: true, smooth: 6, minConf: 40, tilt: 15, mode: 'change', period: 5, intensity: true, codes: {}, facing: 'user' };
+  const DEF = { read: 'both', view: 'close', shoulders: true, headMove: 12, engine: 'net', boost: true, smooth: 6, minConf: 40, tilt: 15, mode: 'change', period: 5, intensity: true, codes: {}, facing: 'user' };
   const cfg = Object.assign({}, DEF);
   try { Object.assign(cfg, JSON.parse(localStorage.getItem(CFG_KEY) || '{}')); } catch (e) {}
   if (!cfg.codes || typeof cfg.codes !== 'object') cfg.codes = {};
-  let cal = { face: null, posture: null };
+  let cal = { face: null, posture: null, postureClose: null };
   try { Object.assign(cal, JSON.parse(localStorage.getItem(CAL_KEY) || '{}')); } catch (e) {}
   const saveCfg = () => { try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {} };
   const saveCal = () => { try { localStorage.setItem(CAL_KEY, JSON.stringify(cal)); } catch (e) {} };
@@ -45,12 +46,16 @@
   const emoSm = J.makeSmoother(7, { alpha: .35, holdMs: smoothMs(), minConf: cfg.minConf / 100 });
   const gesHold = J.makeLabelHold({ holdMs: Math.round(smoothMs() * .7) });
   const poseState = J.makePoseState();
+  let closeState = J.makeCloseState();
   function applyTuning() {
     emoSm.setOptions({ holdMs: smoothMs(), minConf: cfg.minConf / 100 });
     gesHold.setOptions({ holdMs: Math.round(smoothMs() * .7) });
   }
   const FACE_LOST_MS = 1500;
   let lastFaceT = 0, lastPoseT = 0, faceRes = null, poseRes = null, lastBodyVisible = false, boosted = false;
+  // Vista «Cerca»
+  let handsRes = null, lastHandsT = 0, handsSeq = 0, handsDone = 0, headFeat = null, lastHeadT = 0, headSeq = 0, headDone = 0, faceBox = null, lastBoxT = 0, slouchSt = { on: false, conf: 0, t: 0 }, lastClose = null;
+  const isClose = () => cfg.view === 'close';
   let sentLog = [];
   const sentLines = [];                          // per a les proves
 
@@ -83,6 +88,8 @@
     faceRes = r;
     if (!r) { paintOverlay(); return; }
     lastFaceT = now;
+    faceBox = r.box; lastBoxT = now;
+    if (r.landmarks) setHead(r.landmarks);
     let scores = r.scores; boosted = false;
     if (cfg.boost && cfg.read === 'both' && gesHold.current) {
       const rf = J.reinforce(scores, gesHold.current, 1); scores = rf.scores; boosted = rf.boosted;
@@ -104,6 +111,40 @@
   }
   gesHold.pct = 0;
 
+  // ── Vista «Cerca»: mans, cap i espatlles ───────────────────
+  function setHead(lm) {
+    headFeat = J.headFeatures(lm, video.videoWidth || 640, video.videoHeight || 480);
+    lastHeadT = performance.now(); headSeq++;
+  }
+  function onHead(r) {
+    if (!r) { headFeat = null; return; }
+    faceBox = r.box; lastBoxT = performance.now();
+    setHead(r.landmarks);
+  }
+  function onHands(r) {
+    handsRes = r; lastHandsT = performance.now(); handsSeq++;
+    paintOverlay();
+  }
+  function onPoseClose(r) {     // a «Cerca» PoseNet només serveix per a les espatlles; si no es veuen s'ignora
+    const sl = r ? J.slouchFromPose(r.keypoints, { posture: cal.postureClose }) : { visible: false, on: false, conf: 0 };
+    slouchSt = { on: sl.visible && sl.on, conf: sl.conf, t: performance.now(), visible: sl.visible };
+    if (calSession && sl.visible && sl.posture !== null) calSession.posture.push(sl.posture);
+  }
+  function evalClose() {
+    const now = performance.now();
+    const fresh = (t, ms) => t && now - t <= ms;
+    const hands = fresh(lastHandsT, 700) && handsRes ? handsRes.hands : [];
+    const head = fresh(lastHeadT, 700) ? headFeat : null;
+    const box = fresh(lastBoxT, 1500) ? faceBox : null;
+    const slouch = cfg.shoulders && fresh(slouchSt.t, 2500) && slouchSt.visible ? slouchSt : null;
+    const inp = { W: video.videoWidth || 640, H: video.videoHeight || 480, hands, faceBox: box, head, slouch, handsNew: handsSeq !== handsDone, headNew: headSeq !== headDone };
+    handsDone = handsSeq; headDone = headSeq;
+    const cls = J.classifyClose(inp, closeState, { tiltDeg: cfg.tilt, headMove: cfg.headMove / 100, t: Date.now() });
+    lastClose = cls;
+    const out = gesHold.push(cls.id, cls.conf, now);
+    gesHold.pct = out.conf;
+  }
+
   // ── Pintar ────────────────────────────────────────────────
   const emoName = (id) => _t('je.emo.' + id);
   const gesName = (id) => _t('je.ges.' + id);
@@ -117,7 +158,8 @@
   }
   function paintOverlay() {
     const v = $('video');
-    try { V.draw($('overlay'), v, { face: cfg.read !== 'body' && performance.now() - lastFaceT < 600 ? faceRes : null, pose: cfg.read !== 'face' ? poseRes : null }); } catch (e) {}
+    const close = isClose(), now = performance.now();
+    try { V.draw($('overlay'), v, { face: cfg.read !== 'body' && now - lastFaceT < 600 ? faceRes : null, pose: cfg.read !== 'face' && !close ? poseRes : null, hands: cfg.read !== 'face' && close && now - lastHandsT < 600 && handsRes ? handsRes.hands : null }); } catch (e) {}
   }
   function paintReadout() {
     const st = currentState();
@@ -138,7 +180,7 @@
     const gOff = cfg.read === 'face';
     $('gesCard').classList.toggle('off', gOff);
     if (gOff) { $('gesEmoji').textContent = '🧍'; $('gesName').textContent = _t('je.read.off'); $('gesCode').textContent = '–'; $('gesBar').style.width = '0%'; }
-    else if (camOn && readyKinds.pose && !lastBodyVisible && (!st.G || st.G.id === 0)) {
+    else if (!isClose() && camOn && readyKinds.pose && !lastBodyVisible && (!st.G || st.G.id === 0)) {
       $('gesEmoji').textContent = '🫥'; $('gesName').textContent = _t('je.read.body_nf'); $('gesCode').textContent = st.G ? J.formatLine('G', 0, 0, sendCfg()) : '–'; $('gesBar').style.width = '0%';
     } else if (st.G) {
       const g = J.GESTURES[st.G.id];
@@ -179,20 +221,21 @@
       const c = calSession; calSession = null;
       let gotFace = false, gotBody = false;
       if (c.face.length >= 5) { cal.face = J.averageFeatures(c.face); gotFace = true; }
-      if (c.posture.length >= 5) { cal.posture = median(c.posture); gotBody = true; }
+      if (c.posture.length >= 5) { cal[isClose() ? 'postureClose' : 'posture'] = median(c.posture); gotBody = true; }
       if (gotFace || gotBody) saveCal();
       showStatus(() => _t(gotFace && gotBody ? 'je.cal.ok' : gotFace ? 'je.cal.ok_face' : gotBody ? 'je.cal.ok_body' : 'je.cal.fail'));
       refreshCalState();
       setTimeout(toIdle, 4000);
     }, 2200);
   });
-  $('calReset').addEventListener('click', () => { cal = { face: null, posture: null }; saveCal(); refreshCalState(); showStatus(() => _t('je.cal.cleared')); setTimeout(toIdle, 2500); });
-  function refreshCalState() { $('calState').textContent = _t(cal.face || cal.posture ? 'je.cfg.cal_state_yes' : 'je.cfg.cal_state_no'); }
+  $('calReset').addEventListener('click', () => { cal = { face: null, posture: null, postureClose: null }; saveCal(); refreshCalState(); showStatus(() => _t('je.cal.cleared')); setTimeout(toIdle, 2500); });
+  function refreshCalState() { $('calState').textContent = _t(cal.face || cal.posture || cal.postureClose ? 'je.cfg.cal_state_yes' : 'je.cfg.cal_state_no'); }
 
   // ── Càmera i bucle ────────────────────────────────────────
   const video = $('video');
   let facing = cfg.facing || 'user';
-  const needed = () => (cfg.read === 'both' ? ['face', 'pose'] : cfg.read === 'face' ? ['face'] : ['pose']);
+  // Models imprescindibles per a la lectura actual (a «Cerca» PoseNet és opcional: només per a les espatlles)
+  const needed = () => { const w = loop.wanted(loopCfg()); return ['face', 'hands', 'head', 'pose'].filter((k) => w[k] && !(k === 'pose' && isClose())); };
   const readyKinds = {}, failedKinds = {};
   function setCamAlert(text) { const a = $('cam-alert'); a.hidden = !text; a.textContent = text || ''; }
   function checkLoading() {
@@ -200,14 +243,17 @@
     if (camOn) setCamAlert(pending ? _t('je.cam.loading') : '');
     if (camOn && pending) showStatus(() => _t('je.st.loading')); else if (camOn && /^⏳/.test($('status-text').textContent)) toIdle();
   }
-  const loop = V.createLoop(video, () => ({ read: cfg.read, engine: cfg.engine, baseline: cal.face }), {
-    onFace, onPose,
+  const loopCfg = () => ({ read: cfg.read, engine: cfg.engine, view: cfg.view, shoulders: cfg.shoulders, baseline: cal.face });
+  const loop = V.createLoop(video, loopCfg, {
+    onFace, onHands, onHead,
+    onPose: (r) => (isClose() ? onPoseClose(r) : onPose(r)),
     onStatus: (kind, st) => { readyKinds[kind] = st === 'ready'; if (st === 'ready') failedKinds[kind] = false; checkLoading(); },
     onError: (kind, e) => {
       console.warn('JEmo model error', kind, e);
       readyKinds[kind] = false; failedKinds[kind] = true;
+      if (kind === 'pose' && isClose()) { slouchSt = { on: false, conf: 0, t: 0 }; return; }      // espatlles: s'ignoren en silenci
       const code = e && e.code;
-      showStatus(() => _t(code === 'lib' ? 'je.st.lib' : code === 'offline' ? 'je.st.offline_pose' : kind === 'pose' ? 'je.st.pose_fail' : 'je.st.face_fail'));
+      showStatus(() => _t(code === 'lib' ? 'je.st.lib' : code === 'offline' ? 'je.st.offline_pose' : kind === 'pose' ? 'je.st.pose_fail' : kind === 'hands' ? 'je.st.hands_fail' : 'je.st.face_fail'));
       if (kind === 'face' && cfg.read === 'face') setCamAlert(''); else checkLoading();
     }
   });
@@ -217,7 +263,7 @@
       const r = await V.startCamera(video, facing);
       $('cam-inner').classList.toggle('mirror', r.facing !== 'environment' && facing !== 'environment');
       camOn = true; $('cam-msg').hidden = true; $('cam-tools').hidden = false;
-      lastFaceT = 0; lastPoseT = 0; emoSm.reset(); gesHold.reset(); sender.reset();
+      lastFaceT = 0; lastPoseT = 0; resetClose(); emoSm.reset(); gesHold.reset(); sender.reset();
       Object.keys(readyKinds).forEach((k) => delete readyKinds[k]); Object.keys(failedKinds).forEach((k) => delete failedKinds[k]); loop.resetReady();
       loop.start(); checkLoading(); if (!needed().some((k) => !readyKinds[k])) toIdle();
     } catch (e) {
@@ -225,9 +271,10 @@
       showStatus(() => _t(e.code === 'denied' ? 'je.st.denied' : e.code === 'nocam' ? 'je.st.nocam' : 'je.st.camfail'));
     } finally { $('camStart').disabled = false; }
   }
+  function resetClose() { closeState = J.makeCloseState(); handsRes = null; lastHandsT = 0; headFeat = null; lastHeadT = 0; faceBox = null; lastBoxT = 0; slouchSt = { on: false, conf: 0, t: 0 }; lastClose = null; }
   function stopCam() {
     loop.stop(); V.stopCamera(video); camOn = false;
-    faceRes = poseRes = null; lastFaceT = 0; $('cam-msg').hidden = false; $('cam-tools').hidden = true; setCamAlert('');
+    faceRes = poseRes = null; lastFaceT = 0; resetClose(); $('cam-msg').hidden = false; $('cam-tools').hidden = true; setCamAlert('');
     try { const c = $('overlay'); c.getContext('2d').clearRect(0, 0, c.width, c.height); } catch (e) {}
     showStatus(() => _t('je.st.stopped')); setTimeout(() => { if (!camOn) toIdle(); }, 2500);
   }
@@ -241,6 +288,7 @@
 
   // ── Bucle de la interfície i de l'enviament ───────────────
   setInterval(() => {
+    if (camOn && isClose() && cfg.read !== 'face') evalClose();
     const st = currentState();
     if (camOn || st.E || st.G) sender.tick(st, sendCfg(), performance.now());
     paintReadout();
@@ -251,6 +299,8 @@
     $('cfgSmoothLbl').textContent = _t('je.cfg.smooth', { n: fmtSec(cfg.smooth / 10) });
     $('cfgMinConfLbl').textContent = _t('je.cfg.minconf', { n: cfg.minConf });
     $('cfgTiltLbl').textContent = _t('je.cfg.tilt', { n: cfg.tilt });
+    $('cfgHeadMoveLbl').textContent = _t('je.cfg.headmove', { n: cfg.headMove });
+    $('closeBox').hidden = !isClose();
     $('cfgPeriodLbl').textContent = _t('je.cfg.period', { n: fmtSec(cfg.period / 10) });
     $('periodBox').hidden = cfg.mode !== 'continuous';
     refreshCalState(); buildCodes(); buildHelpCodes(); paintSent(); paintReadout();
@@ -279,20 +329,20 @@
     J.GESTURES.forEach((g) => add('G' + g.id, g.emoji, gesName(g.id)));
   }
   function loadCfgUi() {
-    $('cfgRead').value = cfg.read; $('cfgEngine').value = cfg.engine; $('cfgBoost').checked = cfg.boost;
+    $('cfgRead').value = cfg.read; $('cfgView').value = cfg.view; $('cfgShoulders').checked = cfg.shoulders; $('cfgHeadMove').value = cfg.headMove; $('cfgEngine').value = cfg.engine; $('cfgBoost').checked = cfg.boost;
     $('cfgSmooth').value = cfg.smooth; $('cfgMinConf').value = cfg.minConf; $('cfgTilt').value = cfg.tilt;
     $('cfgMode').value = cfg.mode; $('cfgPeriod').value = cfg.period; $('cfgIntensity').checked = cfg.intensity;
     refreshLabels();
   }
   function onModelChange() {   // cal tornar a comprovar quins models fan falta
     Object.keys(readyKinds).forEach((k) => delete readyKinds[k]); Object.keys(failedKinds).forEach((k) => delete failedKinds[k]); loop.resetReady();
-    faceRes = null; poseRes = null; emoSm.reset(); gesHold.reset(); sender.reset(); boosted = false;
+    faceRes = null; poseRes = null; resetClose(); emoSm.reset(); gesHold.reset(); sender.reset(); boosted = false;
     if (camOn) checkLoading();
   }
-  [['cfgRead', 'read', null, true], ['cfgEngine', 'engine', null, true], ['cfgMode', 'mode'], ['cfgBoost', 'boost', (e) => e.checked], ['cfgIntensity', 'intensity', (e) => e.checked]].forEach(([id, key, conv, models]) => {
+  [['cfgRead', 'read', null, true], ['cfgView', 'view', null, true], ['cfgShoulders', 'shoulders', (e) => e.checked, true], ['cfgEngine', 'engine', null, true], ['cfgMode', 'mode'], ['cfgBoost', 'boost', (e) => e.checked], ['cfgIntensity', 'intensity', (e) => e.checked]].forEach(([id, key, conv, models]) => {
     $(id).addEventListener('change', () => { cfg[key] = conv ? conv($(id)) : $(id).value; saveCfg(); sender.reset(); if (models) onModelChange(); refreshLabels(); });
   });
-  [['cfgSmooth', 'smooth'], ['cfgMinConf', 'minConf'], ['cfgTilt', 'tilt'], ['cfgPeriod', 'period']].forEach(([id, key]) => $(id).addEventListener('input', () => { cfg[key] = parseInt($(id).value, 10); saveCfg(); applyTuning(); refreshLabels(); }));
+  [['cfgSmooth', 'smooth'], ['cfgMinConf', 'minConf'], ['cfgTilt', 'tilt'], ['cfgHeadMove', 'headMove'], ['cfgPeriod', 'period']].forEach(([id, key]) => $(id).addEventListener('input', () => { cfg[key] = parseInt($(id).value, 10); saveCfg(); applyTuning(); refreshLabels(); }));
   PIAR_I18N.onChange(() => { refreshLabels(); showStatus(statusFn); if ($('cam-alert') && !$('cam-alert').hidden) setCamAlert(_t('je.cam.loading')); });
 
   // Capes i botons
@@ -315,12 +365,16 @@
   // Per a les proves (permet alimentar l'app sense càmera ni models)
   window.__je = {
     cfg, J, V, emoSm, gesHold, sender, sentLines, currentState, applyTuning,
-    injectFace: (scores, features) => { camOn = true; onFace({ scores, features, box: { x: 10, y: 10, w: 100, h: 100 }, score: 1 }); },
+    injectFace: (scores, features, box) => { camOn = true; onFace({ scores, features, box: box || { x: 10, y: 10, w: 100, h: 100 }, score: 1 }); },
     injectPose: (kp) => { camOn = true; onPose({ keypoints: kp, score: 1 }); },
     injectNoFace: () => { readyKinds.face = true; onFace(null); },
+    injectHands: (hands) => { camOn = true; readyKinds.hands = true; onHands({ hands }); },
+    injectHead: (lm) => { camOn = true; readyKinds.head = true; onHead({ landmarks: lm, box: { x: 220, y: 120, w: 200, h: 260 } }); },
+    injectSlouch: (kp) => { camOn = true; onPoseClose(kp ? { keypoints: kp } : null); },
+    evalClose, resetClose, closeInfo: () => lastClose, setView: (v) => { cfg.view = v; $('cfgView').value = v; $('cfgView').dispatchEvent(new Event('change')); },
     markReady: (k) => { readyKinds[k] = true; },
     setCamOn: (v) => { camOn = v; },
-    cal: () => cal, startCam, stopCam, loop,
+    cal: () => cal, startCam, stopCam, loop, ready: () => Object.assign({}, readyKinds), failed: () => Object.assign({}, failedKinds), needed,
     state: () => ({ camOn, bodyVisible: lastBodyVisible, boosted })
   };
 })();

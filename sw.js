@@ -10,7 +10,7 @@
 
    La versió la posa tools/build-pwa.py. No edites la línia de VERSION a mà.
    ============================================================ */
-const VERSION = '5d193f24da56';
+const VERSION = '8c02e646cb6b';
 const SHELL_CACHE  = 'piar-shell-' + VERSION;
 const VENDOR_CACHE = 'piar-vendor-v1';
 const MODEL_CACHE  = 'piar-models-v1';

@@ -1,9 +1,10 @@
 {
- "version": "5d193f24da56",
+ "version": "8c02e646cb6b",
  "shell": [
   "./",
   "index.html",
   "manifest.webmanifest",
+  "OPCIONAL-whisper/stt-bundle.js",
   "icons/android-chrome-192x192.png",
   "icons/android-chrome-512x512.png",
   "icons/apple-touch-icon.png",
@@ -24,6 +25,7 @@
   "jemo/guia-img/jemo-5-config.webp",
   "jemo/guia-img/jemo-6-config-enviament.webp",
   "jemo/guia-img/jemo-7-ajuda.webp",
+  "jemo/guia-img/jemo-8-mans.webp",
   "jemo/icons/android-chrome-192x192.png",
   "jemo/icons/android-chrome-512x512.png",
   "jemo/icons/apple-touch-icon.png",
@@ -491,6 +493,46 @@
     {
      "u": "vendor/mediapipe-face_mesh/face_mesh_solution_wasm_bin.wasm",
      "s": 6084312
+    },
+    {
+     "u": "vendor/mediapipe-hands/hand_landmark_full.tflite",
+     "s": 5478688
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands.binarypb",
+     "s": 550
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands.js",
+     "s": 45581
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_packed_assets.data",
+     "s": 4326731
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_packed_assets_loader.js",
+     "s": 8327
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_simd_wasm_bin.data",
+     "s": 0
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_simd_wasm_bin.js",
+     "s": 276479
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_simd_wasm_bin.wasm",
+     "s": 6026259
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_wasm_bin.js",
+     "s": 276474
+    },
+    {
+     "u": "vendor/mediapipe-hands/hands_solution_wasm_bin.wasm",
+     "s": 5917209
     },
     {
      "u": "vendor/posenet-2.2.2/posenet.min.js",
