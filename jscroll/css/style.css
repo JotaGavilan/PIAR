@@ -88,8 +88,8 @@ body {
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ═══ Resultats ═══ */
-#result { overflow-y: auto; overflow-x: hidden; padding: 12px 14px 28px; background: radial-gradient(120% 50% at 50% 0%, #1d1840 0%, var(--bg-dark) 60%); display: block; }
-#result > * { max-width: 460px; margin-left: auto; margin-right: auto; }
+#result, #money { overflow-y: auto; overflow-x: hidden; padding: 12px 14px 28px; background: radial-gradient(120% 50% at 50% 0%, #1d1840 0%, var(--bg-dark) 60%); display: block; }
+#result > *, #money > * { max-width: 460px; margin-left: auto; margin-right: auto; }
 .rs-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
 .rs-top h1 { margin: 0; font-size: 1.35rem; flex: 1; line-height: 1.2; }
 .rs-sub { margin: 0 0 12px; font-size: .8rem; color: var(--text-dim); }
@@ -162,3 +162,26 @@ details.how td:last-child { text-align: right; white-space: nowrap; font-variant
 
 @media (max-width: 360px) { .sv { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, 1fr); } }
 @media (max-height: 560px) { .rail { gap: 4px; bottom: 10px; } .rail .ic { font-size: 1.5rem; } .rail button { min-height: 48px; } }
+
+/* ═══ Simulador de diners ═══ */
+#moneyPill { position: absolute; z-index: 25; left: 50%; transform: translateX(-50%); top: 54px; padding: 5px 14px; border-radius: 999px; background: #000b; border: 1px solid #4ade8066; color: #4ade80; font: 700 .85rem/1.3 ui-monospace, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; pointer-events: none; white-space: nowrap; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 12px; }
+.seg button { flex: 1 1 0; min-width: 0; min-height: 40px; padding: 4px 8px; font-size: .84rem; border-radius: 12px; white-space: normal; }
+.seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent2); color: #fff; box-shadow: 0 2px 12px var(--accent-glow); }
+.m-lbl { display: block; font-size: .8rem; color: var(--text-dim); margin: 4px 0 0; }
+.m-row { margin: 6px 0 10px; }
+.m-row label { display: block; font-size: .84rem; margin-bottom: 2px; }
+.m-row input[type="range"] { width: 100%; }
+.m-big { font: 800 1.9rem/1.15 ui-monospace, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; color: #4ade80; text-align: center; padding: 10px 6px 4px; letter-spacing: -.01em; word-break: break-word; }
+.m-big.m-meta { color: #fb7185; }
+.m-sub { text-align: center; color: var(--text-dim); font-size: .8rem; margin: 0 0 4px; }
+table.m-tbl { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: .84rem; }
+.m-tbl th { text-align: right; font-size: .68rem; letter-spacing: .05em; text-transform: uppercase; color: var(--accent2); font-weight: 600; padding: 2px 4px 4px; }
+.m-tbl th:first-child, .m-tbl td:first-child { text-align: left; }
+.m-tbl td { padding: 6px 4px; border-bottom: 1px solid var(--border2); font-variant-numeric: tabular-nums; text-align: right; }
+.m-tbl td:nth-child(2) { font-weight: 700; color: #4ade80; white-space: nowrap; }
+.m-tbl td:nth-child(3) { color: var(--text-dim); font-size: .74rem; }
+.m-src { font-size: .78rem; line-height: 1.5; padding-left: 18px; margin: 4px 0; }
+.m-src a { color: var(--accent2); }
+.m-card-res .m-big { font-size: 1.6rem; }
+@media (max-width: 380px) { .m-big { font-size: 1.55rem; } .m-tbl td:nth-child(3) { display: none; } .m-tbl th:nth-child(3) { display: none; } }

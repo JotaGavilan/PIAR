@@ -11,9 +11,9 @@
    "user": "carla.clips",
    "likes": 3699,
    "cap": {
-    "ca": "Este tema no m'ix del cap 🎧 #musica #repeat",
-    "es": "Este tema no me lo quito de la cabeza 🎧 #musica #repeat",
-    "en": "Can't get this song out of my head 🎧 #music #repeat"
+    "ca": "Ciutat de nit i ritme a tota pastilla 🌙 #música",
+    "es": "Ciudad de noche y ritmo a tope 🌙 #música",
+    "en": "City at night and the beat turned up 🌙 #music"
    }
   },
   {
@@ -26,9 +26,9 @@
    "user": "laia.clips",
    "likes": 4366,
    "cap": {
-    "ca": "Assaig de dissabte, directe i sense filtre 🎸 #banda",
-    "es": "Ensayo del sábado, directo y sin filtro 🎸 #banda",
-    "en": "Saturday rehearsal, live and unfiltered 🎸 #band"
+    "ca": "Vespre dorat i el radiocasset de sempre 🎶 #lofi",
+    "es": "Tarde dorada y el radiocasete de siempre 🎶 #lofi",
+    "en": "Golden evening and the same old boombox 🎶 #lofi"
    }
   },
   {
@@ -41,9 +41,9 @@
    "user": "hugo.zone",
    "likes": 7102,
    "cap": {
-    "ca": "Primera vegada davant del micro 🎤 #nervis",
-    "es": "Primera vez delante del micro 🎤 #nervios",
-    "en": "First time on the mic 🎤 #nerves"
+    "ca": "Auriculars posats, el món pot esperar 🎧 #música",
+    "es": "Cascos puestos, el mundo puede esperar 🎧 #música",
+    "en": "Headphones on, the world can wait 🎧 #music"
    }
   },
   {
@@ -56,9 +56,9 @@
    "user": "mireia.lab",
    "likes": 9191,
    "cap": {
-    "ca": "El ritme és el batec de tot 🥁 #beats",
-    "es": "El ritmo es el latido de todo 🥁 #beats",
-    "en": "Rhythm is the heartbeat of everything 🥁 #beats"
+    "ca": "Quan s'apaguen els llums i comença el solo 🎸 #concert",
+    "es": "Cuando se apagan las luces y empieza el solo 🎸 #concierto",
+    "en": "When the lights go down and the solo starts 🎸 #concert"
    }
   },
   {
@@ -66,16 +66,16 @@
    "topic": "music",
    "type": "video",
    "file": "music-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "music-5-poster.webp",
    "user": "aleix.world",
    "likes": 2456,
    "cap": {
-    "ca": "Mode concert activat 🎹 #live",
-    "es": "Modo concierto activado 🎹 #live",
-    "en": "Concert mode on 🎹 #live"
+    "ca": "Quan el baix et puja per dins 🔊 #música #synthwave",
+    "es": "Cuando el bajo te sube por dentro 🔊 #música #synthwave",
+    "en": "When the bass hits you from the inside 🔊 #music #synthwave"
    }
   },
   {
@@ -83,16 +83,16 @@
    "topic": "music",
    "type": "video",
    "file": "music-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "music-6-poster.webp",
    "user": "mireia.vibes",
    "likes": 1651,
    "cap": {
-    "ca": "El saxo sempre té l'última paraula 🎷 #jazz",
-    "es": "El saxo siempre tiene la última palabra 🎷 #jazz",
-    "en": "The sax always gets the last word 🎷 #jazz"
+    "ca": "Pluja, vinil i gat roncant. Plan perfecte 🌧️ #lofi #música",
+    "es": "Lluvia, vinilo y gato roncando. Plan perfecto 🌧️ #lofi #música",
+    "en": "Rain, vinyl and a snoring cat. Perfect plan 🌧️ #lofi #music"
    }
   },
   {
@@ -105,9 +105,9 @@
    "user": "mireia.lab",
    "likes": 7588,
    "cap": {
-    "ca": "Setup nou, partides infinites 🎮 #gaming",
-    "es": "Setup nuevo, partidas infinitas 🎮 #gaming",
-    "en": "New setup, endless matches 🎮 #gaming"
+    "ca": "L'astronauta corre per un planeta de lava 🚀 #retrogaming",
+    "es": "El astronauta corre por un planeta de lava 🚀 #retrogaming",
+    "en": "The astronaut runs across a lava planet 🚀 #retrogaming"
    }
   },
   {
@@ -120,9 +120,9 @@
    "user": "marc.hub",
    "likes": 4878,
    "cap": {
-    "ca": "Retro mai passa de moda 🕹️ #arcade",
-    "es": "Lo retro nunca pasa de moda 🕹️ #arcade",
-    "en": "Retro never goes out of style 🕹️ #arcade"
+    "ca": "Línia completa i tot brilla en neó 🎮 #retrogaming",
+    "es": "Línea completa y todo brilla en neón 🎮 #retrogaming",
+    "en": "Line cleared and everything glows neon 🎮 #retrogaming"
    }
   },
   {
@@ -135,9 +135,9 @@
    "user": "dani.hub",
    "likes": 6607,
    "cap": {
-    "ca": "Un més i dormim… (mentida) 👾 #gamer",
-    "es": "Una más y a dormir… (mentira) 👾 #gamer",
-    "en": "One more and I sleep… (lie) 👾 #gamer"
+    "ca": "El comandament que ho dona tot a cada partida 🎮 #gaming #setup",
+    "es": "El mando que lo da todo en cada partida 🎮 #gaming #setup",
+    "en": "The controller that gives it all every match 🎮 #gaming #setup"
    }
   },
   {
@@ -150,9 +150,9 @@
    "user": "mireia.zone",
    "likes": 1063,
    "cap": {
-    "ca": "Final de torneig: copa a casa 🏆 #esports",
-    "es": "Final de torneo: copa a casa 🏆 #esports",
-    "en": "Tournament final: cup comes home 🏆 #esports"
+    "ca": "Setup nou: monitor corbat i teclat RGB 🖥️ #gamer",
+    "es": "Setup nuevo: monitor curvo y teclado RGB 🖥️ #gamer",
+    "en": "New setup: curved monitor and RGB keyboard 🖥️ #gamer"
    }
   },
   {
@@ -160,16 +160,16 @@
    "topic": "gaming",
    "type": "video",
    "file": "gaming-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "gaming-5-poster.webp",
    "user": "adri.tv",
    "likes": 2185,
    "cap": {
-    "ca": "Nivell final desbloquejat 🖥️ #pc",
-    "es": "Nivel final desbloqueado 🖥️ #pc",
-    "en": "Final level unlocked 🖥️ #pc"
+    "ca": "Un salt més i ja tinc la moneda 🪙 #gaming #pixelart",
+    "es": "Un salto más y ya tengo la moneda 🪙 #gaming #pixelart",
+    "en": "One more jump and the coin is mine 🪙 #gaming #pixelart"
    }
   },
   {
@@ -177,16 +177,16 @@
    "topic": "gaming",
    "type": "video",
    "file": "gaming-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "gaming-6-poster.webp",
    "user": "biel.clips",
    "likes": 3625,
    "cap": {
-    "ca": "Trencaclosques i modo zen 🧩 #indie",
-    "es": "Puzles y modo zen 🧩 #indie",
-    "en": "Puzzles and zen mode 🧩 #indie"
+    "ca": "Aquell encaix perfecte que et fa molt feliç 🧩 #gaming #arcade",
+    "es": "Ese encaje perfecto que te hace tan feliz 🧩 #gaming #arcade",
+    "en": "That perfect fit that makes you so happy 🧩 #gaming #arcade"
    }
   },
   {
@@ -199,9 +199,9 @@
    "user": "irene.hub",
    "likes": 9188,
    "cap": {
-    "ca": "Entrenament de matí, cap excusa ⚽ #futbol",
-    "es": "Entreno de mañana, sin excusas ⚽ #futbol",
-    "en": "Morning training, no excuses ⚽ #football"
+    "ca": "Pilota, gespa i posta de sol ⚽ #futbol",
+    "es": "Balón, césped y puesta de sol ⚽ #futbol",
+    "en": "Ball, grass and a golden sunset ⚽ #football"
    }
   },
   {
@@ -214,9 +214,9 @@
    "user": "hugo.world",
    "likes": 5454,
    "cap": {
-    "ca": "Triple sobre la botzina 🏀 #basquet",
-    "es": "Triple sobre la bocina 🏀 #baloncesto",
-    "en": "Buzzer-beater three 🏀 #basketball"
+    "ca": "Partidet de nit al barri 🏀 #basquet #nit",
+    "es": "Partidito nocturno en el barrio 🏀 #baloncesto #noche",
+    "en": "Late-night game in the neighborhood 🏀 #basketball"
    }
   },
   {
@@ -229,9 +229,9 @@
    "user": "biel.lab",
    "likes": 3776,
    "cap": {
-    "ca": "Cent llargs i a per més 🏊 #natacio",
-    "es": "Cien largos y a por más 🏊 #natacion",
-    "en": "A hundred laps and still going 🏊 #swimming"
+    "ca": "Piscina, carrer lliure i cap soroll 🏊 #natacio",
+    "es": "Piscina, calle libre y cero ruido 🏊 #natacion",
+    "en": "Pool, open lane and zero noise 🏊 #swimming"
    }
   },
   {
@@ -244,9 +244,9 @@
    "user": "lia.lab",
    "likes": 6550,
    "cap": {
-    "ca": "Ruta en bici de diumenge 🚴 #ciclisme",
-    "es": "Ruta en bici del domingo 🚴 #ciclismo",
-    "en": "Sunday bike ride 🚴 #cycling"
+    "ca": "Pista, posta de sol i a córrer 🏃 #atletisme",
+    "es": "Pista, atardecer y a correr 🏃 #atletismo",
+    "en": "Track, sunset and run 🏃 #athletics"
    }
   },
   {
@@ -254,16 +254,16 @@
    "topic": "sport",
    "type": "video",
    "file": "sport-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "sport-5-poster.webp",
    "user": "sara.moments",
    "likes": 3271,
    "cap": {
-    "ca": "Un kilo més a la barra 🏋️ #gym",
-    "es": "Un kilo más en la barra 🏋️ #gym",
-    "en": "One more kilo on the bar 🏋️ #gym"
+    "ca": "El bot perfecte sota els focus ⚽ #futbol #nit",
+    "es": "El bote perfecto bajo los focos ⚽ #futbol #noche",
+    "en": "The perfect bounce under the floodlights ⚽ #football #night"
    }
   },
   {
@@ -271,16 +271,16 @@
    "topic": "sport",
    "type": "video",
    "file": "sport-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "sport-6-poster.webp",
    "user": "oscar.zone",
    "likes": 843,
    "cap": {
-    "ca": "Partit de tenis amb els amics 🎾 #tennis",
-    "es": "Partido de tenis con los amigos 🎾 #tennis",
-    "en": "Tennis match with friends 🎾 #tennis"
+    "ca": "Cistella neta, sense tocar el ferro 🏀 #basquet #swish",
+    "es": "Canasta limpia, sin tocar aro 🏀 #baloncesto #swish",
+    "en": "Clean swish, nothing but net 🏀 #basketball #swish"
    }
   },
   {
@@ -293,9 +293,9 @@
    "user": "mireia.lab",
    "likes": 1442,
    "cap": {
-    "ca": "Sabatilles noves, dia nou 👟 #sneakers",
-    "es": "Zapatillas nuevas, día nuevo 👟 #sneakers",
-    "en": "New sneakers, new day 👟 #sneakers"
+    "ca": "Penjador de somnis: abric, vestit i bossa 👗 #moda",
+    "es": "Perchero de ensueño: abrigo, vestido y bolso 👗 #moda",
+    "en": "Dream rack: coat, dress and bag 👗 #fashion"
    }
   },
   {
@@ -308,9 +308,9 @@
    "user": "hugo.vibes",
    "likes": 4431,
    "cap": {
-    "ca": "El vestit blau per a qualsevol ocasió 👗 #outfit",
-    "es": "El vestido azul para cualquier ocasión 👗 #outfit",
-    "en": "The blue dress for any occasion 👗 #outfit"
+    "ca": "Sabatilla alta, cap a la lluna 👟 #sneakers",
+    "es": "Zapatilla alta, rumbo a la luna 👟 #sneakers",
+    "en": "High-top vibes, shooting for the moon 👟 #sneakers"
    }
   },
   {
@@ -323,9 +323,9 @@
    "user": "alba.tv",
    "likes": 4435,
    "cap": {
-    "ca": "Abric de segona mà, estil de primera 🧥 #vintage",
-    "es": "Abrigo de segunda mano, estilo de primera 🧥 #vintage",
-    "en": "Second-hand coat, first-class style 🧥 #vintage"
+    "ca": "Flat-lay del dia: gorra, ulleres i bossa ☀️ #outfit #moda",
+    "es": "Flat-lay del día: gorra, gafas y bolso ☀️ #outfit #moda",
+    "en": "Flat-lay of the day: cap, shades and bag ☀️ #outfit #style"
    }
   },
   {
@@ -338,9 +338,9 @@
    "user": "biel.daily",
    "likes": 310,
    "cap": {
-    "ca": "Bossa i res més (i tot el que hi cap) 👜 #look",
-    "es": "Bolso y nada más (y todo lo que cabe) 👜 #look",
-    "en": "Just a bag (and everything it fits) 👜 #look"
+    "ca": "Accessoris en rosa i verd aigua 🕶️ #flatlay",
+    "es": "Accesorios en rosa y verde agua 🕶️ #flatlay",
+    "en": "Accessories in pink and teal 🕶️ #flatlay"
    }
   },
   {
@@ -348,16 +348,16 @@
    "topic": "fashion",
    "type": "video",
    "file": "fashion-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "fashion-5-poster.webp",
    "user": "biel.hub",
    "likes": 4128,
    "cap": {
-    "ca": "Ulleres de sol, vibra d'estiu 🕶️ #ootd",
-    "es": "Gafas de sol, vibra de verano 🕶️ #ootd",
-    "en": "Sunglasses, summer vibes 🕶️ #ootd"
+    "ca": "Passarel·la en mode color-block 🧥 #moda #outfit",
+    "es": "Pasarela en modo color-block 🧥 #moda #outfit",
+    "en": "Color-block runway mode 🧥 #fashion #outfit"
    }
   },
   {
@@ -365,16 +365,16 @@
    "topic": "fashion",
    "type": "video",
    "file": "fashion-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "fashion-6-poster.webp",
    "user": "dani.moments",
    "likes": 6902,
    "cap": {
-    "ca": "Barret per a tot l'any 👒 #style",
-    "es": "Sombrero para todo el año 👒 #style",
-    "en": "A hat for all year round 👒 #style"
+    "ca": "Nova sabatilla, tots els colors 👟 #sneakers #moda",
+    "es": "Nueva zapatilla, todos los colores 👟 #sneakers #moda",
+    "en": "New sneaker, every color 👟 #sneakers #style"
    }
   },
   {
@@ -387,9 +387,9 @@
    "user": "aleix.clips",
    "likes": 5543,
    "cap": {
-    "ca": "Quan t'adones que el dilluns és demà 😂 #meme",
-    "es": "Cuando te das cuenta de que mañana es lunes 😂 #meme",
-    "en": "When you realise tomorrow is Monday 😂 #meme"
+    "ca": "Tota la classe en un sol segon 🫠 #humor #cares",
+    "es": "Toda la clase en un solo segundo 🫠 #humor #caras",
+    "en": "The whole class in a single second 🫠 #humor #faces"
    }
   },
   {
@@ -402,9 +402,9 @@
    "user": "dani.world",
    "likes": 2830,
    "cap": {
-    "ca": "Jo intentant ser seriós a classe 🤣 #relatable",
-    "es": "Yo intentando ser serio en clase 🤣 #relatable",
-    "en": "Me trying to be serious in class 🤣 #relatable"
+    "ca": "Intent número 99: encara no 🙃 #humor #mood",
+    "es": "Intento número 99: todavía no 🙃 #humor #mood",
+    "en": "Attempt number 99: not yet 🙃 #humor #mood"
    }
   },
   {
@@ -417,9 +417,9 @@
    "user": "irene.zone",
    "likes": 8438,
    "cap": {
-    "ca": "Cara de «ja ho enteneu tot, no?» 🙃 #mood",
-    "es": "Cara de «lo entendéis todo, ¿no?» 🙃 #mood",
-    "en": "The «you all understand, right?» face 🙃 #mood"
+    "ca": "Pack d'stickers: quina cara fas tu avui? 😜 #humor #stickers",
+    "es": "Pack de stickers: ¿qué cara pones hoy? 😜 #humor #stickers",
+    "en": "Sticker pack: which face are you today? 😜 #humor #stickers"
    }
   },
   {
@@ -432,9 +432,9 @@
    "user": "dani.hub",
    "likes": 3990,
    "cap": {
-    "ca": "Dijous a les 7 del matí 🥴 #sleepy",
-    "es": "Jueves a las 7 de la mañana 🥴 #sleepy",
-    "en": "Thursday at 7 a.m. 🥴 #sleepy"
+    "ca": "Còmic de tres vinyetes sobre el meu dilluns 😂 #humor #comic",
+    "es": "Cómic de tres viñetas sobre mi lunes 😂 #humor #comic",
+    "en": "Three-panel comic about my Monday 😂 #humor #comic"
    }
   },
   {
@@ -442,16 +442,16 @@
    "topic": "humor",
    "type": "video",
    "file": "humor-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "humor-5-poster.webp",
    "user": "adri.hub",
    "likes": 3641,
    "cap": {
-    "ca": "Quan et poses a riure en el moment menys adequat 😜 #riure",
-    "es": "Cuando te entra la risa en el peor momento 😜 #risa",
-    "en": "When you start laughing at the worst moment 😜 #laugh"
+    "ca": "Jo quan algú diu \"només un capítol més\" 😂 #humor #mood",
+    "es": "Yo cuando alguien dice \"solo un capítulo más\" 😂 #humor #mood",
+    "en": "Me when someone says \"just one more episode\" 😂 #humor #mood"
    }
   },
   {
@@ -459,16 +459,16 @@
    "topic": "humor",
    "type": "video",
    "file": "humor-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "humor-6-poster.webp",
    "user": "nuria.world",
    "likes": 3607,
    "cap": {
-    "ca": "Pla perfecte, execució… creativa 🤡 #fail",
-    "es": "Plan perfecto, ejecución… creativa 🤡 #fail",
-    "en": "Perfect plan, execution… creative 🤡 #fail"
+    "ca": "El pla era perfecte. El resultat… no tant 😅 #humor #fail",
+    "es": "El plan era perfecto. El resultado… no tanto 😅 #humor #fail",
+    "en": "The plan was perfect. The result… not so much 😅 #humor #fail"
    }
   },
   {
@@ -481,9 +481,9 @@
    "user": "pau.hub",
    "likes": 2490,
    "cap": {
-    "ca": "Este gos m'espera cada dia a la porta 🐶 #doggo",
-    "es": "Este perro me espera cada día en la puerta 🐶 #doggo",
-    "en": "This dog waits for me at the door every day 🐶 #doggo"
+    "ca": "Gat de nit amb llum de lluna i parpelleig lent 🌙 #gats",
+    "es": "Gato de noche con luz de luna y parpadeo lento 🌙 #gatos",
+    "en": "Night cat with moonlight and a slow blink 🌙 #cats"
    }
   },
   {
@@ -496,9 +496,9 @@
    "user": "nuria.lab",
    "likes": 6941,
    "cap": {
-    "ca": "El gat que mana a casa 🐱 #gatet",
-    "es": "El gato que manda en casa 🐱 #gatito",
-    "en": "The cat who runs the house 🐱 #kitty"
+    "ca": "Guineu de nit entre cuques de llum i bosc blau 🦊 #natura",
+    "es": "Zorro de noche entre luciérnagas y bosque azul 🦊 #naturaleza",
+    "en": "Night fox among fireflies and a blue forest 🦊 #nature"
    }
   },
   {
@@ -511,9 +511,9 @@
    "user": "nuria.world",
    "likes": 5838,
    "cap": {
-    "ca": "Una guineu a la vora del camí 🦊 #natura",
-    "es": "Un zorro al lado del camino 🦊 #naturaleza",
-    "en": "A fox by the side of the path 🦊 #nature"
+    "ca": "Nit de lluna plena i un mussol que no dorm 🦉 #animals #nit",
+    "es": "Noche de luna llena y un búho que no duerme 🦉 #animales #noche",
+    "en": "Full moon night and an owl that stays awake 🦉 #animals #night"
    }
   },
   {
@@ -526,9 +526,9 @@
    "user": "eric.world",
    "likes": 228,
    "cap": {
-    "ca": "Panda mode: menjar i descansar 🐼 #cute",
-    "es": "Modo panda: comer y descansar 🐼 #cute",
-    "en": "Panda mode: eat and rest 🐼 #cute"
+    "ca": "Una granota feliç sota la pluja 🐸 #animals #pluja",
+    "es": "Una ranita feliz bajo la lluvia 🐸 #animales #lluvia",
+    "en": "A happy little frog in the rain 🐸 #animals #rain"
    }
   },
   {
@@ -536,16 +536,16 @@
    "topic": "animals",
    "type": "video",
    "file": "animals-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "animals-5-poster.webp",
    "user": "oscar.daily",
    "likes": 7452,
    "cap": {
-    "ca": "Granota de pluja, humor de pluja 🐸 #animals",
-    "es": "Rana de lluvia, humor de lluvia 🐸 #animals",
-    "en": "Rain frog, rainy mood 🐸 #animals"
+    "ca": "La meua gata fent guàrdia a la finestra 🐱 #gats #mood",
+    "es": "Mi gata haciendo guardia en la ventana 🐱 #gatos #mood",
+    "en": "My cat on guard duty at the window 🐱 #cats #mood"
    }
   },
   {
@@ -553,16 +553,16 @@
    "topic": "animals",
    "type": "video",
    "file": "animals-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "animals-6-poster.webp",
    "user": "mireia.tv",
    "likes": 279,
    "cap": {
-    "ca": "El rei de la sabana en versió peluix 🦁 #wild",
-    "es": "El rey de la sabana en versión peluche 🦁 #wild",
-    "en": "King of the savanna, plush edition 🦁 #wild"
+    "ca": "Matí de boira, tros de camí i un guardià ros 🦊 #natura #animals",
+    "es": "Mañana de niebla, un camino y un zorro al trote 🦊 #naturaleza #animales",
+    "en": "Misty morning, a trail and a fox on the move 🦊 #nature #animals"
    }
   },
   {
@@ -575,9 +575,9 @@
    "user": "sara.vibes",
    "likes": 7875,
    "cap": {
-    "ca": "Pizza de divendres, tradició sagrada 🍕 #foodie",
-    "es": "Pizza de viernes, tradición sagrada 🍕 #foodie",
-    "en": "Friday pizza, sacred tradition 🍕 #foodie"
+    "ca": "Mozzarella, alfàbrega i res més 🌿 #pizza #casolà",
+    "es": "Mozzarella, albahaca y nada más 🌿 #pizza #casera",
+    "en": "Mozzarella, basil and nothing else 🌿 #pizza #homemade"
    }
   },
   {
@@ -590,9 +590,9 @@
    "user": "mireia.mood",
    "likes": 3308,
    "cap": {
-    "ca": "Hamburguesa casolana amb tot 🍔 #homemade",
-    "es": "Hamburguesa casera con todo 🍔 #homemade",
-    "en": "Homemade burger with everything 🍔 #homemade"
+    "ca": "Primer cafè i el cor ja somriu ☕ #latteart #cafè",
+    "es": "Primer café y el corazón ya sonríe ☕ #latteart #cafe",
+    "en": "First coffee and the heart is already smiling ☕ #latteart #coffee"
    }
   },
   {
@@ -605,9 +605,9 @@
    "user": "noa.zone",
    "likes": 1147,
    "cap": {
-    "ca": "Primer cop fent sushi, sorprenentment bé 🍣 #cuina",
-    "es": "Primera vez haciendo sushi, sorprendentemente bien 🍣 #cocina",
-    "en": "First time making sushi, surprisingly good 🍣 #cooking"
+    "ca": "Hamburguesa en vista explosionada 🍔 #burger #foodie",
+    "es": "Hamburguesa en vista explosionada 🍔 #burger #foodie",
+    "en": "Burger in exploded view mode 🍔 #burger #foodie"
    }
   },
   {
@@ -620,9 +620,9 @@
    "user": "oscar.moments",
    "likes": 1029,
    "cap": {
-    "ca": "Un dònut abans de la classe de mates 🍩 #dolç",
-    "es": "Un donut antes de clase de mates 🍩 #dulce",
-    "en": "A doughnut before maths class 🍩 #sweet"
+    "ca": "Dònut gegant ple de grageetes de colors 🍩 #donut #dolç",
+    "es": "Dónut gigante lleno de sprinkles de colores 🍩 #donut #dulce",
+    "en": "Giant donut loaded with colorful sprinkles 🍩 #donut #sweet"
    }
   },
   {
@@ -630,16 +630,16 @@
    "topic": "food",
    "type": "video",
    "file": "food-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "food-5-poster.webp",
    "user": "aleix.world",
    "likes": 1325,
    "cap": {
-    "ca": "Dimarts de tacos, sempre 🌮 #tacos",
-    "es": "Martes de tacos, siempre 🌮 #tacos",
-    "en": "Taco Tuesday, always 🌮 #tacos"
+    "ca": "Pizza amb tot el formatge del món 🍕 #pizza #foodie",
+    "es": "Pizza con todo el queso del mundo 🍕 #pizza #foodie",
+    "en": "Pizza with all the cheese in the world 🍕 #pizza #foodie"
    }
   },
   {
@@ -647,16 +647,16 @@
    "topic": "food",
    "type": "video",
    "file": "food-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "food-6-poster.webp",
    "user": "mireia.vibes",
    "likes": 8091,
    "cap": {
-    "ca": "Ramen calent un dia de pluja 🍜 #comfortfood",
-    "es": "Ramen caliente en un día de lluvia 🍜 #comfortfood",
-    "en": "Hot ramen on a rainy day 🍜 #comfortfood"
+    "ca": "Ramen ben calent i fideus per a tothom 🍜 #ramen #foodie",
+    "es": "Ramen calentito y fideos para todos 🍜 #ramen #foodie",
+    "en": "Hot ramen and noodles for everyone 🍜 #ramen #foodie"
    }
   },
   {
@@ -669,9 +669,9 @@
    "user": "ivan.mood",
    "likes": 6416,
    "cap": {
-    "ca": "Cim a l'albada, valia la pena 🏔️ #muntanya",
-    "es": "Cima al amanecer, mereció la pena 🏔️ #montaña",
-    "en": "Summit at sunrise, worth it 🏔️ #mountains"
+    "ca": "Globus sobre el llac, sense pressa 🎈 #viatges",
+    "es": "Globos sobre el lago, sin prisa 🎈 #viajes",
+    "en": "Balloons over the lake, no rush 🎈 #travel"
    }
   },
   {
@@ -684,9 +684,9 @@
    "user": "eric.moments",
    "likes": 252,
    "cap": {
-    "ca": "Platja sense gent, un somni 🏝️ #viatges",
-    "es": "Playa sin gente, un sueño 🏝️ #viajes",
-    "en": "Empty beach, a dream 🏝️ #travel"
+    "ca": "Una lluna, un pont i cap pressa 🌙 #viatges #tren",
+    "es": "Una luna, un puente y ninguna prisa 🌙 #viajes #tren",
+    "en": "One moon, one bridge, zero rush 🌙 #travel #train"
    }
   },
   {
@@ -699,9 +699,9 @@
    "user": "oscar.zone",
    "likes": 6840,
    "cap": {
-    "ca": "Una torre, una ciutat, mil fotos 🗼 #tokyo",
-    "es": "Una torre, una ciudad, mil fotos 🗼 #tokyo",
-    "en": "One tower, one city, a thousand photos 🗼 #tokyo"
+    "ca": "Illa, sol i aigua turquesa. Ja no cal res més 🏝️ #viatges #illa",
+    "es": "Isla, sol y agua turquesa. No hace falta más 🏝️ #viajes #isla",
+    "en": "Island, sun and turquoise water. That is all 🏝️ #travel #island"
    }
   },
   {
@@ -714,9 +714,9 @@
    "user": "aleix.world",
    "likes": 857,
    "cap": {
-    "ca": "Un volcà actiu a vint minuts 🌋 #aventura",
-    "es": "Un volcán activo a veinte minutos 🌋 #aventura",
-    "en": "An active volcano twenty minutes away 🌋 #adventure"
+    "ca": "Aurora boreal i una cabana ben acollidora ✨ #viatges #aurora",
+    "es": "Aurora boreal y una cabaña calentita ✨ #viajes #aurora",
+    "en": "Northern lights and a cozy cabin ✨ #travel #aurora"
    }
   },
   {
@@ -724,16 +724,16 @@
    "topic": "travel",
    "type": "video",
    "file": "travel-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "travel-5-poster.webp",
    "user": "laia.zone",
    "likes": 7763,
    "cap": {
-    "ca": "El tren que travessa les muntanyes 🚆 #interrail",
-    "es": "El tren que cruza las montañas 🚆 #interrail",
-    "en": "The train that crosses the mountains 🚆 #interrail"
+    "ca": "Hui el cel va decidir ser així 🌅 #viatges #albada",
+    "es": "Hoy el cielo decidió ser así 🌅 #viajes #atardecer",
+    "en": "Today the sky decided to be like this 🌅 #travel #sunset"
    }
   },
   {
@@ -741,16 +741,16 @@
    "topic": "travel",
    "type": "video",
    "file": "travel-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "travel-6-poster.webp",
    "user": "eric.mood",
    "likes": 4239,
    "cap": {
-    "ca": "Alba que es queda gravada 🌅 #paisatge",
-    "es": "Un amanecer que se queda grabado 🌅 #paisaje",
-    "en": "A sunrise that stays with you 🌅 #landscape"
+    "ca": "El tren de les 23:00 creua el pont entre neons 🚆 #viatges #nit",
+    "es": "El tren de las 23:00 cruza el puente entre neones 🚆 #viajes #noche",
+    "en": "The 11 pm train crosses the bridge through the neon 🚆 #travel #night"
    }
   },
   {
@@ -763,9 +763,9 @@
    "user": "dani.vibes",
    "likes": 3444,
    "cap": {
-    "ca": "Mirant el món a través d'un microscopi 🔬 #ciencia",
-    "es": "Mirando el mundo a través de un microscopio 🔬 #ciencia",
-    "en": "Looking at the world through a microscope 🔬 #science"
+    "ca": "Gegant de gel amb anells rosats i dues llunes 🧊 #ciència #cosmos",
+    "es": "Gigante de hielo con anillos rosados y dos lunas 🧊 #ciencia #cosmos",
+    "en": "Ice giant with pink rings and two moons 🧊 #science #cosmos"
    }
   },
   {
@@ -778,9 +778,9 @@
    "user": "marc.tv",
    "likes": 599,
    "cap": {
-    "ca": "Llançament d'un coet d'aigua al pati 🚀 #fisica",
-    "es": "Lanzamiento de un cohete de agua en el patio 🚀 #fisica",
-    "en": "Water rocket launch in the schoolyard 🚀 #physics"
+    "ca": "Un àtom per dins: nucli i electrons a tota velocitat ⚛️ #ciència #física",
+    "es": "Un átomo por dentro: núcleo y electrones a toda velocidad ⚛️ #ciencia #física",
+    "en": "Inside an atom: nucleus and electrons at full speed ⚛️ #science #physics"
    }
   },
   {
@@ -793,9 +793,9 @@
    "user": "oscar.mood",
    "likes": 4391,
    "cap": {
-    "ca": "Reacció química amb colors (no tocar) 🧪 #laboratori",
-    "es": "Reacción química con colores (no tocar) 🧪 #laboratorio",
-    "en": "Colourful chemical reaction (don't touch) 🧪 #lab"
+    "ca": "Enlairament amb alba sobre la Terra: pell de gallina 🚀 #ciència #espai",
+    "es": "Despegue con amanecer sobre la Tierra: piel de gallina 🚀 #ciencia #espacio",
+    "en": "Liftoff at dawn above Earth: goosebumps 🚀 #science #space"
    }
   },
   {
@@ -808,9 +808,9 @@
    "user": "oscar.hub",
    "likes": 6628,
    "cap": {
-    "ca": "Nit clara: hui toca veure Saturn 🔭 #astronomia",
-    "es": "Noche despejada: hoy toca ver Saturno 🔭 #astronomia",
-    "en": "Clear night: tonight we see Saturn 🔭 #astronomy"
+    "ca": "Cèl·lules i bacteris que brillen sota el microscopi 🔬 #ciència #biologia",
+    "es": "Células y bacterias que brillan bajo el microscopio 🔬 #ciencia #biología",
+    "en": "Cells and bacteria glowing under the microscope 🔬 #science #biology"
    }
   },
   {
@@ -818,16 +818,16 @@
    "topic": "science",
    "type": "video",
    "file": "science-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "science-5-poster.webp",
    "user": "laia.mood",
    "likes": 5138,
    "cap": {
-    "ca": "ADN en 3D, molt més bonic que en el llibre 🧬 #biologia",
-    "es": "ADN en 3D, mucho más bonito que en el libro 🧬 #biologia",
-    "en": "3D DNA, far prettier than in the textbook 🧬 #biology"
+    "ca": "Un planeta amb anells i tres llunes. Fes-me una foto! 🪐 #ciència #espai",
+    "es": "Un planeta con anillos y tres lunas. ¡Hazle una foto! 🪐 #ciencia #espacio",
+    "en": "A ringed planet with three moons. Say cheese! 🪐 #science #space"
    }
   },
   {
@@ -835,16 +835,16 @@
    "topic": "science",
    "type": "video",
    "file": "science-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "science-6-poster.webp",
    "user": "sara.zone",
    "likes": 1231,
    "cap": {
-    "ca": "El robot que programem en classe 🤖 #robotica",
-    "es": "El robot que programamos en clase 🤖 #robotica",
-    "en": "The robot we program in class 🤖 #robotics"
+    "ca": "L'ADN gira i, de colp, tot té sentit 🧬 #ciència #adn",
+    "es": "El ADN gira y todo cobra sentido 🧬 #ciencia #adn",
+    "en": "DNA keeps spinning and everything makes sense 🧬 #science #dna"
    }
   },
   {
@@ -857,9 +857,9 @@
    "user": "laia.zone",
    "likes": 8315,
    "cap": {
-    "ca": "Paleta nova, tardor nova 🎨 #pintura",
-    "es": "Paleta nueva, otoño nuevo 🎨 #pintura",
-    "en": "New palette, new autumn 🎨 #painting"
+    "ca": "Remolins de pintura nocturna, estil impressionista 🌌 #art #color",
+    "es": "Remolinos de pintura nocturna, estilo impresionista 🌌 #arte #color",
+    "en": "Night swirls of paint, impressionist vibes 🌌 #art #color"
    }
   },
   {
@@ -872,9 +872,9 @@
    "user": "eric.world",
    "likes": 7684,
    "cap": {
-    "ca": "Un traç, mil possibilitats 🖌️ #art",
-    "es": "Un trazo, mil posibilidades 🖌️ #arte",
-    "en": "One stroke, a thousand possibilities 🖌️ #art"
+    "ca": "Mandala de llum que gira i no para 🔮 #art #geometria",
+    "es": "Mandala de luz que gira sin parar 🔮 #arte #geometría",
+    "en": "A light mandala that never stops spinning 🔮 #art #geometry"
    }
   },
   {
@@ -887,9 +887,9 @@
    "user": "pau.daily",
    "likes": 3988,
    "cap": {
-    "ca": "Escultura d'argila: la meua primera 🗿 #creatiu",
-    "es": "Escultura de arcilla: mi primera 🗿 #creativo",
-    "en": "Clay sculpture: my first one 🗿 #creative"
+    "ca": "Paleta plena d'oli, pinzells i molt de color 🖌️ #art #pintura",
+    "es": "Paleta llena de óleo, pinceles y mucho color 🖌️ #arte #pintura",
+    "en": "A palette full of oil paint, brushes and loads of color 🖌️ #art #painting"
    }
   },
   {
@@ -902,9 +902,9 @@
    "user": "jana.world",
    "likes": 5292,
    "cap": {
-    "ca": "Una galeria petita però plena de vida 🖼️ #expo",
-    "es": "Una galería pequeña pero llena de vida 🖼️ #expo",
-    "en": "A small gallery full of life 🖼️ #expo"
+    "ca": "Obra abstracta sota els focus del museu 🖼️ #art #museu",
+    "es": "Obra abstracta bajo los focos del museo 🖼️ #arte #museo",
+    "en": "Abstract artwork under the museum spotlights 🖼️ #art #museum"
    }
   },
   {
@@ -912,16 +912,16 @@
    "topic": "art",
    "type": "video",
    "file": "art-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "art-5-poster.webp",
    "user": "lia.tv",
    "likes": 1327,
    "cap": {
-    "ca": "Esbós ràpid en l'autobús ✏️ #dibuix",
-    "es": "Boceto rápido en el autobús ✏️ #dibujo",
-    "en": "Quick sketch on the bus ✏️ #drawing"
+    "ca": "Un quadre que es pinta sol, pinzellada a pinzellada 🎨 #art #pintura",
+    "es": "Un cuadro que se pinta solo, pincelada a pincelada 🎨 #arte #pintura",
+    "en": "A painting that paints itself, stroke by stroke 🎨 #art #painting"
    }
   },
   {
@@ -929,16 +929,16 @@
    "topic": "art",
    "type": "video",
    "file": "art-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "art-6-poster.webp",
    "user": "noa.clips",
    "likes": 4613,
    "cap": {
-    "ca": "Teatre: el cos també pinta 🎭 #escena",
-    "es": "Teatro: el cuerpo también pinta 🎭 #escena",
-    "en": "Theatre: the body paints too 🎭 #stage"
+    "ca": "Gotes de tinta que floreixen i es barregen sobre paper 💧 #art #aquarel·la",
+    "es": "Gotas de tinta que florecen y se mezclan sobre papel 💧 #arte #acuarela",
+    "en": "Ink drops blooming and blending on paper 💧 #art #watercolor"
    }
   },
   {
@@ -951,9 +951,9 @@
    "user": "eric.vibes",
    "likes": 3400,
    "cap": {
-    "ca": "Eixida de circuit a primera hora 🏎️ #motor",
-    "es": "Salida de circuito a primera hora 🏎️ #motor",
-    "en": "Circuit start at dawn 🏎️ #motor"
+    "ca": "Ciutat al fons i carretera per a nosaltres 🌃 #cotxes #nit",
+    "es": "Ciudad al fondo y carretera para nosotros 🌃 #coches #noche",
+    "en": "City ahead, empty road, all ours 🌃 #cars #night"
    }
   },
   {
@@ -966,9 +966,9 @@
    "user": "marc.daily",
    "likes": 3230,
    "cap": {
-    "ca": "El cotxe de la família també té història 🚗 #classic",
-    "es": "El coche de la familia también tiene historia 🚗 #classic",
-    "en": "The family car has a story too 🚗 #classic"
+    "ca": "Autopista de nit, eixugaparabrises i bona música 🎶 #cotxes",
+    "es": "Autopista de noche, limpiaparabrisas y buena música 🎶 #coches",
+    "en": "Night highway, wipers on, good music on 🎶 #cars #rain"
    }
   },
   {
@@ -981,9 +981,9 @@
    "user": "laia.hub",
    "likes": 8087,
    "cap": {
-    "ca": "Dues rodes i el vent a la cara 🏍️ #moto",
-    "es": "Dos ruedas y el viento en la cara 🏍️ #moto",
-    "en": "Two wheels and the wind in your face 🏍️ #bike"
+    "ca": "Última llum del dia i un clàssic que no s'atura 🌇 #cotxes",
+    "es": "Última luz del día y un clásico que no se detiene 🌇 #coches",
+    "en": "Last light of the day and a classic that won't stop 🌇 #cars"
    }
   },
   {
@@ -996,9 +996,9 @@
    "user": "laia.moments",
    "likes": 2568,
    "cap": {
-    "ca": "Furgoneta, camí de terra i res més 🛻 #roadtrip",
-    "es": "Furgoneta, camino de tierra y nada más 🛻 #roadtrip",
-    "en": "Van, dirt road and nothing else 🛻 #roadtrip"
+    "ca": "Nit de circuit: llums, bandera i velocitat 🏁 #cotxes #motor",
+    "es": "Noche de circuito: focos, bandera y velocidad 🏁 #coches #motor",
+    "en": "Race night: floodlights, flags and speed 🏁 #cars #racing"
    }
   },
   {
@@ -1006,16 +1006,16 @@
    "topic": "cars",
    "type": "video",
    "file": "cars-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "cars-5-poster.webp",
    "user": "carla.moments",
    "likes": 3956,
    "cap": {
-    "ca": "Control de carretera: tot en regla 🚓 #seguretat",
-    "es": "Control de carretera: todo en regla 🚓 #seguridad",
-    "en": "Road check: all in order 🚓 #safety"
+    "ca": "Autopista cap al sol i volum al màxim 🌆 #synthwave #cotxes",
+    "es": "Autopista hacia el sol y volumen a tope 🌆 #synthwave #coches",
+    "en": "Highway into the sun, volume maxed 🌆 #synthwave #cars"
    }
   },
   {
@@ -1023,16 +1023,16 @@
    "topic": "cars",
    "type": "video",
    "file": "cars-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "cars-6-poster.webp",
    "user": "alba.hub",
    "likes": 6089,
    "cap": {
-    "ca": "Bandera de quadres a la volta final 🏁 #f1",
-    "es": "Bandera de cuadros en la vuelta final 🏁 #f1",
-    "en": "Chequered flag on the final lap 🏁 #f1"
+    "ca": "Pluja, neó i cap destí concret 🌧️ #nit #cotxes",
+    "es": "Lluvia, neón y ningún destino concreto 🌧️ #noche #coches",
+    "en": "Rain, neon and no particular destination 🌧️ #nightdrive #cars"
    }
   },
   {
@@ -1045,9 +1045,9 @@
    "user": "ivan.mood",
    "likes": 8338,
    "cap": {
-    "ca": "Claqueta i acció: el meu primer curt 🎬 #cine",
-    "es": "Claqueta y acción: mi primer corto 🎬 #cine",
-    "en": "Clapperboard and action: my first short 🎬 #film"
+    "ca": "Presa 1: la claqueta ja ha fet clap 🎬 #cinema #rodatge",
+    "es": "Toma 1: la claqueta ya ha hecho clap 🎬 #cine #rodaje",
+    "en": "Take 1: the clapperboard just went clap 🎬 #cinema #filmmaking"
    }
   },
   {
@@ -1060,9 +1060,9 @@
    "user": "mireia.vibes",
    "likes": 2848,
    "cap": {
-    "ca": "Crispetes, manta i estrena 🍿 #pelis",
-    "es": "Palomitas, manta y estreno 🍿 #pelis",
-    "en": "Popcorn, blanket and a premiere 🍿 #movies"
+    "ca": "La cinta és un tobogan de colors 🎞️ #cinema #pelis",
+    "es": "La cinta es un tobogán de colores 🎞️ #cine #pelis",
+    "en": "The film reel is a slide of colors 🎞️ #cinema #movies"
    }
   },
   {
@@ -1075,9 +1075,9 @@
    "user": "alba.tv",
    "likes": 9495,
    "cap": {
-    "ca": "El projector antic de l'avi 📽️ #retro",
-    "es": "El proyector antiguo del abuelo 📽️ #retro",
-    "en": "Grandpa's old projector 📽️ #retro"
+    "ca": "Llums fora, projector en marxa 🍿 #cinema #pelis",
+    "es": "Luces fuera, proyector en marcha 🍿 #cine #pelis",
+    "en": "Lights out, projector on 🍿 #cinema #movienight"
    }
   },
   {
@@ -1090,9 +1090,9 @@
    "user": "biel.clips",
    "likes": 6357,
    "cap": {
-    "ca": "Fotogrames que ho diuen tot 🎞️ #cinema",
-    "es": "Fotogramas que lo dicen todo 🎞️ #cinema",
-    "en": "Frames that say it all 🎞️ #cinema"
+    "ca": "Catifa roja, flaixos i ganes de premi 📸 #cinema #gala",
+    "es": "Alfombra roja, flashes y ganas de premio 📸 #cine #gala",
+    "en": "Red carpet, flashes and awards night 📸 #cinema #redcarpet"
    }
   },
   {
@@ -1100,16 +1100,16 @@
    "topic": "cinema",
    "type": "video",
    "file": "cinema-5.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "cinema-5-poster.webp",
    "user": "sara.zone",
    "likes": 6328,
    "cap": {
-    "ca": "Heroi o no, la cua és la mateixa 🦸 #marvel",
-    "es": "Héroe o no, la cola es la misma 🦸 #marvel",
-    "en": "Hero or not, the queue is the same 🦸 #marvel"
+    "ca": "Compte enrere i… acció! 🎬 #cinema #peli",
+    "es": "Cuenta atrás y… ¡acción! 🎬 #cine #peli",
+    "en": "Countdown and… action! 🎬 #cinema #movies"
    }
   },
   {
@@ -1117,16 +1117,16 @@
    "topic": "cinema",
    "type": "video",
    "file": "cinema-6.mp4",
-   "dur": 6.0,
-   "w": 540,
-   "h": 960,
+   "dur": 8.0,
+   "w": 720,
+   "h": 1280,
    "poster": "cinema-6-poster.webp",
    "user": "aleix.clips",
    "likes": 9405,
    "cap": {
-    "ca": "Nit de terror amb els amics 🧛 #terror",
-    "es": "Noche de terror con los amigos 🧛 #terror",
-    "en": "Horror night with friends 🧛 #horror"
+    "ca": "Fotogrames que no s'acaben mai 🎞️ #cinema #35mm",
+    "es": "Fotogramas que nunca se acaban 🎞️ #cine #35mm",
+    "en": "Frames that never end 🎞️ #cinema #35mm"
    }
   }
  ]

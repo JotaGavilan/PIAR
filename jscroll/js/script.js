@@ -15,10 +15,10 @@
   try { Object.assign(cfg, JSON.parse(localStorage.getItem(CFG_KEY) || '{}')); } catch (e) {}
   function sanitizeCfg() {
     cfg.n = clamp(parseInt(cfg.n, 10) || 50, 20, 60); cfg.maxMin = clamp(parseInt(cfg.maxMin, 10) || 0, 0, 20);
-    cfg.adaptive = cfg.adaptive !== false; cfg.hint = !!cfg.hint; cfg.phase1Frac = .4;
+    cfg.adaptive = cfg.adaptive !== false; cfg.hint = !!cfg.hint; cfg.money = !!cfg.money; cfg.phase1Frac = .4;
   }
   sanitizeCfg();
-  const saveCfg = () => { try { localStorage.setItem(CFG_KEY, JSON.stringify({ n: cfg.n, maxMin: cfg.maxMin, adaptive: cfg.adaptive, hint: cfg.hint })); } catch (e) {} };
+  const saveCfg = () => { try { localStorage.setItem(CFG_KEY, JSON.stringify({ n: cfg.n, maxMin: cfg.maxMin, adaptive: cfg.adaptive, hint: cfg.hint, money: cfg.money })); } catch (e) {} };
 
   // ── Utilitats ───────────────────────────────────────────
   const lang = () => PIAR_I18N.lang;
@@ -40,7 +40,7 @@
   let lastSummary = null;
   const feed = $('feed');
 
-  function show(id) { ['intro', 'feedScreen', 'result'].forEach((s) => { $(s).hidden = s !== id; }); if (id === 'result') $('result').scrollTop = 0; }
+  function show(id) { ['intro', 'feedScreen', 'result', 'money'].forEach((s) => { $(s).hidden = s !== id; }); if (id === 'result' || id === 'money') $(id).scrollTop = 0; }
 
   // ═════════ Catàleg ═════════
   async function loadCatalog() {
@@ -96,7 +96,7 @@
     S = { declared: (decl || []).slice(0, 3), cfg: c, n, planner: J.makePlanner(catalog, c, rnd), posts: [], active: -1, elapsed: 0, last: performance.now(), ended: false, endCard: false, armed: 0, startedAt: Date.now() };
     feed.innerHTML = ''; feed.style.overflowY = 'scroll'; show('feedScreen'); feed.scrollTop = 0;
     $('endBtn').classList.remove('armed'); $('endBtn').textContent = '✕';
-    $('hintBox').hidden = !cfg.hint;
+    $('hintBox').hidden = !cfg.hint; $('moneyPill').hidden = !cfg.money; updateMoneyPill();
     ensureAhead(0); updateCounter();
     startTicker(); try { feed.focus({ preventScroll: true }); } catch (e) {}
   }
@@ -162,7 +162,7 @@
       if (p.z.s > g.zoomMax) g.zoomMax = p.z.s;
       if (p.paused) g.pauseMs += dt;
     }
-    updateCounter(); updateHint();
+    updateCounter(); updateHint(); updateMoneyPill();
     if (cfg.maxMin && S.elapsed >= cfg.maxMin * 60000) { toast(_t('js.feed.timeup')); finish('time'); }
   }
   function changeActive(a) {
@@ -379,7 +379,7 @@
     if (!sm.enough) {
       h.push('<div class="rs-card rs-warn"><p>' + esc(_t('js.res.few', { n: tot.seen })) + '</p></div>');
     } else {
-      h.push(rankCard(sm), saidCard(sm), adCard(sm), mapCard(sm), bubbleCard(sm), statsCard(sm, d));
+      h.push(rankCard(sm), saidCard(sm), adCard(sm), moneyCard(sm), mapCard(sm), bubbleCard(sm), statsCard(sm, d));
     }
     h.push('<div class="rs-actions"><button type="button" class="btn-primary" id="againBtn">' + esc(_t('js.res.again')) + '</button>' +
       (sm.enough ? '<button type="button" class="btn" id="cardBtn">' + esc(_t('js.res.card')) + '</button>' : '') +
@@ -390,6 +390,7 @@
     if ($('cardBtn')) $('cardBtn').onclick = downloadCard;
     $('delBtn').onclick = () => { wipe(); show('intro'); declared = []; refreshIntro(); };
     $('result').querySelectorAll('.tl .b').forEach((b) => { b.onclick = () => selectBar(+b.dataset.k); });
+    if ($('mOpenBtn')) $('mOpenBtn').onclick = () => openMoney('result');
   }
   const medals = ['🥇', '🥈', '🥉'];
   function rankCard(sm) {
@@ -467,6 +468,115 @@
       '</table><p class="hint">' + esc(_t('js.how.p2')) + '</p></details></div>';
   }
 
+
+  // ═════════ Simulador de diners ═════════
+  //  Dos mètodes independents (preu dels anuncis i ingressos per menor) calculats a core.js (J.ratePerSec, J.sessionMoney).
+  const MN = J.MONEY, MKEY = 'jscroll.money';
+  const M = { platform: MN.DEFAULTS.platform, market: MN.DEFAULTS.market, minDay: null, students: MN.DEFAULTS.students, adEvery: MN.DEFAULTS.adEvery, secPerPost: MN.DEFAULTS.secPerPost };
+  try { const o = JSON.parse(localStorage.getItem(MKEY) || '{}'); if (MN.PLATFORMS[o.platform]) M.platform = o.platform; if (MN.MARKETS.indexOf(o.market) >= 0) M.market = o.market; } catch (e) {}
+  const saveM = () => { try { localStorage.setItem(MKEY, JSON.stringify({ platform: M.platform, market: M.market })); } catch (e) {} };
+  const nf = (x, d) => new Intl.NumberFormat({ ca: 'ca-ES', es: 'es-ES', en: 'en-GB' }[lang()] || 'ca-ES', { minimumFractionDigits: d, maximumFractionDigits: d }).format(x);
+  function fmtEur(x) {
+    if (!(x > 0)) return '0 €';
+    if (x < 0.01) { const c = x * 100; return nf(c, c < 0.1 ? 3 : 2) + ' ' + _t('js.m.cent'); }
+    if (x < 100) return nf(x, 2) + ' €';
+    if (x < 1e6) return nf(Math.round(x), 0) + ' €';
+    if (x < 1e9) return nf(x / 1e6, x < 1e7 ? 2 : 1) + ' ' + _t('js.m.mm');
+    return nf(x / 1e9, 1) + ' ' + _t('js.m.bn');
+  }
+  const mMinDay = () => (M.minDay == null ? MN.PLATFORMS[M.platform].minDay : M.minDay);
+  const mRate = () => J.ratePerSec(M.platform, M.market, { adEvery: M.adEvery, secPerPost: M.secPerPost });
+  function updateMoneyPill() {
+    if (!cfg.money || !S || S.ended) return;
+    const t = _t('js.m.pill', { v: fmtEur(J.sessionMoney(M.platform, M.market, seenPosts().length, S.elapsed, { adEvery: M.adEvery }).mid) });
+    if ($('moneyPill').textContent !== t) $('moneyPill').textContent = t;
+  }
+  function moneyCard(sm) {
+    const t = sm.totals; if (!t.seen || !t.dwellMs) return '';
+    const s = J.sessionMoney(M.platform, M.market, t.seen, t.dwellMs, { adEvery: M.adEvery });
+    const md = mMinDay(), pr = J.project(J.ratePerSec(M.platform, M.market, { adEvery: M.adEvery, secPerPost: s.secPerPost }).mid, md);
+    return '<div class="rs-card m-card-res"><h2>' + esc(_t('js.res.money.h')) + '</h2><p class="hint">' + esc(_t('js.res.money.hint', { plat: _t('js.m.p.' + M.platform), mkt: _t('js.m.k.' + M.market) })) + '</p>' +
+      '<div class="m-big">≈ ' + esc(fmtEur(s.mid)) + '</div><p class="m-sub">' + esc(_t('js.res.money.range', { a: fmtEur(s.low), b: fmtEur(s.high) })) + '</p>' +
+      '<p>' + esc(_t('js.res.money.p1', { ads: nf(s.ads, 1), n: t.seen, t: fmtMin(t.dwellMs), spp: dec(s.secPerPost.toFixed(1)), sec: fmtEur(s.mid / s.sec) })) + '</p>' +
+      '<p>' + _t('js.res.money.p2', { m: md, day: esc(fmtEur(pr.day)), year: esc(fmtEur(pr.year)) }) + '</p>' +
+      '<p>' + _t('js.res.money.meta', { v: esc(fmtEur(J.metaPerSec().eur * s.sec)) }) + '</p>' +
+      '<button type="button" class="btn-primary" id="mOpenBtn">' + esc(_t('js.res.money.btn')) + '</button></div>';
+  }
+  let mTimer = 0, mT0 = 0, mFrom = 'intro';
+  function mStop() { if (mTimer) clearInterval(mTimer); mTimer = 0; }
+  function mTick() {
+    if ($('money').hidden || !$('mLive')) { mStop(); return; }
+    const t = (performance.now() - mT0) / 1000;
+    $('mLive').textContent = fmtEur(mRate().mid * t); $('mWorldLive').textContent = fmtEur(J.metaPerSec().eur * t);
+  }
+  function openMoney(from) { mFrom = from; mT0 = performance.now(); buildMoney(); show('money'); mStop(); mTimer = setInterval(mTick, 100); mTick(); }
+  function closeMoney() { mStop(); show(mFrom === 'result' && lastData ? 'result' : 'intro'); if (mFrom !== 'result') refreshIntro(); }
+  const SRC = [
+    ['Meta · resultados T2 2026', 'https://ppc.land/meta-profit-drops-8-to-15-8bn-as-legal-charges-hit-ad-gains/'],
+    ['Meta · Xinhua / The Star', 'https://www.thestar.com.my/news/world/2026/07/30/meta-reports-higher-q2-revenue-lower-net-income'],
+    ['CPM Facebook/Instagram por país 2026 · Adligator', 'https://adligator.com/es/blog/cpm-facebook-por-pais-2026'],
+    ['CPM TikTok 2026 · Influee', 'https://influee.co/blog/tiktok-cpm'],
+    ['Harvard · PLOS ONE 2023 (ingresos publicitarios de menores, EUA)', 'https://news.harvard.edu/gazette/story/2024/01/social-media-platforms-make-11b-in-ad-revenue-from-u-s-teens/'],
+    ['Qustodio · informe anual 2025 (España)', 'https://www.qustodio.com/es/research/annual-report-2025/'],
+    ['SMI 2026 · Wolters Kluwer', 'https://www.wolterskluwer.com/es-es/expert-insights/smi-2026-salario-minimo'],
+    ['USD/EUR · ValutaFX', 'https://www.valutafx.com/history/usd-eur-2026-08-03']
+  ];
+  function buildMoney() {
+    const sess = lastSummary && lastSummary.totals.seen ? lastSummary.totals : null;
+    const mine = sess && sess.dwellMs ? Math.round(sess.dwellMs / 1000 / sess.seen) : 0;
+    const seg = (id, items, cur) => '<div class="seg" id="' + id + '" role="group">' + items.map((k) => '<button type="button" data-v="' + k[0] + '" aria-pressed="' + (k[0] === cur) + '">' + esc(k[1]) + '</button>').join('') + '</div>';
+    const rows = ['s', 'min', 'h', 'day', 'month', 'year'].map((k) => '<tr><td>' + esc(_t('js.m.u.' + k, { m: mMinDay() })) + '</td><td id="mt-' + k + '"></td><td id="mr-' + k + '"></td></tr>').join('');
+    const h = [];
+    h.push('<div class="rs-top"><button type="button" class="btn" id="mBack">' + esc(_t('js.m.back')) + '</button><h1>' + esc(_t('js.m.title')) + '</h1></div>');
+    h.push('<p class="rs-sub">' + esc(_t('js.m.intro')) + '</p>');
+    h.push('<div class="rs-card"><h2>' + esc(_t('js.m.cfg.h')) + '</h2>' +
+      '<span class="m-lbl">' + esc(_t('js.m.platform')) + '</span>' + seg('mPlat', Object.keys(MN.PLATFORMS).map((k) => [k, _t('js.m.p.' + k)]), M.platform) +
+      '<span class="m-lbl">' + esc(_t('js.m.market')) + '</span>' + seg('mMkt', MN.MARKETS.map((k) => [k, _t('js.m.k.' + k)]), M.market) +
+      '<div class="m-row"><label id="mMinL" for="mMin"></label><input type="range" id="mMin" min="0" max="300" step="5"><p class="hint" id="mMinNote" style="margin:2px 0 0"></p></div>' +
+      '<div class="m-row"><label id="mStuL" for="mStu"></label><input type="range" id="mStu" min="1" max="200" step="1"></div>' +
+      '<details class="how"><summary>' + esc(_t('js.m.adv')) + '</summary>' +
+      '<div class="m-row"><label id="mAdL" for="mAd"></label><input type="range" id="mAd" min="1" max="10" step="1"></div>' +
+      '<div class="m-row"><label id="mSppL" for="mSpp"></label><input type="range" id="mSpp" min="2" max="60" step="1"></div>' +
+      (mine ? '<button type="button" class="btn" id="mMine">' + esc(_t('js.m.mine', { s: mine })) + '</button>' : '') +
+      '<p class="hint" style="margin-top:8px">' + esc(_t('js.m.adv.note')) + '</p></details></div>');
+    h.push('<div class="rs-card"><h2>' + esc(_t('js.m.live.h')) + '</h2><p class="hint">' + esc(_t('js.m.live.p')) + '</p><div class="m-big" id="mLive">0</div><p class="m-sub" id="mLiveRate"></p></div>');
+    h.push('<div class="rs-card"><h2>' + esc(_t('js.m.tbl.h')) + '</h2><table class="m-tbl"><tr><th></th><th>' + esc(_t('js.m.tbl.est')) + '</th><th>' + esc(_t('js.m.tbl.range')) + '</th></tr>' + rows + '</table></div>');
+    h.push('<div class="rs-card"><h2>' + esc(_t('js.m.you.h')) + '</h2><p id="mYou"></p><h2 style="margin-top:12px">' + esc(_t('js.m.cls.h')) + '</h2><p id="mCls"></p></div>');
+    h.push('<div class="rs-card"><h2>' + esc(_t('js.m.world.h')) + '</h2><p>' + _t('js.m.world.p', { q: esc(fmtEur(MN.META.adUsdQ * MN.FX)), s: esc(fmtEur(J.metaPerSec().eur)) }) + '</p>' +
+      '<p class="hint" style="margin-bottom:0">' + esc(_t('js.m.world.live')) + '</p><div class="m-big m-meta" id="mWorldLive">0</div>' +
+      '<p class="m-sub">' + _t('js.m.world.sent', { v: esc(fmtEur(J.metaPerSec().eur * 15)) }) + '</p></div>');
+    h.push('<div class="rs-card"><details class="how"><summary>' + esc(_t('js.m.how.sum')) + '</summary><p id="mHow1" class="hint"></p><p id="mHow2" class="hint"></p><p class="hint">' + esc(_t('js.m.how.res')) + '</p><p class="hint">' + _t('js.m.how.no') + '</p>' +
+      '<h3 style="font-size:.8rem;color:var(--accent2);margin:8px 0 2px">' + esc(_t('js.m.how.src')) + '</h3><ul class="m-src">' + SRC.map((x) => '<li><a href="' + x[1] + '" target="_blank" rel="noopener noreferrer">' + esc(x[0]) + '</a></li>').join('') + '</ul></details></div>');
+    h.push('<div class="rs-card"><h2>' + esc(_t('js.m.think.h')) + '</h2><ul class="m-src"><li>' + esc(_t('js.m.think.1')) + '</li><li>' + esc(_t('js.m.think.2')) + '</li><li>' + esc(_t('js.m.think.3')) + '</li></ul></div>');
+    h.push('<div class="rs-actions"><button type="button" class="btn-primary" id="mBack2">' + esc(_t('js.close')) + '</button></div>');
+    $('money').innerHTML = h.join('');
+    $('mMin').value = mMinDay(); $('mStu').value = M.students; $('mAd').value = M.adEvery; $('mSpp').value = M.secPerPost;
+    $('mBack').onclick = closeMoney; $('mBack2').onclick = closeMoney;
+    const setSeg = (id, key) => { $(id).onclick = (e) => { const b = e.target.closest('button'); if (!b) return; M[key] = b.dataset.v; if (key === 'platform') { M.minDay = null; $('mMin').value = mMinDay(); } saveM(); $(id).querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); moneyUpdate(); }; };
+    setSeg('mPlat', 'platform'); setSeg('mMkt', 'market');
+    $('mMin').oninput = () => { M.minDay = +$('mMin').value; moneyUpdate(); };
+    $('mStu').oninput = () => { M.students = +$('mStu').value; moneyUpdate(); };
+    $('mAd').oninput = () => { M.adEvery = +$('mAd').value; moneyUpdate(); };
+    $('mSpp').oninput = () => { M.secPerPost = +$('mSpp').value; moneyUpdate(); };
+    if ($('mMine')) $('mMine').onclick = () => { M.secPerPost = clamp(mine, 2, 60); $('mSpp').value = M.secPerPost; moneyUpdate(); };
+    moneyUpdate();
+  }
+  function moneyUpdate() {
+    if (!$('mMin')) return;
+    const r = mRate(), md = mMinDay(), pr = (v) => J.project(v, md), lo = pr(r.low), mi = pr(r.mid), hi = pr(r.high);
+    $('mMinL').textContent = _t('js.m.minday', { m: md });
+    $('mMinNote').textContent = _t('js.m.minday.note', { tt: MN.PLATFORMS.tiktok.minDay, ig: MN.PLATFORMS.instagram.minDay });
+    $('mStuL').textContent = _t('js.m.students', { n: M.students });
+    $('mAdL').textContent = _t('js.m.adEvery', { n: M.adEvery });
+    $('mSppL').textContent = _t('js.m.spp', { s: M.secPerPost });
+    ['s', 'min', 'h', 'day', 'month', 'year'].forEach((k) => { $('mt-' + k).textContent = fmtEur(mi[k]); $('mr-' + k).textContent = fmtEur(lo[k]) + ' – ' + fmtEur(hi[k]); });
+    $('mLiveRate').textContent = _t('js.m.live.rate', { v: fmtEur(r.mid) });
+    $('mYou').innerHTML = _t('js.m.you.p', { y: esc(fmtEur(mi.year)), d: nf(mi.year / MN.SMI_DAY, 1), smi: nf(MN.SMI_DAY, 2) });
+    $('mCls').innerHTML = _t('js.m.cls.p', { n: M.students, day: esc(fmtEur(mi.day * M.students)), year: esc(fmtEur(mi.year * M.students)) });
+    $('mHow1').innerHTML = _t('js.m.how.m1', { n: M.adEvery, s: M.secPerPost });
+    $('mHow2').innerHTML = _t('js.m.how.m2', { v: esc(fmtEur(r.topdown)) });
+  }
+
   // Targeta descarregable (PNG)
   function downloadCard() {
     const sm = lastSummary; if (!sm) return;
@@ -492,11 +602,12 @@
     $('cfgNLbl').textContent = _t('js.cfg.n', { n: $('cfgN').value });
     const m = +$('cfgMin').value; $('cfgMinLbl').textContent = m ? _t('js.cfg.min', { m }) : _t('js.cfg.min0');
   }
-  function loadCfgUi() { $('cfgN').value = cfg.n; $('cfgMin').value = cfg.maxMin; $('cfgAdaptive').checked = cfg.adaptive; $('cfgHint').checked = cfg.hint; refreshCfgLabels(); }
+  function loadCfgUi() { $('cfgN').value = cfg.n; $('cfgMin').value = cfg.maxMin; $('cfgAdaptive').checked = cfg.adaptive; $('cfgHint').checked = cfg.hint; $('cfgMoney').checked = cfg.money; refreshCfgLabels(); }
   $('cfgN').addEventListener('input', () => { cfg.n = +$('cfgN').value; saveCfg(); refreshCfgLabels(); });
   $('cfgMin').addEventListener('input', () => { cfg.maxMin = +$('cfgMin').value; saveCfg(); refreshCfgLabels(); });
   $('cfgAdaptive').addEventListener('change', () => { cfg.adaptive = $('cfgAdaptive').checked; saveCfg(); });
   $('cfgHint').addEventListener('change', () => { cfg.hint = $('cfgHint').checked; saveCfg(); });
+  $('cfgMoney').addEventListener('change', () => { cfg.money = $('cfgMoney').checked; saveCfg(); });
   $('wipeBtn').onclick = () => { wipe(); $('wipeBtn').textContent = _t('js.cfg.wiped'); setTimeout(() => { $('wipeBtn').textContent = _t('js.res.delete'); }, 2000); };
   $('configBtn').onclick = () => { $('config-layer').style.display = 'flex'; };
   $('infoBtn').onclick = () => { $('info-layer').style.display = 'flex'; };
@@ -506,11 +617,14 @@
   $('startBtn').onclick = () => startSession(declared);
   $('skipBtn').onclick = () => startSession([]);
   $('lastBtn').onclick = () => { const d = readLast(); if (d) showResult(d); };
+  $('moneyBtn').onclick = () => openMoney('intro');
 
   PIAR_I18N.onChange(() => {
     refreshIntro(); refreshCfgLabels(); refreshCatalogInfo();
     if (S && !S.ended) S.posts.forEach((P) => { P.el.querySelector('.cap').textContent = capOf(P.item); refreshRail(P); });
     if (!$('result').hidden) renderResult();
+    if (!$('money').hidden) buildMoney();
+    updateMoneyPill();
   });
 
   PIAR_I18N.mountSelector($('langSelectHost'));
@@ -521,6 +635,7 @@
     cfg, J, state: () => S, last: () => lastData, summary: () => lastSummary, catalog: () => catalog, declared: () => declared,
     startSession, finish, tick, activePost, scrollPos, applyZoom, zoomAt, toggleZoomBtn, setLike, togglePause, showResult, readLast, wipe,
     goTo: (i) => { feed.scrollTo({ top: i * feed.clientHeight, behavior: 'instant' }); },
-    sanitizeCfg, loadCfgUi
+    sanitizeCfg, loadCfgUi,
+    money: { M, openMoney, closeMoney, buildMoney, moneyUpdate, fmtEur, nf, mRate }
   };
 })();

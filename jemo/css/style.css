@@ -54,14 +54,13 @@ body > .piar-header, body > #stage, body > #controls { width: 100%; max-width: 4
   color: var(--accent2); font-size: .78rem; text-align: center;
 }
 
-/* Lectura: emoció + gest */
-#readout { flex: 0 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+/* Lectura: emoció */
+#readout { flex: 0 0 auto; display: grid; grid-template-columns: 1fr; gap: 8px; }
 .rcard {
   position: relative; display: flex; flex-direction: column; gap: 6px; min-width: 0;
   padding: 8px 10px 10px; border: 1px solid var(--border); border-radius: var(--radius);
   background: rgba(30,26,46,.85);
 }
-.rcard.off { opacity: .45; }
 .rlabel { font-size: .68rem; font-weight: 600; letter-spacing: .04em; color: var(--text-dim); text-transform: uppercase; }
 .rmain { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .rico { font-size: clamp(1.9rem, 9vw, 2.6rem); line-height: 1; flex: 0 0 auto; }

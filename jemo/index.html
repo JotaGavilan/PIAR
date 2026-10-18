@@ -5,7 +5,7 @@
   <meta name="theme-color" content="#090812">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <script src="../shared/viewport.js"></script>
-  <title data-i18n="je.title">JEmo – Cara i cos amb emoció</title>
+  <title data-i18n="je.title">JEmo – Emocions de la cara</title>
   <link rel="stylesheet" href="../shared/piar-ui.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="../shared/loading_overlay.css">
@@ -21,7 +21,7 @@
   <header class="piar-header has-home">
     <a class="btn piar-home" href="../" aria-label="Tornar a la pantalla principal" title="Tornar a la pantalla principal" data-i18n-attr="aria-label:sh.home;title:sh.home"><svg class="ico" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg></a>
     <img src="icons/android-chrome-512x512.png" alt="Icona JEmo" data-i18n-attr="alt:je.alt.app">
-    <h1 data-i18n="je.title">JEmo – Cara i cos amb emoció</h1>
+    <h1 data-i18n="je.title">JEmo – Emocions de la cara</h1>
   </header>
 
   <main id="stage">
@@ -48,12 +48,6 @@
         <span class="rlabel" data-i18n="je.card.emo">Emoció</span>
         <div class="rmain"><span class="rico" id="emoEmoji">😐</span><div class="rtxt"><b id="emoName">–</b><code id="emoCode" class="rcode">E0</code></div></div>
         <div class="rbar"><i id="emoBar"></i></div>
-        <span id="boostChip" class="chip" hidden data-i18n="je.boost">🔗 reforçada pel cos</span>
-      </div>
-      <div class="rcard" id="gesCard">
-        <span class="rlabel" data-i18n="je.card.ges">Gest</span>
-        <div class="rmain"><span class="rico" id="gesEmoji">🧍</span><div class="rtxt"><b id="gesName">–</b><code id="gesCode" class="rcode">G0</code></div></div>
-        <div class="rbar"><i id="gesBar"></i></div>
       </div>
     </section>
 
@@ -84,34 +78,13 @@
       </div>
 
       <div class="config-section">
-        <h3 class="section-title" data-i18n="je.cfg.read">👁 Què llig</h3>
-        <select id="cfgRead" aria-label="Què llig" data-i18n-attr="aria-label:je.cfg.read">
-          <option value="both" data-i18n="je.cfg.read_both">Cara i cos</option>
-          <option value="face" data-i18n="je.cfg.read_face">Només la cara (emocions)</option>
-          <option value="body" data-i18n="je.cfg.read_body">Només el cos (gestos)</option>
-        </select>
-        <label for="cfgView" data-i18n="je.cfg.view">Com et col·loques davant la càmera</label>
-        <select id="cfgView">
-          <option value="close" data-i18n="je.cfg.view_close">Cerca (càmera frontal)</option>
-          <option value="body" data-i18n="je.cfg.view_body">Cos sencer (càmera allunyada)</option>
-        </select>
-        <p class="config-note" data-i18n="je.cfg.view_note">Amb la càmera frontal del mòbil només es veu la cara i les mans: tria «Cerca». «Cos sencer» necessita veure't des del cap fins a les mans (càmera lluny, amb suport).</p>
-        <div id="closeBox">
-          <label class="check"><input type="checkbox" id="cfgShoulders"> <span data-i18n="je.cfg.shoulders">Llegir també l'esquena caiguda si es veuen les espatlles</span></label>
-          <p class="config-note" data-i18n="je.cfg.shoulders_note">Descarrega el model del cos de Google la primera vegada. Si no es veuen les espatlles, s'ignora.</p>
-          <div class="interval-control">
-            <label for="cfgHeadMove" id="cfgHeadMoveLbl">Moviment del cap</label>
-            <input type="range" id="cfgHeadMove" min="6" max="30" value="12" step="1">
-          </div>
-          <p class="config-note" data-i18n="je.cfg.headmove_note">Com de gran ha de ser el «sí» o el «no» amb el cap per a comptar. Més baix = més sensible.</p>
-        </div>
+        <h3 class="section-title" data-i18n="je.cfg.face">👁 La cara</h3>
         <label for="cfgEngine" data-i18n="je.cfg.engine">Model de la cara</label>
         <select id="cfgEngine">
           <option value="net" data-i18n="je.cfg.engine_net">Xarxa neuronal (recomanat)</option>
           <option value="mesh" data-i18n="je.cfg.engine_mesh">Punts de la cara i regles (MediaPipe)</option>
         </select>
         <p class="config-note" data-i18n="je.cfg.note_engine">La xarxa neuronal és la més fiable.</p>
-        <label class="check"><input type="checkbox" id="cfgBoost"> <span data-i18n="je.cfg.reinforce">Reforçar l'emoció amb el cos</span></label>
       </div>
 
       <div class="config-section">
@@ -124,10 +97,6 @@
         <div class="interval-control">
           <label for="cfgMinConf" id="cfgMinConfLbl">Confiança mínima</label>
           <input type="range" id="cfgMinConf" min="20" max="80" value="40" step="5">
-        </div>
-        <div class="interval-control">
-          <label for="cfgTilt" id="cfgTiltLbl">Cap inclinat</label>
-          <input type="range" id="cfgTilt" min="8" max="30" value="15" step="1">
         </div>
       </div>
 
@@ -142,7 +111,7 @@
           <label for="cfgPeriod" id="cfgPeriodLbl">Cada 0,5 s</label>
           <input type="range" id="cfgPeriod" min="2" max="20" value="5" step="1">
         </div>
-        <label class="check"><input type="checkbox" id="cfgIntensity"> <span data-i18n="je.cfg.intensity">Afegir la força (E1:87, G2:90)</span></label>
+        <label class="check"><input type="checkbox" id="cfgIntensity"> <span data-i18n="je.cfg.intensity">Afegir la força (E1:87)</span></label>
         <p class="config-note" data-i18n="je.cfg.send_note">Cada missatge és una línia de text curta.</p>
         <details id="codesBox">
           <summary data-i18n="je.cfg.codes">🏷 Codis dels missatges (opcional)</summary>
@@ -179,13 +148,11 @@
       <p data-i18n-html="je.help.codes"></p>
       <ul id="helpCodes" class="help-codes"></ul>
       <p data-i18n-html="je.help.mb"></p>
-      <p data-i18n-html="je.help.view"></p>
       <p data-i18n-html="je.help.cal"></p>
       <p data-i18n-html="je.help.limit"></p>
       <p data-i18n-html="je.help.net_title"></p>
       <ul>
         <li data-i18n-html="je.help.net1"></li>
-        <li data-i18n-html="je.help.net2"></li>
       </ul>
       <p class="info-footer" data-i18n-html="je.help.footer"></p>
       <button class="close-btn" id="closeInfoBtn" data-i18n="je.close">Tancar</button>

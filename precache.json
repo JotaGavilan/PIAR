@@ -1,5 +1,5 @@
 {
- "version": "e4022127955f",
+ "version": "b2ea84478dfe",
  "shell": [
   "./",
   "index.html",
@@ -66,6 +66,8 @@
   "jscroll/guia-img/jscroll-5-dit-fet.webp",
   "jscroll/guia-img/jscroll-6-anunci.webp",
   "jscroll/guia-img/jscroll-7-mapa.webp",
+  "jscroll/guia-img/jscroll-8-diners.webp",
+  "jscroll/guia-img/jscroll-9-targeta-diners.webp",
   "jscroll/icons/android-chrome-192x192.png",
   "jscroll/icons/android-chrome-512x512.png",
   "jscroll/icons/apple-touch-icon.png",

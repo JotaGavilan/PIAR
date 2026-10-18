@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8">
+<style>
+@font-face{font-family:'Bricolage Grotesque';src:url(fonts/bricolage-grotesque-latin-wght-normal.woff2);font-weight:200 800}
+@font-face{font-family:'Poppins';src:url(fonts/poppins-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:'Space Mono';src:url(fonts/space-mono-latin-700-normal.woff2);font-weight:700}
+html,body{margin:0;background:#222}
+</style>
+<canvas id="c"></canvas>
+<script src="lib.js"></script>
+<script>
+window.renderFrame = async function (id, v, t, scale, fmt, q) {
+  const S = SCENES[id]; if (!S) throw new Error('escena desconocida ' + id);
+  const c = document.getElementById('c'); const W = Math.round(1080 * scale), H = Math.round(1920 * scale);
+  if (c.width !== W) { c.width = W; c.height = H; }
+  const ctx = c.getContext('2d'); ctx.setTransform(scale, 0, 0, scale, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none'; ctx.shadowBlur = 0; ctx.clearRect(0, 0, 1080, 1920);
+  ctx.save(); S.draw(ctx, t, v); ctx.restore();
+  return c.toDataURL(fmt === 'png' ? 'image/png' : 'image/jpeg', q || .92).split(',')[1];
+};
+window.fontsReady = async function () { await document.fonts.load('800 80px "Bricolage Grotesque"'); await document.fonts.load('700 80px Poppins'); await document.fonts.load('700 20px "Space Mono"'); await document.fonts.load('80px "Noto Color Emoji"', '😀'); await document.fonts.ready; return true; };
+</script>

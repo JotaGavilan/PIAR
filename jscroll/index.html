@@ -36,6 +36,7 @@
       <button id="startBtn" type="button" class="btn-primary big" data-i18n="js.intro.start">▶ Començar</button>
       <button id="skipBtn" type="button" class="link-btn" data-i18n="js.intro.skip">Començar sense triar</button>
       <button id="lastBtn" type="button" class="link-btn" hidden data-i18n="js.intro.last">Veure l'últim perfil</button>
+      <button id="moneyBtn" type="button" class="link-btn" data-i18n="js.m.btn">💸 Quant val el meu temps?</button>
       <p class="privacy" data-i18n="js.intro.privacy">🔒 Tot es queda al teu mòbil. No s'envia res a Internet ni a ningú.</p>
       <p class="privacy sub" data-i18n="js.intro.measure">Mentre fas scroll, l'app anota quant de temps et quedes en cada publicació i com hi interactues.</p>
       <div id="langSelectHost" class="lang-host"></div>
@@ -51,11 +52,15 @@
     </div>
     <div id="feed" tabindex="0" aria-label="Publicacions" data-i18n-attr="aria-label:js.feed.aria"></div>
     <div id="hintBox" hidden></div>
+    <div id="moneyPill" hidden aria-live="off"></div>
     <div id="toast" role="status" aria-live="polite"></div>
   </section>
 
   <!-- ═══ Resultats ═══ -->
   <section id="result" class="screen" hidden></section>
+
+  <!-- ═══ Simulador de diners ═══ -->
+  <section id="money" class="screen" hidden></section>
 </div>
 
 <!-- Configuració del professorat -->
@@ -82,6 +87,7 @@
       <label class="check"><input type="checkbox" id="cfgAdaptive"> <span data-i18n="js.cfg.adaptive">El feed s'adapta al que mira l'alumne (efecte bombolla)</span></label>
       <p class="config-note" data-i18n="js.cfg.adaptive_note">Les primeres publicacions són equilibrades (tots els temes per igual); a partir d'ací el feed dona més del que més s'ha mirat.</p>
       <label class="check"><input type="checkbox" id="cfgHint"> <span data-i18n="js.cfg.hint">Mostrar els mesuraments mentre es fa scroll (per a demostracions)</span></label>
+      <label class="check"><input type="checkbox" id="cfgMoney"> <span data-i18n="js.cfg.money">Mostrar en directe els diners que generaria el teu temps (per a demostracions)</span></label>
     </div>
     <div class="config-section">
       <h3 class="section-title" data-i18n="js.cfg.data">🗑 Dades d'este dispositiu</h3>
@@ -112,6 +118,7 @@
       <li data-i18n-html="js.help.m4"></li><li data-i18n-html="js.help.m5"></li><li data-i18n-html="js.help.m6"></li>
     </ul>
     <p data-i18n-html="js.help.how"></p>
+    <p data-i18n-html="js.help.money"></p>
     <p data-i18n-html="js.help.limit"></p>
     <p class="info-footer" data-i18n-html="js.help.credits"></p>
     <button class="close-btn" id="closeInfoBtn" data-i18n="js.close">Tancar</button>

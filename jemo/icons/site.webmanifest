@@ -1,7 +1,7 @@
 {
-  "name": "JEmo – Cara i cos amb emoció",
+  "name": "JEmo – Emocions de la cara",
   "short_name": "JEmo",
-  "description": "Llig amb la càmera l'emoció de la cara i els gestos del cos i els envia a la micro:bit.",
+  "description": "Llig amb la càmera l'emoció de la cara i l'envia a la micro:bit per Bluetooth.",
   "lang": "ca-ES-valencia",
   "start_url": "../",
   "scope": "../",

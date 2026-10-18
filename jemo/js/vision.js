@@ -2,10 +2,7 @@
 //  vision.js – JEmo: càmera + models locals (tot passa dins del dispositiu)
 //   · Cara  → «xarxa»  : face-api (detector petit + xarxa d'expressions) ← pesos dins de /vendor/
 //           → «malla»  : MediaPipe Face Mesh (punts de la cara) + regles ← dins de /vendor/
-//   · Cos   → PoseNet (17 punts) ← els pesos els baixa de Google la 1a vegada i el service worker els guarda
-//   · Mans  → MediaPipe Hands (21 punts per mà) ← dins de /vendor/   (vista «Cerca» de la càmera frontal)
-//   · Cap   → els punts de la malla de la cara donen cap amunt/avall, a un costat i a l'altre, i inclinació
-//  Cada model es carrega només quan es necessita.
+//  Cada model es carrega només quan es necessita. Cap model es baixa d'Internet: tot va dins de PIAR.
 // ============================================================
 (function (root) {
   'use strict';
@@ -77,60 +74,6 @@
     return { scores: J.scoresFromFeatures(f, baseline), features: f, landmarks: lm, box: { x: minx * W, y: miny * H, w: (maxx - minx) * W, h: (maxy - miny) * H }, score: 1 };
   }
 
-  // ── Mans: MediaPipe Hands ────────────────────────────────
-  let hands = null, handsCb = null;
-  async function loadHands() {
-    if (hands) return hands;
-    return (hands = (async () => {
-      await loadScript(VENDOR + 'mediapipe-hands/hands.js');
-      if (!root.Hands) throw err('lib');
-      const h = new root.Hands({ locateFile: (f) => VENDOR + 'mediapipe-hands/' + f });
-      h.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.55, minTrackingConfidence: 0.5 });
-      h.onResults((r) => { if (handsCb) { const c = handsCb; handsCb = null; c(r); } });
-      if (h.initialize) await h.initialize();
-      return h;
-    })().catch((e) => { hands = null; throw e; }));
-  }
-  async function detectHands(video) {
-    const h = await loadHands();
-    const r = await new Promise((resolve) => {
-      let done = false;
-      const fin = (v) => { if (!done) { done = true; resolve(v); } };
-      handsCb = fin;
-      Promise.resolve(h.send({ image: video })).then(() => setTimeout(() => fin(null), 50), () => fin(null));
-    });
-    const out = [];
-    if (r && r.multiHandLandmarks) {
-      r.multiHandLandmarks.forEach((lm, i) => {
-        const hd = r.multiHandedness && r.multiHandedness[i];
-        out.push({ lm, label: hd && hd.label, score: hd && hd.score !== undefined ? hd.score : 1 });
-      });
-    }
-    return { hands: out };
-  }
-
-  // ── Cos: PoseNet ─────────────────────────────────────────
-  let pose = null, poseOverride = null;
-  async function loadPose() {
-    if (poseOverride) return poseOverride;
-    if (pose) return pose;
-    return (pose = (async () => {
-      await loadScript(VENDOR + 'tfjs-4.15.0/tf.min.js');
-      await loadScript(VENDOR + 'posenet-2.2.2/posenet.min.js');
-      if (!root.posenet) throw err('lib');
-      if (typeof navigator !== 'undefined' && navigator.onLine === false) {
-        // sense Internet només funciona si el model ja està guardat al dispositiu
-        try { const c = await caches.open('piar-models-v1'); const ks = await c.keys(); if (!ks.some((r) => /posenet/.test(r.url))) throw err('offline'); } catch (e) { if (e.code === 'offline') throw e; }
-      }
-      return root.posenet.load({ architecture: 'MobileNetV1', outputStride: 16, inputResolution: 257, multiplier: 0.75 });
-    })().catch((e) => { pose = null; throw e; }));
-  }
-  async function detectPose(video) {
-    const net = await loadPose();
-    const r = await (net.estimateSinglePose ? net.estimateSinglePose(video, { flipHorizontal: false }) : net(video));
-    return r && r.keypoints ? r : null;
-  }
-
   // ── Càmera ───────────────────────────────────────────────
   let stream = null;
   async function startCamera(video, facing) {
@@ -152,68 +95,43 @@
   }
 
   // ── Bucle de lectura ─────────────────────────────────────
-  // Una sola inferència cada vegada (el mòbil no pot amb quatre models alhora).
-  //   cfg(): { read:'both'|'face'|'body', engine:'net'|'mesh', view:'close'|'body', shoulders:bool, baseline }
-  //   Tasques:  face (emoció) · pose (vista «Cos sencer», o espatlles a «Cerca») · hands (vista «Cerca») · head (punts de la cara per als moviments del cap)
-  //   hooks: onFace(res|null), onPose(res|null), onHands(res), onHead(res|null), onError(kind, e), onStatus(kind,'loading'|'ready')
+  // Una sola inferència cada vegada (el mòbil no pot amb dos models alhora).
+  //   cfg(): { engine:'net'|'mesh', baseline }
+  //   hooks: onFace(res|null), onError(kind, e), onStatus(kind,'loading'|'ready')
   function createLoop(video, cfg, hooks) {
-    let running = false, token = 0;
-    const KINDS = ['face', 'pose', 'hands', 'head'];
-    const due = { face: 0, pose: 0, hands: 0, head: 0 };          // moment (ms) a partir del qual toca tornar a llegir
-    const EVERY = { face: 110, pose: 170, hands: 130, head: 0 }, BACKOFF = 8000;
-    const ready = { face: false, pose: false, hands: false, head: false };
-    async function step(kind, fn, cb) {
+    let running = false, token = 0, due = 0, ready = false;
+    const EVERY = 110, BACKOFF = 8000;
+    async function step(fn) {
       try {
-        if (!ready[kind]) hooks.onStatus && hooks.onStatus(kind, 'loading');
+        if (!ready) hooks.onStatus && hooks.onStatus('face', 'loading');
         const r = await fn();
-        if (!ready[kind]) { ready[kind] = true; hooks.onStatus && hooks.onStatus(kind, 'ready'); }
-        cb(r);
-        const c = cfg();
-        due[kind] = performance.now() + (kind === 'pose' && c.view === 'close' ? 450 : EVERY[kind]);
+        if (!ready) { ready = true; hooks.onStatus && hooks.onStatus('face', 'ready'); }
+        hooks.onFace(r);
+        due = performance.now() + EVERY;
       } catch (e) {
-        due[kind] = performance.now() + BACKOFF;     // si un model falla, no frena els altres
-        if (hooks.onError) hooks.onError(kind, e);
+        due = performance.now() + BACKOFF;
+        if (hooks.onError) hooks.onError('face', e);
       }
-    }
-    // Quines lectures toquen segons la configuració
-    function wanted(c) {
-      const close = c.view === 'close', gest = c.read !== 'face';
-      return {
-        face: c.read !== 'body',
-        pose: gest && (!close || !!c.shoulders),
-        hands: gest && close,
-        head: gest && close && (c.engine !== 'mesh' || c.read === 'body')
-      };
     }
     async function run(my) {
       while (running && my === token) {
         if (video.readyState < 2 || !video.videoWidth) { await new Promise((r) => setTimeout(r, 80)); continue; }
-        const c = cfg(), w = wanted(c);
-        let did = false;
-        for (const kind of ['face', 'hands', 'head', 'pose']) {
-          if (!(running && my === token) || !w[kind] || performance.now() < due[kind]) continue;
-          did = true;
-          if (kind === 'face') await step('face', () => (c.engine === 'mesh' ? detectMesh(video, c.baseline) : detectNet(video)), (r) => hooks.onFace(r));
-          else if (kind === 'hands') await step('hands', () => detectHands(video), (r) => hooks.onHands(r));
-          else if (kind === 'head') await step('head', () => detectMesh(video, c.baseline), (r) => hooks.onHead(r));
-          else await step('pose', () => detectPose(video), (r) => hooks.onPose(r));
-        }
-        if (!did) await new Promise((r) => setTimeout(r, 25)); else await new Promise((r) => requestAnimationFrame(r));
+        if (performance.now() < due) { await new Promise((r) => setTimeout(r, 25)); continue; }
+        const c = cfg();
+        await step(() => (c.engine === 'mesh' ? detectMesh(video, c.baseline) : detectNet(video)));
+        await new Promise((r) => requestAnimationFrame(r));
       }
     }
     return {
-      start() { if (running) return; running = true; KINDS.forEach((k) => { due[k] = 0; }); run(++token); },
+      start() { if (running) return; running = true; due = 0; run(++token); },
       stop() { running = false; token++; },
       get running() { return running; },
-      wanted,
-      resetReady() { KINDS.forEach((k) => { ready[k] = false; due[k] = 0; }); }
+      resetReady() { ready = false; due = 0; }
     };
   }
 
   // ── Dibuix sobre el vídeo (coordenades del vídeo) ────────
   const GREEN = '#4df5a0', GREEN2 = '#a8ffd6';
-  const BONES = [['leftShoulder', 'rightShoulder'], ['leftShoulder', 'leftElbow'], ['leftElbow', 'leftWrist'], ['rightShoulder', 'rightElbow'], ['rightElbow', 'rightWrist']];
-  const HAND_CONN = [[0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6], [6, 7], [7, 8], [5, 9], [9, 10], [10, 11], [11, 12], [9, 13], [13, 14], [14, 15], [15, 16], [13, 17], [17, 18], [18, 19], [19, 20], [0, 17]];
   function draw(canvas, video, o) {
     const W = video.videoWidth || 640, H = video.videoHeight || 480;
     if (canvas.width !== W) canvas.width = W; if (canvas.height !== H) canvas.height = H;
@@ -230,26 +148,9 @@
         o.face.landmarks.forEach((p, i) => { if (i % 3 === 0) { g.beginPath(); g.arc(p.x * W, p.y * H, W / 400 + 1, 0, 6.3); g.fill(); } });
       }
     }
-    if (o.hands && o.hands.length) {
-      o.hands.forEach((h) => {
-        g.strokeStyle = GREEN; g.shadowColor = GREEN; g.shadowBlur = 6;
-        HAND_CONN.forEach(([a, b]) => { g.beginPath(); g.moveTo(h.lm[a].x * W, h.lm[a].y * H); g.lineTo(h.lm[b].x * W, h.lm[b].y * H); g.stroke(); });
-        g.shadowBlur = 0; g.fillStyle = GREEN2;
-        h.lm.forEach((p) => { g.beginPath(); g.arc(p.x * W, p.y * H, W / 220 + 1.5, 0, 6.3); g.fill(); });
-      });
-    }
-    if (o.pose && o.pose.keypoints) {
-      const m = J.kpMap(o.pose.keypoints);
-      g.strokeStyle = GREEN; g.shadowColor = GREEN; g.shadowBlur = 8;
-      BONES.forEach(([a, b]) => { if (m[a] && m[b] && m[a].s > .3 && m[b].s > .3) { g.beginPath(); g.moveTo(m[a].x, m[a].y); g.lineTo(m[b].x, m[b].y); g.stroke(); } });
-      g.shadowBlur = 0; g.fillStyle = GREEN2;
-      Object.keys(m).forEach((n) => { const p = m[n]; if (p.s > .3 && /(nose|Eye|Ear|Shoulder|Elbow|Wrist)/.test(n)) { g.beginPath(); g.arc(p.x, p.y, W / 110 + 2, 0, 6.3); g.fill(); } });
-    }
   }
 
   root.JEmoVision = {
-    loadFaceNet, loadMesh, loadHands, loadPose, startCamera, stopCamera, createLoop, draw,
-    setPoseSource(fn) { poseOverride = fn ? { estimateSinglePose: fn } : null; },
-    resetPose() { pose = null; }
+    loadFaceNet, loadMesh, startCamera, stopCamera, createLoop, draw
   };
 })(window);

@@ -174,5 +174,60 @@
     return { dwellS: Math.round(r.dwellMs / 1000), zooms: sum.timeline.filter((t) => t.topic === topic && t.zoomMs >= 500).length, likes: r.likes, saves: r.saves, replays: r.replays, share: Math.round(r.share) };
   }
 
-  root.JScroll = { TOPICS, TOPIC_IDS, DEFAULT_CFG, W, mulberry32, shuffle, emptySig, scorePost, isFastSkip, topicScores, phase1Count, makePlanner, summarize, adReasons, clamp };
+
+  // ════════════════════════════════════════════════════════
+  //  Simulador de diners: quant val la teua atenció per a la plataforma
+  //  Dos mètodes independents que es contrasten (tots els valors en USD fins que es convertixen a €):
+  //   1) De baix cap amunt: CPM (preu per cada 1.000 anuncis vists) × anuncis per publicació vista.
+  //   2) De dalt cap avall: ingressos publicitaris anuals per menor (Harvard, PLOS ONE 2023, dades 2022 dels EUA)
+  //      ÷ segons d'ús a l'any (Qustodio 2025, menors d'Espanya), reescalats al mercat amb la proporció de CPM.
+  //  Cap dels dos és una dada publicada per les plataformes: són estimacions d'ordre de magnitud.
+  // ════════════════════════════════════════════════════════
+  const MONEY = {
+    FX: 0.869,                       // 1 USD = 0,869 EUR (valutafx.com, 3-8-2026)
+    SMI_DAY: 40.70,                  // SMI 2026 d'Espanya: 1.221 €/mes en 14 pagues = 40,70 €/dia (RD 126/2026)
+    META: { adUsdQ: 59.36e9, revUsdQ: 60.80e9, dap: 3.60e9, arppUsdQ: 16.86, europeAdUsdQ: 10.85e9, daysQ: 91 },   // Q2 2026
+    MARKETS: ['es', 'eu', 'us'],
+    PLATFORMS: {
+      // cpm: [mínim, màxim] en USD per 1.000 impressions. TikTok no publica CPM per a Espanya/Europa: s'usa el rang general.
+      tiktok:    { cpm: { es: [2.87, 9.16], eu: [2.87, 9.16], us: [10, 15] }, harvUsd: 2.0e9, harvUsers: 18.9e6, minDay: 115 },
+      instagram: { cpm: { es: [7, 10], eu: [7, 13], us: [20, 28] }, harvUsd: 4.0e9 + 0.8011e9, harvUsers: 16.7e6, minDay: 85 }
+    },
+    DEFAULTS: { platform: 'tiktok', market: 'es', adEvery: 5, secPerPost: 15, students: 25 }
+  };
+  const mid = (a) => (a[0] + a[1]) / 2;
+  // CPM en € per 1.000 impressions
+  function cpmEur(platform, market) {
+    const r = MONEY.PLATFORMS[platform].cpm[market];
+    return { low: r[0] * MONEY.FX, mid: mid(r) * MONEY.FX, high: r[1] * MONEY.FX };
+  }
+  // Valor d'un segon d'atenció en € { low, mid, high, cpm:{low,mid,high}, topdown }
+  function ratePerSec(platform, market, o) {
+    o = Object.assign({ adEvery: MONEY.DEFAULTS.adEvery, secPerPost: MONEY.DEFAULTS.secPerPost }, o || {});
+    const P = MONEY.PLATFORMS[platform], c = cpmEur(platform, market);
+    const secPerAd = Math.max(1, o.adEvery) * Math.max(1, o.secPerPost);
+    const cpm = { low: c.low / 1000 / secPerAd, mid: c.mid / 1000 / secPerAd, high: c.high / 1000 / secPerAd };
+    const scale = mid(P.cpm[market]) / mid(P.cpm.us);
+    const arpuYr = P.harvUsd / P.harvUsers * MONEY.FX * scale;               // € per menor i any en este mercat
+    const topdown = arpuYr / (P.minDay * 60 * 365);
+    return { cpm, topdown, arpuYr, low: Math.min(cpm.low, topdown), mid: (cpm.mid + topdown) / 2, high: Math.max(cpm.high, topdown) };
+  }
+  // Projecció d'un valor per segon: segons → minut, hora, dia (minDay min), mes, any
+  function project(perSec, minDay) {
+    const day = perSec * minDay * 60;
+    return { s: perSec, min: perSec * 60, h: perSec * 3600, day, month: day * 30.4, year: day * 365 };
+  }
+  // Sessió de JScroll: seen publicacions vistes i dwellMs de temps → € per a la plataforma
+  function sessionMoney(platform, market, seen, dwellMs, o) {
+    o = Object.assign({ adEvery: MONEY.DEFAULTS.adEvery }, o || {});
+    const sec = dwellMs / 1000, c = cpmEur(platform, market), r = ratePerSec(platform, market, { adEvery: o.adEvery, secPerPost: seen ? sec / seen : MONEY.DEFAULTS.secPerPost });
+    const ads = seen / Math.max(1, o.adEvery);
+    const a = { low: ads * c.low / 1000, mid: ads * c.mid / 1000, high: ads * c.high / 1000 };   // mètode 1 amb els anuncis reals de la sessió
+    const t = sec * r.topdown;                                                                  // mètode 2 amb el temps real
+    return { ads, sec, secPerPost: seen ? sec / seen : 0, adsEur: a, topdown: t, low: Math.min(a.low, t), mid: (a.mid + t) / 2, high: Math.max(a.high, t) };
+  }
+  // Ingressos de Meta (Q2 2026) en € per segon i en total per a un nombre de segons
+  function metaPerSec() { const usd = MONEY.META.adUsdQ / (MONEY.META.daysQ * 86400); return { usd, eur: usd * MONEY.FX }; }
+
+  root.JScroll = { TOPICS, TOPIC_IDS, DEFAULT_CFG, W, mulberry32, shuffle, emptySig, scorePost, isFastSkip, topicScores, phase1Count, makePlanner, summarize, adReasons, clamp, MONEY, cpmEur, ratePerSec, project, sessionMoney, metaPerSec };
 })(typeof window !== 'undefined' ? window : globalThis);
