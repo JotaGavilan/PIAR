@@ -1,0 +1,362 @@
+{
+ "music-1": {
+  "ca": "Este tema no m'ix del cap 🎧 #musica #repeat",
+  "es": "Este tema no me lo quito de la cabeza 🎧 #musica #repeat",
+  "en": "Can't get this song out of my head 🎧 #music #repeat"
+ },
+ "music-2": {
+  "ca": "Assaig de dissabte, directe i sense filtre 🎸 #banda",
+  "es": "Ensayo del sábado, directo y sin filtro 🎸 #banda",
+  "en": "Saturday rehearsal, live and unfiltered 🎸 #band"
+ },
+ "music-3": {
+  "ca": "Primera vegada davant del micro 🎤 #nervis",
+  "es": "Primera vez delante del micro 🎤 #nervios",
+  "en": "First time on the mic 🎤 #nerves"
+ },
+ "music-4": {
+  "ca": "El ritme és el batec de tot 🥁 #beats",
+  "es": "El ritmo es el latido de todo 🥁 #beats",
+  "en": "Rhythm is the heartbeat of everything 🥁 #beats"
+ },
+ "music-5": {
+  "ca": "Mode concert activat 🎹 #live",
+  "es": "Modo concierto activado 🎹 #live",
+  "en": "Concert mode on 🎹 #live"
+ },
+ "music-6": {
+  "ca": "El saxo sempre té l'última paraula 🎷 #jazz",
+  "es": "El saxo siempre tiene la última palabra 🎷 #jazz",
+  "en": "The sax always gets the last word 🎷 #jazz"
+ },
+ "gaming-1": {
+  "ca": "Setup nou, partides infinites 🎮 #gaming",
+  "es": "Setup nuevo, partidas infinitas 🎮 #gaming",
+  "en": "New setup, endless matches 🎮 #gaming"
+ },
+ "gaming-2": {
+  "ca": "Retro mai passa de moda 🕹️ #arcade",
+  "es": "Lo retro nunca pasa de moda 🕹️ #arcade",
+  "en": "Retro never goes out of style 🕹️ #arcade"
+ },
+ "gaming-3": {
+  "ca": "Un més i dormim… (mentida) 👾 #gamer",
+  "es": "Una más y a dormir… (mentira) 👾 #gamer",
+  "en": "One more and I sleep… (lie) 👾 #gamer"
+ },
+ "gaming-4": {
+  "ca": "Final de torneig: copa a casa 🏆 #esports",
+  "es": "Final de torneo: copa a casa 🏆 #esports",
+  "en": "Tournament final: cup comes home 🏆 #esports"
+ },
+ "gaming-5": {
+  "ca": "Nivell final desbloquejat 🖥️ #pc",
+  "es": "Nivel final desbloqueado 🖥️ #pc",
+  "en": "Final level unlocked 🖥️ #pc"
+ },
+ "gaming-6": {
+  "ca": "Trencaclosques i modo zen 🧩 #indie",
+  "es": "Puzles y modo zen 🧩 #indie",
+  "en": "Puzzles and zen mode 🧩 #indie"
+ },
+ "sport-1": {
+  "ca": "Entrenament de matí, cap excusa ⚽ #futbol",
+  "es": "Entreno de mañana, sin excusas ⚽ #futbol",
+  "en": "Morning training, no excuses ⚽ #football"
+ },
+ "sport-2": {
+  "ca": "Triple sobre la botzina 🏀 #basquet",
+  "es": "Triple sobre la bocina 🏀 #baloncesto",
+  "en": "Buzzer-beater three 🏀 #basketball"
+ },
+ "sport-3": {
+  "ca": "Cent llargs i a per més 🏊 #natacio",
+  "es": "Cien largos y a por más 🏊 #natacion",
+  "en": "A hundred laps and still going 🏊 #swimming"
+ },
+ "sport-4": {
+  "ca": "Ruta en bici de diumenge 🚴 #ciclisme",
+  "es": "Ruta en bici del domingo 🚴 #ciclismo",
+  "en": "Sunday bike ride 🚴 #cycling"
+ },
+ "sport-5": {
+  "ca": "Un kilo més a la barra 🏋️ #gym",
+  "es": "Un kilo más en la barra 🏋️ #gym",
+  "en": "One more kilo on the bar 🏋️ #gym"
+ },
+ "sport-6": {
+  "ca": "Partit de tenis amb els amics 🎾 #tennis",
+  "es": "Partido de tenis con los amigos 🎾 #tennis",
+  "en": "Tennis match with friends 🎾 #tennis"
+ },
+ "fashion-1": {
+  "ca": "Sabatilles noves, dia nou 👟 #sneakers",
+  "es": "Zapatillas nuevas, día nuevo 👟 #sneakers",
+  "en": "New sneakers, new day 👟 #sneakers"
+ },
+ "fashion-2": {
+  "ca": "El vestit blau per a qualsevol ocasió 👗 #outfit",
+  "es": "El vestido azul para cualquier ocasión 👗 #outfit",
+  "en": "The blue dress for any occasion 👗 #outfit"
+ },
+ "fashion-3": {
+  "ca": "Abric de segona mà, estil de primera 🧥 #vintage",
+  "es": "Abrigo de segunda mano, estilo de primera 🧥 #vintage",
+  "en": "Second-hand coat, first-class style 🧥 #vintage"
+ },
+ "fashion-4": {
+  "ca": "Bossa i res més (i tot el que hi cap) 👜 #look",
+  "es": "Bolso y nada más (y todo lo que cabe) 👜 #look",
+  "en": "Just a bag (and everything it fits) 👜 #look"
+ },
+ "fashion-5": {
+  "ca": "Ulleres de sol, vibra d'estiu 🕶️ #ootd",
+  "es": "Gafas de sol, vibra de verano 🕶️ #ootd",
+  "en": "Sunglasses, summer vibes 🕶️ #ootd"
+ },
+ "fashion-6": {
+  "ca": "Barret per a tot l'any 👒 #style",
+  "es": "Sombrero para todo el año 👒 #style",
+  "en": "A hat for all year round 👒 #style"
+ },
+ "humor-1": {
+  "ca": "Quan t'adones que el dilluns és demà 😂 #meme",
+  "es": "Cuando te das cuenta de que mañana es lunes 😂 #meme",
+  "en": "When you realise tomorrow is Monday 😂 #meme"
+ },
+ "humor-2": {
+  "ca": "Jo intentant ser seriós a classe 🤣 #relatable",
+  "es": "Yo intentando ser serio en clase 🤣 #relatable",
+  "en": "Me trying to be serious in class 🤣 #relatable"
+ },
+ "humor-3": {
+  "ca": "Cara de «ja ho enteneu tot, no?» 🙃 #mood",
+  "es": "Cara de «lo entendéis todo, ¿no?» 🙃 #mood",
+  "en": "The «you all understand, right?» face 🙃 #mood"
+ },
+ "humor-4": {
+  "ca": "Dijous a les 7 del matí 🥴 #sleepy",
+  "es": "Jueves a las 7 de la mañana 🥴 #sleepy",
+  "en": "Thursday at 7 a.m. 🥴 #sleepy"
+ },
+ "humor-5": {
+  "ca": "Quan et poses a riure en el moment menys adequat 😜 #riure",
+  "es": "Cuando te entra la risa en el peor momento 😜 #risa",
+  "en": "When you start laughing at the worst moment 😜 #laugh"
+ },
+ "humor-6": {
+  "ca": "Pla perfecte, execució… creativa 🤡 #fail",
+  "es": "Plan perfecto, ejecución… creativa 🤡 #fail",
+  "en": "Perfect plan, execution… creative 🤡 #fail"
+ },
+ "animals-1": {
+  "ca": "Este gos m'espera cada dia a la porta 🐶 #doggo",
+  "es": "Este perro me espera cada día en la puerta 🐶 #doggo",
+  "en": "This dog waits for me at the door every day 🐶 #doggo"
+ },
+ "animals-2": {
+  "ca": "El gat que mana a casa 🐱 #gatet",
+  "es": "El gato que manda en casa 🐱 #gatito",
+  "en": "The cat who runs the house 🐱 #kitty"
+ },
+ "animals-3": {
+  "ca": "Una guineu a la vora del camí 🦊 #natura",
+  "es": "Un zorro al lado del camino 🦊 #naturaleza",
+  "en": "A fox by the side of the path 🦊 #nature"
+ },
+ "animals-4": {
+  "ca": "Panda mode: menjar i descansar 🐼 #cute",
+  "es": "Modo panda: comer y descansar 🐼 #cute",
+  "en": "Panda mode: eat and rest 🐼 #cute"
+ },
+ "animals-5": {
+  "ca": "Granota de pluja, humor de pluja 🐸 #animals",
+  "es": "Rana de lluvia, humor de lluvia 🐸 #animals",
+  "en": "Rain frog, rainy mood 🐸 #animals"
+ },
+ "animals-6": {
+  "ca": "El rei de la sabana en versió peluix 🦁 #wild",
+  "es": "El rey de la sabana en versión peluche 🦁 #wild",
+  "en": "King of the savanna, plush edition 🦁 #wild"
+ },
+ "food-1": {
+  "ca": "Pizza de divendres, tradició sagrada 🍕 #foodie",
+  "es": "Pizza de viernes, tradición sagrada 🍕 #foodie",
+  "en": "Friday pizza, sacred tradition 🍕 #foodie"
+ },
+ "food-2": {
+  "ca": "Hamburguesa casolana amb tot 🍔 #homemade",
+  "es": "Hamburguesa casera con todo 🍔 #homemade",
+  "en": "Homemade burger with everything 🍔 #homemade"
+ },
+ "food-3": {
+  "ca": "Primer cop fent sushi, sorprenentment bé 🍣 #cuina",
+  "es": "Primera vez haciendo sushi, sorprendentemente bien 🍣 #cocina",
+  "en": "First time making sushi, surprisingly good 🍣 #cooking"
+ },
+ "food-4": {
+  "ca": "Un dònut abans de la classe de mates 🍩 #dolç",
+  "es": "Un donut antes de clase de mates 🍩 #dulce",
+  "en": "A doughnut before maths class 🍩 #sweet"
+ },
+ "food-5": {
+  "ca": "Dimarts de tacos, sempre 🌮 #tacos",
+  "es": "Martes de tacos, siempre 🌮 #tacos",
+  "en": "Taco Tuesday, always 🌮 #tacos"
+ },
+ "food-6": {
+  "ca": "Ramen calent un dia de pluja 🍜 #comfortfood",
+  "es": "Ramen caliente en un día de lluvia 🍜 #comfortfood",
+  "en": "Hot ramen on a rainy day 🍜 #comfortfood"
+ },
+ "travel-1": {
+  "ca": "Cim a l'albada, valia la pena 🏔️ #muntanya",
+  "es": "Cima al amanecer, mereció la pena 🏔️ #montaña",
+  "en": "Summit at sunrise, worth it 🏔️ #mountains"
+ },
+ "travel-2": {
+  "ca": "Platja sense gent, un somni 🏝️ #viatges",
+  "es": "Playa sin gente, un sueño 🏝️ #viajes",
+  "en": "Empty beach, a dream 🏝️ #travel"
+ },
+ "travel-3": {
+  "ca": "Una torre, una ciutat, mil fotos 🗼 #tokyo",
+  "es": "Una torre, una ciudad, mil fotos 🗼 #tokyo",
+  "en": "One tower, one city, a thousand photos 🗼 #tokyo"
+ },
+ "travel-4": {
+  "ca": "Un volcà actiu a vint minuts 🌋 #aventura",
+  "es": "Un volcán activo a veinte minutos 🌋 #aventura",
+  "en": "An active volcano twenty minutes away 🌋 #adventure"
+ },
+ "travel-5": {
+  "ca": "El tren que travessa les muntanyes 🚆 #interrail",
+  "es": "El tren que cruza las montañas 🚆 #interrail",
+  "en": "The train that crosses the mountains 🚆 #interrail"
+ },
+ "travel-6": {
+  "ca": "Alba que es queda gravada 🌅 #paisatge",
+  "es": "Un amanecer que se queda grabado 🌅 #paisaje",
+  "en": "A sunrise that stays with you 🌅 #landscape"
+ },
+ "science-1": {
+  "ca": "Mirant el món a través d'un microscopi 🔬 #ciencia",
+  "es": "Mirando el mundo a través de un microscopio 🔬 #ciencia",
+  "en": "Looking at the world through a microscope 🔬 #science"
+ },
+ "science-2": {
+  "ca": "Llançament d'un coet d'aigua al pati 🚀 #fisica",
+  "es": "Lanzamiento de un cohete de agua en el patio 🚀 #fisica",
+  "en": "Water rocket launch in the schoolyard 🚀 #physics"
+ },
+ "science-3": {
+  "ca": "Reacció química amb colors (no tocar) 🧪 #laboratori",
+  "es": "Reacción química con colores (no tocar) 🧪 #laboratorio",
+  "en": "Colourful chemical reaction (don't touch) 🧪 #lab"
+ },
+ "science-4": {
+  "ca": "Nit clara: hui toca veure Saturn 🔭 #astronomia",
+  "es": "Noche despejada: hoy toca ver Saturno 🔭 #astronomia",
+  "en": "Clear night: tonight we see Saturn 🔭 #astronomy"
+ },
+ "science-5": {
+  "ca": "ADN en 3D, molt més bonic que en el llibre 🧬 #biologia",
+  "es": "ADN en 3D, mucho más bonito que en el libro 🧬 #biologia",
+  "en": "3D DNA, far prettier than in the textbook 🧬 #biology"
+ },
+ "science-6": {
+  "ca": "El robot que programem en classe 🤖 #robotica",
+  "es": "El robot que programamos en clase 🤖 #robotica",
+  "en": "The robot we program in class 🤖 #robotics"
+ },
+ "art-1": {
+  "ca": "Paleta nova, tardor nova 🎨 #pintura",
+  "es": "Paleta nueva, otoño nuevo 🎨 #pintura",
+  "en": "New palette, new autumn 🎨 #painting"
+ },
+ "art-2": {
+  "ca": "Un traç, mil possibilitats 🖌️ #art",
+  "es": "Un trazo, mil posibilidades 🖌️ #arte",
+  "en": "One stroke, a thousand possibilities 🖌️ #art"
+ },
+ "art-3": {
+  "ca": "Escultura d'argila: la meua primera 🗿 #creatiu",
+  "es": "Escultura de arcilla: mi primera 🗿 #creativo",
+  "en": "Clay sculpture: my first one 🗿 #creative"
+ },
+ "art-4": {
+  "ca": "Una galeria petita però plena de vida 🖼️ #expo",
+  "es": "Una galería pequeña pero llena de vida 🖼️ #expo",
+  "en": "A small gallery full of life 🖼️ #expo"
+ },
+ "art-5": {
+  "ca": "Esbós ràpid en l'autobús ✏️ #dibuix",
+  "es": "Boceto rápido en el autobús ✏️ #dibujo",
+  "en": "Quick sketch on the bus ✏️ #drawing"
+ },
+ "art-6": {
+  "ca": "Teatre: el cos també pinta 🎭 #escena",
+  "es": "Teatro: el cuerpo también pinta 🎭 #escena",
+  "en": "Theatre: the body paints too 🎭 #stage"
+ },
+ "cars-1": {
+  "ca": "Eixida de circuit a primera hora 🏎️ #motor",
+  "es": "Salida de circuito a primera hora 🏎️ #motor",
+  "en": "Circuit start at dawn 🏎️ #motor"
+ },
+ "cars-2": {
+  "ca": "El cotxe de la família també té història 🚗 #classic",
+  "es": "El coche de la familia también tiene historia 🚗 #classic",
+  "en": "The family car has a story too 🚗 #classic"
+ },
+ "cars-3": {
+  "ca": "Dues rodes i el vent a la cara 🏍️ #moto",
+  "es": "Dos ruedas y el viento en la cara 🏍️ #moto",
+  "en": "Two wheels and the wind in your face 🏍️ #bike"
+ },
+ "cars-4": {
+  "ca": "Furgoneta, camí de terra i res més 🛻 #roadtrip",
+  "es": "Furgoneta, camino de tierra y nada más 🛻 #roadtrip",
+  "en": "Van, dirt road and nothing else 🛻 #roadtrip"
+ },
+ "cars-5": {
+  "ca": "Control de carretera: tot en regla 🚓 #seguretat",
+  "es": "Control de carretera: todo en regla 🚓 #seguridad",
+  "en": "Road check: all in order 🚓 #safety"
+ },
+ "cars-6": {
+  "ca": "Bandera de quadres a la volta final 🏁 #f1",
+  "es": "Bandera de cuadros en la vuelta final 🏁 #f1",
+  "en": "Chequered flag on the final lap 🏁 #f1"
+ },
+ "cinema-1": {
+  "ca": "Claqueta i acció: el meu primer curt 🎬 #cine",
+  "es": "Claqueta y acción: mi primer corto 🎬 #cine",
+  "en": "Clapperboard and action: my first short 🎬 #film"
+ },
+ "cinema-2": {
+  "ca": "Crispetes, manta i estrena 🍿 #pelis",
+  "es": "Palomitas, manta y estreno 🍿 #pelis",
+  "en": "Popcorn, blanket and a premiere 🍿 #movies"
+ },
+ "cinema-3": {
+  "ca": "El projector antic de l'avi 📽️ #retro",
+  "es": "El proyector antiguo del abuelo 📽️ #retro",
+  "en": "Grandpa's old projector 📽️ #retro"
+ },
+ "cinema-4": {
+  "ca": "Fotogrames que ho diuen tot 🎞️ #cinema",
+  "es": "Fotogramas que lo dicen todo 🎞️ #cinema",
+  "en": "Frames that say it all 🎞️ #cinema"
+ },
+ "cinema-5": {
+  "ca": "Heroi o no, la cua és la mateixa 🦸 #marvel",
+  "es": "Héroe o no, la cola es la misma 🦸 #marvel",
+  "en": "Hero or not, the queue is the same 🦸 #marvel"
+ },
+ "cinema-6": {
+  "ca": "Nit de terror amb els amics 🧛 #terror",
+  "es": "Noche de terror con los amigos 🧛 #terror",
+  "en": "Horror night with friends 🧛 #horror"
+ }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "Qui és qui neuronal",
+  "short_name": "Qui és qui",
+  "description": "Una xarxa neuronal que aprén a endevinar qui és qui: pesos, errors i entrenament. Tot al teu mòbil.",
+  "lang": "ca-ES-valencia",
+  "start_url": "../",
+  "scope": "../",
+  "display": "standalone",
+  "background_color": "#0f1626",
+  "theme_color": "#1f3a73",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

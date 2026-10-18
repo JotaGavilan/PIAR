@@ -10,7 +10,7 @@
 
    La versió la posa tools/build-pwa.py. No edites la línia de VERSION a mà.
    ============================================================ */
-const VERSION = '8c02e646cb6b';
+const VERSION = 'e4022127955f';
 const SHELL_CACHE  = 'piar-shell-' + VERSION;
 const VENDOR_CACHE = 'piar-vendor-v1';
 const MODEL_CACHE  = 'piar-models-v1';
@@ -74,6 +74,21 @@ async function shellStrategy(event, req, url) {
   }
 }
 
+async function rangeFromCache(req) {
+  try {
+    const cache = await caches.open(SHELL_CACHE);
+    const hit = await cache.match(req.url, { ignoreSearch: true });
+    const m = /^bytes=(\d*)-(\d*)$/.exec(req.headers.get('range') || '');
+    if (!hit || !m) return fetch(req);
+    const blob = await hit.blob(), size = blob.size;
+    let start = m[1] === '' ? Math.max(0, size - parseInt(m[2], 10)) : parseInt(m[1], 10);
+    let end = m[1] === '' || m[2] === '' ? size - 1 : Math.min(parseInt(m[2], 10), size - 1);
+    if (!(start >= 0) || start >= size || end < start) return new Response(null, { status: 416, headers: { 'Content-Range': 'bytes */' + size } });
+    return new Response(blob.slice(start, end + 1), { status: 206, statusText: 'Partial Content', headers: {
+      'Content-Type': hit.headers.get('Content-Type') || 'video/mp4', 'Content-Range': 'bytes ' + start + '-' + end + '/' + size, 'Content-Length': String(end - start + 1), 'Accept-Ranges': 'bytes' } });
+  } catch (e) { return fetch(req); }
+}
+
 async function cacheFirst(cacheName, req) {
   const cache = await caches.open(cacheName);
   const hit = await cache.match(req);
@@ -89,7 +104,11 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.origin === SCOPE.origin) {
     if (!url.pathname.startsWith(SCOPE.pathname)) return;
-    if (req.headers.has('range')) return;
+    if (req.headers.has('range')) {
+      // Els vídeos (JScroll) es demanen per trossos: es serveixen des de la memòria per a funcionar sense Internet
+      if (/\.(mp4|webm)$/i.test(url.pathname)) event.respondWith(rangeFromCache(req));
+      return;
+    }
     if (inVendor(url)) { event.respondWith(cacheFirst(VENDOR_CACHE, req)); return; }
     event.respondWith(shellStrategy(event, req, url));
     return;

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#000000">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <script src="../shared/viewport.js"></script>
+  <title data-i18n="js.title">JScroll – Què saben de tu quan fas scroll</title>
+  <link rel="stylesheet" href="../shared/piar-ui.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="manifest" href="icons/site.webmanifest">
+  <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="../vendor/fonts/fonts.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══ Inici ═══ -->
+  <section id="intro" class="screen">
+    <div class="intro-top">
+      <a class="btn piar-home" href="../" aria-label="Tornar a la pantalla principal" title="Tornar a la pantalla principal" data-i18n-attr="aria-label:sh.home;title:sh.home"><svg class="ico" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg></a>
+      <span class="spacer"></span>
+      <button id="infoBtn" type="button" class="icon-btn" aria-label="Ajuda" data-i18n-attr="aria-label:js.btn.help;title:js.btn.help" title="Ajuda">ℹ️</button>
+      <button id="configBtn" type="button" class="icon-btn" aria-label="Configuració del professorat" data-i18n-attr="aria-label:js.btn.config;title:js.btn.config" title="Configuració del professorat">⚙️</button>
+    </div>
+    <div class="intro-body">
+      <img class="logo" src="icons/android-chrome-192x192.png" alt="" width="64" height="64">
+      <h1 data-i18n="js.intro.h">Fes scroll com sempre</h1>
+      <p class="lead" data-i18n="js.intro.p">Mira les publicacions com ho faries a una xarxa social. No hi ha res correcte ni incorrecte.</p>
+      <h2 class="pick-h" data-i18n="js.intro.pick">Abans de començar: tria els 3 temes que més t'agraden</h2>
+      <div id="chips" role="group" aria-label="Temes"></div>
+      <p id="pickCount" class="pick-count" aria-live="polite"></p>
+      <button id="startBtn" type="button" class="btn-primary big" data-i18n="js.intro.start">▶ Començar</button>
+      <button id="skipBtn" type="button" class="link-btn" data-i18n="js.intro.skip">Començar sense triar</button>
+      <button id="lastBtn" type="button" class="link-btn" hidden data-i18n="js.intro.last">Veure l'últim perfil</button>
+      <p class="privacy" data-i18n="js.intro.privacy">🔒 Tot es queda al teu mòbil. No s'envia res a Internet ni a ningú.</p>
+      <p class="privacy sub" data-i18n="js.intro.measure">Mentre fas scroll, l'app anota quant de temps et quedes en cada publicació i com hi interactues.</p>
+      <div id="langSelectHost" class="lang-host"></div>
+    </div>
+  </section>
+
+  <!-- ═══ Feed ═══ -->
+  <section id="feedScreen" class="screen" hidden>
+    <div id="topbar">
+      <button id="endBtn" type="button" class="icon-btn" aria-label="Acabar ara" data-i18n-attr="aria-label:js.feed.exit;title:js.feed.exit" title="Acabar ara">✕</button>
+      <div class="tabs"><span class="tab">Seguint</span><span class="tab on" data-i18n="js.feed.foryou">Per a tu</span></div>
+      <span id="counter" aria-live="off">1/50</span>
+    </div>
+    <div id="feed" tabindex="0" aria-label="Publicacions" data-i18n-attr="aria-label:js.feed.aria"></div>
+    <div id="hintBox" hidden></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </section>
+
+  <!-- ═══ Resultats ═══ -->
+  <section id="result" class="screen" hidden></section>
+</div>
+
+<!-- Configuració del professorat -->
+<div id="config-layer" class="layer">
+  <div class="layer-box">
+    <div class="layer-header">
+      <img src="icons/android-chrome-192x192.png" alt="" width="40" height="40">
+      <h2 data-i18n="js.cfg.title">⚙️ Configuració del professorat</h2>
+    </div>
+    <div class="config-section">
+      <h3 class="section-title" data-i18n="js.cfg.session">⏱ Sessió</h3>
+      <div class="interval-control">
+        <label for="cfgN" id="cfgNLbl">Publicacions: 50</label>
+        <input type="range" id="cfgN" min="20" max="60" step="5" value="50">
+      </div>
+      <div class="interval-control">
+        <label for="cfgMin" id="cfgMinLbl">Sense límit de temps</label>
+        <input type="range" id="cfgMin" min="0" max="20" step="1" value="0">
+      </div>
+      <p class="config-note" data-i18n="js.cfg.session_note">La sessió acaba amb el que passe primer: vistes totes les publicacions o arribat el límit de temps.</p>
+    </div>
+    <div class="config-section">
+      <h3 class="section-title" data-i18n="js.cfg.algo">🧠 Algoritme</h3>
+      <label class="check"><input type="checkbox" id="cfgAdaptive"> <span data-i18n="js.cfg.adaptive">El feed s'adapta al que mira l'alumne (efecte bombolla)</span></label>
+      <p class="config-note" data-i18n="js.cfg.adaptive_note">Les primeres publicacions són equilibrades (tots els temes per igual); a partir d'ací el feed dona més del que més s'ha mirat.</p>
+      <label class="check"><input type="checkbox" id="cfgHint"> <span data-i18n="js.cfg.hint">Mostrar els mesuraments mentre es fa scroll (per a demostracions)</span></label>
+    </div>
+    <div class="config-section">
+      <h3 class="section-title" data-i18n="js.cfg.data">🗑 Dades d'este dispositiu</h3>
+      <p class="config-note" data-i18n="js.cfg.data_note">L'últim perfil es guarda només en este dispositiu.</p>
+      <button type="button" class="btn btn-danger" id="wipeBtn" data-i18n="js.res.delete">🗑 Esborrar les meues dades</button>
+    </div>
+    <div class="config-section">
+      <h3 class="section-title" data-i18n="js.cfg.content">🖼 Contingut</h3>
+      <p class="config-note" data-i18n-html="js.cfg.content_note"></p>
+      <p class="config-note" id="catalogInfo"></p>
+    </div>
+    <button class="close-btn" id="closeConfigBtn" data-i18n="js.close">Tancar</button>
+  </div>
+</div>
+
+<!-- Ajuda -->
+<div id="info-layer" class="layer">
+  <div class="layer-box">
+    <div class="layer-header">
+      <img src="icons/android-chrome-192x192.png" alt="" width="40" height="40">
+      <h2 data-i18n="js.btn.help">ℹ️ Ajuda</h2>
+    </div>
+    <p data-i18n-html="js.help.p1"></p>
+    <a class="guide-btn" href="guia.html" data-i18n="js.help.guide">📖 Guia per al professorat</a>
+    <p data-i18n-html="js.help.measured"></p>
+    <ul>
+      <li data-i18n-html="js.help.m1"></li><li data-i18n-html="js.help.m2"></li><li data-i18n-html="js.help.m3"></li>
+      <li data-i18n-html="js.help.m4"></li><li data-i18n-html="js.help.m5"></li><li data-i18n-html="js.help.m6"></li>
+    </ul>
+    <p data-i18n-html="js.help.how"></p>
+    <p data-i18n-html="js.help.limit"></p>
+    <p class="info-footer" data-i18n-html="js.help.credits"></p>
+    <button class="close-btn" id="closeInfoBtn" data-i18n="js.close">Tancar</button>
+  </div>
+</div>
+
+<script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
+<script src="js/core.js"></script>
+<script src="js/script.js"></script>
+<script src="../shared/piar_home.js"></script>
+<script src="../shared/pwa.js"></script>
+</body>
+</html>

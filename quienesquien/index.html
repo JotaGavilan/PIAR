@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f3a73">
+<title data-i18n="qq.title">Qui és qui neuronal</title>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="icons/site.webmanifest">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="toprow">
+      <a class="homebtn piar-home" href="../" data-i18n-attr="aria-label:sh.home;title:sh.home" aria-label="Tornar a la pantalla principal" title="Tornar a la pantalla principal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg></a>
+      <p class="kicker" data-i18n="qq.kicker">3r–4t d'ESO · una sessió de 50 minuts</p>
+      <div class="langhost" id="langSelectHost"></div>
+    </div>
+    <h1 data-i18n="qq.title">Qui és qui neuronal</h1>
+    <p class="lead" data-lv="basic" data-i18n="qq.lead.b"></p>
+    <p class="lead" data-lv="adv" hidden data-i18n="qq.lead.a"></p>
+    <div class="lvsw" role="group" data-i18n-attr="aria-label:qq.lv.aria">
+      <span class="lvl" data-i18n="qq.lv.label">Nivell</span>
+      <button class="lvbtn" data-l="basic" aria-pressed="true" data-i18n="qq.lv.basic">Bàsic</button>
+      <button class="lvbtn" data-l="adv" aria-pressed="false" data-i18n="qq.lv.adv">Avançat</button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" data-i18n-attr="aria-label:qq.tabs.aria">
+    <button role="tab" id="t-juego" data-lv="basic"><b>1</b><span data-i18n="qq.tab.juego">Joc</span></button>
+    <button role="tab" id="t-detector" data-lv="basic"><b>2</b><span data-i18n="qq.tab.detector">Un detector</span></button>
+    <button role="tab" id="t-aprende" data-lv="basic"><b>3</b><span data-i18n="qq.tab.aprende">La xarxa aprén</span></button>
+    <button role="tab" id="t-tablero" data-lv="adv" hidden><b>1</b><span data-i18n="qq.tab.tablero">Tauler</span></button>
+    <button role="tab" id="t-neurona" data-lv="adv" hidden><b>2</b><span data-i18n="qq.tab.neurona">Una neurona</span></button>
+    <button role="tab" id="t-red" data-lv="adv" hidden><b>3</b><span data-i18n="qq.tab.red">La xarxa</span></button>
+    <button role="tab" id="t-guia"><b>4</b><span data-i18n="qq.tab.guia">Guia del professorat</span></button>
+  </nav>
+
+  <!-- 1. TABLERO / JUEGO (panel compartido: cambia de datos según el nivel) -->
+  <section id="p-tablero" class="panel" role="tabpanel" aria-labelledby="t-tablero">
+    <div class="two">
+      <div class="board" id="g-board"></div>
+      <div class="stack">
+        <div class="card">
+          <h2 data-i18n="qq.g.ask.h">Fes una pregunta</h2>
+          <p class="hint" data-i18n="qq.g.ask.p"></p>
+          <div id="g-qs" class="qs"></div>
+          <label class="check"><input type="checkbox" id="g-help"> <span data-i18n="qq.g.help">Marcar la pregunta que reparteix millor</span></label>
+        </div>
+        <div class="card">
+          <div class="stats">
+            <div class="stat"><b id="g-left">12</b><span data-i18n="qq.g.left">candidats</span></div>
+            <div class="stat"><b id="g-nq">0</b><span data-i18n="qq.g.nq">preguntes</span></div>
+          </div>
+          <p id="g-msg" aria-live="polite"></p>
+          <button id="g-new" class="btn" data-i18n="qq.g.new">Partida nova</button>
+        </div>
+        <div class="card intro">
+          <h3 data-i18n="qq.g.did.h">El que acabes de fer</h3>
+          <p data-lv="basic" data-i18n="qq.g.did.b"></p>
+          <p data-lv="adv" hidden data-i18n="qq.g.did.a"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVANZADO 2. NEURONA -->
+  <section id="p-neurona" class="panel" role="tabpanel" aria-labelledby="t-neurona" hidden>
+    <div class="card intro">
+      <h2 data-i18n="qq.n.h">Una neurona és un detector</h2>
+      <p data-i18n="qq.n.p"></p>
+    </div>
+    <div class="tools">
+      <label for="n-target" data-i18n="qq.n.target">Detector de</label>
+      <select id="n-target"></select>
+      <button id="n-learn" class="btn" data-i18n="qq.n.learn">Que aprenga soleta</button>
+      <button id="n-reset" class="btn ghost" data-i18n="qq.n.reset">Posar a zero</button>
+      <span id="n-score" class="score" aria-live="polite"></span>
+    </div>
+    <div class="two">
+      <div class="card">
+        <div class="calc-head">
+          <div class="mini" id="n-face"></div>
+          <div><b id="n-who"></b><span class="muted" id="n-has"></span></div>
+        </div>
+        <div id="n-calc"></div>
+        <div class="result">
+          <div class="line"><span data-i18n="qq.n.z">Suma d'aportacions (z)</span><b id="n-z">0,0</b></div>
+          <div class="line"><span data-i18n="qq.n.conf">Confiança que siga l'objectiu</span><b id="n-p">50 %</b></div>
+          <div class="meter" aria-hidden="true"><i id="n-m"></i></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2 data-i18n="qq.n.out.h">Eixida per a cada cara</h2>
+        <p class="hint" data-i18n="qq.n.out.hint"></p>
+        <div id="n-list" class="rank"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVANZADO 3. RED -->
+  <section id="p-red" class="panel" role="tabpanel" aria-labelledby="t-red" hidden>
+    <div class="card intro">
+      <h2 data-i18n="qq.r.h">Una xarxa sencera aprén soleta</h2>
+      <p data-i18n="qq.r.p"></p>
+    </div>
+    <div class="two wide">
+      <div class="card">
+        <div class="tools">
+          <button id="r-train" class="btn" data-i18n="qq.r.train">Entrenar</button>
+          <button id="r-step" class="btn ghost" data-i18n="qq.r.step">1 època</button>
+          <button id="r-reset" class="btn ghost" data-i18n="qq.r.reset">Reiniciar pesos</button>
+          <span class="hid"><span data-i18n="qq.r.hidden">Neurones ocultes</span>
+            <button id="r-hm" class="btn ghost" data-i18n-attr="aria-label:qq.r.hm">−</button>
+            <output id="r-hn" aria-live="polite">5</output>
+            <button id="r-hp" class="btn ghost" data-i18n-attr="aria-label:qq.r.hp">+</button></span>
+        </div>
+        <div class="netwrap"><svg id="r-svg" role="img" data-i18n-attr="aria-label:qq.r.svg"></svg></div>
+        <p class="scrollhint" data-i18n="qq.r.scroll"></p>
+        <div class="stats3">
+          <div class="stat"><b id="r-ep">0</b><span data-i18n="qq.r.ep">èpoques</span></div>
+          <div class="stat"><b id="r-loss">—</b><span data-i18n="qq.r.loss">error</span></div>
+          <div class="stat"><b id="r-ok">0</b><span data-i18n="qq.r.ok">reconeix de 12</span></div>
+        </div>
+        <p id="r-msg" aria-live="polite"></p>
+        <div class="chartbox">
+          <svg id="r-chart" viewBox="0 0 320 120" role="img" data-i18n-attr="aria-label:qq.r.chart">
+            <line class="gl" x1="34" x2="312" y1="100" y2="100"/>
+            <line class="gl" x1="34" x2="312" y1="65.4" y2="65.4"/>
+            <line class="gl" x1="34" x2="312" y1="30.8" y2="30.8"/>
+            <text x="28" y="103" text-anchor="end">0</text>
+            <text x="28" y="68.4" text-anchor="end">1</text>
+            <text x="28" y="33.8" text-anchor="end">2</text>
+            <text x="4" y="10" id="r-yl">error</text>
+            <text x="34" y="116">0</text>
+            <text x="312" y="116" text-anchor="end" id="r-xl"></text>
+            <polyline id="r-line" class="ln" points=""/>
+          </svg>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h2 data-i18n="qq.test.h">Cara de prova</h2>
+          <div class="testface">
+            <div class="big" id="r-face"></div>
+            <div class="tgs" id="r-tgs"></div>
+          </div>
+          <p class="pred" id="r-pred" aria-live="polite"></p>
+          <div id="r-rank" class="rank"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2 data-i18n="qq.data.h">Dades d'entrenament</h2>
+      <p class="hint" data-i18n="qq.data.r.hint"></p>
+      <div class="tools" id="r-presets" style="margin-top:10px">
+        <button class="btn ghost" data-p="todos" data-i18n="qq.data.todos">Tots</button>
+        <button class="btn ghost" data-p="gafas" data-i18n="qq.data.gafas">Sense els d'ulleres</button>
+        <button class="btn ghost" data-p="sombrero" data-i18n="qq.data.sombrero">Sense els de barret</button>
+        <button class="btn ghost" data-p="azar" data-i18n="qq.data.azar">Només 6 a l'atzar</button>
+      </div>
+      <div class="strip" id="r-strip"></div>
+    </div>
+  </section>
+
+  <!-- BÁSICO 2. DETECTOR -->
+  <section id="p-detector" class="panel" role="tabpanel" aria-labelledby="t-detector" hidden>
+    <div class="card intro">
+      <h2 data-i18n="qq.d.h">Cada tret vota amb punts</h2>
+      <p data-i18n="qq.d.p"></p>
+    </div>
+    <div class="tools">
+      <label for="d-target" data-i18n="qq.n.target">Detector de</label>
+      <select id="d-target"></select>
+      <button id="d-sol" class="btn ghost" data-i18n="qq.d.sol">Veure la solució</button>
+      <button id="d-reset" class="btn ghost" data-i18n="qq.n.reset">Posar a zero</button>
+    </div>
+    <div class="two">
+      <div class="card">
+        <h2 data-i18n="qq.d.pts.h">Els teus punts</h2>
+        <p class="hint" data-i18n="qq.d.pts.hint"></p>
+        <div id="d-pts" class="pts"></div>
+        <p id="d-msg" class="dmsg" aria-live="polite"></p>
+      </div>
+      <div class="card">
+        <h2 data-i18n="qq.d.list.h">Punts que trau cada cara</h2>
+        <p class="hint" data-i18n="qq.d.list.hint"></p>
+        <div id="d-list" class="rank"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BÁSICO 3. LA RED APRENDE -->
+  <section id="p-aprende" class="panel" role="tabpanel" aria-labelledby="t-aprende" hidden>
+    <div class="card intro">
+      <h2 data-i18n="qq.a.h">La xarxa té una fila de punts per personatge</h2>
+      <p data-i18n="qq.a.p"></p>
+    </div>
+    <div class="two wide">
+      <div class="card">
+        <div class="tools">
+          <button id="a-one" class="btn" data-i18n="qq.a.one">Ensenya-li una cara</button>
+          <button id="a-auto" class="btn" data-i18n="qq.a.auto">Entrenar soleta</button>
+          <button id="a-reset" class="btn ghost" data-i18n="qq.a.reset">Començar de zero</button>
+        </div>
+        <div class="tblscroll"><table id="a-table" class="heat"></table></div>
+        <p id="a-msg" class="amsg" aria-live="polite"></p>
+        <div class="stats3">
+          <div class="stat"><b id="a-n">0</b><span data-i18n="qq.a.n">cares ensenyades</span></div>
+          <div class="stat"><b id="a-f">0</b><span data-i18n="qq.a.f">errors</span></div>
+          <div class="stat"><b id="a-ok">0</b><span data-i18n="qq.a.ok">reconeix de 6</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2 data-i18n="qq.test.h">Cara de prova</h2>
+        <div class="testface"><div class="big" id="a-face"></div><div class="tgs" id="a-tgs"></div></div>
+        <p class="pred" id="a-pred" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="card">
+      <h2 data-i18n="qq.data.h">Dades d'entrenament</h2>
+      <p class="hint" data-i18n="qq.data.a.hint"></p>
+      <div class="tools" id="a-presets" style="margin-top:10px">
+        <button class="btn ghost" data-p="todos" data-i18n="qq.data.todos">Tots</button>
+        <button class="btn ghost" data-p="gafas" data-i18n="qq.data.gafas">Sense els d'ulleres</button>
+        <button class="btn ghost" data-p="sombrero" data-i18n="qq.data.sombrero">Sense els de barret</button>
+      </div>
+      <div class="strip" id="a-strip"></div>
+    </div>
+  </section>
+
+  <!-- GUÍA -->
+  <section id="p-guia" class="panel" role="tabpanel" aria-labelledby="t-guia" hidden>
+    <div class="guide">
+      <article class="card" data-lv="basic" data-i18n-html="qq.gb.idea"></article>
+      <article class="card" data-lv="basic" data-i18n-html="qq.gb.plan"></article>
+      <article class="card" data-lv="basic" data-i18n-html="qq.gb.map"></article>
+      <article class="card" data-lv="basic" data-i18n-html="qq.gb.expect"></article>
+      <article class="card" data-lv="basic" data-i18n-html="qq.gb.close"></article>
+      <article class="card" data-lv="basic" data-i18n-html="qq.gb.paper"></article>
+      <article class="card" data-lv="basic" data-i18n-html="qq.gb.extra"></article>
+      <article class="card" data-lv="basic" data-i18n-html="qq.gb.gloss"></article>
+      <article class="card" data-lv="adv" hidden data-i18n-html="qq.ga.idea"></article>
+      <article class="card" data-lv="adv" hidden data-i18n-html="qq.ga.plan"></article>
+      <article class="card" data-lv="adv" hidden data-i18n-html="qq.ga.map"></article>
+      <article class="card" data-lv="adv" hidden data-i18n-html="qq.ga.expect"></article>
+      <article class="card" data-lv="adv" hidden data-i18n-html="qq.ga.close"></article>
+      <article class="card" data-lv="adv" hidden data-i18n-html="qq.ga.paper"></article>
+      <article class="card" data-lv="adv" hidden data-i18n-html="qq.ga.limits"></article>
+      <article class="card" data-lv="adv" hidden data-i18n-html="qq.ga.gloss"></article>
+    </div>
+  </section>
+  <p class="foot" data-i18n="qq.foot">Fet per Jose L. Gavilán amb ❤️ i IA · IES Jorge Juan, Alacant, 2026 · Tot es calcula al teu dispositiu.</p>
+</div>
+
+<script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
+<script src="js/core.js"></script>
+<script src="js/script.js"></script>
+<script src="../shared/pwa.js"></script>
+</body>
+</html>

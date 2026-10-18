@@ -1,0 +1,1133 @@
+{
+ "version": 1,
+ "items": [
+  {
+   "id": "music-1",
+   "topic": "music",
+   "type": "photo",
+   "file": "music-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "carla.clips",
+   "likes": 3699,
+   "cap": {
+    "ca": "Este tema no m'ix del cap 🎧 #musica #repeat",
+    "es": "Este tema no me lo quito de la cabeza 🎧 #musica #repeat",
+    "en": "Can't get this song out of my head 🎧 #music #repeat"
+   }
+  },
+  {
+   "id": "music-2",
+   "topic": "music",
+   "type": "photo",
+   "file": "music-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "laia.clips",
+   "likes": 4366,
+   "cap": {
+    "ca": "Assaig de dissabte, directe i sense filtre 🎸 #banda",
+    "es": "Ensayo del sábado, directo y sin filtro 🎸 #banda",
+    "en": "Saturday rehearsal, live and unfiltered 🎸 #band"
+   }
+  },
+  {
+   "id": "music-3",
+   "topic": "music",
+   "type": "photo",
+   "file": "music-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "hugo.zone",
+   "likes": 7102,
+   "cap": {
+    "ca": "Primera vegada davant del micro 🎤 #nervis",
+    "es": "Primera vez delante del micro 🎤 #nervios",
+    "en": "First time on the mic 🎤 #nerves"
+   }
+  },
+  {
+   "id": "music-4",
+   "topic": "music",
+   "type": "photo",
+   "file": "music-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "mireia.lab",
+   "likes": 9191,
+   "cap": {
+    "ca": "El ritme és el batec de tot 🥁 #beats",
+    "es": "El ritmo es el latido de todo 🥁 #beats",
+    "en": "Rhythm is the heartbeat of everything 🥁 #beats"
+   }
+  },
+  {
+   "id": "music-5",
+   "topic": "music",
+   "type": "video",
+   "file": "music-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "music-5-poster.webp",
+   "user": "aleix.world",
+   "likes": 2456,
+   "cap": {
+    "ca": "Mode concert activat 🎹 #live",
+    "es": "Modo concierto activado 🎹 #live",
+    "en": "Concert mode on 🎹 #live"
+   }
+  },
+  {
+   "id": "music-6",
+   "topic": "music",
+   "type": "video",
+   "file": "music-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "music-6-poster.webp",
+   "user": "mireia.vibes",
+   "likes": 1651,
+   "cap": {
+    "ca": "El saxo sempre té l'última paraula 🎷 #jazz",
+    "es": "El saxo siempre tiene la última palabra 🎷 #jazz",
+    "en": "The sax always gets the last word 🎷 #jazz"
+   }
+  },
+  {
+   "id": "gaming-1",
+   "topic": "gaming",
+   "type": "photo",
+   "file": "gaming-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "mireia.lab",
+   "likes": 7588,
+   "cap": {
+    "ca": "Setup nou, partides infinites 🎮 #gaming",
+    "es": "Setup nuevo, partidas infinitas 🎮 #gaming",
+    "en": "New setup, endless matches 🎮 #gaming"
+   }
+  },
+  {
+   "id": "gaming-2",
+   "topic": "gaming",
+   "type": "photo",
+   "file": "gaming-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "marc.hub",
+   "likes": 4878,
+   "cap": {
+    "ca": "Retro mai passa de moda 🕹️ #arcade",
+    "es": "Lo retro nunca pasa de moda 🕹️ #arcade",
+    "en": "Retro never goes out of style 🕹️ #arcade"
+   }
+  },
+  {
+   "id": "gaming-3",
+   "topic": "gaming",
+   "type": "photo",
+   "file": "gaming-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "dani.hub",
+   "likes": 6607,
+   "cap": {
+    "ca": "Un més i dormim… (mentida) 👾 #gamer",
+    "es": "Una más y a dormir… (mentira) 👾 #gamer",
+    "en": "One more and I sleep… (lie) 👾 #gamer"
+   }
+  },
+  {
+   "id": "gaming-4",
+   "topic": "gaming",
+   "type": "photo",
+   "file": "gaming-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "mireia.zone",
+   "likes": 1063,
+   "cap": {
+    "ca": "Final de torneig: copa a casa 🏆 #esports",
+    "es": "Final de torneo: copa a casa 🏆 #esports",
+    "en": "Tournament final: cup comes home 🏆 #esports"
+   }
+  },
+  {
+   "id": "gaming-5",
+   "topic": "gaming",
+   "type": "video",
+   "file": "gaming-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "gaming-5-poster.webp",
+   "user": "adri.tv",
+   "likes": 2185,
+   "cap": {
+    "ca": "Nivell final desbloquejat 🖥️ #pc",
+    "es": "Nivel final desbloqueado 🖥️ #pc",
+    "en": "Final level unlocked 🖥️ #pc"
+   }
+  },
+  {
+   "id": "gaming-6",
+   "topic": "gaming",
+   "type": "video",
+   "file": "gaming-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "gaming-6-poster.webp",
+   "user": "biel.clips",
+   "likes": 3625,
+   "cap": {
+    "ca": "Trencaclosques i modo zen 🧩 #indie",
+    "es": "Puzles y modo zen 🧩 #indie",
+    "en": "Puzzles and zen mode 🧩 #indie"
+   }
+  },
+  {
+   "id": "sport-1",
+   "topic": "sport",
+   "type": "photo",
+   "file": "sport-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "irene.hub",
+   "likes": 9188,
+   "cap": {
+    "ca": "Entrenament de matí, cap excusa ⚽ #futbol",
+    "es": "Entreno de mañana, sin excusas ⚽ #futbol",
+    "en": "Morning training, no excuses ⚽ #football"
+   }
+  },
+  {
+   "id": "sport-2",
+   "topic": "sport",
+   "type": "photo",
+   "file": "sport-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "hugo.world",
+   "likes": 5454,
+   "cap": {
+    "ca": "Triple sobre la botzina 🏀 #basquet",
+    "es": "Triple sobre la bocina 🏀 #baloncesto",
+    "en": "Buzzer-beater three 🏀 #basketball"
+   }
+  },
+  {
+   "id": "sport-3",
+   "topic": "sport",
+   "type": "photo",
+   "file": "sport-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "biel.lab",
+   "likes": 3776,
+   "cap": {
+    "ca": "Cent llargs i a per més 🏊 #natacio",
+    "es": "Cien largos y a por más 🏊 #natacion",
+    "en": "A hundred laps and still going 🏊 #swimming"
+   }
+  },
+  {
+   "id": "sport-4",
+   "topic": "sport",
+   "type": "photo",
+   "file": "sport-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "lia.lab",
+   "likes": 6550,
+   "cap": {
+    "ca": "Ruta en bici de diumenge 🚴 #ciclisme",
+    "es": "Ruta en bici del domingo 🚴 #ciclismo",
+    "en": "Sunday bike ride 🚴 #cycling"
+   }
+  },
+  {
+   "id": "sport-5",
+   "topic": "sport",
+   "type": "video",
+   "file": "sport-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "sport-5-poster.webp",
+   "user": "sara.moments",
+   "likes": 3271,
+   "cap": {
+    "ca": "Un kilo més a la barra 🏋️ #gym",
+    "es": "Un kilo más en la barra 🏋️ #gym",
+    "en": "One more kilo on the bar 🏋️ #gym"
+   }
+  },
+  {
+   "id": "sport-6",
+   "topic": "sport",
+   "type": "video",
+   "file": "sport-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "sport-6-poster.webp",
+   "user": "oscar.zone",
+   "likes": 843,
+   "cap": {
+    "ca": "Partit de tenis amb els amics 🎾 #tennis",
+    "es": "Partido de tenis con los amigos 🎾 #tennis",
+    "en": "Tennis match with friends 🎾 #tennis"
+   }
+  },
+  {
+   "id": "fashion-1",
+   "topic": "fashion",
+   "type": "photo",
+   "file": "fashion-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "mireia.lab",
+   "likes": 1442,
+   "cap": {
+    "ca": "Sabatilles noves, dia nou 👟 #sneakers",
+    "es": "Zapatillas nuevas, día nuevo 👟 #sneakers",
+    "en": "New sneakers, new day 👟 #sneakers"
+   }
+  },
+  {
+   "id": "fashion-2",
+   "topic": "fashion",
+   "type": "photo",
+   "file": "fashion-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "hugo.vibes",
+   "likes": 4431,
+   "cap": {
+    "ca": "El vestit blau per a qualsevol ocasió 👗 #outfit",
+    "es": "El vestido azul para cualquier ocasión 👗 #outfit",
+    "en": "The blue dress for any occasion 👗 #outfit"
+   }
+  },
+  {
+   "id": "fashion-3",
+   "topic": "fashion",
+   "type": "photo",
+   "file": "fashion-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "alba.tv",
+   "likes": 4435,
+   "cap": {
+    "ca": "Abric de segona mà, estil de primera 🧥 #vintage",
+    "es": "Abrigo de segunda mano, estilo de primera 🧥 #vintage",
+    "en": "Second-hand coat, first-class style 🧥 #vintage"
+   }
+  },
+  {
+   "id": "fashion-4",
+   "topic": "fashion",
+   "type": "photo",
+   "file": "fashion-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "biel.daily",
+   "likes": 310,
+   "cap": {
+    "ca": "Bossa i res més (i tot el que hi cap) 👜 #look",
+    "es": "Bolso y nada más (y todo lo que cabe) 👜 #look",
+    "en": "Just a bag (and everything it fits) 👜 #look"
+   }
+  },
+  {
+   "id": "fashion-5",
+   "topic": "fashion",
+   "type": "video",
+   "file": "fashion-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "fashion-5-poster.webp",
+   "user": "biel.hub",
+   "likes": 4128,
+   "cap": {
+    "ca": "Ulleres de sol, vibra d'estiu 🕶️ #ootd",
+    "es": "Gafas de sol, vibra de verano 🕶️ #ootd",
+    "en": "Sunglasses, summer vibes 🕶️ #ootd"
+   }
+  },
+  {
+   "id": "fashion-6",
+   "topic": "fashion",
+   "type": "video",
+   "file": "fashion-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "fashion-6-poster.webp",
+   "user": "dani.moments",
+   "likes": 6902,
+   "cap": {
+    "ca": "Barret per a tot l'any 👒 #style",
+    "es": "Sombrero para todo el año 👒 #style",
+    "en": "A hat for all year round 👒 #style"
+   }
+  },
+  {
+   "id": "humor-1",
+   "topic": "humor",
+   "type": "photo",
+   "file": "humor-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "aleix.clips",
+   "likes": 5543,
+   "cap": {
+    "ca": "Quan t'adones que el dilluns és demà 😂 #meme",
+    "es": "Cuando te das cuenta de que mañana es lunes 😂 #meme",
+    "en": "When you realise tomorrow is Monday 😂 #meme"
+   }
+  },
+  {
+   "id": "humor-2",
+   "topic": "humor",
+   "type": "photo",
+   "file": "humor-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "dani.world",
+   "likes": 2830,
+   "cap": {
+    "ca": "Jo intentant ser seriós a classe 🤣 #relatable",
+    "es": "Yo intentando ser serio en clase 🤣 #relatable",
+    "en": "Me trying to be serious in class 🤣 #relatable"
+   }
+  },
+  {
+   "id": "humor-3",
+   "topic": "humor",
+   "type": "photo",
+   "file": "humor-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "irene.zone",
+   "likes": 8438,
+   "cap": {
+    "ca": "Cara de «ja ho enteneu tot, no?» 🙃 #mood",
+    "es": "Cara de «lo entendéis todo, ¿no?» 🙃 #mood",
+    "en": "The «you all understand, right?» face 🙃 #mood"
+   }
+  },
+  {
+   "id": "humor-4",
+   "topic": "humor",
+   "type": "photo",
+   "file": "humor-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "dani.hub",
+   "likes": 3990,
+   "cap": {
+    "ca": "Dijous a les 7 del matí 🥴 #sleepy",
+    "es": "Jueves a las 7 de la mañana 🥴 #sleepy",
+    "en": "Thursday at 7 a.m. 🥴 #sleepy"
+   }
+  },
+  {
+   "id": "humor-5",
+   "topic": "humor",
+   "type": "video",
+   "file": "humor-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "humor-5-poster.webp",
+   "user": "adri.hub",
+   "likes": 3641,
+   "cap": {
+    "ca": "Quan et poses a riure en el moment menys adequat 😜 #riure",
+    "es": "Cuando te entra la risa en el peor momento 😜 #risa",
+    "en": "When you start laughing at the worst moment 😜 #laugh"
+   }
+  },
+  {
+   "id": "humor-6",
+   "topic": "humor",
+   "type": "video",
+   "file": "humor-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "humor-6-poster.webp",
+   "user": "nuria.world",
+   "likes": 3607,
+   "cap": {
+    "ca": "Pla perfecte, execució… creativa 🤡 #fail",
+    "es": "Plan perfecto, ejecución… creativa 🤡 #fail",
+    "en": "Perfect plan, execution… creative 🤡 #fail"
+   }
+  },
+  {
+   "id": "animals-1",
+   "topic": "animals",
+   "type": "photo",
+   "file": "animals-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "pau.hub",
+   "likes": 2490,
+   "cap": {
+    "ca": "Este gos m'espera cada dia a la porta 🐶 #doggo",
+    "es": "Este perro me espera cada día en la puerta 🐶 #doggo",
+    "en": "This dog waits for me at the door every day 🐶 #doggo"
+   }
+  },
+  {
+   "id": "animals-2",
+   "topic": "animals",
+   "type": "photo",
+   "file": "animals-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "nuria.lab",
+   "likes": 6941,
+   "cap": {
+    "ca": "El gat que mana a casa 🐱 #gatet",
+    "es": "El gato que manda en casa 🐱 #gatito",
+    "en": "The cat who runs the house 🐱 #kitty"
+   }
+  },
+  {
+   "id": "animals-3",
+   "topic": "animals",
+   "type": "photo",
+   "file": "animals-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "nuria.world",
+   "likes": 5838,
+   "cap": {
+    "ca": "Una guineu a la vora del camí 🦊 #natura",
+    "es": "Un zorro al lado del camino 🦊 #naturaleza",
+    "en": "A fox by the side of the path 🦊 #nature"
+   }
+  },
+  {
+   "id": "animals-4",
+   "topic": "animals",
+   "type": "photo",
+   "file": "animals-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "eric.world",
+   "likes": 228,
+   "cap": {
+    "ca": "Panda mode: menjar i descansar 🐼 #cute",
+    "es": "Modo panda: comer y descansar 🐼 #cute",
+    "en": "Panda mode: eat and rest 🐼 #cute"
+   }
+  },
+  {
+   "id": "animals-5",
+   "topic": "animals",
+   "type": "video",
+   "file": "animals-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "animals-5-poster.webp",
+   "user": "oscar.daily",
+   "likes": 7452,
+   "cap": {
+    "ca": "Granota de pluja, humor de pluja 🐸 #animals",
+    "es": "Rana de lluvia, humor de lluvia 🐸 #animals",
+    "en": "Rain frog, rainy mood 🐸 #animals"
+   }
+  },
+  {
+   "id": "animals-6",
+   "topic": "animals",
+   "type": "video",
+   "file": "animals-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "animals-6-poster.webp",
+   "user": "mireia.tv",
+   "likes": 279,
+   "cap": {
+    "ca": "El rei de la sabana en versió peluix 🦁 #wild",
+    "es": "El rey de la sabana en versión peluche 🦁 #wild",
+    "en": "King of the savanna, plush edition 🦁 #wild"
+   }
+  },
+  {
+   "id": "food-1",
+   "topic": "food",
+   "type": "photo",
+   "file": "food-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "sara.vibes",
+   "likes": 7875,
+   "cap": {
+    "ca": "Pizza de divendres, tradició sagrada 🍕 #foodie",
+    "es": "Pizza de viernes, tradición sagrada 🍕 #foodie",
+    "en": "Friday pizza, sacred tradition 🍕 #foodie"
+   }
+  },
+  {
+   "id": "food-2",
+   "topic": "food",
+   "type": "photo",
+   "file": "food-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "mireia.mood",
+   "likes": 3308,
+   "cap": {
+    "ca": "Hamburguesa casolana amb tot 🍔 #homemade",
+    "es": "Hamburguesa casera con todo 🍔 #homemade",
+    "en": "Homemade burger with everything 🍔 #homemade"
+   }
+  },
+  {
+   "id": "food-3",
+   "topic": "food",
+   "type": "photo",
+   "file": "food-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "noa.zone",
+   "likes": 1147,
+   "cap": {
+    "ca": "Primer cop fent sushi, sorprenentment bé 🍣 #cuina",
+    "es": "Primera vez haciendo sushi, sorprendentemente bien 🍣 #cocina",
+    "en": "First time making sushi, surprisingly good 🍣 #cooking"
+   }
+  },
+  {
+   "id": "food-4",
+   "topic": "food",
+   "type": "photo",
+   "file": "food-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "oscar.moments",
+   "likes": 1029,
+   "cap": {
+    "ca": "Un dònut abans de la classe de mates 🍩 #dolç",
+    "es": "Un donut antes de clase de mates 🍩 #dulce",
+    "en": "A doughnut before maths class 🍩 #sweet"
+   }
+  },
+  {
+   "id": "food-5",
+   "topic": "food",
+   "type": "video",
+   "file": "food-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "food-5-poster.webp",
+   "user": "aleix.world",
+   "likes": 1325,
+   "cap": {
+    "ca": "Dimarts de tacos, sempre 🌮 #tacos",
+    "es": "Martes de tacos, siempre 🌮 #tacos",
+    "en": "Taco Tuesday, always 🌮 #tacos"
+   }
+  },
+  {
+   "id": "food-6",
+   "topic": "food",
+   "type": "video",
+   "file": "food-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "food-6-poster.webp",
+   "user": "mireia.vibes",
+   "likes": 8091,
+   "cap": {
+    "ca": "Ramen calent un dia de pluja 🍜 #comfortfood",
+    "es": "Ramen caliente en un día de lluvia 🍜 #comfortfood",
+    "en": "Hot ramen on a rainy day 🍜 #comfortfood"
+   }
+  },
+  {
+   "id": "travel-1",
+   "topic": "travel",
+   "type": "photo",
+   "file": "travel-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "ivan.mood",
+   "likes": 6416,
+   "cap": {
+    "ca": "Cim a l'albada, valia la pena 🏔️ #muntanya",
+    "es": "Cima al amanecer, mereció la pena 🏔️ #montaña",
+    "en": "Summit at sunrise, worth it 🏔️ #mountains"
+   }
+  },
+  {
+   "id": "travel-2",
+   "topic": "travel",
+   "type": "photo",
+   "file": "travel-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "eric.moments",
+   "likes": 252,
+   "cap": {
+    "ca": "Platja sense gent, un somni 🏝️ #viatges",
+    "es": "Playa sin gente, un sueño 🏝️ #viajes",
+    "en": "Empty beach, a dream 🏝️ #travel"
+   }
+  },
+  {
+   "id": "travel-3",
+   "topic": "travel",
+   "type": "photo",
+   "file": "travel-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "oscar.zone",
+   "likes": 6840,
+   "cap": {
+    "ca": "Una torre, una ciutat, mil fotos 🗼 #tokyo",
+    "es": "Una torre, una ciudad, mil fotos 🗼 #tokyo",
+    "en": "One tower, one city, a thousand photos 🗼 #tokyo"
+   }
+  },
+  {
+   "id": "travel-4",
+   "topic": "travel",
+   "type": "photo",
+   "file": "travel-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "aleix.world",
+   "likes": 857,
+   "cap": {
+    "ca": "Un volcà actiu a vint minuts 🌋 #aventura",
+    "es": "Un volcán activo a veinte minutos 🌋 #aventura",
+    "en": "An active volcano twenty minutes away 🌋 #adventure"
+   }
+  },
+  {
+   "id": "travel-5",
+   "topic": "travel",
+   "type": "video",
+   "file": "travel-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "travel-5-poster.webp",
+   "user": "laia.zone",
+   "likes": 7763,
+   "cap": {
+    "ca": "El tren que travessa les muntanyes 🚆 #interrail",
+    "es": "El tren que cruza las montañas 🚆 #interrail",
+    "en": "The train that crosses the mountains 🚆 #interrail"
+   }
+  },
+  {
+   "id": "travel-6",
+   "topic": "travel",
+   "type": "video",
+   "file": "travel-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "travel-6-poster.webp",
+   "user": "eric.mood",
+   "likes": 4239,
+   "cap": {
+    "ca": "Alba que es queda gravada 🌅 #paisatge",
+    "es": "Un amanecer que se queda grabado 🌅 #paisaje",
+    "en": "A sunrise that stays with you 🌅 #landscape"
+   }
+  },
+  {
+   "id": "science-1",
+   "topic": "science",
+   "type": "photo",
+   "file": "science-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "dani.vibes",
+   "likes": 3444,
+   "cap": {
+    "ca": "Mirant el món a través d'un microscopi 🔬 #ciencia",
+    "es": "Mirando el mundo a través de un microscopio 🔬 #ciencia",
+    "en": "Looking at the world through a microscope 🔬 #science"
+   }
+  },
+  {
+   "id": "science-2",
+   "topic": "science",
+   "type": "photo",
+   "file": "science-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "marc.tv",
+   "likes": 599,
+   "cap": {
+    "ca": "Llançament d'un coet d'aigua al pati 🚀 #fisica",
+    "es": "Lanzamiento de un cohete de agua en el patio 🚀 #fisica",
+    "en": "Water rocket launch in the schoolyard 🚀 #physics"
+   }
+  },
+  {
+   "id": "science-3",
+   "topic": "science",
+   "type": "photo",
+   "file": "science-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "oscar.mood",
+   "likes": 4391,
+   "cap": {
+    "ca": "Reacció química amb colors (no tocar) 🧪 #laboratori",
+    "es": "Reacción química con colores (no tocar) 🧪 #laboratorio",
+    "en": "Colourful chemical reaction (don't touch) 🧪 #lab"
+   }
+  },
+  {
+   "id": "science-4",
+   "topic": "science",
+   "type": "photo",
+   "file": "science-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "oscar.hub",
+   "likes": 6628,
+   "cap": {
+    "ca": "Nit clara: hui toca veure Saturn 🔭 #astronomia",
+    "es": "Noche despejada: hoy toca ver Saturno 🔭 #astronomia",
+    "en": "Clear night: tonight we see Saturn 🔭 #astronomy"
+   }
+  },
+  {
+   "id": "science-5",
+   "topic": "science",
+   "type": "video",
+   "file": "science-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "science-5-poster.webp",
+   "user": "laia.mood",
+   "likes": 5138,
+   "cap": {
+    "ca": "ADN en 3D, molt més bonic que en el llibre 🧬 #biologia",
+    "es": "ADN en 3D, mucho más bonito que en el libro 🧬 #biologia",
+    "en": "3D DNA, far prettier than in the textbook 🧬 #biology"
+   }
+  },
+  {
+   "id": "science-6",
+   "topic": "science",
+   "type": "video",
+   "file": "science-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "science-6-poster.webp",
+   "user": "sara.zone",
+   "likes": 1231,
+   "cap": {
+    "ca": "El robot que programem en classe 🤖 #robotica",
+    "es": "El robot que programamos en clase 🤖 #robotica",
+    "en": "The robot we program in class 🤖 #robotics"
+   }
+  },
+  {
+   "id": "art-1",
+   "topic": "art",
+   "type": "photo",
+   "file": "art-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "laia.zone",
+   "likes": 8315,
+   "cap": {
+    "ca": "Paleta nova, tardor nova 🎨 #pintura",
+    "es": "Paleta nueva, otoño nuevo 🎨 #pintura",
+    "en": "New palette, new autumn 🎨 #painting"
+   }
+  },
+  {
+   "id": "art-2",
+   "topic": "art",
+   "type": "photo",
+   "file": "art-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "eric.world",
+   "likes": 7684,
+   "cap": {
+    "ca": "Un traç, mil possibilitats 🖌️ #art",
+    "es": "Un trazo, mil posibilidades 🖌️ #arte",
+    "en": "One stroke, a thousand possibilities 🖌️ #art"
+   }
+  },
+  {
+   "id": "art-3",
+   "topic": "art",
+   "type": "photo",
+   "file": "art-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "pau.daily",
+   "likes": 3988,
+   "cap": {
+    "ca": "Escultura d'argila: la meua primera 🗿 #creatiu",
+    "es": "Escultura de arcilla: mi primera 🗿 #creativo",
+    "en": "Clay sculpture: my first one 🗿 #creative"
+   }
+  },
+  {
+   "id": "art-4",
+   "topic": "art",
+   "type": "photo",
+   "file": "art-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "jana.world",
+   "likes": 5292,
+   "cap": {
+    "ca": "Una galeria petita però plena de vida 🖼️ #expo",
+    "es": "Una galería pequeña pero llena de vida 🖼️ #expo",
+    "en": "A small gallery full of life 🖼️ #expo"
+   }
+  },
+  {
+   "id": "art-5",
+   "topic": "art",
+   "type": "video",
+   "file": "art-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "art-5-poster.webp",
+   "user": "lia.tv",
+   "likes": 1327,
+   "cap": {
+    "ca": "Esbós ràpid en l'autobús ✏️ #dibuix",
+    "es": "Boceto rápido en el autobús ✏️ #dibujo",
+    "en": "Quick sketch on the bus ✏️ #drawing"
+   }
+  },
+  {
+   "id": "art-6",
+   "topic": "art",
+   "type": "video",
+   "file": "art-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "art-6-poster.webp",
+   "user": "noa.clips",
+   "likes": 4613,
+   "cap": {
+    "ca": "Teatre: el cos també pinta 🎭 #escena",
+    "es": "Teatro: el cuerpo también pinta 🎭 #escena",
+    "en": "Theatre: the body paints too 🎭 #stage"
+   }
+  },
+  {
+   "id": "cars-1",
+   "topic": "cars",
+   "type": "photo",
+   "file": "cars-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "eric.vibes",
+   "likes": 3400,
+   "cap": {
+    "ca": "Eixida de circuit a primera hora 🏎️ #motor",
+    "es": "Salida de circuito a primera hora 🏎️ #motor",
+    "en": "Circuit start at dawn 🏎️ #motor"
+   }
+  },
+  {
+   "id": "cars-2",
+   "topic": "cars",
+   "type": "photo",
+   "file": "cars-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "marc.daily",
+   "likes": 3230,
+   "cap": {
+    "ca": "El cotxe de la família també té història 🚗 #classic",
+    "es": "El coche de la familia también tiene historia 🚗 #classic",
+    "en": "The family car has a story too 🚗 #classic"
+   }
+  },
+  {
+   "id": "cars-3",
+   "topic": "cars",
+   "type": "photo",
+   "file": "cars-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "laia.hub",
+   "likes": 8087,
+   "cap": {
+    "ca": "Dues rodes i el vent a la cara 🏍️ #moto",
+    "es": "Dos ruedas y el viento en la cara 🏍️ #moto",
+    "en": "Two wheels and the wind in your face 🏍️ #bike"
+   }
+  },
+  {
+   "id": "cars-4",
+   "topic": "cars",
+   "type": "photo",
+   "file": "cars-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "laia.moments",
+   "likes": 2568,
+   "cap": {
+    "ca": "Furgoneta, camí de terra i res més 🛻 #roadtrip",
+    "es": "Furgoneta, camino de tierra y nada más 🛻 #roadtrip",
+    "en": "Van, dirt road and nothing else 🛻 #roadtrip"
+   }
+  },
+  {
+   "id": "cars-5",
+   "topic": "cars",
+   "type": "video",
+   "file": "cars-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "cars-5-poster.webp",
+   "user": "carla.moments",
+   "likes": 3956,
+   "cap": {
+    "ca": "Control de carretera: tot en regla 🚓 #seguretat",
+    "es": "Control de carretera: todo en regla 🚓 #seguridad",
+    "en": "Road check: all in order 🚓 #safety"
+   }
+  },
+  {
+   "id": "cars-6",
+   "topic": "cars",
+   "type": "video",
+   "file": "cars-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "cars-6-poster.webp",
+   "user": "alba.hub",
+   "likes": 6089,
+   "cap": {
+    "ca": "Bandera de quadres a la volta final 🏁 #f1",
+    "es": "Bandera de cuadros en la vuelta final 🏁 #f1",
+    "en": "Chequered flag on the final lap 🏁 #f1"
+   }
+  },
+  {
+   "id": "cinema-1",
+   "topic": "cinema",
+   "type": "photo",
+   "file": "cinema-1.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "ivan.mood",
+   "likes": 8338,
+   "cap": {
+    "ca": "Claqueta i acció: el meu primer curt 🎬 #cine",
+    "es": "Claqueta y acción: mi primer corto 🎬 #cine",
+    "en": "Clapperboard and action: my first short 🎬 #film"
+   }
+  },
+  {
+   "id": "cinema-2",
+   "topic": "cinema",
+   "type": "photo",
+   "file": "cinema-2.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "mireia.vibes",
+   "likes": 2848,
+   "cap": {
+    "ca": "Crispetes, manta i estrena 🍿 #pelis",
+    "es": "Palomitas, manta y estreno 🍿 #pelis",
+    "en": "Popcorn, blanket and a premiere 🍿 #movies"
+   }
+  },
+  {
+   "id": "cinema-3",
+   "topic": "cinema",
+   "type": "photo",
+   "file": "cinema-3.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "alba.tv",
+   "likes": 9495,
+   "cap": {
+    "ca": "El projector antic de l'avi 📽️ #retro",
+    "es": "El proyector antiguo del abuelo 📽️ #retro",
+    "en": "Grandpa's old projector 📽️ #retro"
+   }
+  },
+  {
+   "id": "cinema-4",
+   "topic": "cinema",
+   "type": "photo",
+   "file": "cinema-4.webp",
+   "w": 1080,
+   "h": 1920,
+   "user": "biel.clips",
+   "likes": 6357,
+   "cap": {
+    "ca": "Fotogrames que ho diuen tot 🎞️ #cinema",
+    "es": "Fotogramas que lo dicen todo 🎞️ #cinema",
+    "en": "Frames that say it all 🎞️ #cinema"
+   }
+  },
+  {
+   "id": "cinema-5",
+   "topic": "cinema",
+   "type": "video",
+   "file": "cinema-5.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "cinema-5-poster.webp",
+   "user": "sara.zone",
+   "likes": 6328,
+   "cap": {
+    "ca": "Heroi o no, la cua és la mateixa 🦸 #marvel",
+    "es": "Héroe o no, la cola es la misma 🦸 #marvel",
+    "en": "Hero or not, the queue is the same 🦸 #marvel"
+   }
+  },
+  {
+   "id": "cinema-6",
+   "topic": "cinema",
+   "type": "video",
+   "file": "cinema-6.mp4",
+   "dur": 6.0,
+   "w": 540,
+   "h": 960,
+   "poster": "cinema-6-poster.webp",
+   "user": "aleix.clips",
+   "likes": 9405,
+   "cap": {
+    "ca": "Nit de terror amb els amics 🧛 #terror",
+    "es": "Noche de terror con los amigos 🧛 #terror",
+    "en": "Horror night with friends 🧛 #horror"
+   }
+  }
+ ]
+}

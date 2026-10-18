@@ -12,7 +12,7 @@ SKIP_DIRS = {'.git', 'tools', 'node_modules', '__pycache__', '_testlibs', '_font
 SKIP_FILES = {'sw.js', 'precache.json', '.DS_Store'}
 # Carpetes de vendor/ que NO es descarreguen amb el botó de la portada (es guarden en usar-les): model avançat de «Què veuen de tu»
 OPTIONAL_VENDOR = ['transformers-4.3.1/']
-SHELL_EXT = {'.html', '.css', '.js', '.json', '.webmanifest', '.png', '.jpg', '.jpeg', '.webp', '.ico', '.svg', '.woff2'}
+SHELL_EXT = {'.html', '.css', '.js', '.json', '.webmanifest', '.png', '.jpg', '.jpeg', '.webp', '.ico', '.svg', '.woff2', '.mp4'}
 
 def walk():
     for d, ds, fs in os.walk(ROOT):
@@ -47,7 +47,7 @@ GROUPS = [
     ('teachable', 'Teachable Microbit', ['tfjs-3.11.0/', 'teachablemachine-image-0.8.5/', 'teachablemachine-pose-0.8.6/', 'tfjs-4.15.0/', 'mobilenet-2.1.0/', 'posenet-2.2.2/', 'mediapipe-hands/'], None),
     ('maquina', 'Màquina Ensenyable', ['tfjs-4.15.0/', 'mobilenet-2.1.0/', 'posenet-2.2.2/', 'mediapipe-hands/'], 'maquina-ensenyable/precarrega.html'),
     ('jveu', 'JVeu', [], 'jveu/precarrega.html'),
-    ('jemo', 'JEmo', ['face-api-', 'mediapipe-face_mesh/', 'mediapipe-hands/', 'tfjs-4.15.0/', 'posenet-2.2.2/'], 'jemo/precarrega.html'),
+    ('jemo', 'JEmo', ['face-api-', 'mediapipe-face_mesh/'], None),
     ('quevuen', 'Què veuen de tu', ['exifr-', 'face-api-', 'coco-ssd-2.2.3/', 'tesseract.js-', 'tesseract.js-core-', 'tesseract-lang-'], 'quevuen/precarrega.html'),
 ]
 groups = []
