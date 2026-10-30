@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guia · JParla</title>
+<meta name="theme-color" content="#1e1a2e">
+<link rel="icon" href="icons/favicon-32x32.png">
+<link rel="stylesheet" href="../vendor/fonts/fonts.css">
+<link rel="stylesheet" href="../shared/guia.css">
+</head>
+<body>
+<header class="g-top">
+  <img src="icons/android-chrome-192x192.png" alt="">
+  <div class="t">Guia de JParla<small>Robot que parla, pas a pas</small></div>
+  <a class="btn" href="index.html">← L'app</a>
+  <a class="btn" href="../index.html" aria-label="Pantalla principal" title="Pantalla principal"><svg class="ico" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg></a>
+</header>
+<main>
+  <div class="hero">
+    <h1>JParla, pas a pas</h1>
+    <p>Fes parlar el robot de la micro:bit: el mòbil llig el text en veu alta i el robot mou la boca a cada síl·laba, gira el cap i parpelleja. Amb la IA de Google, a més, pot conversar.</p>
+    <div class="meta"><span class="pill">Veu del mòbil</span><span class="pill">Boca per síl·labes</span><span class="pill">IA opcional</span><span class="pill">Bluetooth</span><span class="pill">Mateix programa que JFace</span></div>
+  </div>
+  <nav class="toc" aria-label="Índex"><h2>📋 Passos de la guia</h2><ol>
+    <li><a href="#que-es">Què és i com funciona</a></li>
+    <li><a href="#microbit">Prepara la micro:bit</a></li>
+    <li><a href="#connecta">Connecta la micro:bit amb JParla</a></li>
+    <li><a href="#repeteix">Fes parlar el robot (mode Repeteix)</a></li>
+    <li><a href="#ordres">Ordres entre [claudàtors]</a></li>
+    <li><a href="#conversa">Conversa amb la IA (mode Conversa)</a></li>
+    <li><a href="#sincronia">Com se sincronitza la boca amb la veu</a></li>
+    <li><a href="#veus">Veus i idiomes (Android)</a></li>
+    <li><a href="#calibratge">Calibra el robot</a></li>
+    <li><a href="#sense-internet">Sense Internet</a></li>
+    <li><a href="#classe">Idees per a classe</a></li>
+    <li><a href="#problemes">Si alguna cosa no va bé</a></li>
+  </ol></nav>
+
+<section class="step" id="que-es"><div class="step-head"><span class="n">1</span><h2>Què és i com funciona</h2></div>
+<p><b>JParla</b> fa parlar el robot de la micro:bit (el mateix de <b>JFace</b> i <b>JVeu</b>). Escrius un text o el dius amb la veu, el mòbil el <b>llig en veu alta</b> i, mentrestant, l'app envia a la micro:bit com ha de moure la <b>boca</b> (a cada síl·laba), el <b>cap</b> (un poc, de tant en tant) i els <b>ulls</b> (parpelleja). Va pensada a partir de la idea del robot de cartó parlant de <i>LOFI Robot</i>, però integrada en PIAR: tres idiomes, mòbil i sense Internet.</p>
+<div class="msgsplit"><div><b style="background:#2d6a4f">text</b>què ha de dir</div><div><b style="background:#5C2D91">síl·labes</b>compta cada paraula</div><div><b style="background:#B22222">boca</b>s'obri a cada una</div><div><b style="background:#00A4A6">veu</b>la del mòbil</div></div>
+<p>El missatge que arriba a la micro:bit és el <b>mateix paquet de 6 dígits que JFace</b> (<span class="msg">gir · boca · ull E · ull D</span>), per això <b>no cal canviar el programa de la micro:bit</b>.</p>
+<div class="note"><b>ℹ️ Dos modes.</b> <i>🗣 Repeteix</i>: el robot diu el que escrigues o dius (no necessita Internet ni clau). <i>💬 Conversa (IA)</i>: contesta la IA de Google amb la personalitat que triïs i el robot ho diu (necessita Internet i una clau gratuïta).</div>
+</section>
+
+<section class="step" id="microbit"><div class="step-head"><span class="n">2</span><h2>Prepara la micro:bit</h2></div>
+<p>JParla usa <b>exactament el mateix programa que JFace</b>: un servei UART Bluetooth que llig el text de 6 dígits i el reparteix a un servo de gir, un servo de boca i dos LEDs d'ulls.</p>
+<ol><li>Segueix la <a href="../jface/guia.html#makecode">guia de JFace</a> (MakeCode, extensió Bluetooth, «sense vinculació», blocs i connexions) i descarrega el programa a la micro:bit.</li><li>Si ja el tens per a JFace o JVeu, <b>no cal fer res més</b>.</li></ol>
+<div class="note"><b>ℹ️ Sense micro:bit també val.</b> Si no tens la micro:bit a mà, el <b>cap virtual</b> de la pantalla fa el mateix moviment: és molt útil per a provar.</div>
+</section>
+
+<section class="step" id="connecta"><div class="step-head"><span class="n">3</span><h2>Connecta la micro:bit amb JParla</h2></div>
+<div class="figrow"><figure class="fig phone"><img src="guia-img/jparla-1-inici.webp" alt="JParla en obrir-la"><figcaption>Pantalla inicial: cap virtual, dades enviades, modes i exemples.</figcaption></figure><figure class="fig phone"><img src="guia-img/jparla-2-connectat.webp" alt="JParla connectada a la micro:bit"><figcaption>Connectada: el botó es posa verd i apareix el nom de la micro:bit.</figcaption></figure></div>
+<ol><li>Obri <b>JParla</b> en <b>Chrome</b> (Android o ordinador).</li><li>Comprova que el <b>Bluetooth</b> del mòbil està activat (en Android 11 o anterior, també la <b>ubicació</b>; en Android 12 o posterior, el permís de <b>dispositius propers</b>).</li><li>Prem <b>🔵 Connectar Bluetooth</b> i tria <b>BBC micro:bit</b> a la llista.</li><li>Quan estiga connectada, el botó diu <b>✓ Bluetooth connectat</b>.</li></ol>
+<div class="warn"><b>⚠️ iPhone/iPad.</b> Apple no permet el Bluetooth web en cap navegador; allí només funcionarà el cap virtual (i la veu, segons el navegador).</div>
+</section>
+
+<section class="step" id="repeteix"><div class="step-head"><span class="n">4</span><h2>Fes parlar el robot (mode Repeteix)</h2></div>
+<div class="figrow"><figure class="fig phone"><img src="guia-img/jparla-3-parlant.webp" alt="El robot parlant"><figcaption>Mentre parla, la paraula que toca es ressalta i les ordres es marquen quan s'executen.</figcaption></figure></div>
+<ol><li>Tria <b>🗣 Repeteix</b>.</li><li><b>Escriu</b> el text a la caixa de baix i prem ▶, o <b>mantín premut el micròfon</b> i parla: el robot repetirà el que has dit.</li><li>El mòbil ho llig en veu alta i la boca del robot s'obri a cada síl·laba. A la pantalla es ressalta la paraula que s'està dient.</li><li>El botó <b>⏹</b> fa callar el robot a l'instant; <b>↺</b> el torna al centre.</li></ol>
+<p>També pots provar els exemples de dalt: cada un mostra una cosa diferent (una frase simple, ordres de moviment, sorpresa i son).</p>
+</section>
+
+<section class="step" id="ordres"><div class="step-head"><span class="n">5</span><h2>Ordres entre [claudàtors]</h2></div>
+<p>Dins del text pots escriure <b>ordres entre claudàtors</b>. <b>No es pronuncien</b>: el robot les fa just en el lloc on les escrius. Per exemple: <span class="msg">[parpelleja] Hola! Mira cap ací [esquerra] i ara cap allà [dreta] [centre]</span></p>
+<div class="tw"><table class="t"><tr><th>Ordre (valencià · castellà · anglés)</th><th>Què fa</th></tr>
+<tr><td><b>[parpelleja]</b> · [parpadea] · [blink]</td><td>Tanca i obri els dos ulls.</td></tr>
+<tr><td><b>[guinya_esquerra]</b> · [guiña_izquierda] · [wink_left]<br><b>[guinya_dreta]</b> · [guiña_derecha] · [wink_right]</td><td>Guinya un ull.</td></tr>
+<tr><td><b>[esquerra]</b> · [izquierda] · [left]<br><b>[dreta]</b> · [derecha] · [right]<br><b>[centre]</b> · [centro] · [center]</td><td>Gira el cap cap a un costat o el torna al centre.</td></tr>
+<tr><td><b>[nega]</b> · [niega] · [no]</td><td>Nega amb el cap (esquerra-dreta, ràpid).</td></tr>
+<tr><td><b>[sorpresa]</b> · [sorpresa] · [surprise]</td><td>Ulls oberts i boca oberta un instant.</td></tr>
+<tr><td><b>[riu]</b> · [ríe / risa] · [laugh]</td><td>La boca fa «ja, ja, ja».</td></tr>
+<tr><td><b>[pensa]</b> · [piensa] · [think]</td><td>Mira cap a un costat i torna.</td></tr>
+<tr><td><b>[dorm]</b> · [duerme] · [sleep]<br><b>[desperta]</b> · [despierta] · [wake]</td><td>Tanca els ulls i la boca / obri els ulls.</td></tr>
+<tr><td><b>[pausa]</b> · [pausa] · [pause]</td><td>Un silenci curt.</td></tr></table></div>
+<div class="note"><b>ℹ️ Només el que pot fer el robot.</b> El cap de JFace gira a esquerra i dreta, obri la boca i obri/tanca els ulls: no pot «dir que sí» (moure's amunt i avall). Les ordres que no existixen s'ignoren i l'app t'ho avisa.</div>
+</section>
+
+<section class="step" id="conversa"><div class="step-head"><span class="n">6</span><h2>Conversa amb la IA (mode Conversa)</h2></div>
+<div class="figrow"><figure class="fig phone"><img src="guia-img/jparla-4-conversa.webp" alt="Mode Conversa"><figcaption>Dius o escrius alguna cosa i el robot contesta, amb ordres incloses.</figcaption></figure><figure class="fig phone"><img src="guia-img/jparla-7-config-ia.webp" alt="Configuració de la IA"><figcaption>Clau, model i personalitat del robot.</figcaption></figure></div>
+<ol><li>Consegueix una <b>clau gratuïta</b> de Google AI Studio. És <b>la mateixa que usen <i>Què veuen de tu</i> i JVeu</b>: si ja la has posada allí, ja la tens ací.</li><li>A <b>⚙️ Configurar → ✨ IA de Google</b>, apega la clau (es guarda <b>només en este dispositiu</b>).</li><li>Tria la <b>personalitat</b> del robot (amable, mestre de ciències, pirata, robot antic) o escriu la teua en «Personalitzada…».</li><li>Passa a <b>💬 Conversa (IA)</b> i parla o escriu. El robot contesta en veu alta, i la IA pot afegir ordres com <span class="msg">[parpelleja]</span> o <span class="msg">[esquerra]</span> on convinga.</li><li>«🧹 Començar una conversa nova» esborra la memòria de la conversa (el robot recorda els últims torns).</li></ol>
+<div class="warn"><b>⚠️ Privacitat i seguretat.</b> Només s'envia el <b>text</b> de la conversa, mai l'àudio. Amb una clau gratuïta, Google pot usar els textos per a millorar els seus productes: <b>ningú ha d'escriure dades personals</b>. A la IA se li indica que el públic és alumnat, que conteste breu i que no demane dades personals, però <b>cap filtre és perfecte</b>: supervisa l'activitat. La IA no controla res directament: l'app només accepta les ordres de la llista i en limita la quantitat.</div>
+</section>
+
+<section class="step" id="sincronia"><div class="step-head"><span class="n">7</span><h2>Com se sincronitza la boca amb la veu</h2></div>
+<p>El navegador no diu exactament <i>quan</i> s'està pronunciant cada síl·laba, així que JParla fa una <b>estimació</b>:</p>
+<ol><li><b>Compta les síl·labes</b> de cada paraula (regles per a valencià, castellà i anglés) i decideix com d'oberta ha de quedar la boca: <i>a</i> molt oberta, <i>e/o</i> a mitges, <i>i/u</i> poc.</li><li><b>Calcula</b> quan toca cada síl·laba segons la velocitat de la veu (i fa una pausa en les comes i els punts).</li><li><b>Aprén</b>: en acabar cada frase compara el que ha tardat de veritat la veu amb el que havia previst i ajusta el ritme per a la frase següent. Així, en Android (on les veus no avisen paraula a paraula) la boca s'adapta sola després de 2–3 frases.</li><li>Si el navegador sí que avisa de cada paraula (sol passar a l'ordinador), la boca es <b>resincronitza</b> amb eixos avisos.</li></ol>
+<div class="note"><b>ℹ️ Ajust manual.</b> A <b>⚙️ Configurar → 👄 Boca i moviment</b>, «Ritme de la boca» l'accelera o la frena: si la boca va per darrere de la veu, puja'l; si va per davant, baixa'l. També pots triar quant es mou el cap (cap, poc, normal, molt) i si parpelleja mentre parla.</div>
+<div class="figrow"><figure class="fig phone"><img src="guia-img/jparla-6-config-boca.webp" alt="Configuració de la boca"><figcaption>Ritme de la boca, moviment del cap i enviament.</figcaption></figure></div>
+</section>
+
+<section class="step" id="veus"><div class="step-head"><span class="n">8</span><h2>Veus i idiomes (Android)</h2></div>
+<div class="figrow"><figure class="fig phone"><img src="guia-img/jparla-5-config-veu.webp" alt="Configuració de la veu"><figcaption>Idioma de la conversa, veu, velocitat, to i veu de robot.</figcaption></figure></div>
+<ul><li><b>Idioma de la conversa</b>: per defecte és el de l'app (valencià, castellà o anglés). Afecta a la veu, al micròfon i a les respostes de la IA.</li><li><b>Veu</b>: l'app usa les veus que té el dispositiu. En Android depén del motor de «text a veu» (normalment <i>Serveis de veu de Google</i>). Si no hi ha veu en valencià/català, o en l'idioma que vulgues, instal·la les <b>dades de veu</b> (Configuració d'Android → Idioma → Eixida de text a veu; la ruta canvia segons el fabricant). L'app t'avisa si falta.</li><li><b>Velocitat i to</b>: canvien la veu del mòbil. <b>🔊 Provar la veu</b> diu una frase per a comprovar-ho.</li><li><b>Veu de robot</b>: diu el text paraula a paraula, amb una pausa entre cada una, per a un efecte més «robòtic» (el mateix truc de les comes de la idea original).</li></ul>
+<div class="note"><b>ℹ️ Micròfon.</b> El reconeixement de veu és el del navegador (Chrome): en Android l'àudio el processa Google i cal Internet. Si no vols usar-lo, escriu el text.</div>
+</section>
+
+<section class="step" id="calibratge"><div class="step-head"><span class="n">9</span><h2>Calibra el robot</h2></div>
+<p>Cada robot és un poc diferent. A <b>Enviament i calibratge</b> (igual que a JVeu):</p>
+<ul><li><b>Recorregut del gir</b> i <b>obertura màxima de la boca</b>: fins on gira el cap i com d'oberta queda la boca. Els botons <b>⬅ ⬆ ➡</b> i <b>👄 Obrir la boca</b> et deixen comprovar-ho.</li><li><b>Invertir l'esquerra i la dreta</b>: si el cap gira cap a l'altre costat del que apareix a la pantalla.</li><li><b>Interval entre paquets</b>: cada quant s'envia un canvi. Un valor baix (0,05–0,1 s) fa la boca més precisa; si el servo tremola o el Bluetooth es satura, puja'l.</li></ul>
+<div class="warn"><b>⚠️ Servos.</b> La boca es mou ràpid (una obertura per síl·laba). Si el servo de la boca vibra o s'escalfa, redueix l'«Obertura màxima» o puja l'interval.</div>
+</section>
+
+<section class="step" id="sense-internet"><div class="step-head"><span class="n">10</span><h2>Sense Internet</h2></div>
+<ol><li>Amb Internet, a la pantalla principal de PIAR prem <b>«Descarregar per a ús sense Internet»</b>.</li><li>Després, <b>JParla funciona sense connexió</b> en mode Repeteix si el dispositiu té veus instal·lades (la veu del sistema sol funcionar sense Internet; algunes veus «en línia» no).</li><li>El <b>micròfon del navegador</b> (Chrome) i la <b>IA de Google</b> sí que necessiten Internet; si no n'hi ha, escriu el text.</li><li><b>No actives el mode avió</b> si vols Bluetooth (o torna a activar-lo).</li></ol>
+</section>
+
+<section class="step" id="classe"><div class="step-head"><span class="n">11</span><h2>Idees per a classe</h2></div>
+<ul><li><b>Teatre de robots:</b> cada grup escriu un guió amb ordres ([riu], [sorpresa], [esquerra]…) i el robot l'«interpreta».</li><li><b>Compta síl·labes:</b> escriu paraules llargues i curtes i observa quantes vegades s'obri la boca. On s'equivoca l'app? Per què (diftongs, hiats, sigles, números)?</li><li><b>Personalitats:</b> la mateixa pregunta a un robot amable, a un pirata i a un mestre de ciències. Què canvia en la resposta? Qui decideix com parla una IA?</li><li><b>IA i seguretat:</b> prova que el robot no siga capaç de revelar dades personals ni d'obeir ordres «tramposes». Què fa l'app per a limitar-ho i què no pot garantir?</li><li><b>Robot en altres idiomes:</b> tria anglés i compara com compta síl·labes i com sona.</li><li><b>Programació:</b> canvia el programa de la micro:bit perquè, a més de la boca, s'encenguen els LEDs al ritme de la veu.</li></ul>
+</section>
+
+<section class="step" id="problemes"><div class="step-head"><span class="n">12</span><h2>Si alguna cosa no va bé</h2></div>
+<div class="tw"><table class="t"><tr><th>Què passa</th><th>Per què</th><th>Com es resol</th></tr>
+<tr><td>No se sent res</td><td>Volum baix, so silenciat o el dispositiu no té veus instal·lades.</td><td>Puja el volum i prem <b>🔊 Provar la veu</b>. Instal·la veus del sistema (apartat 8).</td></tr>
+<tr><td>«El navegador no deixa parlar encara»</td><td>Chrome demana un toc a la pantalla abans de permetre l'àudio.</td><td>Toca la pantalla i torna-ho a provar.</td></tr>
+<tr><td>«No hi ha veu per a este idioma»</td><td>El dispositiu no té veu en valencià o en l'idioma triat.</td><td>Instal·la les dades de veu o tria un altre idioma de la conversa.</td></tr>
+<tr><td>La boca va desfasada respecte de la veu</td><td>Cada veu va a una velocitat diferent.</td><td>Espera 2–3 frases (aprén) o usa «Ritme de la boca».</td></tr>
+<tr><td>La boca no para quieta o el servo vibra</td><td>Massa paquets o obertura massa gran.</td><td>Puja l'interval entre paquets o baixa l'obertura màxima.</td></tr>
+<tr><td>«No t'he sentit» / «No es pot usar el micròfon»</td><td>Has deixat anar el botó massa prompte o no has donat permís.</td><td>Mantín premut mentre parles; cadenat de l'adreça → Permisos → Micròfon.</td></tr>
+<tr><td>«Per a conversar cal la clau de Google»</td><td>No hi ha clau guardada.</td><td>Configuració → IA de Google. El mode Repeteix no la necessita.</td></tr>
+<tr><td>«La IA de Google no ha respost (quota esgotada)»</td><td>S'ha superat el límit gratuït.</td><td>Espera una estona, tria <i>gemini-3.5-flash-lite</i> o usa una altra clau.</td></tr>
+<tr><td>El robot no es mou però sí el cap virtual</td><td>Falta connectar la micro:bit.</td><td>Prem <b>Connectar Bluetooth</b> i comprova que el programa és el de JFace.</td></tr></table></div>
+</section>
+
+  <div class="nav2"><a href="index.html">← Tornar a JParla</a><a href="../index.html"><svg class="ico" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg> Totes les apps</a></div>
+  <footer><p>Fet per Jose L. Gavilán amb ❤️ i IA · IES Jorge Juan, Alacant, 2026</p></footer>
+</main>
+<script src="../shared/guia.js"></script>
+<script src="../shared/pwa.js"></script>
+</body>
+</html>

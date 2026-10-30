@@ -1,0 +1,17 @@
+{
+  "name": "JParla – Robot que parla",
+  "short_name": "JParla",
+  "description": "Fa parlar el robot de la micro:bit: llig el text en veu alta i mou la boca a cada síl·laba, amb IA opcional per a conversar.",
+  "lang": "ca-ES-valencia",
+  "start_url": "../",
+  "scope": "../",
+  "display": "standalone",
+  "background_color": "#04100b",
+  "theme_color": "#1e1a2e",
+  "icons": [
+    { "src": "android-chrome-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "android-chrome-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "maskable-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "maskable-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
