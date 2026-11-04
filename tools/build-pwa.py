@@ -8,7 +8,7 @@ Cal tornar-lo a executar cada vegada que afegisques o canvies fitxers:   python3
 import hashlib, json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SKIP_DIRS = {'.git', 'tools', 'node_modules', '__pycache__', '_testlibs', '_fonts'}
+SKIP_DIRS = {'.git', 'tools', 'node_modules', '__pycache__', '_testlibs', '_fonts', 'control'}   # «control»: panell d'administració, no entra en la memòria de l'app
 SKIP_FILES = {'sw.js', 'precache.json', '.DS_Store'}
 # Carpetes de vendor/ que NO es descarreguen amb el botó de la portada (es guarden en usar-les): model avançat de «Què veuen de tu»
 OPTIONAL_VENDOR = ['transformers-4.3.1/']

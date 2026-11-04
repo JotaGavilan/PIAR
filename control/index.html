@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ca-ES-valencia">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#1e1a2e">
+<title>Panell de control · PIAR</title>
+<link rel="icon" href="../icons/favicon-32x32.png">
+<link rel="stylesheet" href="../vendor/fonts/fonts.css">
+<link rel="stylesheet" href="../shared/piar-ui.css">
+<style>
+  body { min-height: 100vh; min-height: 100dvh; padding: 1rem 16px 3rem; }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: .4rem 0 .2rem; }
+  .sub { color: var(--text-dim); margin: 0 0 1.2rem; font-size: .92rem; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; margin-bottom: 1rem; }
+  label { display: block; margin: 0 0 .4rem; font-weight: 600; }
+  input[type=password] { width: 100%; min-height: var(--tap); padding: .6rem .8rem; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg); color: var(--text); font: inherit; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: var(--tap); padding: .55rem 1rem; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg3); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; }
+  .btn:hover { border-color: var(--accent2); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .row-btns { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; }
+  .msg { min-height: 1.4em; margin: .6rem 0 0; font-size: .92rem; }
+  .msg.err { color: var(--danger); } .msg.ok { color: var(--ok); }
+  .apps { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; }
+  .app { display: flex; align-items: center; gap: .8rem; padding: .6rem .7rem; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); }
+  .app img { width: 44px; height: 44px; border-radius: 22%; flex: none; }
+  .app .nm { flex: 1; min-width: 0; }
+  .app .nm b { display: block; overflow-wrap: anywhere; }
+  .app .nm small { color: var(--text-dim); }
+  .app.off { opacity: .6; }
+  .app.off .nm b { text-decoration: line-through; }
+  .sw { position: relative; width: 54px; height: 32px; flex: none; }
+  .sw input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; margin: 0; cursor: pointer; z-index: 1; }
+  .sw span { position: absolute; inset: 0; border-radius: 16px; background: var(--bg3); border: 1px solid var(--border); transition: background .15s; }
+  .sw span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: var(--text-dim); transition: transform .15s, background .15s; }
+  .sw input:checked + span { background: rgba(74,222,128,.25); border-color: var(--ok); }
+  .sw input:checked + span::after { transform: translateX(22px); background: var(--ok); }
+  .sw input:focus-visible + span { outline: 2px solid var(--accent2); outline-offset: 2px; }
+  .stat { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .4rem; margin-bottom: .8rem; font-size: .92rem; }
+  .pill { padding: .15rem .6rem; border-radius: 99px; border: 1px solid var(--border); background: var(--bg); }
+  .pill.dirty { border-color: var(--warn); color: var(--warn); }
+  ol.steps { margin: .4rem 0 0; padding-left: 1.2rem; } ol.steps li { margin: .35rem 0; }
+  .note { border-left: 3px solid var(--warn); padding: .5rem .8rem; background: rgba(251,191,36,.07); border-radius: 0 var(--radius) var(--radius) 0; font-size: .9rem; }
+  code { background: var(--bg); padding: .05rem .35rem; border-radius: 6px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+
+  .tabs { display: flex; gap: .4rem; margin: 0 0 1rem; }
+  .tab { flex: 1; min-height: var(--tap); border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg2); color: var(--text-dim); font: inherit; font-weight: 600; cursor: pointer; }
+  .tab[aria-selected=true] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .shortcuts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.1rem; margin-bottom: 1rem; }
+  .shortcuts .project-card { padding: 1.4rem; text-decoration: none; color: var(--text); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+  .shortcuts .project-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(108,99,255,.3); border-color: var(--accent); }
+  .shortcuts .project-icon { width: 96px; height: 96px; margin-bottom: 1rem; }
+  .shortcuts .project-title { font-size: 1.3em; font-weight: 600; margin: 0 0 .6rem; }
+  .shortcuts .project-description { font-size: .9em; line-height: 1.55; color: var(--text-dim); margin: 0 0 1rem; }
+  .shortcuts .project-tech { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; margin-top: auto; }
+  .shortcuts .badge { position: absolute; top: .6rem; right: .6rem; font-size: .75rem; padding: .1rem .55rem; border-radius: 99px; border: 1px solid var(--warn); color: var(--warn); background: rgba(251,191,36,.08); }
+  .shortcuts .project-card.is-off { border-style: dashed; }
+  .shortcuts .project-card.is-off .project-icon { opacity: .7; }
+  .full-link { display: block; text-align: center; margin-bottom: 1rem; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <div><h1>🔧 Panell de control</h1><p class="sub">Tria quines aplicacions es veuen a la portada de PIAR.</p></div>
+    <button type="button" class="btn" id="lockBtn" hidden>🔒 Tancar</button>
+  </div>
+
+  <!-- Accés -->
+  <section class="card" id="gate">
+    <form id="gateForm" autocomplete="off">
+      <label for="pw">Contrasenya</label>
+      <input type="password" id="pw" autocomplete="current-password" autofocus required>
+      <div class="row-btns"><button type="submit" class="btn btn-primary" id="enterBtn">Entrar</button></div>
+      <p class="msg" id="gateMsg" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <!-- Panell -->
+  <div id="panel" hidden>
+    <div class="tabs" role="tablist" aria-label="Seccions">
+      <button type="button" class="tab" role="tab" id="tabApps" aria-selected="true" aria-controls="viewApps">🏠 Totes les apps</button>
+      <button type="button" class="tab" role="tab" id="tabCfg" aria-selected="false" aria-controls="viewCfg">🔧 Configurar</button>
+    </div>
+
+    <div id="viewApps" role="tabpanel" aria-labelledby="tabApps">
+      <p class="sub" style="margin-bottom:1rem">Tots els accessos directes, també els de les apps ocultes a la portada pública.</p>
+      <div class="shortcuts" id="shortcuts"></div>
+      <a class="btn full-link" href="../?completa=1">📲 Portada completa: instal·lar PIAR i descarregar models</a>
+    </div>
+
+    <div id="viewCfg" role="tabpanel" aria-labelledby="tabCfg" hidden>
+    <section class="card">
+      <div class="stat"><span class="pill" id="cntVis"></span><span class="pill" id="cntDirty"></span></div>
+      <ul class="apps" id="apps" aria-label="Aplicacions"></ul>
+      <p class="msg" id="loadMsg" role="status" aria-live="polite"></p>
+      <div class="row-btns">
+        <button type="button" class="btn" id="allBtn">✅ Mostrar-les totes</button>
+        <button type="button" class="btn" id="resetBtn">↩ Tornar al que hi ha publicat</button>
+        <button type="button" class="btn" id="prevBtn">👁 Vista prèvia</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 style="font-size:1.1rem;margin:0 0 .3rem">📤 Publicar els canvis</h2>
+      <p class="sub" style="margin:0">PIAR és una web estàtica: este panell prepara el fitxer <code>apps.json</code> i tu el puges al repositori.</p>
+      <ol class="steps">
+        <li>Prem <b>Descarregar apps.json</b> (o <b>Copiar</b> i apega'l al fitxer).</li>
+        <li>Substituïx el fitxer <code>apps.json</code> de l'arrel del repositori de PIAR i fes <i>commit</i> i <i>push</i>.</li>
+        <li>En uns minuts GitHub Pages el publica i <b>tothom</b> veu la portada nova. No cal executar <code>actualitzar-pwa.bat</code>.</li>
+      </ol>
+      <div class="row-btns">
+        <button type="button" class="btn btn-primary" id="dlBtn">⬇ Descarregar apps.json</button>
+        <button type="button" class="btn" id="cpBtn">📋 Copiar</button>
+      </div>
+      <p class="msg" id="outMsg" role="status" aria-live="polite"></p>
+    </section>
+
+    <p class="note"><b>Cal saber:</b> ocultar una app només treu la seua targeta de la portada. Qui conega l'adreça (per exemple <code>…/PIAR/jface/</code>) encara pot obrir-la. El mateix passa amb «Instal·lació i models»: ocultar-ho només treu la secció de la portada. I este panell no és «seguretat forta»: la contrasenya només frena que qualsevol l'òbriga; la protecció real és que només qui puga pujar fitxers al repositori pot canviar el que veu la resta.</p>
+    </div>
+  </div>
+</main>
+
+<script src="auth.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var OKKEY = 'piar.ctl.ok', fails = 0;
+  var INSTALL = { id: 'instal-la', name: 'Instal·lació i models', icon: '', emoji: '📲', sub: 'Botó d\'instal·lar PIAR i de descarregar models per a ús sense Internet' };
+  var apps = [], published = [], hidden = [], cards = [];   // apps: [{id,name,icon}] · published/hidden: ids ocults
+
+  // ── Contrasenya (PBKDF2-SHA256; la contrasenya no està escrita enlloc) ──
+  function hex(buf) { return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join(''); }
+  async function check(pw) {
+    var A = window.CONTROL_AUTH; if (!A || !window.crypto || !crypto.subtle) throw new Error('nocrypto');
+    var key = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits']);
+    var bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: new TextEncoder().encode(A.salt), iterations: A.iter }, key, 256);
+    var h = hex(bits), ok = h.length === A.hash.length, diff = 0;
+    for (var i = 0; i < h.length && i < A.hash.length; i++) diff |= h.charCodeAt(i) ^ A.hash.charCodeAt(i);
+    return ok && diff === 0;
+  }
+  function setMsg(el, txt, cls) { el.textContent = txt || ''; el.className = 'msg' + (cls ? ' ' + cls : ''); }
+
+  $('gateForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var pw = $('pw').value; $('enterBtn').disabled = true; setMsg($('gateMsg'), 'Comprovant…');
+    try {
+      if (await check(pw)) { try { sessionStorage.setItem(OKKEY, '1'); } catch (x) {} $('pw').value = ''; setMsg($('gateMsg'), ''); open(); return; }
+      fails++; await new Promise(function (r) { setTimeout(r, Math.min(8000, 700 * fails * fails)); });
+      setMsg($('gateMsg'), 'Contrasenya incorrecta.', 'err');
+    } catch (x) { setMsg($('gateMsg'), x.message === 'nocrypto' ? 'Este navegador no permet comprovar la contrasenya (cal https).' : 'No s\'ha pogut comprovar la contrasenya.', 'err'); }
+    $('enterBtn').disabled = false; $('pw').select();
+  });
+  $('lockBtn').onclick = function () { try { sessionStorage.removeItem(OKKEY); } catch (x) {} location.reload(); };
+
+  // ── Panell ──
+  async function loadApps() {
+    var r = await fetch('../index.html', { cache: 'no-store' }); if (!r.ok) throw new Error('index');
+    var doc = new DOMParser().parseFromString(await r.text(), 'text/html'), out = [];
+    doc.querySelectorAll('.project-card[data-app]').forEach(function (a) {
+      var h2 = a.querySelector('h2'), img = a.querySelector('img');
+      cards.push(a.cloneNode(true));
+      out.push({ id: a.getAttribute('data-app'), name: h2 ? h2.textContent.trim() : a.getAttribute('data-app'), icon: img ? new URL(img.getAttribute('src'), new URL('../', location.href)).href : '' });
+    });
+    out.push(INSTALL);
+    return out;
+  }
+  async function loadPublished() {
+    try { var r = await fetch('../apps.json', { cache: 'no-store' }); if (!r.ok) return []; var j = await r.json(); return Array.isArray(j.hidden) ? j.hidden.filter(function (x) { return typeof x === 'string'; }) : []; }
+    catch (e) { return []; }
+  }
+  function sameSet(a, b) { return a.length === b.length && a.every(function (x) { return b.indexOf(x) >= 0; }); }
+  function render() {
+    var ul = $('apps'); ul.textContent = '';
+    apps.forEach(function (a) {
+      var off = hidden.indexOf(a.id) >= 0;
+      var li = document.createElement('li'); li.className = 'app' + (off ? ' off' : '');
+      var img;
+      if (a.emoji) { img = document.createElement('div'); img.textContent = a.emoji; img.style.cssText = 'width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;font-size:1.6rem;border-radius:22%;background:var(--bg3)'; }
+      else { img = document.createElement('img'); img.src = a.icon; img.alt = ''; img.width = 44; img.height = 44; }
+      var nm = document.createElement('div'); nm.className = 'nm'; var b = document.createElement('b'); b.textContent = a.name; var sm = document.createElement('small'); sm.textContent = (off ? 'Oculta · ' : 'Visible · ') + (a.sub || a.id + '/');
+      nm.appendChild(b); nm.appendChild(sm);
+      var sw = document.createElement('label'); sw.className = 'sw'; sw.style.margin = '0';
+      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !off; cb.setAttribute('aria-label', a.name + ': visible a la portada');
+      cb.onchange = function () { var i = hidden.indexOf(a.id); if (cb.checked && i >= 0) hidden.splice(i, 1); if (!cb.checked && i < 0) hidden.push(a.id); render(); };
+      var sp = document.createElement('span'); sw.appendChild(cb); sw.appendChild(sp);
+      li.appendChild(img); li.appendChild(nm); li.appendChild(sw); ul.appendChild(li);
+    });
+    var real = apps.filter(function (a) { return !a.emoji; });
+    var vis = real.length - hidden.filter(function (id) { return real.some(function (a) { return a.id === id; }); }).length;
+    $('cntVis').textContent = vis + ' de ' + real.length + ' apps visibles';
+    renderShortcuts();
+    var dirty = !sameSet(hidden, published);
+    $('cntDirty').textContent = dirty ? '● Canvis sense publicar' : '✓ Igual que el publicat'; $('cntDirty').className = 'pill' + (dirty ? ' dirty' : '');
+    $('dlBtn').classList.toggle('btn-primary', dirty);
+  }
+  function renderShortcuts() {
+    var box = $('shortcuts'); box.textContent = '';
+    var base = new URL('../', location.href);
+    cards.forEach(function (c) {
+      var id = c.getAttribute('data-app'), el = c.cloneNode(true), off = hidden.indexOf(id) >= 0;
+      el.setAttribute('href', new URL(c.getAttribute('href'), base).href); el.removeAttribute('style'); el.removeAttribute('data-app');
+      var im = el.querySelector('img'); if (im) im.setAttribute('src', new URL(c.querySelector('img').getAttribute('src'), base).href);
+      if (off) { el.classList.add('is-off'); var b = document.createElement('span'); b.className = 'badge'; b.textContent = 'Oculta a la portada'; el.appendChild(b); }
+      box.appendChild(el);
+    });
+  }
+  function json() {
+    var known = apps.map(function (a) { return a.id; });
+    var h = hidden.filter(function (x) { return known.indexOf(x) >= 0; }).sort();   // només ids existents, en ordre estable
+    return '{\n  "versio": 1,\n  "hidden": ' + (h.length ? '[\n' + h.map(function (x) { return '    ' + JSON.stringify(x); }).join(',\n') + '\n  ]' : '[]') + '\n}\n';
+  }
+  async function open() {
+    $('gate').hidden = true; $('panel').hidden = false; $('lockBtn').hidden = false;
+    setMsg($('loadMsg'), 'Carregant…');
+    try { var r = await Promise.all([loadApps(), loadPublished()]); apps = r[0]; published = r[1].slice(); hidden = r[1].slice(); setMsg($('loadMsg'), apps.length ? '' : 'No s\'ha trobat cap aplicació a la portada.', apps.length ? '' : 'err'); }
+    catch (e) { setMsg($('loadMsg'), 'No s\'ha pogut llegir la portada. Comprova la connexió.', 'err'); }
+    render();
+  }
+  $('allBtn').onclick = function () { hidden = []; render(); };
+  $('resetBtn').onclick = function () { hidden = published.slice(); render(); };
+  $('prevBtn').onclick = function () { window.open('../?ocultes=' + encodeURIComponent(hidden.join(',')), '_blank', 'noopener'); };
+  $('dlBtn').onclick = function () {
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([json()], { type: 'application/json' })); a.download = 'apps.json';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    setMsg($('outMsg'), '✅ Descarregat. Ara substituïx apps.json de l\'arrel del repositori i puja\'l.', 'ok');
+  };
+  $('cpBtn').onclick = async function () {
+    try { await navigator.clipboard.writeText(json()); setMsg($('outMsg'), '✅ Copiat. Apega\'l dins de apps.json i puja\'l.', 'ok'); }
+    catch (e) { setMsg($('outMsg'), 'No s\'ha pogut copiar: usa «Descarregar».', 'err'); }
+  };
+
+  function tab(n) {
+    var cfg = n === 'cfg';
+    $('viewApps').hidden = cfg; $('viewCfg').hidden = !cfg;
+    $('tabApps').setAttribute('aria-selected', String(!cfg)); $('tabCfg').setAttribute('aria-selected', String(cfg));
+  }
+  $('tabApps').onclick = function () { tab('apps'); }; $('tabCfg').onclick = function () { tab('cfg'); };
+
+  try { if (sessionStorage.getItem(OKKEY) === '1') open(); } catch (e) {}
+})();
+</script>
+</body>
+</html>

@@ -10,7 +10,7 @@
 
    La versió la posa tools/build-pwa.py. No edites la línia de VERSION a mà.
    ============================================================ */
-const VERSION = '363a5cd56d43';
+const VERSION = '740fd4b0903a';
 const SHELL_CACHE  = 'piar-shell-' + VERSION;
 const VENDOR_CACHE = 'piar-vendor-v1';
 const MODEL_CACHE  = 'piar-models-v1';
@@ -89,6 +89,20 @@ async function rangeFromCache(req) {
   } catch (e) { return fetch(req); }
 }
 
+// apps.json (apps visibles de la portada): primer la xarxa, perquè un canvi del panell /control es veja de seguida; sense xarxa, l'última còpia
+async function networkFirst(req) {
+  const cache = await caches.open(SHELL_CACHE);
+  try {
+    const resp = await fetch(req, { cache: 'no-store' });
+    if (resp && resp.ok && resp.status === 200) await cache.put(req, resp.clone()).catch(() => {});
+    return resp;
+  } catch (e) {
+    const hit = await cache.match(req, { ignoreSearch: true });
+    if (hit) return hit;
+    throw e;
+  }
+}
+
 async function cacheFirst(cacheName, req) {
   const cache = await caches.open(cacheName);
   const hit = await cache.match(req);
@@ -110,6 +124,7 @@ self.addEventListener('fetch', (event) => {
       return;
     }
     if (inVendor(url)) { event.respondWith(cacheFirst(VENDOR_CACHE, req)); return; }
+    if (url.pathname === SCOPE.pathname + 'apps.json') { event.respondWith(networkFirst(req)); return; }
     event.respondWith(shellStrategy(event, req, url));
     return;
   }
