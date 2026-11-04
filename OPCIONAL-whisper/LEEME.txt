@@ -1,6 +1,6 @@
-WHISPER LOCAL PARA JVeu (opcional)
+WHISPER LOCAL PARA JParla (opcional)
 ==================================
-JVeu funciona SIN este archivo (voz del navegador + escribir órdenes). Solo hace falta para
+JParla funciona SIN este archivo (voz del navegador + escribir). Solo hace falta para
 la opción «Whisper local» (reconocimiento de voz sin Internet).
 
 Para activarlo:

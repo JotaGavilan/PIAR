@@ -37,34 +37,49 @@
       <span id="device-indicator" style="display:none;"></span>
     </div>
 
-    <!-- Mode: repetir o conversar -->
+    <!-- Mode: moure, repetir o conversar -->
     <div id="modes" role="group" aria-label="Mode" data-i18n-attr="aria-label:jp.mode.aria">
+      <button type="button" id="modeMove" class="mode" aria-pressed="false" data-i18n="jp.mode.move">🎭 Mou</button>
       <button type="button" id="modeSay" class="mode on" aria-pressed="true" data-i18n="jp.mode.say">🗣 Repeteix</button>
-      <button type="button" id="modeChat" class="mode" aria-pressed="false" data-i18n="jp.mode.chat">💬 Conversa (IA)</button>
+      <button type="button" id="modeChat" class="mode" aria-pressed="false" data-i18n="jp.mode.chat">💬 Conversa</button>
     </div>
 
     <section id="heard" class="card" aria-live="polite">
       <p id="heardNone" class="heard-none" data-i18n="jp.heard.none_say">Escriu un text o mantín premut el micròfon: el robot ho dirà en veu alta i mourà la boca.</p>
       <div id="heardBox" hidden>
-        <p class="heard-line" id="youLine"><span class="heard-label" id="youLabel">Tu:</span> <q id="youTxt"></q></p>
-        <p class="heard-label" id="robotLabel" data-i18n="jp.heard.robot">Robot:</p>
-        <p id="robotTxt" class="robot-txt"></p>
+        <p class="heard-line" id="youLine"><span class="heard-label" id="youLabel">Tu:</span> <q id="youTxt"></q> <span id="heardSrc" class="chip"></span></p>
+        <div id="moveBox" hidden>
+          <p class="heard-label" id="stepsLabel" data-i18n="jv.heard.understood">He entés:</p>
+          <div id="steps" class="steps"></div>
+        </div>
+        <div id="speakBox" hidden>
+          <p class="heard-label" id="robotLabel" data-i18n="jp.heard.robot">Robot:</p>
+          <p id="robotTxt" class="robot-txt"></p>
+        </div>
         <p id="sayMsg" class="say" hidden></p>
       </div>
     </section>
 
     <section id="examples" aria-label="Exemples">
       <p class="ex-title" data-i18n="jp.ex.title">Prova amb:</p>
+      <div class="ex-row" id="exMove" hidden>
+        <button type="button" class="ex" data-k="jv.ex.1" data-i18n="jv.ex.1">Mira a l'esquerra</button>
+        <button type="button" class="ex" data-k="jv.ex.2" data-i18n="jv.ex.2">Obri la boca</button>
+        <button type="button" class="ex" data-k="jv.ex.3" data-i18n="jv.ex.3">Parpelleja tres vegades</button>
+        <button type="button" class="ex" data-k="jv.ex.4" data-i18n="jv.ex.4">Di que no</button>
+        <button type="button" class="ex" data-k="jv.ex.5" data-i18n="jv.ex.5">Gira un poc a la dreta i després al centre</button>
+        <button type="button" class="ex" data-k="jv.ex.6" data-i18n="jv.ex.6">Fes com si estigueres sorprés</button>
+      </div>
       <div class="ex-row" id="exSay">
-        <button type="button" class="ex" data-ex="1" data-i18n="jp.ex.1">Hola, sóc un robot i parle amb tu.</button>
-        <button type="button" class="ex" data-ex="2" data-i18n="jp.ex.2">[blink] Hola! Mira cap ací [left] i ara cap allà [right] [center]</button>
-        <button type="button" class="ex" data-ex="3" data-i18n="jp.ex.3">Què? [surprise] No ho puc creure! [laugh]</button>
-        <button type="button" class="ex" data-ex="4" data-i18n="jp.ex.4">Tinc son [sleep] Bona nit…</button>
+        <button type="button" class="ex" data-k="jp.ex.1" data-i18n="jp.ex.1">Hola, sóc un robot i parle amb tu.</button>
+        <button type="button" class="ex" data-k="jp.ex.2" data-i18n="jp.ex.2">[blink] Hola! Mira cap ací [left] i ara cap allà [right] [center]</button>
+        <button type="button" class="ex" data-k="jp.ex.3" data-i18n="jp.ex.3">Què? [surprise] No ho puc creure! [laugh]</button>
+        <button type="button" class="ex" data-k="jp.ex.4" data-i18n="jp.ex.4">Tinc son [sleep] Bona nit…</button>
       </div>
       <div class="ex-row" id="exChat" hidden>
-        <button type="button" class="ex" data-ex="5" data-i18n="jp.ex.5">Qui ets?</button>
-        <button type="button" class="ex" data-ex="6" data-i18n="jp.ex.6">Conta'm un acudit</button>
-        <button type="button" class="ex" data-ex="7" data-i18n="jp.ex.7">Explica'm què és una micro:bit</button>
+        <button type="button" class="ex" data-k="jp.ex.5" data-i18n="jp.ex.5">Qui ets?</button>
+        <button type="button" class="ex" data-k="jp.ex.6" data-i18n="jp.ex.6">Conta'm un acudit</button>
+        <button type="button" class="ex" data-k="jp.ex.7" data-i18n="jp.ex.7">Explica'm què és una micro:bit</button>
       </div>
     </section>
   </main>
@@ -75,11 +90,11 @@
       <button id="micBtn" class="btn-primary mic" type="button" aria-label="Botó per a parlar" data-i18n-attr="aria-label:jp.mic.aria">
         <span class="mic-ico" aria-hidden="true">🎤</span><span id="micLabel" data-i18n="jp.mic.hold">Mantín premut i parla</span>
       </button>
-      <button id="stopBtn" class="btn-danger side" type="button" aria-label="Callar" title="Callar" data-i18n-attr="aria-label:jp.btn.stop;title:jp.btn.stop" disabled>⏹</button>
+      <button id="stopBtn" class="btn-danger side" type="button" aria-label="Parar" title="Parar" data-i18n-attr="aria-label:jp.btn.stop;title:jp.btn.stop" disabled>⏹</button>
       <button id="centerBtn" class="side" type="button" aria-label="Centrar" title="Centrar" data-i18n-attr="aria-label:jp.btn.center;title:jp.btn.center">↺</button>
     </div>
     <form id="textForm" autocomplete="off">
-      <input id="textIn" type="text" maxlength="400" enterkeyhint="send" placeholder="O escriu què ha de dir…" aria-label="Text" data-i18n-attr="placeholder:jp.text.ph_say;aria-label:jp.text.aria">
+      <input id="textIn" type="text" maxlength="400" enterkeyhint="send" placeholder="O escriu què ha de dir…" aria-label="Text" data-i18n-attr="aria-label:jp.text.aria">
       <button id="textGo" type="submit" class="btn-primary" aria-label="Enviar" data-i18n-attr="aria-label:jp.btn.send">▶</button>
     </form>
   </div>
@@ -101,14 +116,37 @@
       </div>
 
       <div class="config-section">
-        <h3 class="section-title" data-i18n="jp.cfg.voice">🔊 Veu del robot</h3>
-        <label for="cfgLang" data-i18n="jp.cfg.lang">Idioma de la conversa</label>
+        <h3 class="section-title" data-i18n="jp.cfg.mic">🎤 Micròfon i idioma</h3>
+        <label for="cfgLang" data-i18n="jp.cfg.lang">Idioma (veu, micròfon i IA)</label>
         <select id="cfgLang">
           <option value="auto" data-i18n="jp.cfg.lang_same">El mateix de l'app</option>
           <option value="ca">Valencià</option>
           <option value="es">Castellano</option>
           <option value="en">English</option>
         </select>
+        <label for="cfgEngine" data-i18n="jv.cfg.engine">Reconeixement de veu</label>
+        <select id="cfgEngine">
+          <option value="web" data-i18n="jv.cfg.engine_web">Navegador (ràpid; a Chrome usa Google i cal Internet)</option>
+          <option value="whisper" data-i18n="jv.cfg.engine_whisper">Whisper local (privat, sense Internet)</option>
+        </select>
+        <div id="whisperBox" hidden>
+          <label for="cfgWModel" data-i18n="jv.cfg.wmodel">Model de Whisper</label>
+          <select id="cfgWModel">
+            <option value="base" data-i18n="jv.cfg.wmodel_base">Mitjà (≈ 80 MB): més precís (recomanat)</option>
+            <option value="tiny" data-i18n="jv.cfg.wmodel_tiny">Menut (≈ 40 MB): més ràpid, menys precís</option>
+          </select>
+          <p class="config-note"><span id="whState"></span></p>
+          <button id="whBtn" type="button" class="btn" data-i18n="jv.wh.btn">📥 Descarregar model</button>
+        </div>
+        <label for="cfgTalk" data-i18n="jp.cfg.talkmode">Botó de parlar</label>
+        <select id="cfgTalk">
+          <option value="hold" data-i18n="jp.cfg.talk_hold">Mantindre premut mentre parles</option>
+          <option value="tap" data-i18n="jp.cfg.talk_tap">Tocar per a començar i per a acabar</option>
+        </select>
+      </div>
+
+      <div class="config-section">
+        <h3 class="section-title" data-i18n="jp.cfg.voice">🔊 Veu del robot</h3>
         <label for="cfgVoice" data-i18n="jp.cfg.voicesel">Veu</label>
         <select id="cfgVoice"></select>
         <p class="config-note" id="voiceNote"></p>
@@ -122,15 +160,10 @@
         </div>
         <label class="check"><input type="checkbox" id="cfgRobotic"> <span data-i18n="jp.cfg.robotic">Veu de robot (paraula a paraula, amb una pausa entre cada una)</span></label>
         <button type="button" class="btn" id="voiceTest" data-i18n="jp.cfg.test">🔊 Provar la veu</button>
-        <label for="cfgTalk" data-i18n="jp.cfg.talkmode">Botó de parlar</label>
-        <select id="cfgTalk">
-          <option value="hold" data-i18n="jp.cfg.talk_hold">Mantindre premut mentre parles</option>
-          <option value="tap" data-i18n="jp.cfg.talk_tap">Tocar per a començar i per a acabar</option>
-        </select>
       </div>
 
       <div class="config-section">
-        <h3 class="section-title" data-i18n="jp.cfg.move">👄 Boca i moviment</h3>
+        <h3 class="section-title" data-i18n="jp.cfg.move">👄 Boca i moviment en parlar</h3>
         <div class="interval-control">
           <label for="cfgMouthRate" id="mouthRateLbl">Ritme de la boca: 100 %</label>
           <input type="range" id="cfgMouthRate" min="60" max="160" value="100" step="5">
@@ -151,7 +184,7 @@
         <h3 class="section-title" data-i18n="jp.cfg.send">📡 Enviament i calibratge</h3>
         <div class="interval-control">
           <label for="intervalSlider" id="intervalLbl">Interval entre paquets: 0,08 s</label>
-          <input type="range" id="intervalSlider" min="3" max="30" value="8" step="1">
+          <input type="range" id="intervalSlider" min="3" max="50" value="8" step="1">
         </div>
         <p class="config-note" data-i18n="jp.cfg.interval_note">Cada quants segons s'envia un canvi a la micro:bit (en centèsimes de segon).</p>
         <div class="interval-control">
@@ -175,7 +208,8 @@
       </div>
 
       <div class="config-section">
-        <h3 class="section-title" data-i18n="jp.cfg.ai">✨ IA de Google (mode Conversa)</h3>
+        <h3 class="section-title" data-i18n="jp.cfg.ai">✨ IA de Google (Conversa i frases lliures)</h3>
+        <label class="check"><input type="checkbox" id="cfgGem"> <span data-i18n="jp.cfg.gem_move">Mode «Mou»: preguntar a la IA quan les regles no entenguen la frase</span></label>
         <label for="cfgKey" data-i18n="jp.cfg.gem_key">Clau de Google</label>
         <input type="password" id="cfgKey" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="AIza…" data-i18n-attr="placeholder:jp.cfg.gem_key_ph">
         <p class="config-note" id="keyState"></p>
@@ -217,6 +251,15 @@
       <p data-i18n-html="jp.help.p1"></p>
       <a class="guide-btn" href="guia.html" data-i18n="jp.help.guide">📖 Guia completa pas a pas</a>
       <p data-i18n-html="jp.help.modes"></p>
+      <p data-i18n-html="jp.help.move_title"></p>
+      <ul>
+        <li data-i18n-html="jv.help.o1"></li>
+        <li data-i18n-html="jv.help.o2"></li>
+        <li data-i18n-html="jv.help.o3"></li>
+        <li data-i18n-html="jv.help.o4"></li>
+        <li data-i18n-html="jv.help.o5"></li>
+      </ul>
+      <p data-i18n-html="jv.help.limit"></p>
       <p data-i18n-html="jp.help.cmds"></p>
       <ul>
         <li data-i18n-html="jp.help.c1"></li>
@@ -226,6 +269,7 @@
       </ul>
       <p data-i18n-html="jp.help.sync"></p>
       <p data-i18n-html="jp.help.format"></p>
+      <p data-i18n-html="jp.help.voice"></p>
       <p data-i18n-html="jp.help.net_title"></p>
       <ul>
         <li data-i18n-html="jp.help.net1"></li>
@@ -245,9 +289,10 @@
   <script src="../shared/loading_overlay.js"></script>
   <script src="../shared/bluetooth_uart.js"></script>
   <script src="js/core.js"></script>
+  <script src="js/commands.js"></script>
   <script src="js/head.js"></script>
   <script src="js/puppet.js"></script>
-  <script src="js/stt.js"></script>
+  <script src="js/speech.js"></script>
   <script src="js/chat.js"></script>
   <script src="js/script.js"></script>
 <script src="../shared/piar_home.js"></script>

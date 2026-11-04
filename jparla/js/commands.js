@@ -1,7 +1,7 @@
 // ============================================================
-//  commands.js – Intèrpret d'ordres (valencià, castellà i anglés) per a JVeu
+//  commands.js – Intèrpret d'ordres (valencià, castellà i anglés) per al mode «Mou» de JParla
 //
-//  JVeu.parse(text)  →  {
+//  JMove.parse(text)  →  {
 //      ok:        true si s'ha entés alguna cosa,
 //      stop:      true si l'ordre és «para / stop»,
 //      steps:     [{ yaw?, dyaw?, mouth?, dmouth?, eyeL?, eyeR?, ms, tag? }],
@@ -13,8 +13,8 @@
 //      mouth  0 … 1    (0 = tancada; 1 = molt oberta)
 //      eyeL / eyeR     0 = tancat, 1 = obert
 //      ms              pausa després d'arribar a l'objectiu
-//  JVeu.sanitize(steps) valida i limita passos de qualsevol origen (p. ex. Gemini).
-//  JVeu.toPacket(pose, cal) → «yyMMEE» de 6 dígits (mateix format que JFace).
+//  JMove.sanitize(steps) valida i limita passos de qualsevol origen (p. ex. Gemini).
+//  JMove.toPacket(pose, cal) → «yyMMEE» de 6 dígits (mateix format que JFace).
 //
 //  Entén les tres llengües alhora (no cal triar-ne una). Funciona també en Node (proves).
 // ============================================================
@@ -337,6 +337,6 @@
   }
   const NEUTRAL = { yaw: 0, mouth: 0, eyeL: 1, eyeR: 1 };
 
-  root.JVeu = { parse, sanitize, toPacket, norm, DEF_CAL, NEUTRAL, _words2digits: words2digits };
-  if (typeof module !== 'undefined' && module.exports) module.exports = root.JVeu;
+  root.JMove = { parse, sanitize, toPacket, norm, DEF_CAL, NEUTRAL, _words2digits: words2digits };
+  if (typeof module !== 'undefined' && module.exports) module.exports = root.JMove;
 })(typeof window !== 'undefined' ? window : globalThis);

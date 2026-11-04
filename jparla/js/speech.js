@@ -1,15 +1,15 @@
 // ============================================================
-//  speech.js – Veu → text per a JVeu (dos motors)
+//  speech.js – Veu → text per a JParla (dos motors)
 //
 //   «web»     Reconeixement de veu del navegador (Web Speech API). Ràpid i sense descàrregues, però a Chrome/Android
 //             l'àudio el processa Google (cal Internet) i no existeix a Firefox.
 //   «whisper» Whisper local en un Worker: privat i sense Internet després de baixar el model una vegada.
 //
-//  const s = await JVeuSpeech.listen({ engine, lang:'ca'|'es'|'en', model:'tiny'|'base', onInterim(text), onState(st) });
+//  const s = await JParlaSTT.listen({ engine, lang:'ca'|'es'|'en', model:'tiny'|'base', onInterim(text), onState(st) });
 //  const text = await s.stop();     // «prémer per a parlar»: s'inicia en prémer i s'acaba en deixar de prémer
 //  s.cancel();
 //  Errors: Error amb .code = 'unsupported' | 'mic' | 'nospeech' | 'net' | 'lang' | 'stt' | 'load' | 'missing'
-//  JVeuSpeech.webSupported() · .whisperSupported() · .whisperCached(model) · .whisperLoad(model, onProgress) · .whisperReady(model)
+//  JParlaSTT.webSupported() · .whisperSupported() · .whisperCached(model) · .whisperLoad(model, onProgress) · .whisperReady(model)
 // ============================================================
 (function (root) {
   'use strict';
@@ -170,5 +170,5 @@
     return listenWeb(o);
   }
 
-  root.JVeuSpeech = { whisperEngine, listen, webSupported, whisperSupported, whisperCached, whisperLoad, whisperReady, WEB_LANG, WH_LANG };
+  root.JParlaSTT = { whisperEngine, listen, webSupported, whisperSupported, whisperCached, whisperLoad, whisperReady, WEB_LANG, WH_LANG };
 })(window);

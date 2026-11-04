@@ -4,7 +4,9 @@
 //  const P = JParlaPuppet.create({ send, onPose, onPacket, getCal, getInterval, getMove, getBlink });
 //  P.speak(text, { lang, voice, rate, pitch, robotic, k, mouthRate, onWord(i), onStart })
 //        → Promise<{ status:'done'|'stopped'|'error', code, learn }>      (un tros de text; el boca va per síl·labes)
-//  P.runSteps(steps)  → Promise<'done'|'stopped'>                          (passos d'una ordre [entre claudàtors])
+//  P.runSteps(steps, { slow, onStep(i, step) })  → Promise<'done'|'stopped'>
+//        passos { yaw|dyaw, mouth|dmouth, eyeL, eyeR, ms }: ordres [entre claudàtors] i moviments del mode «Mou».
+//        slow = true: la boca avança poc a poc (3,6/s, com feia JVeu) en compte de «a clap».
 //  P.stop()   P.center()   P.setPose({yaw,mouth,eyeL,eyeR}, force)   P.pose   P.resend()   P.speaking
 //
 //  Un únic bucle (25 ms) fa avançar la pose cap a l'objectiu amb límit de velocitat (per no forçar els servos)
@@ -18,6 +20,7 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const YAW_SPEED = 2.6;                 // unitats normalitzades per segon
   const MOUTH_UP = 20, MOUTH_DOWN = 16;  // la boca s'obri i es tanca ràpid (com un clap), però no instantàniament
+  const MOUTH_SLOW = 3.6;                // mode «Mou»: la boca avança amb suavitat perquè el servo no patisca
   const WEB_LANG = { ca: 'ca-ES', es: 'es-ES', en: 'en-US' };
   const MOVE = { none: [0, 0], low: [0.3, 0.3], normal: [0.55, 0.45], lively: [0.9, 0.65] };   // [probabilitat per paraula, amplitud]
 
@@ -29,7 +32,7 @@
     let lastPk = null, lastSentAt = 0, lastPoseKey = '';
     let mouthSrc = null;                    // (ara) → obertura 0…1 mentre es parla
     let runId = 0, wake = null;
-    let blinkUntil = 0, nextBlink = 0, eyesForced = null;
+    let blinkUntil = 0, nextBlink = 0, eyesForced = null, mouthSlow = false;
     let timer = null, lastTick = performance.now();
 
     const sleep = (ms) => new Promise((res) => { const t = setTimeout(() => { wake = null; res(); }, ms); wake = () => { clearTimeout(t); wake = null; res(); }; });
@@ -55,7 +58,7 @@
       // gir
       if (Math.abs(tgt.yaw - pose.yaw) > 1e-4) { const d = YAW_SPEED * dt; pose.yaw = Math.abs(tgt.yaw - pose.yaw) <= d ? tgt.yaw : pose.yaw + Math.sign(tgt.yaw - pose.yaw) * d; }
       // boca
-      if (Math.abs(tgt.mouth - pose.mouth) > 1e-4) { const d = (tgt.mouth > pose.mouth ? MOUTH_UP : MOUTH_DOWN) * dt; pose.mouth = Math.abs(tgt.mouth - pose.mouth) <= d ? tgt.mouth : pose.mouth + Math.sign(tgt.mouth - pose.mouth) * d; }
+      if (Math.abs(tgt.mouth - pose.mouth) > 1e-4) { const d = (mouthSlow ? MOUTH_SLOW : tgt.mouth > pose.mouth ? MOUTH_UP : MOUTH_DOWN) * dt; pose.mouth = Math.abs(tgt.mouth - pose.mouth) <= d ? tgt.mouth : pose.mouth + Math.sign(tgt.mouth - pose.mouth) * d; }
       // parpelleig automàtic (només mentre es parla)
       if (mouthSrc && opt.getBlink && opt.getBlink()) {
         if (!nextBlink) nextBlink = now + 1800 + Math.random() * 2500;
@@ -82,6 +85,7 @@
         const synth = root.speechSynthesis;
         if (!synth || typeof root.SpeechSynthesisUtterance === 'undefined') return resolve({ status: 'error', code: 'unsupported' });
         const my = runId;
+        mouthSlow = false;
         const lang = o.lang || 'ca';
         const words = (String(text).match(/[\p{L}\p{N}'’·]+/gu) || []);
         const spoken = o.robotic ? words.join(', ') + '.' : String(text);
@@ -138,27 +142,34 @@
     }
     let cur = null;
 
-    async function runSteps(steps) {
+    async function runSteps(steps, o) {
+      o = o || {};
       const my = ++runId;
       if (cur) { cur.cancel(); }
       if (wake) wake();
+      mouthSlow = !!o.slow;
       for (let i = 0; i < steps.length; i++) {
         if (my !== runId) return 'stopped';
         const s = steps[i];
+        if (o.onStep) o.onStep(i, s);
+        // els ulls i qualsevol canvi «discret» són immediats
         if (s.eyeL !== undefined) pose.eyeL = s.eyeL ? 1 : 0;
         if (s.eyeR !== undefined) pose.eyeR = s.eyeR ? 1 : 0;
         if (s.yaw !== undefined) tgt.yaw = clamp(s.yaw, -1, 1);
+        else if (s.dyaw !== undefined) tgt.yaw = clamp(pose.yaw + s.dyaw, -1, 1);
         if (s.mouth !== undefined) tgt.mouth = clamp(s.mouth, 0, 1);
+        else if (s.dmouth !== undefined) tgt.mouth = clamp(pose.mouth + s.dmouth, 0, 1);
         let guard = 0;
         while (my === runId && (Math.abs(pose.yaw - tgt.yaw) > 1e-3 || Math.abs(pose.mouth - tgt.mouth) > 1e-3) && ++guard < 120) await sleep(25);
         if (my !== runId) return 'stopped';
         await sleep(Math.max(0, s.ms || 0));
       }
+      if (my === runId) mouthSlow = false;
       return my === runId ? 'done' : 'stopped';
     }
 
     function stop() {
-      runId++; if (wake) wake();
+      runId++; if (wake) wake(); mouthSlow = false;
       if (cur) cur.cancel(); else { try { root.speechSynthesis && root.speechSynthesis.cancel(); } catch (e) {} }
       mouthSrc = null; tgt.mouth = 0;
     }
