@@ -1,2 +1,2 @@
 // Generat per tools/control-password.py. Conté només el «hash» de la contrasenya (no la contrasenya).
-window.CONTROL_AUTH = { salt: "c433c808a1ee95836bd67cd921ab2c4b", iter: 200000, hash: "014766d79fce454414839dbf377bc29bd0ead9cbcebe49fea598840b395046ff" };
+window.CONTROL_AUTH = { salt: "d9059a944d84aa5e29baca7a14524770", iter: 200000, hash: "ed5ef77a0c85aa38dfc21fcfa128d99227a54c1dfd4edaaaa1ea9f617c37826c" };
