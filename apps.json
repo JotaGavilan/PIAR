@@ -1,4 +1,13 @@
 {
   "versio": 1,
-  "hidden": []
+  "hidden": [
+    "instal-la",
+    "jemo",
+    "jscroll",
+    "maquina-ensenyable",
+    "quevuen",
+    "quienesquien",
+    "robhort",
+    "teachable-microbit"
+  ]
 }
