@@ -177,6 +177,12 @@
           <option value="normal" data-i18n="jp.cfg.move_normal">Normal</option>
           <option value="lively" data-i18n="jp.cfg.move_lively">Molt</option>
         </select>
+        <label class="check"><input type="checkbox" id="cfgHold"> <span data-i18n="jp.cfg.hold">Boca mig oberta entre les síl·labes d'una paraula (més definida)</span></label>
+        <div class="interval-control">
+          <label for="mouthLead" id="mouthLeadLbl">Avançar la boca: 0 ms</label>
+          <input type="range" id="mouthLead" min="0" max="300" value="0" step="10">
+        </div>
+        <p class="config-note" data-i18n="jp.cfg.lead_note">Si la boca s'obri després de sonar la veu, puja'l (compensa el Bluetooth i el servo).</p>
         <label class="check"><input type="checkbox" id="cfgBlink"> <span data-i18n="jp.cfg.blink">Parpellejar mentre parla</span></label>
       </div>
 
@@ -193,8 +199,9 @@
         </div>
         <div class="interval-control">
           <label for="mouthMax" id="mouthMaxLbl">Obertura màxima de la boca: 20</label>
-          <input type="range" id="mouthMax" min="8" max="40" value="20" step="1">
+          <input type="range" id="mouthMax" min="4" max="40" value="10" step="1">
         </div>
+        <p class="config-note" data-i18n="jp.cfg.mouthmax_note">Ha de coincidir amb el programa de la micro:bit: el de «Cap amb IA» i JFace només accepta boca de 0 a 10 (amb més, ignora el valor).</p>
         <label class="check"><input type="checkbox" id="cfgInvert"> <span data-i18n="jp.cfg.invert">Invertir l'esquerra i la dreta del gir</span></label>
         <p class="config-note" data-i18n="jp.cfg.cal_note">Com JFace, el gir 15 és «de cara».</p>
         <div class="cal-row">
@@ -204,6 +211,7 @@
         </div>
         <div class="cal-row">
           <button type="button" class="btn" id="calMouth" data-i18n="jp.cfg.cal_mouth">👄 Obrir la boca</button>
+          <button type="button" class="btn" id="calSyl" data-i18n="jp.cfg.cal_syl">👄 Prova de síl·labes</button>
         </div>
       </div>
 

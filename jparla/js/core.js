@@ -166,12 +166,16 @@
   }
 
   // Obertura de la boca (0…1) en l'instant t (s des de l'inici del tros). Cerca binària.
-  function mouthAt(tl, t) {
+  // «floor» (0…0.6): entre dues síl·labes de la MATEIXA paraula la boca no es tanca del tot, només baixa fins a floor·nivell
+  // (el servo recorre menys i la boca queda més definida); en acabar la paraula o en una pausa sí que es tanca.
+  function mouthAt(tl, t, floor) {
     const S = tl.sylls; if (!S.length || t < S[0].t) return 0;
     let a = 0, b = S.length - 1;
     while (a < b) { const mid = (a + b + 1) >> 1; if (S[mid].t <= t) a = mid; else b = mid - 1; }
     const s = S[a];
-    return t < s.t + s.open ? s.level : 0;
+    if (t < s.t + s.open) return s.level;
+    const nx = S[a + 1];
+    return floor > 0 && nx && nx.w === s.w ? Math.min(s.level, nx.level) * clamp(floor, 0, 0.6) : 0;
   }
   function wordAt(tl, t) {
     const W = tl.words; if (!W.length || t < W[0].t) return -1;
@@ -209,7 +213,7 @@
   }
 
   // ───────────── Paquet «yyMMEE» ─────────────
-  const DEF_CAL = { yawC: 15, yawHalf: 10, mouthMax: 20, invert: false };
+  const DEF_CAL = { yawC: 15, yawHalf: 10, mouthMax: 10, invert: false };   // mouthMax 10: el programa «Cap amb IA» (i JFace) només accepta boca 0…10
   const NEUTRAL = { yaw: 0, mouth: 0, eyeL: 1, eyeR: 1 };
   function toPacket(p, cal) {
     cal = Object.assign({}, DEF_CAL, cal || {});

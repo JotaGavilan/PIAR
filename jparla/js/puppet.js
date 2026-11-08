@@ -2,7 +2,7 @@
 //  puppet.js – JParla: mou el cap (gir, boca, ulls) i fa parlar el dispositiu
 //
 //  const P = JParlaPuppet.create({ send, onPose, onPacket, getCal, getInterval, getMove, getBlink });
-//  P.speak(text, { lang, voice, rate, pitch, robotic, k, mouthRate, onWord(i), onStart })
+//  P.speak(text, { lang, voice, rate, pitch, robotic, k, mouthRate, lead (s: avança la boca), floor (0…0.6: boca mig oberta entre síl·labes), onWord(i), onStart })
 //        → Promise<{ status:'done'|'stopped'|'error', code, learn }>      (un tros de text; el boca va per síl·labes)
 //  P.runSteps(steps, { slow, onStep(i, step) })  → Promise<'done'|'stopped'>
 //        passos { yaw|dyaw, mouth|dmouth, eyeL, eyeR, ms }: ordres [entre claudàtors] i moviments del mode «Mou».
@@ -19,7 +19,7 @@
   'use strict';
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const YAW_SPEED = 2.6;                 // unitats normalitzades per segon
-  const MOUTH_UP = 20, MOUTH_DOWN = 16;  // la boca s'obri i es tanca ràpid (com un clap), però no instantàniament
+  const MOUTH_UP = 60, MOUTH_DOWN = 60;  // en parlar, la boca va «a clap»: el límit de velocitat real és el del servo. Una rampa de programari només envia valors intermedis ja vells.
   const MOUTH_SLOW = 3.6;                // mode «Mou»: la boca avança amb suavitat perquè el servo no patisca
   const WEB_LANG = { ca: 'ca-ES', es: 'es-ES', en: 'en-US' };
   const MOVE = { none: [0, 0], low: [0.3, 0.3], normal: [0.55, 0.45], lively: [0.9, 0.65] };   // [probabilitat per paraula, amplitud]
@@ -36,7 +36,10 @@
     let timer = null, lastTick = performance.now();
 
     const sleep = (ms) => new Promise((res) => { const t = setTimeout(() => { wake = null; res(); }, ms); wake = () => { clearTimeout(t); wake = null; res(); }; });
-    const interval = () => clamp((opt.getInterval && opt.getInterval()) || 80, 30, 500);
+    // En parlar (o en la prova de síl·labes) l'interval no passa de 50 ms: a 80 ms o més, una obertura de ~110 ms no arriba a enviar-se completa
+    const SPEECH_INTERVAL = 50;
+    let fastRun = false;
+    const interval = () => { const v = clamp((opt.getInterval && opt.getInterval()) || 80, 30, 500); return (mouthSrc || fastRun) ? Math.min(v, SPEECH_INTERVAL) : v; };
 
     function emit(force) {
       const eyes = eyesForced || (blinkUntil > performance.now() ? { l: 0, r: 0 } : null);
@@ -108,7 +111,7 @@
             const t = (now - t0) / 1000;
             const w = J.wordAt(tl, t);
             if (w !== lastWord && w >= 0) { lastWord = w; wander(); if (o.onWord) o.onWord(w, tl); }
-            return J.mouthAt(tl, t);
+            return J.mouthAt(tl, t + (o.lead || 0), o.floor || 0);
           };
           if (o.onStart) o.onStart(tl);
           watch = setTimeout(() => { try { synth.cancel(); } catch (e) {} finish({ status: 'done', timeout: true }); }, (tl.total * 4 + 8) * 1000);
@@ -147,7 +150,7 @@
       const my = ++runId;
       if (cur) { cur.cancel(); }
       if (wake) wake();
-      mouthSlow = !!o.slow;
+      mouthSlow = !!o.slow; fastRun = !!o.fast;
       for (let i = 0; i < steps.length; i++) {
         if (my !== runId) return 'stopped';
         const s = steps[i];
@@ -164,12 +167,12 @@
         if (my !== runId) return 'stopped';
         await sleep(Math.max(0, s.ms || 0));
       }
-      if (my === runId) mouthSlow = false;
+      if (my === runId) { mouthSlow = false; fastRun = false; }
       return my === runId ? 'done' : 'stopped';
     }
 
     function stop() {
-      runId++; if (wake) wake(); mouthSlow = false;
+      runId++; if (wake) wake(); mouthSlow = false; fastRun = false;
       if (cur) cur.cancel(); else { try { root.speechSynthesis && root.speechSynthesis.cancel(); } catch (e) {} }
       mouthSrc = null; tgt.mouth = 0;
     }

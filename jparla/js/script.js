@@ -17,13 +17,13 @@
   const DEF = {
     lang: 'auto', voice: '', rate: 10, pitch: 10, robotic: false, talk: 'hold',
     mouthRate: 100, learn: true, move: 'normal', blink: true,
-    interval: 8, yawHalf: 10, mouthMax: 20, invert: false,
+    interval: 8, yawHalf: 10, mouthMax: 10, invert: false, mouthHold: false, mouthLead: 0, v: 2,
     gmodel: 'gemini-3.5-flash-lite', preset: 'friendly', persona: '', mode: 'say',
     engine: 'web', wmodel: 'base', gem: false
   };
   const cfg = Object.assign({}, DEF);
-  let firstRun = true;
-  try { const raw = localStorage.getItem(CFG_KEY); if (raw) { firstRun = false; Object.assign(cfg, JSON.parse(raw)); } } catch (e) {}
+  let firstRun = true, storedV = 0;
+  try { const raw = localStorage.getItem(CFG_KEY); if (raw) { firstRun = false; const o = JSON.parse(raw); storedV = o.v || 0; Object.assign(cfg, o); } } catch (e) {}
   // Qui venia de JVeu (app fusionada en esta): es recuperen els seus ajustos i s'obri en el mode «Mou»
   if (firstRun) {
     try {
@@ -37,6 +37,8 @@
     } catch (e) {}
     if (!STT.webSupported() && STT.whisperSupported()) cfg.engine = 'whisper';
   }
+  // v2: el programa «Cap amb IA» (i el de JFace) només accepta boca 0…10; amb 20 s'ignoraven les obertures grans (a, e, o)
+  if (storedV < 2) { if (cfg.mouthMax === 20) cfg.mouthMax = 10; cfg.v = 2; try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {} }
   if (!['move', 'say', 'chat'].includes(cfg.mode)) cfg.mode = 'say';
   const saveCfg = () => { try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {} };
   let kMap = {};
@@ -233,6 +235,7 @@
         const res = await puppet.speak(p.text, {
           lang, voice, rate: cfg.rate / 10, pitch: cfg.pitch / 10, robotic: cfg.robotic,
           k: cfg.learn ? (kMap[key] || 1) : 1, mouthRate: cfg.mouthRate / 100,
+          lead: cfg.mouthLead / 1000, floor: cfg.mouthHold ? 0.3 : 0,
           onWord: (w) => { if (my !== runToken || !p.els) return; p.els.forEach((e, n) => { e.classList.toggle('now', n === w); e.classList.toggle('said', n < w); }); keepVisible(p.els[w]); }
         });
         if (p.els) p.els.forEach((e) => { e.classList.remove('now'); e.classList.add('said'); });
@@ -476,6 +479,7 @@
     $('intervalLbl').textContent = _t('jp.cfg.interval', { n: fmtNum(cfg.interval / 100, 2) });
     $('yawHalfLbl').textContent = _t('jp.cfg.yawhalf', { n: cfg.yawHalf });
     $('mouthMaxLbl').textContent = _t('jp.cfg.mouthmax', { n: cfg.mouthMax });
+    $('mouthLeadLbl').textContent = _t('jp.cfg.mouthlead', { n: cfg.mouthLead });
     setMic(uiState); refreshKeyState();
   }
   function syncPersona() {
@@ -488,7 +492,7 @@
     $('cfgLang').value = cfg.lang; $('cfgTalk').value = cfg.talk; $('cfgRobotic').checked = cfg.robotic;
     $('cfgRate').value = cfg.rate; $('cfgPitch').value = cfg.pitch; $('cfgMouthRate').value = cfg.mouthRate;
     $('cfgLearn').checked = cfg.learn; $('cfgMove').value = cfg.move; $('cfgBlink').checked = cfg.blink;
-    $('intervalSlider').value = cfg.interval; $('yawHalf').value = cfg.yawHalf; $('mouthMax').value = cfg.mouthMax;
+    $('intervalSlider').value = cfg.interval; $('yawHalf').value = cfg.yawHalf; $('mouthMax').value = cfg.mouthMax; $('mouthLead').value = cfg.mouthLead; $('cfgHold').checked = cfg.mouthHold;
     $('cfgInvert').checked = cfg.invert; $('cfgGModel').value = cfg.gmodel; $('cfgPreset').value = cfg.preset;
     $('cfgEngine').value = cfg.engine; $('cfgWModel').value = cfg.wmodel; $('cfgGem').checked = cfg.gem;
     syncBoxes(); fillVoices(); syncPersona(); refreshLabels();
@@ -499,12 +503,12 @@
   bind('cfgLang', 'lang', null, () => { fillVoices(); toIdle(); });
   bind('cfgVoice', 'voice');
   bind('cfgTalk', 'talk', null, toIdle);
-  bind('cfgRobotic', 'robotic', (e) => e.checked); bind('cfgLearn', 'learn', (e) => e.checked); bind('cfgBlink', 'blink', (e) => e.checked);
+  bind('cfgRobotic', 'robotic', (e) => e.checked); bind('cfgLearn', 'learn', (e) => e.checked); bind('cfgBlink', 'blink', (e) => e.checked); bind('cfgHold', 'mouthHold', (e) => e.checked);
   bind('cfgMove', 'move'); bind('cfgInvert', 'invert', (e) => e.checked); bind('cfgGModel', 'gmodel');
   bind('cfgPreset', 'preset', null, syncPersona);
   bind('cfgEngine', 'engine'); bind('cfgWModel', 'wmodel', null, refreshWhisperState); bind('cfgGem', 'gem', (e) => e.checked);
   $('whBtn').addEventListener('click', async () => { if (await ensureWhisper()) toIdle(); });
-  [['cfgRate', 'rate'], ['cfgPitch', 'pitch'], ['cfgMouthRate', 'mouthRate'], ['intervalSlider', 'interval'], ['yawHalf', 'yawHalf'], ['mouthMax', 'mouthMax']]
+  [['cfgRate', 'rate'], ['cfgPitch', 'pitch'], ['cfgMouthRate', 'mouthRate'], ['intervalSlider', 'interval'], ['yawHalf', 'yawHalf'], ['mouthMax', 'mouthMax'], ['mouthLead', 'mouthLead']]
     .forEach(([id, key]) => $(id).addEventListener('input', () => { cfg[key] = parseInt($(id).value, 10); saveCfg(); refreshLabels(); }));
   $('cfgPersona').addEventListener('input', () => { if (cfg.preset === 'custom') { cfg.persona = $('cfgPersona').value.slice(0, 600); saveCfg(); } });
   $('cfgKey').addEventListener('change', () => { CHAT.setKey($('cfgKey').value); $('cfgKey').value = ''; refreshKeyState(); });
@@ -513,6 +517,13 @@
   $('voiceTest').addEventListener('click', () => { $('config-layer').style.display = 'none'; sayText(_t('jp.test.text')); });
   const cal = (y) => { runToken++; setSpeaking(false); puppet.stop(); puppet.setPose({ yaw: y, mouth: 0 }, true); };
   $('calL').addEventListener('click', () => cal(1)); $('calC').addEventListener('click', () => cal(0)); $('calR').addEventListener('click', () => cal(-1));
+  // Prova de síl·labes (sense veu): obri i tanca la boca com al parlar, a l'ona del «Ritme de la boca». Serveix per a vore si el servo arriba.
+  $('calSyl').addEventListener('click', () => {
+    runToken++; setSpeaking(false); puppet.stop();
+    const syl = 0.2 / (cfg.mouthRate / 100), lv = [1, 0.75, 0.5, 0.75, 1, 0.5, 1, 0.75, 0.5, 0.75, 1, 0.5], steps = [];
+    lv.forEach((l, i) => { steps.push({ mouth: l, ms: Math.round(syl * 580) }); steps.push({ mouth: i % 3 === 2 || i === lv.length - 1 ? 0 : cfg.mouthHold ? l * 0.3 : 0, ms: Math.round(syl * 420) }); });
+    puppet.runSteps(steps, { fast: true }).then(() => puppet.setPose({ mouth: 0 }, true));
+  });
   $('calMouth').addEventListener('click', () => { runToken++; setSpeaking(false); puppet.stop(); puppet.setPose({ mouth: 1 }, true); setTimeout(() => puppet.setPose({ mouth: 0 }, true), 900); });
 
   // Capes i botons
