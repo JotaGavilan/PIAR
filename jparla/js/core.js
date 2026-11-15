@@ -9,7 +9,7 @@
 //  JParla.parseScript(text)            → { items, unknown:[…] }
 //  JParla.chunkSay(text, max)          → [trossos ≤ max caràcters, tallats en frases/comes]
 //  JParla.timeline(text, lang, o)      → { words, sylls, total }    o = { rate, k, gap, mouthRate }
-//  JParla.mouthAt(tl, t)               → 0…1   ·   JParla.wordAt(tl, t) → índex de paraula
+//  JParla.mouthAt(tl, t, floor, mode)  → 0…1 (mode 'word': una obertura per paraula)   ·   JParla.wordAt(tl, t) → índex de paraula
 //  JParla.commandSteps(id)             → passos { yaw, mouth, eyeL, eyeR, ms } d'una ordre [entre claudàtors]
 //  JParla.toPacket(pose, cal)          → «yyMMEE»
 //  JParla.sanitizeReply(text)          → text net per a parlar (sense Markdown, emojis ni ordres desconegudes)
@@ -159,6 +159,7 @@
         const open = Math.max(0.05, sylDur * 0.58);
         sylls.push({ t: st, open, level: sy.levels[s], w: w.i });
       }
+      w.level = Math.max.apply(null, sy.levels);   // obertura de la paraula sencera (mode «per paraula»)
       t += sy.n * sylDur + 0.03 + gap;
     }
     const first = words[0], lastW = words[words.length - 1];
@@ -168,8 +169,15 @@
   // Obertura de la boca (0…1) en l'instant t (s des de l'inici del tros). Cerca binària.
   // «floor» (0…0.6): entre dues síl·labes de la MATEIXA paraula la boca no es tanca del tot, només baixa fins a floor·nivell
   // (el servo recorre menys i la boca queda més definida); en acabar la paraula o en una pausa sí que es tanca.
-  function mouthAt(tl, t, floor) {
+  // mode 'word': la boca s'obri a l'inici de la paraula (amb l'obertura més gran de les seues síl·labes), es manté i es tanca al final
+  // (el servo es mou una vegada per paraula, no una per síl·laba: per a servos lents o amb poca alimentació).
+  function mouthAt(tl, t, floor, mode) {
     const S = tl.sylls; if (!S.length || t < S[0].t) return 0;
+    if (mode === 'word') {
+      const wi = wordAt(tl, t); if (wi < 0) return 0;
+      const w = tl.words[wi];
+      return t < w.t + w.dur * 0.88 ? w.level : 0;
+    }
     let a = 0, b = S.length - 1;
     while (a < b) { const mid = (a + b + 1) >> 1; if (S[mid].t <= t) a = mid; else b = mid - 1; }
     const s = S[a];

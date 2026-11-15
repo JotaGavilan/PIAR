@@ -17,8 +17,8 @@
   const DEF = {
     lang: 'auto', voice: '', rate: 10, pitch: 10, robotic: false, talk: 'hold',
     mouthRate: 100, learn: true, move: 'normal', blink: true,
-    interval: 8, yawHalf: 10, mouthMax: 10, invert: false, mouthHold: false, mouthLead: 0, v: 2,
-    gmodel: 'gemini-3.5-flash-lite', preset: 'friendly', persona: '', mode: 'say',
+    interval: 8, yawHalf: 10, mouthMax: 10, invert: false, mouthHold: false, mouthLead: 0, mouthMode: 'syl', v: 3,
+    gmodel: 'gemini-3.5-flash-lite', preset: 'ironic', persona: '', mode: 'say',
     engine: 'web', wmodel: 'base', gem: false
   };
   const cfg = Object.assign({}, DEF);
@@ -38,7 +38,12 @@
     if (!STT.webSupported() && STT.whisperSupported()) cfg.engine = 'whisper';
   }
   // v2: el programa «Cap amb IA» (i el de JFace) només accepta boca 0…10; amb 20 s'ignoraven les obertures grans (a, e, o)
-  if (storedV < 2) { if (cfg.mouthMax === 20) cfg.mouthMax = 10; cfg.v = 2; try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {} }
+  // v3: personalitat per defecte irònica (l'antiga «gruñó» desapareix; «amable» passa a ser una opció més)
+  if (storedV < 3 && !firstRun) { if (cfg.preset === 'friendly' || cfg.preset === 'grumpy') cfg.preset = 'ironic'; }
+  if (cfg.preset === 'grumpy') cfg.preset = 'ironic';
+  if (storedV < 2 && cfg.mouthMax === 20) cfg.mouthMax = 10;
+  cfg.v = 3;
+  if (storedV < 3) { try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {} }
   if (!['move', 'say', 'chat'].includes(cfg.mode)) cfg.mode = 'say';
   const saveCfg = () => { try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {} };
   let kMap = {};
@@ -235,7 +240,7 @@
         const res = await puppet.speak(p.text, {
           lang, voice, rate: cfg.rate / 10, pitch: cfg.pitch / 10, robotic: cfg.robotic,
           k: cfg.learn ? (kMap[key] || 1) : 1, mouthRate: cfg.mouthRate / 100,
-          lead: cfg.mouthLead / 1000, floor: cfg.mouthHold ? 0.3 : 0,
+          lead: cfg.mouthLead / 1000, floor: cfg.mouthHold ? 0.3 : 0, mode: cfg.mouthMode,
           onWord: (w) => { if (my !== runToken || !p.els) return; p.els.forEach((e, n) => { e.classList.toggle('now', n === w); e.classList.toggle('said', n < w); }); keepVisible(p.els[w]); }
         });
         if (p.els) p.els.forEach((e) => { e.classList.remove('now'); e.classList.add('said'); });
@@ -327,6 +332,7 @@
   async function handleChat(text) {
     const my = ++runToken;
     puppet.stop(); setSpeaking(false);
+    aiNoticeOpen = false; paintAiNotice();
     if (!CHAT.getKey()) { setView({ kind: 'speak', you: text, plan: [], msg: _t('jp.msg.nokey'), tone: 'warn' }); showStatus(() => '⚠️ ' + _t('jp.msg.nokey')); return 'nokey'; }
     if (navigator.onLine === false) { setView({ kind: 'speak', you: text, plan: [], msg: _t('jp.msg.offline'), tone: 'warn' }); showStatus(() => '🌐 ' + _t('jp.msg.offline')); return 'offline'; }
     setView({ kind: 'speak', you: text, thinking: true });
@@ -467,11 +473,27 @@
     document.body.dataset.mode = cfg.mode;
     if (view) paintView();
   }
-  function setMode(m) { if (cfg.mode === m) return; cfg.mode = m; saveCfg(); stopAll(); view = null; paintView(); paintMode(); toIdle(); }
+  // Avís de la conversa amb Gemini: es mostra cada vegada que s'obri el mode Conversa (fins que es tanque amb «D'acord»)
+  let aiNoticeOpen = false;
+  function paintAiNotice() {
+    $('aiNotice').hidden = !(cfg.mode === 'chat' && aiNoticeOpen);
+    document.body.classList.toggle('has-notice', !$('aiNotice').hidden);
+    if (!$('aiNotice').hidden) $('aiNoticeKey').textContent = _t(CHAT.getKey() ? 'jp.ai.notice.has' : 'jp.ai.notice.no');
+  }
+  function setMode(m) { if (cfg.mode === m) return; cfg.mode = m; aiNoticeOpen = m === 'chat'; saveCfg(); stopAll(); view = null; paintView(); paintMode(); paintAiNotice(); toIdle(); }
+  $('aiNoticeOk').addEventListener('click', () => { aiNoticeOpen = false; paintAiNotice(); });
+  $('aiNoticeCfg').addEventListener('click', () => {
+    $('config-layer').style.display = 'flex'; fillVoices(); refreshKeyState(); refreshWhisperState();
+    const h = document.querySelector('h3[data-i18n="jp.cfg.ai"]'); if (h) h.scrollIntoView({ block: 'start' });
+  });
+  // Idioma de la conversa (veu, micròfon i resposta): selector de la pantalla principal, sincronitzat amb Configuració
+  function syncLangSel() { $('langSel').value = cfg.lang; $('cfgLang').value = cfg.lang; }
+  function setConvLang(v) { cfg.lang = v; saveCfg(); syncLangSel(); fillVoices(); toIdle(); }
+  $('langSel').addEventListener('change', () => setConvLang($('langSel').value));
   MODES.forEach((m) => $(MODE_BTN[m]).addEventListener('click', () => setMode(m)));
 
   // ── Configuració ──────────────────────────────────────────
-  function refreshKeyState() { $('keyState').textContent = _t(CHAT.getKey() ? 'jp.cfg.gem_saved' : 'jp.cfg.gem_none'); }
+  function refreshKeyState() { $('keyState').textContent = _t(CHAT.getKey() ? 'jp.cfg.gem_saved' : 'jp.cfg.gem_none'); paintAiNotice(); }
   function refreshLabels() {
     $('rateLbl').textContent = _t('jp.cfg.rate', { n: fmtNum(cfg.rate / 10, 1) });
     $('pitchLbl').textContent = _t('jp.cfg.pitch', { n: fmtNum(cfg.pitch / 10, 1) });
@@ -489,10 +511,10 @@
   }
   function syncBoxes() { $('whisperBox').hidden = cfg.engine !== 'whisper'; }
   function loadCfgUi() {
-    $('cfgLang').value = cfg.lang; $('cfgTalk').value = cfg.talk; $('cfgRobotic').checked = cfg.robotic;
+    syncLangSel(); $('cfgTalk').value = cfg.talk; $('cfgRobotic').checked = cfg.robotic;
     $('cfgRate').value = cfg.rate; $('cfgPitch').value = cfg.pitch; $('cfgMouthRate').value = cfg.mouthRate;
     $('cfgLearn').checked = cfg.learn; $('cfgMove').value = cfg.move; $('cfgBlink').checked = cfg.blink;
-    $('intervalSlider').value = cfg.interval; $('yawHalf').value = cfg.yawHalf; $('mouthMax').value = cfg.mouthMax; $('mouthLead').value = cfg.mouthLead; $('cfgHold').checked = cfg.mouthHold;
+    $('intervalSlider').value = cfg.interval; $('yawHalf').value = cfg.yawHalf; $('mouthMax').value = cfg.mouthMax; $('mouthLead').value = cfg.mouthLead; $('cfgHold').checked = cfg.mouthHold; $('cfgMouthMode').value = cfg.mouthMode;
     $('cfgInvert').checked = cfg.invert; $('cfgGModel').value = cfg.gmodel; $('cfgPreset').value = cfg.preset;
     $('cfgEngine').value = cfg.engine; $('cfgWModel').value = cfg.wmodel; $('cfgGem').checked = cfg.gem;
     syncBoxes(); fillVoices(); syncPersona(); refreshLabels();
@@ -500,10 +522,10 @@
   const bind = (id, key, conv, after) => $(id).addEventListener('change', () => {
     cfg[key] = conv ? conv($(id)) : $(id).value; saveCfg(); syncBoxes(); refreshLabels(); if (after) after();
   });
-  bind('cfgLang', 'lang', null, () => { fillVoices(); toIdle(); });
+  $('cfgLang').addEventListener('change', () => setConvLang($('cfgLang').value));
   bind('cfgVoice', 'voice');
   bind('cfgTalk', 'talk', null, toIdle);
-  bind('cfgRobotic', 'robotic', (e) => e.checked); bind('cfgLearn', 'learn', (e) => e.checked); bind('cfgBlink', 'blink', (e) => e.checked); bind('cfgHold', 'mouthHold', (e) => e.checked);
+  bind('cfgRobotic', 'robotic', (e) => e.checked); bind('cfgLearn', 'learn', (e) => e.checked); bind('cfgBlink', 'blink', (e) => e.checked); bind('cfgHold', 'mouthHold', (e) => e.checked); bind('cfgMouthMode', 'mouthMode');
   bind('cfgMove', 'move'); bind('cfgInvert', 'invert', (e) => e.checked); bind('cfgGModel', 'gmodel');
   bind('cfgPreset', 'preset', null, syncPersona);
   bind('cfgEngine', 'engine'); bind('cfgWModel', 'wmodel', null, refreshWhisperState); bind('cfgGem', 'gem', (e) => e.checked);
@@ -517,11 +539,17 @@
   $('voiceTest').addEventListener('click', () => { $('config-layer').style.display = 'none'; sayText(_t('jp.test.text')); });
   const cal = (y) => { runToken++; setSpeaking(false); puppet.stop(); puppet.setPose({ yaw: y, mouth: 0 }, true); };
   $('calL').addEventListener('click', () => cal(1)); $('calC').addEventListener('click', () => cal(0)); $('calR').addEventListener('click', () => cal(-1));
-  // Prova de síl·labes (sense veu): obri i tanca la boca com al parlar, a l'ona del «Ritme de la boca». Serveix per a vore si el servo arriba.
+  // Prova de síl·labes (sense veu): fa EXACTAMENT el mateix moviment de boca que en parlar una frase (mateixa línia de temps, ritme i mode), però sense veu.
   $('calSyl').addEventListener('click', () => {
     runToken++; setSpeaking(false); puppet.stop();
-    const syl = 0.2 / (cfg.mouthRate / 100), lv = [1, 0.75, 0.5, 0.75, 1, 0.5, 1, 0.75, 0.5, 0.75, 1, 0.5], steps = [];
-    lv.forEach((l, i) => { steps.push({ mouth: l, ms: Math.round(syl * 580) }); steps.push({ mouth: i % 3 === 2 || i === lv.length - 1 ? 0 : cfg.mouthHold ? l * 0.3 : 0, ms: Math.round(syl * 420) }); });
+    const tl = J.timeline(_t('jp.test.text'), convLang(), { mouthRate: cfg.mouthRate / 100 }), steps = [];
+    let last = null, acc = 0;
+    for (let t = 0; t < tl.total + 0.05; t += 0.025) {
+      const m = J.mouthAt(tl, t, cfg.mouthHold ? 0.3 : 0, cfg.mouthMode);
+      if (last === null) { last = m; acc = 25; continue; }
+      if (Math.abs(m - last) < 1e-6) acc += 25; else { steps.push({ mouth: last, ms: acc }); last = m; acc = 25; }
+    }
+    steps.push({ mouth: last || 0, ms: acc }); steps.push({ mouth: 0, ms: 0 });
     puppet.runSteps(steps, { fast: true }).then(() => puppet.setPose({ mouth: 0 }, true));
   });
   $('calMouth').addEventListener('click', () => { runToken++; setSpeaking(false); puppet.stop(); puppet.setPose({ mouth: 1 }, true); setTimeout(() => puppet.setPose({ mouth: 0 }, true), 900); });
@@ -543,7 +571,7 @@
   // Idioma
   PIAR_I18N.mountSelector($('langSelectHost'));
 
-  loadCfgUi(); paintMode(); refreshWhisperState();
+  loadCfgUi(); paintMode(); aiNoticeOpen = cfg.mode === 'chat'; paintAiNotice(); refreshWhisperState();
   toIdle();
 
   // Per a les proves

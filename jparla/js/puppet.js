@@ -111,7 +111,7 @@
             const t = (now - t0) / 1000;
             const w = J.wordAt(tl, t);
             if (w !== lastWord && w >= 0) { lastWord = w; wander(); if (o.onWord) o.onWord(w, tl); }
-            return J.mouthAt(tl, t + (o.lead || 0), o.floor || 0);
+            return J.mouthAt(tl, t + (o.lead || 0), o.floor || 0, o.mode);
           };
           if (o.onStart) o.onStart(tl);
           watch = setTimeout(() => { try { synth.cancel(); } catch (e) {} finish({ status: 'done', timeout: true }); }, (tl.total * 4 + 8) * 1000);

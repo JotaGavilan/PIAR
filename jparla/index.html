@@ -44,6 +44,25 @@
       <button type="button" id="modeChat" class="mode" aria-pressed="false" data-i18n="jp.mode.chat">💬 Conversa</button>
     </div>
 
+    <!-- Idioma de la conversa (veu, micròfon i resposta) -->
+    <div id="langRow">
+      <label for="langSel" data-i18n="jp.lang.speak">🌐 Idioma de la conversa</label>
+      <select id="langSel">
+        <option value="auto" data-i18n="jp.lang.auto">Com l'app</option>
+        <option value="ca">Valencià</option>
+        <option value="es">Castellano</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+
+    <!-- Avís de la conversa amb Gemini -->
+    <section id="aiNotice" class="card" role="note" hidden>
+      <p class="ai-title" data-i18n="jp.ai.notice.title">✨ Esta opció no ve activada per defecte</p>
+      <p data-i18n="jp.ai.notice.body">Conversa usa models externs (la IA de Google, Gemini) i només funciona si tens una clau (token) de Gemini.</p>
+      <p id="aiNoticeKey" class="ai-key"></p>
+      <div class="ai-btns"><button type="button" class="btn" id="aiNoticeCfg" data-i18n="jp.ai.notice.key">🔑 Posar la clau</button><button type="button" class="btn" id="aiNoticeOk" data-i18n="jp.ai.notice.ok">D'acord</button></div>
+    </section>
+
     <section id="heard" class="card" aria-live="polite">
       <p id="heardNone" class="heard-none" data-i18n="jp.heard.none_say">Escriu un text o mantín premut el micròfon: el robot ho dirà en veu alta i mourà la boca.</p>
       <div id="heardBox" hidden>
@@ -177,6 +196,11 @@
           <option value="normal" data-i18n="jp.cfg.move_normal">Normal</option>
           <option value="lively" data-i18n="jp.cfg.move_lively">Molt</option>
         </select>
+        <label for="cfgMouthMode" data-i18n="jp.cfg.mouthmode">Com es mou la boca</label>
+        <select id="cfgMouthMode">
+          <option value="syl" data-i18n="jp.cfg.mouthmode_syl">Una obertura per síl·laba (més detall)</option>
+          <option value="word" data-i18n="jp.cfg.mouthmode_word">Una obertura per paraula (servo lent o poca força)</option>
+        </select>
         <label class="check"><input type="checkbox" id="cfgHold"> <span data-i18n="jp.cfg.hold">Boca mig oberta entre les síl·labes d'una paraula (més definida)</span></label>
         <div class="interval-control">
           <label for="mouthLead" id="mouthLeadLbl">Avançar la boca: 0 ms</label>
@@ -229,10 +253,10 @@
         <button type="button" class="btn" id="keyClear" data-i18n="jp.cfg.gem_clear">Esborrar la clau</button>
         <label for="cfgPreset" data-i18n="jp.cfg.persona">Personalitat del robot</label>
         <select id="cfgPreset">
+          <option value="ironic" data-i18n="jp.persona.ironic">Irònic i amb retranca</option>
           <option value="friendly" data-i18n="jp.persona.friendly">Amable i curiós</option>
           <option value="teacher" data-i18n="jp.persona.teacher">Mestre de ciències</option>
           <option value="pirate" data-i18n="jp.persona.pirate">Pirata simpàtic</option>
-          <option value="grumpy" data-i18n="jp.persona.grumpy">Robot antic i un poc gruñó</option>
           <option value="custom" data-i18n="jp.persona.custom">Personalitzada…</option>
         </select>
         <textarea id="cfgPersona" rows="4" maxlength="600" aria-label="Personalitat" data-i18n-attr="aria-label:jp.cfg.persona"></textarea>

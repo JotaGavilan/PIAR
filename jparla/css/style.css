@@ -139,6 +139,14 @@ body > .piar-header, body > #stage, body > #talk, body > #controls { width: 100%
 
 /* ── JParla: mode, text que diu el robot, personalitat ─────── */
 #modes { flex: 0 0 auto; display: flex; gap: 6px; }
+#langRow { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: .84rem; color: var(--text-dim); }
+#langRow select { width: auto; min-width: 8.5rem; min-height: 36px; padding: 4px 10px; font-size: .86rem; }
+#aiNotice { flex: 0 0 auto; padding: 12px 14px; border-color: var(--warn); font-size: .88rem; line-height: 1.45; }
+#aiNotice p { margin: 0 0 6px; }
+#aiNotice .ai-title { font-weight: 700; color: var(--warn); }
+#aiNotice .ai-key { color: var(--text-dim); }
+#aiNotice .ai-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+#aiNotice .ai-btns .btn { min-height: 40px; padding: 6px 14px; }
 .mode { flex: 1 1 0; min-height: 40px; padding: 6px 8px; font-size: .84rem; font-weight: 600; border-radius: 999px; }
 .mode.on { background: rgba(77,245,160,.16); border-color: var(--ok); color: var(--ok); box-shadow: 0 0 10px rgba(77,245,160,.25); }
 .robot-txt { margin: 2px 0 0 !important; font-size: .98rem; line-height: 1.7; overflow-wrap: anywhere; color: var(--text); }
@@ -162,3 +170,7 @@ body > .piar-header, body > #stage, body > #talk, body > #controls { width: 100%
 .has-view #head-box { height: clamp(76px, 14vh, 150px); }
 .has-view #examples { display: none; }
 @media (max-height: 520px) { .has-view #heard { flex: 0 0 auto; } .has-view #examples { display: block; } .has-view #head-box { height: 120px; } }
+
+/* Mentre es veu l'avís de Gemini, es lleva el que no cal perquè càpiga sencer (inclosos els botons) en pantalles xicotetes */
+.has-notice #head-box { height: 110px; }
+.has-notice #examples, .has-notice #data-panel { display: none; }
