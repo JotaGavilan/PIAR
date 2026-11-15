@@ -214,3 +214,4 @@ body > .piar-header, body > #stage, body > #talk, body > #controls { width: 100%
 .ph-hint { margin-bottom: 6px !important; color: var(--accent2); }
 @media (max-height: 520px) { #phrasePanel { max-height: 70vh; } }
 @media (max-height: 700px) { .ph-hint { display: none; } }
+.ph.picked { border-color: var(--ok); background: rgba(77,245,160,.22); color: #fff; transition: background .12s, border-color .12s; }

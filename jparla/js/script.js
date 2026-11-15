@@ -469,9 +469,22 @@
   $('phraseClose').addEventListener('click', () => { phraseOpen(false); phBtn.focus({ preventScroll: true }); });
   document.addEventListener('pointerdown', (e) => { if (!phPanel.hidden && !phPanel.contains(e.target) && !phBtn.contains(e.target)) phraseOpen(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !phPanel.hidden) { phraseOpen(false); phBtn.focus({ preventScroll: true }); } });
-  document.querySelectorAll('.ex').forEach((b) => b.addEventListener('click', () => { phraseOpen(false); phBtn.focus({ preventScroll: true }); handleInput(_t(b.dataset.k), 'example'); }));
+  // En triar una frase: es ressalta un instant, el panell es tanca i, després d'una xicoteta pausa (perquè done temps a veure-ho), s'executa
+  let phTimer = 0;
+  const PH_MARK_MS = 220, PH_RUN_MS = 450;
+  function phraseCancel() { clearTimeout(phTimer); phTimer = 0; phPanel.querySelectorAll('.ph.picked').forEach((e) => e.classList.remove('picked')); }
+  document.querySelectorAll('.ex').forEach((b) => b.addEventListener('click', () => {
+    if (phTimer) return;                                  // ja n'hi ha una en camí
+    const txt = _t(b.dataset.k), mode = cfg.mode;
+    b.classList.add('picked');
+    phTimer = setTimeout(() => {
+      b.classList.remove('picked'); phraseOpen(false); phBtn.focus({ preventScroll: true });
+      phTimer = setTimeout(() => { phTimer = 0; if (cfg.mode === mode) handleInput(txt, 'example'); }, PH_RUN_MS);
+    }, PH_MARK_MS);
+  }));
   function stopAll() { runToken++; puppet.stop(); setSpeaking(false); }
   $('stopBtn').addEventListener('click', () => {
+    phraseCancel();
     const wasSpeech = view && view.kind === 'speak';
     stopAll();
     if (wasSpeech) puppet.runSteps([{ yaw: 0, mouth: 0, ms: 0 }]);   // en parlar, torna al centre i tanca la boca
@@ -495,7 +508,7 @@
     document.body.classList.toggle('has-notice', !$('aiNotice').hidden);
     if (!$('aiNotice').hidden) $('aiNoticeKey').textContent = _t(CHAT.getKey() ? 'jp.ai.notice.has' : 'jp.ai.notice.no');
   }
-  function setMode(m) { if (cfg.mode === m) return; phraseOpen(false); cfg.mode = m; aiNoticeOpen = m === 'chat'; saveCfg(); stopAll(); view = null; paintView(); paintMode(); paintAiNotice(); toIdle(); }
+  function setMode(m) { if (cfg.mode === m) return; phraseCancel(); phraseOpen(false); cfg.mode = m; aiNoticeOpen = m === 'chat'; saveCfg(); stopAll(); view = null; paintView(); paintMode(); paintAiNotice(); toIdle(); }
   $('aiNoticeOk').addEventListener('click', () => { aiNoticeOpen = false; paintAiNotice(); });
   $('aiNoticeCfg').addEventListener('click', () => {
     $('config-layer').style.display = 'flex'; fillVoices(); refreshKeyState(); refreshWhisperState();
