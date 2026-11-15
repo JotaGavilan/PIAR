@@ -191,7 +191,7 @@
   SCENES['art-b'] = {
     topic: 'art', stillT: [.45, .3],
     cap: [
-      { ca: 'Gotes de tinta que floreixen i es barregen sobre paper 💧 #art #aquarel·la', es: 'Gotas de tinta que florecen y se mezclan sobre papel 💧 #arte #acuarela', en: 'Ink drops blooming and blending on paper 💧 #art #watercolor' },
+      { ca: 'Gotes de tinta que florixen i es barregen sobre paper 💧 #art #aquarel·la', es: 'Gotas de tinta que florecen y se mezclan sobre papel 💧 #arte #acuarela', en: 'Ink drops blooming and blending on paper 💧 #art #watercolor' },
       { ca: 'Mandala de llum que gira i no para 🔮 #art #geometria', es: 'Mandala de luz que gira sin parar 🔮 #arte #geometría', en: 'A light mandala that never stops spinning 🔮 #art #geometry' }],
     draw(ctx, t, v) {
       if (v % 2) { mandala(ctx, t); L.vignette(ctx, W, H, .5); return; }

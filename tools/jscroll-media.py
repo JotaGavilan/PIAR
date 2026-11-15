@@ -9,7 +9,7 @@ JScroll – gestor del catàleg de fotos i vídeos.
 CARPETA ha de tindre una subcarpeta per interés, amb este nom (en anglés, minúscules):
   music gaming sport fashion humor animals food travel science art cars cinema
   p. ex.  la-meua-carpeta/music/concert.jpg   la-meua-carpeta/sport/gol.mp4
-Les fotos es redimensionen (màx. 720×1280) i es guarden en WebP; els vídeos es comprimeixen (H.264, màx. 720×1280, ≤ 12 s, sense so)
+Les fotos es redimensionen (màx. 720×1280) i es guarden en WebP; els vídeos es comprimixen (H.264, màx. 720×1280, ≤ 12 s, sense so)
 amb ffmpeg (cal tindre'l instal·lat: ffmpeg i ffprobe). Els peus de foto (opcionals) es posen a jscroll/media/captions.json:
   { "music-7": { "ca": "text", "es": "texto", "en": "text" } }   (o simplement "text" per a tots els idiomes)
 Cada interés necessita almenys 6 publicacions per a una sessió de 60. Després d'executar-lo: python3 tools/build-pwa.py

@@ -193,7 +193,7 @@
   function paintView() {
     const none = !view;
     document.body.classList.toggle('has-view', !none);
-    $('heardNone').hidden = !none; $('heardBox').hidden = none;
+    $('heardNone').hidden = !none; $('phHint').hidden = !none; $('heardBox').hidden = none;
     if (none) return;
     const move = view.kind === 'move', chat = cfg.mode === 'chat';
     $('youLine').hidden = !view.you || (!move && !chat);
@@ -455,7 +455,21 @@
 
   // ── Text, exemples, parar, centrar, mode ──────────────────
   $('textForm').addEventListener('submit', (e) => { e.preventDefault(); const v = $('textIn').value; $('textIn').value = ''; handleInput(v, 'text'); });
-  document.querySelectorAll('.ex').forEach((b) => b.addEventListener('click', () => handleInput(_t(b.dataset.k), 'example')));
+  // Frases d'exemple: un panell que es desplega SOBRE la caixa de text (no mou res de l'escena) i es tanca en triar una frase
+  const phPanel = $('phrasePanel'), phBtn = $('phraseBtn');
+  function phraseOpen(open) {
+    if (open === phPanel.hidden) { phPanel.hidden = !open; phBtn.setAttribute('aria-expanded', String(open)); phBtn.classList.toggle('on', open); }
+    if (open) {   // alçada màxima: només l'espai lliure entre la capçalera i la caixa de text (la llista té el seu propi desplaçament)
+      const free = $('talk').getBoundingClientRect().top - Math.max(0, document.querySelector('.piar-header').getBoundingClientRect().bottom) - 14;
+      phPanel.style.maxHeight = Math.max(150, Math.min(400, free)) + 'px';
+    }
+    if (open) { const a = document.activeElement; if (a && a.blur && a !== document.body) a.blur(); const f = phPanel.querySelector('.ph-list:not([hidden]) .ph'); if (f) f.focus({ preventScroll: true }); }
+  }
+  phBtn.addEventListener('click', () => phraseOpen(phPanel.hidden));
+  $('phraseClose').addEventListener('click', () => { phraseOpen(false); phBtn.focus({ preventScroll: true }); });
+  document.addEventListener('pointerdown', (e) => { if (!phPanel.hidden && !phPanel.contains(e.target) && !phBtn.contains(e.target)) phraseOpen(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !phPanel.hidden) { phraseOpen(false); phBtn.focus({ preventScroll: true }); } });
+  document.querySelectorAll('.ex').forEach((b) => b.addEventListener('click', () => { phraseOpen(false); phBtn.focus({ preventScroll: true }); handleInput(_t(b.dataset.k), 'example'); }));
   function stopAll() { runToken++; puppet.stop(); setSpeaking(false); }
   $('stopBtn').addEventListener('click', () => {
     const wasSpeech = view && view.kind === 'speak';
@@ -471,6 +485,7 @@
     $('textIn').placeholder = _t({ move: 'jv.text.ph', say: 'jp.text.ph_say', chat: 'jp.text.ph_chat' }[cfg.mode]);
     $('heardNone').textContent = _t({ move: 'jv.heard.none', say: 'jp.heard.none_say', chat: 'jp.heard.none_chat' }[cfg.mode]);
     document.body.dataset.mode = cfg.mode;
+    $('phraseTitle').textContent = _t({ move: 'jp.ph.title_move', say: 'jp.ph.title_say', chat: 'jp.ph.title_chat' }[cfg.mode]);
     if (view) paintView();
   }
   // Avís de la conversa amb Gemini: es mostra cada vegada que s'obri el mode Conversa (fins que es tanque amb «D'acord»)
@@ -480,7 +495,7 @@
     document.body.classList.toggle('has-notice', !$('aiNotice').hidden);
     if (!$('aiNotice').hidden) $('aiNoticeKey').textContent = _t(CHAT.getKey() ? 'jp.ai.notice.has' : 'jp.ai.notice.no');
   }
-  function setMode(m) { if (cfg.mode === m) return; cfg.mode = m; aiNoticeOpen = m === 'chat'; saveCfg(); stopAll(); view = null; paintView(); paintMode(); paintAiNotice(); toIdle(); }
+  function setMode(m) { if (cfg.mode === m) return; phraseOpen(false); cfg.mode = m; aiNoticeOpen = m === 'chat'; saveCfg(); stopAll(); view = null; paintView(); paintMode(); paintAiNotice(); toIdle(); }
   $('aiNoticeOk').addEventListener('click', () => { aiNoticeOpen = false; paintAiNotice(); });
   $('aiNoticeCfg').addEventListener('click', () => {
     $('config-layer').style.display = 'flex'; fillVoices(); refreshKeyState(); refreshWhisperState();

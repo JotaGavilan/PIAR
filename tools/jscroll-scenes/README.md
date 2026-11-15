@@ -21,4 +21,4 @@ Les fotos i els vídeos d'exemple de JScroll **no són fotos reals**: són il·l
 4. `python3 ../jscroll-media.py` (regenera `feed.json` amb `captions.json`) i `python3 ../build-pwa.py`.
 
 Les ruta de Playwright/Chromium es poden indicar amb `PLAYWRIGHT_PATH` i `CHROME_PATH` si no estan instal·lats de la manera habitual.
-Si prefereixes **vídeos reals**, usa `tools/jscroll-media.py CARPETA` (mira la guia de JScroll): cal que tinguen llicència lliure.
+Si preferixes **vídeos reals**, usa `tools/jscroll-media.py CARPETA` (mira la guia de JScroll): cal que tinguen llicència lliure.

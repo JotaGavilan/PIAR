@@ -44,7 +44,7 @@ Publicacions (20–60) · límit de temps (0–20 min) · adaptació del feed (s
 
 ## Sense Internet
 
-Les pàgines i tot `media/` entren a la memòria del service worker. Els vídeos es demanen per trossos (*Range*): el service worker els serveix des de la memòria (`rangeFromCache` a `sw.js`).
+Les pàgines i tot `media/` entren a la memòria del service worker. Els vídeos es demanen per trossos (*Range*): el service worker els servix des de la memòria (`rangeFromCache` a `sw.js`).
 
 ## Proves
 

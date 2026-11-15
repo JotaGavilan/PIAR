@@ -12,6 +12,7 @@
 <link rel="manifest" href="icons/site.webmanifest">
 <script src="../shared/i18n.js"></script><script src="../shared/i18n_shared.js"></script><script src="js/i18n.js"></script>
 <script src="../shared/piar_models.js"></script>
+<script src="../shared/loading_overlay.js"></script>
 <script src="../vendor/tfjs-4.15.0/tf.min.js"></script>
 <script src="../vendor/mobilenet-2.1.0/mobilenet.min.js"></script>
 <script src="../vendor/posenet-2.2.2/posenet.min.js"></script>
@@ -19,6 +20,7 @@
 <script src="../vendor/mediapipe-hands/hands.js"></script>
 <link rel="stylesheet" href="../vendor/fonts/fonts.css">
 <link rel="stylesheet" href="../shared/piar-ui.css">
+<link rel="stylesheet" href="../shared/loading_overlay.css">
 <style>
 /* Màquina Ensenyable: només el que és exclusiu de l'app (pestanyes, classes, mostres, gràfics, càmera).
    Tokens, capçalera, botons, targetes, formularis i tipografia vénen de shared/piar-ui.css. */
@@ -364,7 +366,7 @@ select.piar-lang-select { color-scheme: dark; }
       <button class="btn" id="tmShareBtn" onclick="shareLight()" data-i18n="mq.tm.share">📤 Compartir model</button>
       <button class="btn" id="tmDownBtn" onclick="exportLight()" data-i18n="mq.tm.download">⬇ Descarregar model</button>
     </div>
-    <p class="save-desc last" data-i18n-html="mq.tm.desc">Només guarda el model entrenat, sense les mostres: pesa molt poc. A Teachable Microbit, a <b>Configuració</b>, tria <i>Model de Màquina Ensenyable</i> i carrega el fitxer. Els formats de la pestanya Exportar (TF.js, Keras, TF Lite) no serveixen per a Teachable Microbit.</p>
+    <p class="save-desc last" data-i18n-html="mq.tm.desc">Només guarda el model entrenat, sense les mostres: pesa molt poc. A Teachable Microbit, a <b>Configuració</b>, tria <i>Model de Màquina Ensenyable</i> i carrega el fitxer. Els formats de la pestanya Exportar (TF.js, Keras, TF Lite) no servixen per a Teachable Microbit.</p>
   </div>
   <div class="card">
     <div class="sec-title" data-i18n="mq.save.project">Projecte</div>
@@ -697,6 +699,18 @@ function renderThumbs(cls, ci) {
   return `<div class="thumbs">${vis.map((src,si) => `<div class="twrap"><img class="thumb" src="${src}" loading="lazy"><button class="tdel" aria-label="${_t('mq.cls.sample_del_aria')}" onclick="deleteSample(${ci},${si})">✕</button></div>`).join('')}${extra>0?`<div class="tmore">+${extra}</div>`:''}</div>`;
 }
 
+// ═══ CAPA DE BLOQUEIG ═══
+// Mentre es descarrega un model, s'obri la càmera o es llig/escriu un projecte, una capa
+// cobreix tota la pàgina (PIAR_BUSY). L'ENTRENAMENT no es bloqueja: l'alumne pot seguir mirant
+// la gràfica i la pàgina; per això loadBase(true) de l'entrenament passa «quiet».
+function busyOn(msgKey, detKey, icon) {
+  return PIAR_BUSY.begin({ message: _t(msgKey), details: detKey ? _t(detKey) : '', icon: icon || '🤖' });
+}
+async function withBusy(msgKey, detKey, icon, fn) {
+  const end = busyOn(msgKey, detKey, icon);
+  try { return await fn(); } finally { end(); }
+}
+
 // ═══ CAMERA ═══
 let camType = 'image';       // 'image' | 'pose' | 'hands' — tipus de la sessió de càmera oberta
 let camOverlayLoop = null;   // requestAnimationFrame id del feedback en viu (esquelet/mà)
@@ -710,6 +724,7 @@ async function openCam(ci, type) {
   updateCamCount();
   const overlay = document.getElementById('camOverlay');
   overlay.getContext('2d').clearRect(0,0,overlay.width,overlay.height);
+  const endBusy = busyOn('sh.loading.camera', 'sh.loading.camera_d', '📷');
   try {
     // 'pose' i 'hands' necessiten la càmera frontal (l'usuari es grava a si
     // mateix); 'image' fa servir per defecte la posterior.
@@ -720,6 +735,7 @@ async function openCam(ci, type) {
     overlay.width = v.videoWidth; overlay.height = v.videoHeight;
     if (type==='pose' || type==='hands') startCamOverlayLoop(type);
   } catch(e) { toast(_t('mq.toast.no_cam'),'error'); closeCamera(); }
+  finally { endBusy(); }
 }
 function closeCamera() {
   stopCap();
@@ -822,10 +838,15 @@ function stopCap(e) {
 }
 async function uploadImgs(event, ci) {
   const files = Array.from(event.target.files);
-  for (const f of files) {
-    const url = await new Promise(res => { const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(f); });
-    classes[ci].samples.push(url);
-  }
+  const endBusy = PIAR_BUSY.begin({ message: _t('mq.busy.images'), icon: '🖼', progress: 0 });
+  try {
+    for (let n = 0; n < files.length; n++) {
+      const f = files[n];
+      const url = await new Promise(res => { const r=new FileReader(); r.onload=e=>res(e.target.result); r.onerror=()=>res(null); r.readAsDataURL(f); });
+      if (url) classes[ci].samples.push(url);
+      PIAR_BUSY.setProgress((n+1)/files.length);
+    }
+  } finally { endBusy(); }
   renderClasses();
   toast(tn('mq.toast.img_added', files.length),'success');
 }
@@ -838,14 +859,15 @@ function restorePill() {
 }
 
 // ═══ BASE MODEL ═══
-async function loadBase() {
+async function loadBase(quiet) {     // quiet = true: dins de l'entrenament, que no es bloqueja
   if (baseModel) return;
   if (offlineNow()) throw new Error('Network offline');
   needLib('mobilenet');
   setPill('mq.pill.loading_mobilenet','');
   netInfo('image');
+  const endBusy = quiet ? null : busyOn('mq.busy.mobilenet', 'mq.busy.net_d');
   try { baseModel = await mobilenet.load({ version:2, alpha:.5 }); }
-  finally { restorePill(); }
+  finally { restorePill(); if (endBusy) endBusy(); }
 }
 
 // ═══ POSENET ═══
@@ -855,8 +877,9 @@ async function ensurePoseNet() {
   needLib('posenet');
   setPill('mq.pill.loading_posenet','');
   netInfo('pose');
+  const endBusy = busyOn('mq.busy.posenet', 'mq.busy.net_d');
   try { poseNet = await posenet.load({ architecture:'MobileNetV1', outputStride:16, inputResolution:193, multiplier:.75 }); }
-  finally { restorePill(); }
+  finally { restorePill(); endBusy(); }
   return poseNet;
 }
 
@@ -864,13 +887,16 @@ async function ensurePoseNet() {
 // MediaPipe Hands notifica els resultats per callback (onResults), no amb
 // una promesa; este embolcall el converteix en awaitable perquè es puga
 // cridar com la resta de deteccions (posenet.estimateSinglePose, etc.).
+let handsBusyEnd = null;
+function endHandsBusy() { if (handsBusyEnd) { const f = handsBusyEnd; handsBusyEnd = null; f(); } }
 function getHandsDetector() {
   if (handsDetector) return handsDetector;
   needLib('Hands');
   netInfo('hands');
   handsDetector = new Hands({ locateFile: file => `../vendor/mediapipe-hands/${file}` });
   handsDetector.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
-  handsDetector.onResults(res => { handsReady = true; if (pendingHandsResolve) { const r = pendingHandsResolve; pendingHandsResolve = null; r(res); } });
+  if (!handsReady) handsBusyEnd = busyOn('mq.busy.hands', 'mq.busy.net_d', '🤚');
+  handsDetector.onResults(res => { handsReady = true; endHandsBusy(); if (pendingHandsResolve) { const r = pendingHandsResolve; pendingHandsResolve = null; r(res); } });
   return handsDetector;
 }
 function detectHandsOnce(videoEl) {
@@ -878,9 +904,10 @@ function detectHandsOnce(videoEl) {
     pendingHandsResolve = resolve;
     let det;
     try { det = getHandsDetector(); }
-    catch (e) { pendingHandsResolve = null; netFail('hands'); resolve(null); return; }
+    catch (e) { pendingHandsResolve = null; endHandsBusy(); netFail('hands'); resolve(null); return; }
     det.send({ image: videoEl }).catch(() => {
       pendingHandsResolve = null;
+      endHandsBusy();
       if (!handsReady) netFail('hands');   // la descàrrega no ha funcionat
       resolve(null);
     });
@@ -932,7 +959,7 @@ async function trainImage() {
   if (valid.length<2) { toast(_t('mq.toast.need_img'),'error'); return; }
   startTrainUI();
   try {
-    await loadBase();
+    await loadBase(true);          // entrenament: sense capa de bloqueig
     setTrainBtn('mq.train.extracting');
     const xs_l=[], ys_l=[];
     for (let i=0;i<valid.length;i++) for (const s of valid[i].samples) { xs_l.push(await getEmb(s)); ys_l.push(i); }
@@ -1063,6 +1090,7 @@ function setTestMode(m) {
 async function toggleTest() { isTesting?stopTest():await startTest(); }
 async function startTest() {
   if (!model) { toast(_t('mq.toast.train_first'),'error'); return; }
+  const endBusy = busyOn('sh.loading.camera', 'sh.loading.camera_d', '📷');
   try {
     testStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
     document.getElementById('testVideo').srcObject=testStream;
@@ -1073,6 +1101,7 @@ async function startTest() {
     setupPredRows('predCon',model._classNames,model._classColors);
     testInterval=setInterval(runImgPred,200);
   } catch(e) { toast(_t('mq.toast.no_cam'),'error'); }
+  finally { endBusy(); }
 }
 function stopTest() {
   clearInterval(testInterval);
@@ -1125,6 +1154,10 @@ function setupPredRows(conId, names, colors) {
 async function togglePoseTest() { isTestingPose?stopPoseTest():await startPoseTest(); }
 async function startPoseTest() {
   if (!model) { toast(_t('mq.toast.train_first'),'error'); return; }
+  const endBusy = busyOn('sh.loading.camera', 'sh.loading.camera_d', '📷');   // sense forat entre PoseNet i càmera
+  try { await startPoseTestInner(); } finally { endBusy(); }
+}
+async function startPoseTestInner() {
   if (!poseNet) {
     try { await ensurePoseNet(); }
     catch(e) { netFail('pose'); return; }
@@ -1178,6 +1211,7 @@ let handsStream = null, isTestingHands = false, handsTestLoop = null;
 async function toggleHandsTest() { isTestingHands?stopHandsTest():await startHandsTest(); }
 async function startHandsTest() {
   if (!model) { toast(_t('mq.toast.train_first'),'error'); return; }
+  const endBusy = busyOn('sh.loading.camera', 'sh.loading.camera_d', '📷');
   try {
     handsStream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
     const canvas = document.getElementById('handsCanvas');
@@ -1197,6 +1231,7 @@ async function startHandsTest() {
     };
     loop();
   } catch(e) { toast(_t('mq.toast.no_cam'),'error'); }
+  finally { endBusy(); }
 }
 async function runHandsPred(video, canvas) {
   if (!model || video.readyState<2) return;
@@ -1244,18 +1279,18 @@ async function exportTFJS() {
   const m = model;
   if (!m) return;
   const name=document.getElementById('projectName').value||defName();
-  await m.save('downloads://'+name+'-tfjs');
+  await withBusy('sh.loading.save', null, '💾', () => m.save('downloads://'+name+'-tfjs'));
   toast(_t('mq.toast.dl_model'),'success');
 }
 async function exportKeras() {
   const m = model;
   if (!m) return;
   let topology,weightSpecs,weightData;
-  await m.save(tf.io.withSaveHandler(async a=>{
+  await withBusy('sh.loading.save', null, '💾', () => m.save(tf.io.withSaveHandler(async a=>{
     topology=a.modelTopology; weightSpecs=a.weightSpecs;
     const bytes=new Uint8Array(a.weightData); let bin='';
     bytes.forEach(b=>bin+=String.fromCharCode(b)); weightData=btoa(bin); return {};
-  }));
+  })));
   const d={modelTopology:topology,weightSpecs,weightData,classNames:model._classNames,modelType};
   dlBlob(JSON.stringify(d,null,2),(document.getElementById('projectName').value||defName())+'-keras.json','application/json');
   toast(_t('mq.toast.exported'),'success');
@@ -1279,6 +1314,9 @@ function updateSaveTab() {
   document.querySelector('#tab-save .ic').textContent=model?'⭐':'💾';
 }
 async function buildJSON() {
+  return withBusy('sh.loading.save', null, '💾', buildJSONInner);
+}
+async function buildJSONInner() {
   let modelData=null;
   const m = model;
   if (m) {
@@ -1306,8 +1344,11 @@ async function lightProject() {
 async function openInTeachable() {
   if (!model) { toast(_t('mq.toast.train_first'),'error'); return; }
   try {
-    const entry=PIAR_MODELS.fromProject(await lightProject());
-    await PIAR_MODELS.save(entry);
+    const entry = await withBusy('sh.loading.save', null, '💾', async () => {
+      const e = PIAR_MODELS.fromProject(await lightProject());
+      await PIAR_MODELS.save(e);
+      return e;
+    });
     stopAllTests();
     location.href='../teachable-microbit/?model='+encodeURIComponent(entry.id);
   } catch(e) { toast(_t('mq.tm.err',{msg:e.message||e}),'error'); }
@@ -1346,7 +1387,7 @@ async function shareProject() {
 }
 async function importJSON(event) {
   const file=event.target.files[0]; if(!file) return;
-  try { if (await loadProject(JSON.parse(await file.text()))) toast(_t('mq.toast.loaded'),'success'); }
+  try { if (await withBusy('mq.busy.project', 'mq.busy.project_d', '📂', async () => loadProject(JSON.parse(await file.text())))) toast(_t('mq.toast.loaded'),'success'); }
   catch(e) { errToast(e); }
   event.target.value='';
 }

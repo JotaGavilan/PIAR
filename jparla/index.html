@@ -40,7 +40,7 @@
     <!-- Mode: moure, repetir o conversar -->
     <div id="modes" role="group" aria-label="Mode" data-i18n-attr="aria-label:jp.mode.aria">
       <button type="button" id="modeMove" class="mode" aria-pressed="false" data-i18n="jp.mode.move">🎭 Mou</button>
-      <button type="button" id="modeSay" class="mode on" aria-pressed="true" data-i18n="jp.mode.say">🗣 Repeteix</button>
+      <button type="button" id="modeSay" class="mode on" aria-pressed="true" data-i18n="jp.mode.say">🗣 Repetix</button>
       <button type="button" id="modeChat" class="mode" aria-pressed="false" data-i18n="jp.mode.chat">💬 Conversa</button>
     </div>
 
@@ -64,6 +64,7 @@
     </section>
 
     <section id="heard" class="card" aria-live="polite">
+      <p id="phHint" class="heard-none ph-hint" data-i18n="jp.ph.hint">💡 Toca la bombeta per a veure frases d'exemple.</p>
       <p id="heardNone" class="heard-none" data-i18n="jp.heard.none_say">Escriu un text o mantín premut el micròfon: el robot ho dirà en veu alta i mourà la boca.</p>
       <div id="heardBox" hidden>
         <p class="heard-line" id="youLine"><span class="heard-label" id="youLabel">Tu:</span> <q id="youTxt"></q> <span id="heardSrc" class="chip"></span></p>
@@ -79,32 +80,35 @@
       </div>
     </section>
 
-    <section id="examples" aria-label="Exemples">
-      <p class="ex-title" data-i18n="jp.ex.title">Prova amb:</p>
-      <div class="ex-row" id="exMove" hidden>
-        <button type="button" class="ex" data-k="jv.ex.1" data-i18n="jv.ex.1">Mira a l'esquerra</button>
-        <button type="button" class="ex" data-k="jv.ex.2" data-i18n="jv.ex.2">Obri la boca</button>
-        <button type="button" class="ex" data-k="jv.ex.3" data-i18n="jv.ex.3">Parpelleja tres vegades</button>
-        <button type="button" class="ex" data-k="jv.ex.4" data-i18n="jv.ex.4">Di que no</button>
-        <button type="button" class="ex" data-k="jv.ex.5" data-i18n="jv.ex.5">Gira un poc a la dreta i després al centre</button>
-        <button type="button" class="ex" data-k="jv.ex.6" data-i18n="jv.ex.6">Fes com si estigueres sorprés</button>
-      </div>
-      <div class="ex-row" id="exSay">
-        <button type="button" class="ex" data-k="jp.ex.1" data-i18n="jp.ex.1">Hola, sóc un robot i parle amb tu.</button>
-        <button type="button" class="ex" data-k="jp.ex.2" data-i18n="jp.ex.2">[blink] Hola! Mira cap ací [left] i ara cap allà [right] [center]</button>
-        <button type="button" class="ex" data-k="jp.ex.3" data-i18n="jp.ex.3">Què? [surprise] No ho puc creure! [laugh]</button>
-        <button type="button" class="ex" data-k="jp.ex.4" data-i18n="jp.ex.4">Tinc son [sleep] Bona nit…</button>
-      </div>
-      <div class="ex-row" id="exChat" hidden>
-        <button type="button" class="ex" data-k="jp.ex.5" data-i18n="jp.ex.5">Qui ets?</button>
-        <button type="button" class="ex" data-k="jp.ex.6" data-i18n="jp.ex.6">Conta'm un acudit</button>
-        <button type="button" class="ex" data-k="jp.ex.7" data-i18n="jp.ex.7">Explica'm què és una micro:bit</button>
-      </div>
-    </section>
   </main>
 
   <!-- Parlar o escriure -->
   <div id="talk">
+    <div id="phrasePanel" role="group" aria-labelledby="phraseTitle" hidden>
+      <div class="ph-head">
+        <p id="phraseTitle" class="ph-title" data-i18n="jp.ph.title_say">💡 Tria una frase</p>
+        <button type="button" id="phraseClose" class="ph-close" aria-label="Tancar" title="Tancar" data-i18n-attr="aria-label:jp.ph.close;title:jp.ph.close">✕</button>
+      </div>
+      <div class="ph-list" id="exMove" hidden>
+        <button type="button" class="ex ph" data-k="jv.ex.1" data-i18n="jv.ex.1">Mira a l'esquerra</button>
+        <button type="button" class="ex ph" data-k="jv.ex.2" data-i18n="jv.ex.2">Obri la boca</button>
+        <button type="button" class="ex ph" data-k="jv.ex.3" data-i18n="jv.ex.3">Parpelleja tres vegades</button>
+        <button type="button" class="ex ph" data-k="jv.ex.4" data-i18n="jv.ex.4">Digues que no</button>
+        <button type="button" class="ex ph" data-k="jv.ex.5" data-i18n="jv.ex.5">Gira un poc a la dreta i després al centre</button>
+        <button type="button" class="ex ph" data-k="jv.ex.6" data-i18n="jv.ex.6">Fes com si estigueres sorprés</button>
+      </div>
+      <div class="ph-list" id="exSay">
+        <button type="button" class="ex ph" data-k="jp.ex.1" data-i18n="jp.ex.1">Hola, sóc un robot i parle amb tu.</button>
+        <button type="button" class="ex ph" data-k="jp.ex.2" data-i18n="jp.ex.2">[blink] Hola! Mira cap ací [left] i ara cap allà [right] [center]</button>
+        <button type="button" class="ex ph" data-k="jp.ex.3" data-i18n="jp.ex.3">Què? [surprise] No ho puc creure! [laugh]</button>
+        <button type="button" class="ex ph" data-k="jp.ex.4" data-i18n="jp.ex.4">Tinc son [sleep] Bona nit…</button>
+      </div>
+      <div class="ph-list" id="exChat" hidden>
+        <button type="button" class="ex ph" data-k="jp.ex.5" data-i18n="jp.ex.5">Qui ets?</button>
+        <button type="button" class="ex ph" data-k="jp.ex.6" data-i18n="jp.ex.6">Conta'm un acudit</button>
+        <button type="button" class="ex ph" data-k="jp.ex.7" data-i18n="jp.ex.7">Explica'm què és una micro:bit</button>
+      </div>
+    </div>
     <div class="talk-main">
       <button id="micBtn" class="btn-primary mic" type="button" aria-label="Botó per a parlar" data-i18n-attr="aria-label:jp.mic.aria">
         <span class="mic-ico" aria-hidden="true">🎤</span><span id="micLabel" data-i18n="jp.mic.hold">Mantín premut i parla</span>
@@ -113,6 +117,7 @@
       <button id="centerBtn" class="side" type="button" aria-label="Centrar" title="Centrar" data-i18n-attr="aria-label:jp.btn.center;title:jp.btn.center">↺</button>
     </div>
     <form id="textForm" autocomplete="off">
+      <button id="phraseBtn" type="button" class="ph-btn" aria-haspopup="true" aria-expanded="false" aria-controls="phrasePanel" aria-label="Frases d'exemple" title="Frases d'exemple" data-i18n-attr="aria-label:jp.ph.btn;title:jp.ph.btn">💡</button>
       <input id="textIn" type="text" maxlength="400" enterkeyhint="send" placeholder="O escriu què ha de dir…" aria-label="Text" data-i18n-attr="aria-label:jp.text.aria">
       <button id="textGo" type="submit" class="btn-primary" aria-label="Enviar" data-i18n-attr="aria-label:jp.btn.send">▶</button>
     </form>

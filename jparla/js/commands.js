@@ -87,7 +87,7 @@
     slow: W('despacio|lento|lenta|lentamente|a poc a poc|pausadament|piano|slowly|slow|calmadamente|tranquilamente'),
     fast: W('rapido|rapida|rapidamente|rapid|rapidament|deprisa|de pressa|aviat|fast|quickly|quick|ligero|veloz|velozmente|corriendo'),
     // Coses que la cabeza NO pot fer (només té gir horitzontal, boca i ulls)
-    vertical: W('arriba|abajo|adalt|dalt|avall|baix|up|down|asiente|asentir|assenteix|assentir|nod|nods|cabecea|cabeceo|afirma|afirmar|di que si|diu que si|say yes|di si|sube|baja|puja|abaixa|upward|downward|techo|sostre|suelo|terra|ceiling|floor|inclina|ladea|tilt'),
+    vertical: W('arriba|abajo|adalt|dalt|avall|baix|up|down|asiente|asentir|assenteix|assentir|nod|nods|cabecea|cabeceo|afirma|afirmar|di que si|diu que si|digues que si|say yes|di si|sube|baja|puja|abaixa|upward|downward|techo|sostre|suelo|terra|ceiling|floor|inclina|ladea|tilt'),
     // Repeticions
     twice: W('dos veces|doble|dues vegades|dues voltes|dos cops|twice|per duplicat'),
     once: W('una vez|una vegada|una volta|un cop|once|1 vez|1 vegada|1 volta'),

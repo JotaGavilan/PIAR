@@ -1,7 +1,7 @@
 {
   "name": "JParla – Robot que parla",
   "short_name": "JParla",
-  "description": "El robot de la micro:bit amb veu i moviment: mou el cap amb ordres, repeteix el que dius movent la boca a cada síl·laba o conversa amb la IA de Google.",
+  "description": "El robot de la micro:bit amb veu i moviment: mou el cap amb ordres, repetix el que dius movent la boca a cada síl·laba o conversa amb la IA de Google.",
   "lang": "ca-ES-valencia",
   "start_url": "../",
   "scope": "../",

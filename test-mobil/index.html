@@ -12,6 +12,7 @@
   <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="../vendor/fonts/fonts.css">
   <link rel="stylesheet" href="../shared/piar-ui.css">
+  <link rel="stylesheet" href="../shared/loading_overlay.css">
   <style>
     /* Tokens, tipografia, capçalera, botons, targetes i etiquetes: ../shared/piar-ui.css. Ací només el que és propi del test. */
     * { margin: 0; padding: 0; }
@@ -175,11 +176,11 @@
         <ol>
           <li data-i18n-html="tt.fam.st1">Obri l'app <b>Family Link</b> i tria el perfil del menor.</li>
           <li data-i18n-html="tt.fam.st2">Entra a <b>Controls → Restriccions de contingut → Google Chrome</b>.
-            Tria «Permet tots els llocs». Si es prefereix «Només permet llocs aprovats», entra a <b>Gestiona llocs</b> i afig els que el test diu que fallen
+            Tria «Permet tots els llocs». Si es preferix «Només permet llocs aprovats», entra a <b>Gestiona llocs</b> i afig els que el test diu que fallen
             (normalment: <code>jotagavilan.github.io</code>, <code>storage.googleapis.com</code>, <code>tfhub.dev</code> i <code>teachablemachine.withgoogle.com</code>).</li>
           <li data-i18n="tt.fam.st3">Comprova que no hi haja límits als permisos que les webs poden demanar (càmera, ubicació), en la configuració de Chrome del menor.</li>
           <li data-i18n-html="tt.fam.st4">En els permisos de les aplicacions del menor, deixa que <b>Chrome</b> use la <b>càmera</b> i <b>«Dispositius propers»</b> (en Android 11 o anterior: la <b>ubicació</b>).</li>
-          <li data-i18n-html="tt.fam.st5">Al mòbil del menor, tanca Chrome del tot, obri-lo de nou i <b>repeteix este test</b>.</li>
+          <li data-i18n-html="tt.fam.st5">Al mòbil del menor, tanca Chrome del tot, obri-lo de nou i <b>repetix este test</b>.</li>
         </ol>
         <p class="dim" style="margin-top:.6rem" data-i18n="tt.fam.note">Family Link filtra sobretot les pàgines que s'obrin; no sempre bloqueja els fitxers que carrega una pàgina. Per això el test comprova cada servidor un per un.</p>
 
@@ -445,6 +446,7 @@ async function testMicrobit() {
       else setR('btmb', 'fail', M('tt.d.mb_other', { name: e.name }), 'bt_other');
       return;
     }
+    const endBusy = PIAR_BUSY.begin({ message: _t('sh.loading.bt'), details: _t('sh.loading.bt_d'), icon: '📡' });
     try {
       const server = await dev.gatt.connect();
       const svc = await server.getPrimaryService(UART_SERVICE);
@@ -456,7 +458,7 @@ async function testMicrobit() {
       if (e.name === 'NotFoundError') setR('btmb', 'fail', M('tt.d.mb_nouart'), 'bt_nouart');
       else if (e.name === 'NetworkError') setR('btmb', 'fail', M('tt.d.mb_connect'), 'bt_connect');
       else setR('btmb', 'fail', M('tt.d.mb_connerr', { name: e.name }), 'bt_other');
-    }
+    } finally { endBusy(); }
   } finally { btn.disabled = false; }
 }
 
@@ -639,10 +641,16 @@ async function runAll() {
   $('#startBtn').disabled = true; $('#copyBtn').disabled = true; $('#againBtn').disabled = true;
   renderStartBtn();
   resetR(); renderChecks(); renderApps();
-  for (const st of STEPS) {
-    if (Array.isArray(st[0])) await Promise.all(st.map(([id, fn]) => runOne(id, fn)));
-    else await runOne(st[0], st[1]);
-  }
+  // Capa de bloqueig mentre dura el test (no es pot canviar de pàgina ni tocar res a mitges)
+  const endBusy = PIAR_BUSY.begin({ message: _t('tt.busy'), details: _t('tt.busy_d'), icon: '🩺', progress: 0.02 });
+  try {
+    let n = 0;
+    for (const st of STEPS) {
+      PIAR_BUSY.setProgress(Math.max(0.02, n / STEPS.length)); n++;
+      if (Array.isArray(st[0])) await Promise.all(st.map(([id, fn]) => runOne(id, fn)));
+      else await runOne(st[0], st[1]);
+    }
+  } finally { endBusy(); }
   running = false; finished = true;
   renderStartBtn(); $('#startBtn').disabled = false;
   $('#copyBtn').disabled = false; $('#againBtn').disabled = false;
@@ -707,6 +715,7 @@ PIAR_I18N.onChange(() => {
   document.querySelectorAll('#apps details.prob').forEach((d, i) => { if (open[i] !== undefined) d.open = open[i]; });
 });
 </script>
+<script src="../shared/loading_overlay.js"></script>
 <script src="../shared/pwa.js"></script>
 </body>
 </html>

@@ -2,8 +2,8 @@
 
 🎭🗣💬 El robot de la micro:bit (el cap de **JFace**) amb tres modes, que es trien amb els botons de dalt (l'app recorda l'últim):
 
-- **🎭 Mou** (el que feia **JVeu**, ara fusionat ací): obeeix ordres de moviment que dius o escrius («mira a l'esquerra, obri la boca i parpelleja tres vegades»). No parla.
-- **🗣 Repeteix**: el mòbil llig un text en veu alta i l'app mou la **boca a cada síl·laba**, gira un poc el cap i parpelleja. Admet ordres entre `[claudàtors]`. Pensat a partir de la idea del robot de cartó parlant de LOFI Robot (*Talking Robot*).
+- **🎭 Mou** (el que feia **JVeu**, ara fusionat ací): obeïx ordres de moviment que dius o escrius («mira a l'esquerra, obri la boca i parpelleja tres vegades»). No parla.
+- **🗣 Repetix**: el mòbil llig un text en veu alta i l'app mou la **boca a cada síl·laba**, gira un poc el cap i parpelleja. Admet ordres entre `[claudàtors]`. Pensat a partir de la idea del robot de cartó parlant de LOFI Robot (*Talking Robot*).
 - **💬 Conversa**: contesta la IA de Google (Gemini) amb la personalitat triada i el robot ho diu.
 
 Valencià · castellà · anglés, mòbil (Android) i sense Internet (excepte la IA). En els tres modes s'envia el **mateix paquet de 6 dígits que JFace**, per això **no cal canviar el programa de la micro:bit**.
@@ -22,6 +22,7 @@ veu (navegador o Whisper local) / text
 - **Paquet**: `yyMMEE` = gir (2 dígits, 15 = de cara), boca (2), ull E (0/1), ull D (0/1). Només s'envia quan canvia. **La boca ha de ser 0…10**: el programa «Cap amb IA» ignora els valors > 10 (per defecte `mouthMax` = 10; la configuració antiga amb 20 es migra).
 - **Ordres entre claudàtors** (no es pronuncien): `[parpelleja] [guinya_esquerra] [guinya_dreta] [esquerra] [dreta] [centre] [nega] [sorpresa] [riu] [pensa] [dorm] [desperta] [pausa]`, amb àlies en valencià, castellà i anglés. La IA només pot usar esta llista blanca (`JParla.sanitizeReply` treu Markdown, emojis, adreces i ordres desconegudes, i limita a 6 ordres i 600 caràcters).
 - **Idioma de la conversa**: selector a la pantalla principal (`#langSel`, sincronitzat amb Configuració; `cfg.lang`): fixa la llengua del micròfon, de la veu i de la resposta de Gemini (`chat.reply({lang})`).
+- **Entrada de text i frases d'exemple**: la caixa de text (`#textIn`) té aspecte de «paper» clar, les llistes desplegables van en fosc amb fletxa ▾ i les frases d'exemple ja no són una llista a l'escena: el botó 💡 (`#phraseBtn`) obri un panell (`#phrasePanel`) damunt de la caixa, amb les frases del mode actual (`#exMove/#exSay/#exChat`, botons `.ex.ph`). En triar-ne una s'executa i el panell es tanca (també amb ✕, Esc, tocar fora o canviar de mode). L'escena no es mou.
 - **Avís de Conversa**: en obrir el mode es mostra `#aiNotice` (no activat per defecte, models externs, cal clau/token); botó «Posar la clau» → Configuració → IA.
 - **Personalitat**: per defecte «Irònic i amb retranca» (config `v:3` migra «amable» i l'antiga «gruñó»); `chat.js` afig una regla general: mai diu que està vell/cansat ni talla la conversa.
 - **Clau de Google**: la mateixa que *Què veuen de tu* (`localStorage['qv.gk.v1']`). Només s'envia **text**, mai àudio. En **Mou**, la IA només es consulta si l'actives i les regles no entenen la frase; l'eixida es valida amb `JMove.sanitize`.
@@ -34,7 +35,7 @@ Les veus d'Android (i les de xarxa de Chrome) no avisen paraula a paraula, així
 1. `JParla.syllables()` compta síl·labes (regles de diftongs/hiats en ca/es, vocals per a anglés) i dóna l'obertura de cada una (a > e,o > i,u).
 2. `JParla.timeline()` calcula quan cau cada síl·laba amb una durada base per idioma, la velocitat de la veu, el control «Ritme de la boca» i una pausa en la puntuació.
 3. En acabar cada tros, `puppet.js` compara la durada real amb la prevista i ajusta un factor `k` per veu i idioma (`localStorage['jparla.k.v1']`) ⇒ la boca s'adapta en 2–3 frases.
-4. Si el navegador sí dona `boundary` (escriptori), la línia de temps es resincronitza amb eixos esdeveniments i no s'aprèn.
+4. Si el navegador sí dona `boundary` (escriptori), la línia de temps es resincronitza amb eixos esdeveniments i no s'aprén.
 
 En parlar, la boca va «a clap» (sense rampa de programari: només enviava valors intermedis ja vells) i l'interval entre paquets no passa de 50 ms. Opcions: «Avançar la boca» (ms, compensa Bluetooth i servo) i «Boca mig oberta entre síl·labes» (`mouthAt(tl,t,floor)`). «Com es mou la boca» pot ser per síl·laba o per paraula (`mouthAt(tl,t,floor,'word')`: una obertura per paraula, per a servos lents). El botó «👄 Prova de la boca» fa el mateix moviment que en parlar una frase, sense veu, per a calibrar el servo.
 

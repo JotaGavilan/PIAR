@@ -5,7 +5,7 @@ App de PIAR per a **3r–4t d'ESO** (sessió de 50 minuts) que explica com funci
 ## Dos nivells
 
 **Bàsic** (6 personatges × 4 trets: ulleres, barret, barba, somriu; punts enters)
-1. *Joc*: Qui és qui clàssic amb ajuda opcional («la pregunta que reparteix millor»).
+1. *Joc*: Qui és qui clàssic amb ajuda opcional («la pregunta que repartix millor»).
 2. *Un detector*: es posen punts +/− (−6 a +6) a cada tret i es veu qui guanya.
 3. *La xarxa aprén*: una fila de punts per personatge; quan s'equivoca, puja un punt al correcte i en baixa un al que ha colat. Botons «Ensenya-li una cara», «Entrenar sola» i dades d'entrenament («Sense els d'ulleres»…).
 
@@ -28,6 +28,6 @@ La **guia del professorat** (pla de 50 min, correspondències joc ↔ xarxa, qu�
 
 ## Proves
 
-El motor es pot provar amb node (`require('./js/core.js')`). Valors de referència mesurats: bàsic, 3000 entrenaments sempre convergeixen (mitjana 27 cares i 13 fallades, màx. 72); «sense gafes» reconeix 3/6; avançat amb 5 ocultes acaba en ≈ 100 èpoques (error < 0,02), amb 3 ≈ 435, amb 8 ≈ 45 i amb 2 triga 1200–2500 i a voltes es queda en 11/12.
+El motor es pot provar amb node (`require('./js/core.js')`). Valors de referència mesurats: bàsic, 3000 entrenaments sempre convergixen (mitjana 27 cares i 13 fallades, màx. 72); «sense gafes» reconeix 3/6; avançat amb 5 ocultes acaba en ≈ 100 èpoques (error < 0,02), amb 3 ≈ 435, amb 8 ≈ 45 i amb 2 triga 1200–2500 i a voltes es queda en 11/12.
 
 Enllaços directes: `#juego`, `#detector`, `#aprende` (bàsic) i `#tablero`, `#neurona`, `#red` (avançat).

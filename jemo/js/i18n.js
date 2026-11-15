@@ -65,7 +65,7 @@ PIAR_I18N.add({
     "je.help.codes": "<b>Missatges que envia</b> (una línia cada un):",
     "je.help.mb": "A MakeCode, el bloc «<i>quan es rep una cadena</i>» (serial, fi de línia) et dona el text, p. ex. <code>E1:87</code>: amb «<i>separa per :</i>» tens el codi i la força.",
     "je.help.cal": "<b>Calibrar</b>: amb la cara neutra, toca 🎯. Millora el model de punts.",
-    "je.help.limit": "<b>Ull!</b> JEmo detecta l'<b>expressió de la cara</b>, no el que sent la persona de veritat. Falla amb gorres, mascareta, poca llum o si no mires a la càmera. Serveix per a jugar i aprendre, no per a avaluar ningú. Llig només <b>una persona</b>.",
+    "je.help.limit": "<b>Ull!</b> JEmo detecta l'<b>expressió de la cara</b>, no el que sent la persona de veritat. Falla amb gorres, mascareta, poca llum o si no mires a la càmera. Servix per a jugar i aprendre, no per a avaluar ningú. Llig només <b>una persona</b>.",
     "je.help.net_title": "<b>Internet:</b>",
     "je.help.net1": "Tots els models <b>van inclosos</b> a PIAR i funcionen sense Internet.",
     "je.help.footer": "El botó de la casa, dalt a l'esquerra, torna a la pantalla principal de PIAR."

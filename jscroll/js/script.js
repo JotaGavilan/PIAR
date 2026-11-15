@@ -137,7 +137,7 @@
   function addEndCard() {
     S.endCard = true;
     const d = document.createElement('div'); d.className = 'endcard'; d.id = 'endCard';
-    d.innerHTML = '<div class="big-em">🏁</div><h2 data-i18n="js.feed.end.h">Has arribat al final</h2><p data-i18n="js.feed.end.p">Mira què ha après l\'algoritme de tu.</p><button type="button" class="btn-primary big" id="seeBtn" data-i18n="js.feed.end.btn">Veure el meu perfil →</button>';
+    d.innerHTML = '<div class="big-em">🏁</div><h2 data-i18n="js.feed.end.h">Has arribat al final</h2><p data-i18n="js.feed.end.p">Mira què ha aprés l\'algoritme de tu.</p><button type="button" class="btn-primary big" id="seeBtn" data-i18n="js.feed.end.btn">Veure el meu perfil →</button>';
     feed.appendChild(d); PIAR_I18N.apply(d); $('seeBtn').onclick = () => finish('end');
   }
   const activePost = () => (S && S.active >= 0 ? S.posts[S.active] : null);
