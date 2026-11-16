@@ -5,7 +5,7 @@
 //   pare → runner:  {type:'start', entry:{modelType, classNames, payload}, facing:'auto'|'user'|'environment'}
 //                   {type:'facing', facing}   {type:'stop'}
 //   runner → pare:  {type:'loaded'} · {type:'stage', stage:'model'|'base'|'camera'}
-//                   {type:'ready'} · {type:'pred', preds:[{className,probability}]}   (preds buit = sense detecció)
+//                   {type:'camera_done'} (després de canviar de càmera) · {type:'ready'} · {type:'pred', preds:[{className,probability}]}   (preds buit = sense detecció)
 //                   {type:'error', code:'net'|'cam'|'bad'|'other', message}
 // ============================================================
 (function () {
@@ -150,7 +150,10 @@
     if (e.origin !== location.origin || e.source !== parent) return;
     const m = e.data || {};
     if (m.type === 'start') start(m);
-    else if (m.type === 'facing' && running) { try { await openCamera(m.facing); } catch (err) { fail('cam', err); } }
+    else if (m.type === 'facing' && running) {
+      try { await openCamera(m.facing); post({ type: 'camera_done' }); }
+      catch (err) { post({ type: 'camera_done' }); fail('cam', err); }
+    }
     else if (m.type === 'stop') { running = false; session++; closeCamera(); }
   });
   window.addEventListener('pagehide', closeCamera);

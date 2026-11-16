@@ -155,7 +155,12 @@ function drawPose(pose, ctx) {
 //  S'executen dins d'un iframe del mateix origen (maquina-runner.html) perquè
 //  Màquina usa TF.js 4.15 i Teachable Machine 3.11; així no es barregen.
 // ─────────────────────────────────────────────────────────────
-let mqFrame = null, mqListener = null, mqLoadTimer = null;
+let mqFrame = null, mqListener = null, mqLoadTimer = null, mqCamEnd = null, mqCamTimer = null;
+
+function endMqCamBusy() {
+  clearTimeout(mqCamTimer); mqCamTimer = null;
+  if (mqCamEnd) { mqCamEnd(); mqCamEnd = null; }
+}
 
 function showCanvas() {
   const c = document.getElementById('canvas');
@@ -164,6 +169,7 @@ function showCanvas() {
 
 function stopMaquina() {
   clearTimeout(mqLoadTimer); mqLoadTimer = null;
+  endMqCamBusy();
   if (mqListener) { window.removeEventListener('message', mqListener); mqListener = null; }
   if (mqFrame) {
     try { mqFrame.contentWindow.postMessage({ type: 'stop' }, location.origin); } catch (e) {}
@@ -206,6 +212,8 @@ async function loadMaquinaModel(entry, facing) {
     } else if (m.type === 'ready') {
       hideLoadingOverlay();
       if (onModelReadyCallback) onModelReadyCallback();
+    } else if (m.type === 'camera_done') {
+      endMqCamBusy();
     } else if (m.type === 'pred') {
       if (onPredictionCallback) onPredictionCallback(m.preds || []);
     } else if (m.type === 'error') {
@@ -218,7 +226,12 @@ async function loadMaquinaModel(entry, facing) {
 }
 
 function setMaquinaCamera(facing) {
-  if (mqFrame && mqFrame.contentWindow) mqFrame.contentWindow.postMessage({ type: 'facing', facing }, location.origin);
+  if (!(mqFrame && mqFrame.contentWindow)) return;
+  // Canviar de càmera pot tardar un poc: es bloqueja la pàgina fins que el runner avisa (o 15 s com a màxim)
+  endMqCamBusy();
+  mqCamEnd = PIAR_BUSY.begin({ message: _t('sh.loading.camera'), details: _t('sh.loading.camera_d'), icon: '📷' });
+  mqCamTimer = setTimeout(endMqCamBusy, 15000);
+  mqFrame.contentWindow.postMessage({ type: 'facing', facing }, location.origin);
 }
 
 // ── Aturar predicció ─────────────────────────────────────────

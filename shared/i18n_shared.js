@@ -3,6 +3,15 @@
 PIAR_I18N.add({
   ca: {
     'sh.loading_model': 'Carregant model d\'IA...',
+    'sh.loading.stuck': 'Sembla que tarda massa.',
+    'sh.loading.reload': 'Recarregar la pàgina',
+    'sh.loading.camera': 'Obrint la càmera…',
+    'sh.loading.camera_d': 'Accepta el permís de la càmera si el navegador el demana.',
+    'sh.loading.bt': 'Connectant amb la micro:bit…',
+    'sh.loading.bt_d': 'Un moment: s\'estan preparant els canals de comunicació.',
+    'sh.loading.file': 'Llegint el fitxer…',
+    'sh.loading.save': 'Preparant el fitxer…',
+    'sh.loading.start': 'Preparant l\'aplicació…',
 
     'sh.net.loading': 'Cal Internet només per a descarregar el model (si no l\'has descarregat ja des de la portada, «Ús sense Internet»). Quan estiga carregat, pots llevar el Wi-Fi i les dades mòbils: la càmera i el micròfon es processen en este dispositiu i no s\'envia res a cap servidor.',
     'sh.net.ready': 'Ja no cal Internet: pots llevar el Wi-Fi i les dades mòbils. No actives el mode avió (o torna a activar el Bluetooth després), perquè la micro:bit el necessita.',
@@ -35,6 +44,15 @@ PIAR_I18N.add({
   },
   es: {
     'sh.loading_model': 'Cargando modelo de IA...',
+    'sh.loading.stuck': 'Parece que tarda demasiado.',
+    'sh.loading.reload': 'Recargar la página',
+    'sh.loading.camera': 'Abriendo la cámara…',
+    'sh.loading.camera_d': 'Acepta el permiso de la cámara si el navegador lo pide.',
+    'sh.loading.bt': 'Conectando con la micro:bit…',
+    'sh.loading.bt_d': 'Un momento: se están preparando los canales de comunicación.',
+    'sh.loading.file': 'Leyendo el archivo…',
+    'sh.loading.save': 'Preparando el archivo…',
+    'sh.loading.start': 'Preparando la aplicación…',
 
     'sh.net.loading': 'Hace falta Internet solo para descargar el modelo (si no lo has descargado ya desde la portada, «Uso sin Internet»). Cuando esté cargado, puedes quitar el Wi-Fi y los datos móviles: la cámara y el micrófono se procesan en este dispositivo y no se envía nada a ningún servidor.',
     'sh.net.ready': 'Ya no hace falta Internet: puedes quitar el Wi-Fi y los datos móviles. No actives el modo avión (o vuelve a activar el Bluetooth después), porque la micro:bit lo necesita.',
@@ -67,6 +85,15 @@ PIAR_I18N.add({
   },
   en: {
     'sh.loading_model': 'Loading AI model...',
+    'sh.loading.stuck': 'This seems to be taking too long.',
+    'sh.loading.reload': 'Reload the page',
+    'sh.loading.camera': 'Opening the camera…',
+    'sh.loading.camera_d': 'Accept the camera permission if the browser asks for it.',
+    'sh.loading.bt': 'Connecting to the micro:bit…',
+    'sh.loading.bt_d': 'One moment: the communication channels are being prepared.',
+    'sh.loading.file': 'Reading the file…',
+    'sh.loading.save': 'Preparing the file…',
+    'sh.loading.start': 'Preparing the app…',
 
     'sh.net.loading': 'Internet is only needed to download the model (if you have not already downloaded it from the home page, «Use without Internet»). Once it is loaded you can turn off Wi-Fi and mobile data: the camera and microphone are processed on this device and nothing is sent to any server.',
     'sh.net.ready': 'Internet is no longer needed: you can turn off Wi-Fi and mobile data. Do not turn on airplane mode (or turn Bluetooth back on afterwards), because the micro:bit needs it.',

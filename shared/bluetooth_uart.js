@@ -95,6 +95,7 @@ async function connectBluetooth() {
     }
     return;
   }
+  let endBusy = null;
   try {
     notifyStatus(false, _t('sh.bt.searching'));
 
@@ -110,6 +111,9 @@ async function connectBluetooth() {
 
     uBitDevice.addEventListener('gattserverdisconnected', onDisconnected);
 
+    // Mentre s'estableix la connexió GATT (pot tardar uns segons), la pàgina queda bloquejada
+    if (window.PIAR_BUSY) endBusy = PIAR_BUSY.begin({ message: _t('sh.loading.bt'), details: _t('sh.loading.bt_d'), icon: '📡' });
+
     const server  = await uBitDevice.gatt.connect();
     const service = await server.getPrimaryService(UART_SERVICE_UUID);
 
@@ -119,8 +123,10 @@ async function connectBluetooth() {
 
     uart = await service.getCharacteristic(UART_RX_CHARACTERISTIC);
 
+    if (endBusy) { endBusy(); endBusy = null; }
     notifyStatus(true, _t('sh.bt.ok'));
   } catch (e) {
+    if (endBusy) { endBusy(); endBusy = null; }
     console.error('❌ Error BT:', e);
     uart = null;
     rxCharacteristic = null;

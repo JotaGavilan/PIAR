@@ -332,6 +332,10 @@ PIAR_I18N.onChange(() => {
     showStatus(() => NET_LIBS_MISSING_TEXT);
     return;
   }
-  await startVideo();
-  await initModel();
+  // Càmera + model dins d'un únic bloqueig, perquè no hi haja cap forat entre els dos passos
+  const endBusy = PIAR_BUSY.begin({ message: _t('sh.loading.camera'), details: _t('sh.loading.camera_d'), icon: '📷' });
+  try {
+    await startVideo();
+    await initModel();
+  } finally { endBusy(); }
 })();

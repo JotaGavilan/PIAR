@@ -130,15 +130,19 @@
       if (!confirm(_t('qv.vlm.confirm_dl'))) return;
     }
     S.vlmBusy = true; $('vlmBtn').disabled = true; setVlmMsg('qv.vlm.init'); $('vlmBar').hidden = false; $('vlmFill').style.width = '2%';
+    // Capa de bloqueig: descàrrega del model + descripció (amb barra de progrés)
+    const endBusy = PIAR_BUSY.begin({ message: _t('qv.busy.vlm'), details: _t('qv.vlm.init'), icon: '🧠', progress: 0.02 });
+    const vlmNote = (key, vars) => { setVlmMsg(key, vars); PIAR_BUSY.update(undefined, _t(key, vars)); };
     try {
       const info = await QVLM.load((p) => {
         if (p.total > 0) {
           $('vlmFill').style.width = Math.max(2, Math.min(95, Math.round(p.loaded / p.total * 95))) + '%';
-          if (p.total > 2e6 && p.loaded < p.total) setVlmMsg('qv.vlm.dl', { done: (p.loaded / 1e6).toFixed(0), total: (p.total / 1e6).toFixed(0) });
+          PIAR_BUSY.setProgress(Math.max(0.02, Math.min(0.95, p.loaded / p.total * 0.95)));
+          if (p.total > 2e6 && p.loaded < p.total) vlmNote('qv.vlm.dl', { done: (p.loaded / 1e6).toFixed(0), total: (p.total / 1e6).toFixed(0) });
         }
       });
       if (run !== S.run) return;
-      $('vlmFill').style.width = '97%'; setVlmMsg('qv.vlm.run');
+      $('vlmFill').style.width = '97%'; vlmNote('qv.vlm.run'); PIAR_BUSY.setProgress(null);
       const text = await QVLM.describe(img.canvas);
       if (run !== S.run) return;
       $('vlmFill').style.width = '100%';
@@ -151,7 +155,7 @@
       else { vlmMsg = { key: 'qv.vlm.err', vars: { msg: m }, cls: 'err', raw: undefined }; paintVlmMsg(); }
       if (window.console) console.warn('[qv] vlm', e);
     } finally {
-      S.vlmBusy = false; $('vlmBar').hidden = true; $('vlmBtn').disabled = false;
+      S.vlmBusy = false; $('vlmBar').hidden = true; $('vlmBtn').disabled = false; endBusy();
     }
   }
   $('vlmBtn').addEventListener('click', runVlm);
@@ -183,8 +187,10 @@
     const run = S.run;
     S.cloudBusy = true; $('cloudBtn').disabled = true; setCloudMsg('qv.cloud.prep');
     let prep;
+    const endPrep = PIAR_BUSY.begin({ message: _t('qv.busy.cloud_prep'), details: _t('qv.busy.cloud_prep_d'), icon: '🔒' });
     try { prep = await QVCLOUD.prepare(S.img, S.a, cfg.cloudPix); }
     catch (e) { if (window.console) console.warn('[qv] cloud prepare', e); prep = { ok: false, reason: 'nocheck' }; }
+    finally { endPrep(); }
     S.cloudBusy = false; $('cloudBtn').disabled = false;
     if (run !== S.run) return;
     if (!prep.ok) { setCloudMsg('qv.cloud.block.' + (prep.reason === 'minors' ? 'minors' : prep.reason === 'people' ? 'people' : 'nocheck'), null, 'block'); return; }
@@ -206,6 +212,7 @@
     if (!blob || run !== S.run) { closeCloudLayer(); return; }
     closeCloudLayer();
     S.cloudBusy = true; $('cloudBtn').disabled = true; setCloudMsg('qv.cloud.sending');
+    const endSend = PIAR_BUSY.begin({ message: _t('qv.busy.cloud_send'), details: _t('qv.cloud.sending'), icon: '☁️' });
     try {
       const text = await QVCLOUD.describe(blob, { model, lang: PIAR_I18N.lang });
       if (run !== S.run) return;
@@ -220,6 +227,7 @@
       if (window.console) console.warn('[qv] cloud', e);
     } finally {
       S.cloudBusy = false; if (run === S.run) renderCloud(); else $('cloudBtn').disabled = false;
+      endSend();
     }
   }
   $('cloudBtn').addEventListener('click', runCloud);
@@ -286,7 +294,12 @@
 
   // ── Anàlisi ──
   const isOffline = () => typeof navigator !== 'undefined' && navigator.onLine === false;
+  // Tot l'anàlisi (càrrega de la imatge, models de cares/objectes i OCR) va dins d'una capa de bloqueig amb progrés
   async function analyze(file) {
+    const endBusy = PIAR_BUSY.begin({ message: _t('qv.busy.analyze'), details: _t('qv.busy.analyze_d', { step: _t('qv.step.meta') }), icon: '🔍', progress: 0.03 });
+    try { await analyzeInner(file); } finally { endBusy(); }
+  }
+  async function analyzeInner(file) {
     const run = ++S.run;
     S.file = file; S.a = null; S.steps = {}; S.strip = null;
     $('pickView').hidden = true; $('resultView').hidden = false; $('newBtn').hidden = false;
@@ -302,6 +315,9 @@
     $('photo').width = img.w; $('photo').height = img.h; drawPhoto();
     const step = async (id, enabled, fn) => {
       if (run !== S.run) return;
+      const at = STEP_DEF.findIndex((d) => d[0] === id);
+      PIAR_BUSY.update(undefined, _t('qv.busy.analyze_d', { step: _t('qv.step.' + id) }));
+      PIAR_BUSY.setProgress(Math.max(0.03, at / STEP_DEF.length));
       if (!enabled) { setStep(id, 'skip'); return; }
       setStep(id, 'run');
       try { S.a[id] = await fn(); if (run === S.run) setStep(id, 'done'); }
@@ -317,7 +333,7 @@
     await step('faces', cfg.faces, () => { setStep('faces', 'load'); return QV.detectFaces(img.canvas); });
     await step('objects', cfg.objects, () => { setStep('objects', 'load'); return QV.detectObjects(img.canvas); });
     const langs = Object.keys(cfg.ocr).filter((k) => cfg.ocr[k]);
-    await step('text', cfg.text && langs.length > 0, () => QV.readText(img.canvas, langs, (m) => { if (run === S.run && /recogniz/i.test(m.status || '')) setStep('text', 'run', Math.round(m.progress * 100)); }));
+    await step('text', cfg.text && langs.length > 0, () => QV.readText(img.canvas, langs, (m) => { if (run === S.run && /recogniz/i.test(m.status || '')) { setStep('text', 'run', Math.round(m.progress * 100)); PIAR_BUSY.setProgress(0.8 + 0.2 * m.progress); } }));
     if (run === S.run) { setStatus('qv.status.done'); renderAll(); }
   }
 

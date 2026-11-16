@@ -129,6 +129,7 @@ mqFile.addEventListener('change', async () => {
   const file = mqFile.files[0];
   mqFile.value = '';
   if (!file) return;
+  const endBusy = PIAR_BUSY.begin({ message: _t('sh.loading.file'), icon: '📂' });
   try {
     let entry;
     try { entry = PIAR_MODELS.fromProject(JSON.parse(await file.text())); }
@@ -139,7 +140,7 @@ mqFile.addEventListener('change', async () => {
   } catch (e) {
     const code = e && e.code ? e.code : 'format';
     setMqInfo(() => _t('tm.err.mq_' + code), true);
-  }
+  } finally { endBusy(); }
 });
 
 mqDelete.addEventListener('click', async () => {
