@@ -33,6 +33,22 @@ body > .piar-header, body > #stage, body > #talk, body > #controls { width: 100%
 }
 #head-box .vhead-svg { height: 100%; width: auto; max-width: 100%; display: block; }
 
+/* Cartell de cartró: «Parla amb JÚLI.A.» (al costat del robot) */
+.head-wrap { position: relative; flex: 0 0 auto; }
+.sign {
+  position: absolute; right: 2px; top: 50%; transform: translateY(-50%) rotate(3deg);
+  max-width: 34%; padding: 5px 9px 6px; text-align: center; line-height: 1.1; pointer-events: none;
+  background: linear-gradient(180deg, #123324, #0a1c14); border: 2px solid #4ade80; border-radius: 4px;
+  box-shadow: 0 0 12px rgba(74,222,128,.35), inset 0 0 0 1px rgba(74,222,128,.12);
+}
+.sign::before, .sign::after { content: ""; position: absolute; top: -5px; width: 16px; height: 9px; background: rgba(74,222,128,.35); }
+.sign::before { left: -6px; transform: rotate(-35deg); }
+.sign::after { right: -6px; transform: rotate(35deg); }
+.sign small { display: block; font-size: .66rem; font-weight: 500; color: #86efac; letter-spacing: .02em; }
+.sign strong { display: block; font-size: 1rem; font-weight: 700; color: #f0eeff; letter-spacing: .03em; white-space: nowrap; }
+.sign strong span { color: #4df5a0; text-shadow: 0 0 8px rgba(77,245,160,.7); }
+@media (max-width: 340px) { .sign strong { font-size: .88rem; } .sign small { font-size: .6rem; } }
+
 /* Dades enviades (igual que JFace) */
 #data-panel {
   flex: 0 0 auto;

@@ -1,4 +1,4 @@
-# JParla · Robot amb veu i moviment
+# Júlia · Robot amb veu i moviment
 
 🎭🗣💬 El robot de la micro:bit (el cap de **JFace**) amb tres modes, que es trien amb els botons de dalt (l'app recorda l'últim):
 
@@ -57,7 +57,7 @@ En el mode **Mou** la boca avança més a poc a poc (3,6 unitats/s) perquè el s
 
 ## Whisper local (opcional)
 
-Necessita `vendor/transformers-4.3.1/stt-bundle.js` (transformers.js 4.3.1 + ONNX Runtime Web empaquetats amb esbuild; el `.wasm` ja és a la mateixa carpeta, compartit amb *Què veuen de tu*). Si no hi és, JParla funciona igual amb la veu del navegador i ho indica. Vegeu `OPCIONAL-whisper/LEEME.txt`.
+Necessita `vendor/transformers-4.3.1/stt-bundle.js` (transformers.js 4.3.1 + ONNX Runtime Web empaquetats amb esbuild; el `.wasm` ja és a la mateixa carpeta, compartit amb *Què veuen de tu*). Si no hi és, Júlia funciona igual amb la veu del navegador i ho indica. Vegeu `OPCIONAL-whisper/LEEME.txt`.
 
 ## Límits coneguts
 
