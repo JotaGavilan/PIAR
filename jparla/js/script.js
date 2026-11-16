@@ -75,7 +75,7 @@
   const toIdle = () => showStatus(idleStatus);
 
   // ── Cap virtual i «titella» ───────────────────────────────
-  JParlaHead.mount($('head-box'));
+  JParlaHeadRobot.mount($('head-box'));
   const getCal = () => ({ yawC: 15, yawHalf: cfg.yawHalf, mouthMax: cfg.mouthMax, invert: cfg.invert });
   function paintPacket(pk) {
     $('yaw').textContent = pk.slice(0, 2); $('mouth').textContent = pk.slice(2, 4);
@@ -84,7 +84,7 @@
   }
   const puppet = JParlaPuppet.create({
     send: (pk) => sendUARTData(pk),
-    onPose: (p) => JParlaHead.set(p),
+    onPose: (p) => JParlaHeadRobot.set(p),
     onPacket: paintPacket,
     getCal,
     getInterval: () => cfg.interval * 10,
@@ -92,7 +92,7 @@
     getBlink: () => cfg.blink
   });
   paintPacket(J.toPacket(J.NEUTRAL, getCal()));
-  JParlaHead.set(J.NEUTRAL);
+  JParlaHeadRobot.set(J.NEUTRAL);
 
   // ── Veus del dispositiu ───────────────────────────────────
   const vlang = (v) => String(v.lang || '').replace('_', '-').toLowerCase();

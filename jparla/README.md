@@ -50,7 +50,7 @@ En el mode **Mou** la boca avança més a poc a poc (3,6 unitats/s) perquè el s
 | `js/puppet.js` | Bucle de 25 ms: mou gir/boca/ulls amb límit de velocitat, parla amb `speechSynthesis`, executa passos, envia paquets només quan canvien |
 | `js/speech.js` | Micròfon → text: Web Speech API o **Whisper local** (Worker `js/stt-worker.js`) |
 | `js/chat.js` | Gemini: conversa (instrucció de sistema: alumnat, resposta curta, llista d'ordres) i interpretació de frases lliures per a Mou |
-| `js/head.js` | Cap virtual SVG |
+| `js/head_robot.js` | Cap virtual SVG: robot de cartró verd (gira, obri la boca i parpelleja) |
 | `js/script.js` | Interfície, configuració, modes, targeta amb la paraula ressaltada |
 | `js/i18n.js` | Textos ca/es/en (claus `jp.*`, `jv.*`; **generat**) |
 | `precarrega.html` | Descàrrega del model de Whisper per a l'ús sense Internet |
