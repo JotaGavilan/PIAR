@@ -1,6 +1,6 @@
 {
-  "name": "Júlia – Robot que parla",
-  "short_name": "Júlia",
+  "name": "JÚLI.A. – Robot que parla",
+  "short_name": "JÚLI.A.",
   "description": "El robot de la micro:bit amb veu i moviment: mou el cap amb ordres, repetix el que dius movent la boca a cada síl·laba o conversa amb la IA de Google.",
   "lang": "ca-ES-valencia",
   "start_url": "../",

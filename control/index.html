@@ -55,6 +55,14 @@
   .shortcuts .project-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(108,99,255,.3); border-color: var(--accent); }
   .shortcuts .project-icon { width: 96px; height: 96px; margin-bottom: 1rem; }
   .shortcuts .project-title { font-size: 1.3em; font-weight: 600; margin: 0 0 .6rem; }
+  /* Cartell de cartró de JÚLI.A. (igual que a la portada) */
+  .shortcuts .project-title.sign-title { display: block; width: fit-content; margin: .35rem auto 1rem; padding: 7px 18px 8px; transform: rotate(-2deg); line-height: 1.1; text-align: center; position: relative; background: linear-gradient(180deg, #123324, #0a1c14); border: 2px solid #4ade80; border-radius: 5px; box-shadow: 0 0 16px rgba(74,222,128,.35), inset 0 0 0 1px rgba(74,222,128,.12); }
+  .sign-title::before, .sign-title::after { content: ""; position: absolute; top: -6px; width: 20px; height: 11px; background: rgba(74,222,128,.35); }
+  .sign-title::before { left: -8px; transform: rotate(-35deg); }
+  .sign-title::after { right: -8px; transform: rotate(35deg); }
+  .sign-title small { display: block; font-size: .55em; font-weight: 500; color: #86efac; letter-spacing: .02em; }
+  .sign-title strong { display: block; font-size: 1.15em; font-weight: 700; color: #f0eeff; letter-spacing: .04em; white-space: nowrap; }
+  .sign-title strong span { color: #4df5a0; text-shadow: 0 0 8px rgba(77,245,160,.7); }
   .shortcuts .project-description { font-size: .9em; line-height: 1.55; color: var(--text-dim); margin: 0 0 1rem; }
   .shortcuts .project-tech { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; margin-top: auto; }
   .shortcuts .badge { position: absolute; top: .6rem; right: .6rem; font-size: .75rem; padding: .1rem .55rem; border-radius: 99px; border: 1px solid var(--warn); color: var(--warn); background: rgba(251,191,36,.08); }
@@ -166,7 +174,7 @@
     doc.querySelectorAll('.project-card[data-app]').forEach(function (a) {
       var h2 = a.querySelector('h2'), img = a.querySelector('img');
       cards.push(a.cloneNode(true));
-      out.push({ id: a.getAttribute('data-app'), name: h2 ? h2.textContent.trim() : a.getAttribute('data-app'), icon: img ? new URL(img.getAttribute('src'), new URL('../', location.href)).href : '' });
+      out.push({ id: a.getAttribute('data-app'), name: h2 ? (h2.getAttribute('data-name') || h2.textContent.replace(/\s+/g, ' ').trim()) : a.getAttribute('data-app'), icon: img ? new URL(img.getAttribute('src'), new URL('../', location.href)).href : '' });
     });
     out.push(INSTALL);
     return out;

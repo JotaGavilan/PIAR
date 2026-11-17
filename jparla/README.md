@@ -1,10 +1,12 @@
-# Júlia · Robot amb veu i moviment
+# JÚLI.A. · Robot amb veu i moviment
 
 🎭🗣💬 El robot de la micro:bit (el cap de **JFace**) amb tres modes, que es trien amb els botons de dalt (l'app recorda l'últim):
 
 - **🎭 Mou** (el que feia **JVeu**, ara fusionat ací): obeïx ordres de moviment que dius o escrius («mira a l'esquerra, obri la boca i parpelleja tres vegades»). No parla.
 - **🗣 Repetix**: el mòbil llig un text en veu alta i l'app mou la **boca a cada síl·laba**, gira un poc el cap i parpelleja. Admet ordres entre `[claudàtors]`. Pensat a partir de la idea del robot de cartó parlant de LOFI Robot (*Talking Robot*).
 - **💬 Conversa**: contesta la IA de Google (Gemini) amb la personalitat triada i el robot ho diu.
+
+A la pantalla, el cap és un **robot de cartró verd** (gira, obri la boca i parpelleja com el real) amb el cartell **«Parla amb JÚLI.A.»** (en castellà «Habla con JÚLI.A.», en anglés «Talk to JÚLI.A.»). **JÚLI.A. és una marca: s'escriu sempre així, en majúscules i amb els dos punts.**
 
 Valencià · castellà · anglés, mòbil (Android) i sense Internet (excepte la IA). En els tres modes s'envia el **mateix paquet de 6 dígits que JFace**, per això **no cal canviar el programa de la micro:bit**.
 
@@ -57,7 +59,7 @@ En el mode **Mou** la boca avança més a poc a poc (3,6 unitats/s) perquè el s
 
 ## Whisper local (opcional)
 
-Necessita `vendor/transformers-4.3.1/stt-bundle.js` (transformers.js 4.3.1 + ONNX Runtime Web empaquetats amb esbuild; el `.wasm` ja és a la mateixa carpeta, compartit amb *Què veuen de tu*). Si no hi és, Júlia funciona igual amb la veu del navegador i ho indica. Vegeu `OPCIONAL-whisper/LEEME.txt`.
+Necessita `vendor/transformers-4.3.1/stt-bundle.js` (transformers.js 4.3.1 + ONNX Runtime Web empaquetats amb esbuild; el `.wasm` ja és a la mateixa carpeta, compartit amb *Què veuen de tu*). Si no hi és, JÚLI.A. funciona igual amb la veu del navegador i ho indica. Vegeu `OPCIONAL-whisper/LEEME.txt`.
 
 ## Límits coneguts
 
